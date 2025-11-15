@@ -1,0 +1,505 @@
+{
+  "mindsetPacks": [
+    {
+      "title": "🧠 Progression > perfection",
+      "body": "Chaque repas aligné est un vote pour l’identité que tu construis."
+    },
+    {
+      "title": "💪 Constance antifragile",
+      "body": "C’est la moyenne de la semaine qui compte, pas un repas isolé."
+    },
+    {
+      "title": "🚀 Micro-habitudes",
+      "body": "1% mieux chaque jour → effet cumulatif massif."
+    },
+    {
+      "title": "🌱 Bienveillance",
+      "body": "Parle-toi comme à un ami que tu veux aider."
+    },
+    {
+      "title": "🌿 Nature & lumière",
+      "body": "10–15 min dehors rechargent ton horloge biologique."
+    },
+    {
+      "title": "🧘 Respiration lente",
+      "body": "4s inspire, 6s expire, 3 min : calme le système."
+    },
+    {
+      "title": "🔥 Digestion zen",
+      "body": "Mâche vraiment et fais une vraie pause pendant le repas."
+    },
+    {
+      "title": "🛡️ Immunité quotidienne",
+      "body": "Sommeil, micronutriments, mouvement doux : trio gagnant."
+    },
+    {
+      "title": "💤 Sommeil profond",
+      "body": "Couvre-feu digital 45 min + lumière du matin."
+    },
+    {
+      "title": "🧩 Glycémie stable",
+      "body": "Légumes en premier → protéines/lipides → glucides."
+    },
+    {
+      "title": "🏃 Fractionne le mouvement",
+      "body": "2 min d’étirements/marche toutes les 60–90 min."
+    },
+    {
+      "title": "🧴 Minéraux utiles",
+      "body": "Transpiration élevée ? Un peu de sel de qualité sur des aliments bruts."
+    },
+    {
+      "title": "🧭 Intention du jour",
+      "body": "Une action simple et réalisée > 10 intentions non tenues."
+    },
+    {
+      "title": "🍽️ Densité nutritionnelle",
+      "body": "Assiette colorée = spectre micro plus large."
+    },
+    {
+      "title": "🫀 Lipides de qualité",
+      "body": "Oméga-3 & huile d’olive : base anti-inflammatoire."
+    },
+    {
+      "title": "🧠 Focus matinal",
+      "body": "Petit-déj riche en protéines + fibres = idées claires."
+    },
+    {
+      "title": "🧊 Récupération active",
+      "body": "Le lendemain d’une séance dure : 10–20 min cardio facile."
+    },
+    {
+      "title": "📓 Journal bref",
+      "body": "Le soir : 1 victoire, 1 axe d’amélioration, 1 gratitude."
+    },
+    {
+      "title": "💡 Rituels d’énergie",
+      "body": "Lumière, eau, respiration : interrupteurs rapides."
+    },
+    {
+      "title": "🧩 Clarté au supermarché",
+      "body": "Liste écrite = 80% de décisions nutritionnelles déjà prises."
+    },
+    {
+      "title": "🥗 Préparation simple",
+      "body": "Batch-cooking minimal : céréale + légumineuse + 2 légumes."
+    },
+    {
+      "title": "🧃 Boissons sucrées",
+      "body": "À garder pour des moments choisis, pas au quotidien."
+    },
+    {
+      "title": "🔁 Routine anti-stress",
+      "body": "Respiration + marche courte après repas = nerfs apaisés."
+    },
+    {
+      "title": "🧪 Essais & feedback",
+      "body": "Teste, observe, ajuste : ton corps est ton meilleur labo."
+    },
+    {
+      "title": "🧯 Inflammation de fond",
+      "body": "Sommeil, oméga-3, fibres, stress → leviers principaux."
+    },
+    {
+      "title": "🎯 Une cible par semaine",
+      "body": "Un seul levier focus = bien plus d’adhérence."
+    },
+    {
+      "title": "🧊 Eau fraîche, idées fraîches",
+      "body": "Légère déshydratation = baisse de performance cognitive."
+    },
+    {
+      "title": "🌈 Couleurs = micronutriments",
+      "body": "Vise 3 couleurs par assiette."
+    },
+    {
+      "title": "🧰 Outils utiles",
+      "body": "Balance culinaire & gourde = impact disproportionné."
+    },
+    {
+      "title": "🧭 Identité nutritionnelle",
+      "body": "« Je suis quelqu’un qui prend soin de mon énergie. »"
+    }
+  ],
+  "coach": {
+    "sedentaire": [
+      "2–3×/sem 20–30 min : marche rapide, vélo doux ou renfo poids du corps.",
+      "Objectif pas/jour 6–8k, fractionnés après repas (8–12 min).",
+      "5 min mobilité matin + 5 min soir (hanches/colonne/épaules).",
+      "Escaliers + pauses actives toutes les 60–90 min.",
+      "Marche lumière du jour 10–15 min : humeur/sommeil boostés.",
+      "1 séance technique/sem (gainage, équilibre).",
+      "2–3 min d’étirements lents en fin de journée.",
+      "Hydratation avant/pendant/après l’activité."
+    ],
+    "perte": [
+      "Déficit léger (10–20 %) + protéines suffisantes + fibres.",
+      "Renfo 2–3×/sem, cardio facile en complément (RPE 6–7/10).",
+      "Priorise la récup : sommeil & gestion du stress.",
+      "1–2 jours allégés/sem pour neuromodulation.",
+      "Marche post-prandiale 8–12 min.",
+      "Répartis protéines sur 3–4 prises/j.",
+      "Séances courtes mais fréquentes > longues et rares.",
+      "Tour de taille 1×/sem comme indicateur simple."
+    ],
+    "masse": [
+      "Surplus +10–15 %, protéines 1.6–2.2 g/kg, glucides autour séances.",
+      "Progression charge ou volume (pas les deux simultanément).",
+      "Sommeil >7 h, baisse le volume si <6.5 h.",
+      "Hydrate-toi bien : pense électrolytes si transpiration élevée.",
+      "Deload toutes les 6–8 semaines.",
+      "Accent excentrique contrôlé (3 s) pour hypertrophie.",
+      "Glucides complexes pré/post séance + protéines faciles.",
+      "Magnésium en soirée via l’assiette (amandes, verts, cacao)."
+    ],
+    "maintien": [
+      "3–4 séances variées/sem, modulation d’intensité.",
+      "1 séance technique légère (mobilité, gainage).",
+      "Récup active le lendemain d’une séance dure.",
+      "Travail vitesse/coordination 1×/sem (drills, sprints courts).",
+      "Exposition lumière du matin : motivation accrue.",
+      "Mix tirage/press/hinge/squat + locomotion.",
+      "1 jour plaisir (sport de jeu) pour l’adhérence.",
+      "Hydratation + un peu de sel si forte transpiration."
+    ]
+  },
+  "heroPool": {
+    "hydration": [
+      {
+        "title": "💧 Hydratation : boost silencieux",
+        "theme": "Clarté mentale, énergie stabile",
+        "insight": "1 verre/repas + 2 verres entre les repas. Gorgées régulières."
+      },
+      {
+        "title": "🚰 Eau cellulaire = énergie propre",
+        "theme": "Moins de maux de tête",
+        "insight": "Hydratation continue > grands volumes ponctuels."
+      },
+      {
+        "title": "🧠 Cerveau hydraté",
+        "theme": "Neurotransmission & humeur",
+        "insight": "Déshydratation légère = -5 à -10% de performance cognitive."
+      },
+      {
+        "title": "⚖️ Eau & glycémie",
+        "theme": "Moins d’envies de sucre",
+        "insight": "Souvent la soif imite la faim. Bois avant la collation."
+      }
+    ],
+    "omega3": [
+      {
+        "title": "🐟 Oméga-3 marins = membranes souples",
+        "theme": "Inflammation, récupération",
+        "insight": "2×/sem poissons gras (sardines/maquereau/hareng)."
+      },
+      {
+        "title": "🧠 EPA/DHA & cerveau",
+        "theme": "Clarté & humeur",
+        "insight": "Intégration membranaire → meilleure signalisation neuronale."
+      },
+      {
+        "title": "💤 Oméga-3 & sommeil",
+        "theme": "Récupération profonde",
+        "insight": "Statut oméga-3 corrélé à un sommeil de meilleure qualité."
+      },
+      {
+        "title": "🛡️ Oméga-3 & immunité",
+        "theme": "Anti-inflammation de fond",
+        "insight": "EPA/DHA calibrent les réponses immunitaires."
+      }
+    ],
+    "omega3_ALA": [
+      {
+        "title": "🌰 ALA végétal",
+        "theme": "Précurseur EPA/DHA",
+        "insight": "Lin/chia moulus, noix : 1 c.s/j = base végétale d’ALA."
+      },
+      {
+        "title": "🥣 Petit-déj ALA",
+        "theme": "Absorption optimisée",
+        "insight": "Moudre juste avant consommation."
+      }
+    ],
+    "omega6": [
+      {
+        "title": "🌻 Oméga-6 utiles",
+        "theme": "Peau, membranes, hormones",
+        "insight": "Qualité & cuisson douce pour préserver les lipides."
+      }
+    ],
+    "omega9": [
+      {
+        "title": "🫒 Oméga-9 & longévité",
+        "theme": "Huile d’olive, avocat, amandes",
+        "insight": "Filet à cru/fin de cuisson."
+      }
+    ],
+    "vitA": [
+      {
+        "title": "👀 Vitamine A",
+        "theme": "Vision & barrières",
+        "insight": "Carotte/patate douce + un peu de gras."
+      },
+      {
+        "title": "🥚 Rétinol & co",
+        "theme": "Mix végétal/animal",
+        "insight": "Abats/œufs (selon choix) + légumes orange."
+      }
+    ],
+    "vitD": [
+      {
+        "title": "☀️ Vitamine D chef d’orchestre",
+        "theme": "Immunité, force, humeur",
+        "insight": "Lumière du matin + sources alimentaires."
+      },
+      {
+        "title": "🦴 D & force musculaire",
+        "theme": "Prévention faiblesse/blessures",
+        "insight": "Statut D adéquat ↔ force améliorée."
+      }
+    ],
+    "vitE": [
+      {
+        "title": "🛡️ Vitamine E",
+        "theme": "Antioxydant membranaire",
+        "insight": "Amandes/noisettes + huiles vierges."
+      }
+    ],
+    "vitK": [
+      {
+        "title": "🦴 Vitamine K",
+        "theme": "Os & coagulation",
+        "insight": "Verts feuillus + un peu d’huile."
+      }
+    ],
+    "vitC": [
+      {
+        "title": "🍋 Vitamine C",
+        "theme": "Antioxydant & fer",
+        "insight": "Kiwi, agrumes, poivron cru, persil."
+      },
+      {
+        "title": "🌈 Couleurs & C",
+        "theme": "Assiette vive",
+        "insight": "Varie les couleurs naturelles."
+      }
+    ],
+    "Bgroup": [
+      {
+        "title": "⚡ Complexe B",
+        "theme": "Énergie & nerfs",
+        "insight": "B1/B2/B3/B6 = rouages de l’ATP."
+      },
+      {
+        "title": "🧩 B9/B12",
+        "theme": "Renouvellement cellulaire",
+        "insight": "Verts feuillus + sources animales/enrichies."
+      }
+    ],
+    "iron": [
+      {
+        "title": "🩸 Fer & oxygénation",
+        "theme": "Performance à l’effort",
+        "insight": "Associe fer végétal + vitamine C."
+      }
+    ],
+    "magnesium": [
+      {
+        "title": "😌 Magnésium",
+        "theme": "Relaxation & sommeil",
+        "insight": "Amandes, cacao, verts feuillus, eaux magnésiennes."
+      }
+    ],
+    "zinc": [
+      {
+        "title": "🛠️ Zinc",
+        "theme": "Peau, hormones, immunité",
+        "insight": "Fruits de mer, bœuf, graines de courge."
+      }
+    ],
+    "calcium": [
+      {
+        "title": "🧱 Calcium & D",
+        "theme": "Solidité osseuse",
+        "insight": "Répartis l’apport + statut D correct."
+      }
+    ],
+    "potassium": [
+      {
+        "title": "⚡ Potassium",
+        "theme": "Tension & muscles",
+        "insight": "Banane, avocat, verts, légumineuses."
+      }
+    ],
+    "fibers": [
+      {
+        "title": "🌱 Fibres",
+        "theme": "Microbiote & satiété",
+        "insight": "Légumineuses + légumes + fruits entiers."
+      },
+      {
+        "title": "🌀 Fibres solubles",
+        "theme": "Glycémie plus plate",
+        "insight": "Lentilles, avoine, pectines."
+      }
+    ],
+    "immunity": [
+      {
+        "title": "🛡️ Pack Immunité",
+        "theme": "Sommeil + oméga-3 + vit D/C/Zinc",
+        "insight": "Routine régulière > pics ponctuels."
+      },
+      {
+        "title": "🥣 Soupe riche en couleurs",
+        "theme": "Polyphénols & chaleur douce",
+        "insight": "Ajoute ail/gingembre/curcuma pour l’arôme."
+      }
+    ],
+    "digestion": [
+      {
+        "title": "🔥 Digestion tranquille",
+        "theme": "Mastication & pause",
+        "insight": "Éloigne les écrans, respire avant de manger."
+      },
+      {
+        "title": "🧪 Tolérances personnelles",
+        "theme": "Observe & ajuste",
+        "insight": "Note ce qui marche bien pour toi."
+      }
+    ],
+    "sleep": [
+      {
+        "title": "🌙 Rituel dodo",
+        "theme": "Couvre-feu digital",
+        "insight": "Lumière douce + lecture courte."
+      },
+      {
+        "title": "☀️ Lumière du matin",
+        "theme": "Synchronisation circadienne",
+        "insight": "10–15 min dehors dès que possible."
+      }
+    ]
+  },
+  "recipesByKey": {
+    "omega3": [
+      "Bowl sardines-citron-avocat + huile d’olive • pain complet",
+      "Salade maquereau, lentilles, persil, câpres • vinaigrette colza",
+      "Tartines rillettes de maquereau au yaourt + crudités"
+    ],
+    "omega3_ALA": [
+      "Porridge flocons d’avoine • lin/chia moulus • noix + fruits",
+      "Quinoa, roquette, betterave, noix • huile de colza",
+      "Toast avocat + graines de lin moulues • œuf mollet"
+    ],
+    "omega6": [
+      "Salade + graines de tournesol • vinaigrette tournesol",
+      "Poulet, riz complet, crudités • filet huile pépins de raisin",
+      "Houmous + crudités • pain pita complet"
+    ],
+    "omega9": [
+      "Tomates-mozza + huile d’olive • pain au levain",
+      "Salade niçoise (thon/œufs/haricots verts) • huile d’olive",
+      "Pâtes complètes, pesto maison (huile d’olive, basilic, noix)"
+    ],
+    "vitD": [
+      "Omelette œufs entiers + sardines émiettées • salade verte",
+      "Rillettes de maquereau au yaourt + crudités",
+      "Saumon au four + citron + herbes • légumes vapeur"
+    ],
+    "vitA": [
+      "Velouté carotte-patate douce • graines de courge",
+      "Salade mâche, orange, carotte râpée • huile d’olive",
+      "Poêlée foie de volaille + oignons • salade verte"
+    ],
+    "vitE": [
+      "Salade avocat, amandes, épinards • huile de colza/olive",
+      "Yaourt grec + noisettes + framboises",
+      "Poisson au four + amandes concassées • légumes vapeur"
+    ],
+    "vitK": [
+      "Poêlée de chou kale à l’ail • huile d’olive + œuf",
+      "Salade d’épinards, avocat, parmesan • citron",
+      "Chou croquant en salade • graines + huile d’olive"
+    ],
+    "vitC": [
+      "Salade poivron cru, kiwi, persil, pois chiches",
+      "Agrumes en salade + menthe • chocolat noir",
+      "Taboulé libanais (persil, citron) + pois chiches"
+    ],
+    "B9": [
+      "Wok verts feuillus (épinards/blettes) • pois chiches",
+      "Salade de lentilles vertes, herbes fraîches",
+      "Wrap complet houmous + crudités verts"
+    ],
+    "iron": [
+      "Dahl de lentilles corail + citron • coriandre",
+      "Bœuf minute + poivron • semoule complète",
+      "Salade épinards + pois chiches + agrumes"
+    ],
+    "calcium": [
+      "Taboulé persil-tahini (sésame) • citron",
+      "Yaourt grec + amandes + fruits rouges",
+      "Tofu sauté sésame • brocoli vapeur"
+    ],
+    "magnesium": [
+      "Porridge cacao non sucré + amandes",
+      "Pois chiches, avocat, roquette + graines courge",
+      "Banane + beurre d’amande • carré chocolat 85%"
+    ],
+    "zinc": [
+      "Spaghetti vongole (palourdes) + persil",
+      "Salade bœuf tiède, roquette, parmesan",
+      "Toast sardine-citron + cornichons"
+    ],
+    "selenium": [
+      "2 noix du Brésil + yaourt nature • fruit",
+      "Poisson au four + citron + herbes",
+      "Omelette champignons + salade"
+    ],
+    "fibers": [
+      "Buddha bowl : légumineuses + 2 légumes + céréale complète",
+      "Soupe de légumes + tartine pain complet + houmous",
+      "Légumes rôtis au four + pois chiches croustillants"
+    ],
+    "immunity": [
+      "Soupe carotte-courge-gingembre + tartine au levain",
+      "Salade choux rouges + agrumes + noix",
+      "Curry de pois chiches au curcuma + riz basmati"
+    ],
+    "digestion": [
+      "Poisson vapeur + riz demi-complet + légumes vapeurs",
+      "Bouillon clair + vermicelles + herbes fraîches",
+      "Riz sauté légumes doux (carotte, courgette) + tofu"
+    ],
+    "sleep": [
+      "Dîner léger : soupe + protéine maigre + verts",
+      "Tisane verveine/tilleul + carré chocolat noir",
+      "Omelette aux herbes + salade verte + pain complet"
+    ],
+    "ig_bas": [
+      "Salade lentilles/quinoa/avocat/œuf mollet",
+      "Yaourt grec + fruits rouges + graines de chia",
+      "Poêlée légumes + poulet + olives • huile d’olive"
+    ],
+    "vegetarien": [
+      "Dahl lentilles + riz basmati + coriandre",
+      "Bowl quinoa, tofu, brocoli, carotte, tahini-citron",
+      "Pasta complètes + pesto roquette/noix"
+    ],
+    "vegan": [
+      "Chili sin carne (haricots rouges, maïs, poivrons)",
+      "Salade pois chiches, concombre, tomates, huile d’olive",
+      "Tofu brouillé aux épices + légumes sautés"
+    ],
+    "saison_hiver": [
+      "Velouté butternut + graines de courge • pain complet",
+      "Poisson au four + choux rôtis",
+      "Gratin de blettes léger + salade d’orange"
+    ],
+    "saison_ete": [
+      "Salade niçoise • huile d’olive",
+      "Taboulé libanais + pois chiches",
+      "Gazpacho + tartine chèvre/tomate"
+    ]
+  }
+}
