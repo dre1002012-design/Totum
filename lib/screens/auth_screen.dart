@@ -198,7 +198,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 6),
 
                   const Text(
-                    'Essai gratuit complet pendant 7 jours, puis accès à vie pour 2,99€ sans pub.',
+                    'Essai gratuit complet pendant 7 jours, puis accès à vie pour 6,99€ sans pub.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 13,

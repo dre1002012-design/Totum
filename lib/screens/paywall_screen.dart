@@ -115,7 +115,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final Color primaryColor = const Color(0xFFFF7A00); // ton orange TOTUM
-    final String priceText = _premiumProduct?.price ?? '2,99 €';
+    final String priceText = _premiumProduct?.price ?? '6,99 €';
 
     return Scaffold(
       body: SafeArea(

@@ -2,7 +2,7 @@ name: totum_app
 description: Application Totum – Suivi nutrition et bien-être
 publish_to: 'none'
 
-version: 1.0.8+9
+version: 1.1.4+15
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -27,6 +27,9 @@ dependencies:
 
   # Autres utilitaires Flutter
   cupertino_icons: ^1.0.8
+
+  http: ^1.2.0           # pour appeler les API USDA + Open Food Facts
+  mobile_scanner: ^5.0.0 # pour scanner les codes-barres avec la caméra
 
 
 dev_dependencies:

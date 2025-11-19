@@ -223,7 +223,7 @@ class _AccountScreenState extends State<AccountScreen> {
     final color = const Color(0xFFFF7A00); // orange Totum
 
     // Prix officiel Play Store ou fallback provisoire
-    final storePriceText = _premiumProduct?.price ?? '2,99 €';
+    final storePriceText = _premiumProduct?.price ?? '6,99 €';
 
     // Texte de statut (essai / premium)
     String statusTitle = 'Statut du compte';

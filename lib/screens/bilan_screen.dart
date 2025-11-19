@@ -1,19 +1,16 @@
-// lib/screens/bilan_screen.dart
-// Écran Bilan complet : macros + micros + hydratation
-// Calculs basés sur le journal (journal_YYYY-MM-DD) et FoodsRepository.
-//
-// NOTE IMPORTS : adapte la ligne d'import de foods_loader.dart
-// pour qu'elle soit IDENTIQUE à celle de journal_screen.dart.
-
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../services/foods_loader.dart' as foods_loader;
 import 'account_screen.dart'; // ✅
+
+// Supabase client global (comme dans les autres écrans)
+SupabaseClient get _client => Supabase.instance.client;
 
 
 /// ───────────────────────────── Couleurs / helpers ─────────────────────────────
@@ -278,6 +275,14 @@ Future<void> _ensureFoodsLoaded() async {
   } catch (_) {}
 }
 
+String _dateKey(DateTime d) =>
+    '${d.year.toString().padLeft(4, '0')}-'
+    '${d.month.toString().padLeft(2, '0')}-'
+    '${d.day.toString().padLeft(2, '0')}';
+
+String _hydrationManualKeyForDate(DateTime d) =>
+    'hydration_manual_ml_${_dateKey(d)}';
+
 String _journalKeyForDate(DateTime d) {
   final y = d.year.toString().padLeft(4, '0');
   final m = d.month.toString().padLeft(2, '0');
@@ -318,6 +323,92 @@ Future<_DayTotals> _computeDayTotalsForDate(
   foods_loader.FoodsRepository repo,
   SharedPreferences sp,
 ) async {
+  final y = day.year.toString().padLeft(4, '0');
+  final m = day.month.toString().padLeft(2, '0');
+  final dd = day.day.toString().padLeft(2, '0');
+  final ymd = '$y-$m-$dd';
+
+  double kcal = 0, prot = 0, carb = 0, fat = 0, fiber = 0;
+  final microTotals = <String, double>{};
+  double waterMl = 0;
+  final waterNames = <String>{};
+
+  // Repo aliments (base CSV + customs)
+  final List<foods_loader.FoodItem> allFoods = [
+    ...(repo.items as List),
+    ...repo.customs,
+  ];
+
+  foods_loader.FoodItem? _findFood(String id) {
+    for (final f in allFoods) {
+      if (f.id == id) return f;
+    }
+    return null;
+  }
+
+  // 1) 🔹 Tentative via Supabase (multi-appareils)
+  try {
+    final user = _client.auth.currentUser;
+    if (user != null) {
+      final List<Map<String, dynamic>> rows = await _client
+          .from('food_entries')
+          .select()
+          .eq('user_id', user.id)
+          .eq('entry_date', ymd);
+
+      if (rows.isNotEmpty) {
+        for (final r in rows) {
+          final id = (r['food_id'] ?? '').toString();
+          final name = (r['food_name'] ?? '').toString();
+          final grams = (r['quantity_grams'] as num?)?.toDouble() ?? 0.0;
+
+          // Macros depuis Supabase
+          kcal += (r['energy_kcal'] as num?)?.toDouble() ?? 0.0;
+          prot += (r['protein_g'] as num?)?.toDouble() ?? 0.0;
+          carb += (r['carbs_g'] as num?)?.toDouble() ?? 0.0;
+          fat  += (r['fat_g'] as num?)?.toDouble() ?? 0.0;
+          fiber += (r['fiber_g'] as num?)?.toDouble() ?? 0.0;
+
+          // Micros depuis la base CSV / customs
+          if (id.isNotEmpty) {
+            final food = _findFood(id);
+            if (food != null) {
+              final mic = food.microsFor(grams);
+              mic.forEach((k, v) {
+                microTotals[k] = (microTotals[k] ?? 0.0) + v;
+              });
+            }
+          }
+
+          // Eau (on suppose 1 g ≈ 1 ml)
+          if (_looksLikeWater(name)) {
+            waterMl += grams;
+            waterNames.add(name);
+          }
+        }
+
+        if ((kcal + prot + carb + fat + fiber) > 0 ||
+            microTotals.isNotEmpty ||
+            waterMl > 0) {
+          return _DayTotals(
+            kcal: kcal,
+            prot: prot,
+            carb: carb,
+            fat: fat,
+            fiber: fiber,
+            micros: microTotals,
+            waterMlFromJournal: waterMl,
+            waterSources: waterNames.toList(),
+            hasData: true,
+          );
+        }
+      }
+    }
+  } catch (_) {
+    // En cas de souci réseau / Supabase → on tombera sur le fallback local
+  }
+
+  // 2) 🔹 Fallback : lecture locale du journal_YYYY-MM-DD (comportement historique)
   final key = _journalKeyForDate(day);
   final raw = sp.getString(key);
   if (raw == null || raw.isEmpty) {
@@ -331,24 +422,15 @@ Future<_DayTotals> _computeDayTotalsForDate(
     return _DayTotals.empty();
   }
 
-  double kcal = 0, prot = 0, carb = 0, fat = 0, fiber = 0;
-  final microTotals = <String, double>{};
-  double waterMl = 0;
-  final waterNames = <String>{};
-
-  // On s'appuie sur les macros déjà stockées dans le journal
-  // et on recalcule les micros via FoodsRepository.
-  final List<foods_loader.FoodItem> allFoods = [
-    ...(repo.items as List),
-    ...repo.customs,
-  ];
-
-  foods_loader.FoodItem? _findFood(String id) {
-    for (final f in allFoods) {
-      if (f.id == id) return f;
-    }
-    return null;
-  }
+  // Réinitialise les compteurs pour la partie locale
+  kcal = 0;
+  prot = 0;
+  carb = 0;
+  fat = 0;
+  fiber = 0;
+  microTotals.clear();
+  waterMl = 0;
+  waterNames.clear();
 
   for (final mealList in decoded.values) {
     if (mealList is! List) continue;
@@ -363,7 +445,7 @@ Future<_DayTotals> _computeDayTotalsForDate(
       kcal += (m['kcal'] as num?)?.toDouble() ?? 0.0;
       prot += (m['prot'] as num?)?.toDouble() ?? 0.0;
       carb += (m['carb'] as num?)?.toDouble() ?? 0.0;
-      fat += (m['fat'] as num?)?.toDouble() ?? 0.0;
+      fat  += (m['fat'] as num?)?.toDouble() ?? 0.0;
       fiber += (m['fiber'] as num?)?.toDouble() ?? 0.0;
 
       // Micros depuis la base CSV
@@ -383,25 +465,20 @@ Future<_DayTotals> _computeDayTotalsForDate(
     }
   }
 
-    return _DayTotals(
-      kcal: kcal,
-      prot: prot,
-      carb: carb,
-      fat: fat,
-      fiber: fiber,
-      micros: microTotals,
-      waterMlFromJournal: waterMl,
-      waterSources: waterNames.toList(),
-      // ⚠️ ICI la seule vraie modification :
-      // on considère qu'il y a des données dès qu'il y a
-      //   - des macros OU
-      //   - des micros (complément pur) OU
-      //   - de l'eau venant du journal.
-      hasData: (kcal + prot + carb + fat + fiber) > 0 ||
-              microTotals.isNotEmpty ||
-              waterMl > 0,
-    );
-  }
+  return _DayTotals(
+    kcal: kcal,
+    prot: prot,
+    carb: carb,
+    fat: fat,
+    fiber: fiber,
+    micros: microTotals,
+    waterMlFromJournal: waterMl,
+    waterSources: waterNames.toList(),
+    hasData: (kcal + prot + carb + fat + fiber) > 0 ||
+        microTotals.isNotEmpty ||
+        waterMl > 0,
+  );
+}
 
 
 /// ───────────────────────────── Hydratation ─────────────────────────────
@@ -482,18 +559,66 @@ Future<BilanData> _computeBilanForSpan(ReportSpan span) async {
     });
   }
 
-  if (isAvg && daysWithData > 0) {
+    if (isAvg && daysWithData > 0) {
     final div = daysWithData.toDouble();
     sumKcal /= div;
     sumProt /= div;
     sumCarb /= div;
-    sumFat /= div;
-    sumFib /= div;
+    sumFat  /= div;
+    sumFib  /= div;
     microTotals.updateAll((key, value) => value / div);
   }
 
-  // Hydratation toujours basée sur la journée en cours (bilan du jour)
-  final hydration = await _computeHydrationForToday(goals);
+  // ───────── Hydratation : jour vs moyennes 7/30/90 ─────────
+  HydrationData hydration;
+
+  if (!isAvg) {
+    // Mode "Jour" : on garde exactement le comportement actuel
+    hydration = await _computeHydrationForToday(goals);
+  } else {
+    // Mode moyenne 7 / 30 / 90 jours :
+    // on calcule la moyenne journalière (journal + manuel) sur la période.
+    double sumJournalWater = 0;
+    double sumManualWater  = 0;
+    int daysCount = 0;
+
+    final repo = foods_loader.FoodsRepository.instance;
+    await _ensureFoodsLoaded();
+    final sp = await SharedPreferences.getInstance();
+
+    for (DateTime d = from;
+        !d.isAfter(to);
+        d = d.add(const Duration(days: 1))) {
+
+      final dt = await _computeDayTotalsForDate(d, repo, sp);
+      if (!dt.hasData) continue;
+      daysCount++;
+
+      sumJournalWater += dt.waterMlFromJournal;
+      final manualKey = _hydrationManualKeyForDate(d);
+      sumManualWater  += sp.getDouble(manualKey) ?? 0.0;
+    }
+
+    double avgJournal = 0;
+    double avgManual  = 0;
+    if (daysCount > 0) {
+      final div = daysCount.toDouble();
+      avgJournal = sumJournalWater / div;
+      avgManual  = sumManualWater  / div;
+    }
+
+    // Objectif hydrique : basé sur le profil (comme avant)
+    final target = (await SharedPreferences.getInstance())
+            .getDouble('goals_water_ml') ??
+        _hydrationTarget(goals.weightKg, goals.activityIdx);
+
+    hydration = HydrationData(
+      journalMl: avgJournal,
+      manualMl: avgManual,
+      targetMl: target,
+      sources: const [], // on n'affiche pas les sources pour une moyenne
+    );
+  }
 
   // Construction des groupes de métriques à partir des totaux
   final data = _buildMetricGroups(

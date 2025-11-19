@@ -8,7 +8,12 @@ import '../services/profile.dart'
     show NutritionTargets, Goals, computeAndSaveTargetsFromStoredProfile;
 import '../services/foods_loader.dart' as foods_loader;
 import 'account_screen.dart'; // ✅ nécessaire ici
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:http/http.dart' as http;      // pour API USDA + Open Food Facts
+import 'barcode_scan_screen.dart';            // notre nouvel écran de scan
+import '../services/usda_service.dart';       // le service USDA qu’on vient de créer
 
+SupabaseClient get _supabaseClient => Supabase.instance.client;
 
 // ────────────────────────────── Couleurs / helpers ───────────────────────────
 const Color _kPctBrique = Color(0xFFD32F2F); // 0–50%
@@ -80,25 +85,83 @@ class _FoodStats {
   int last(String id)  => (map[id]?['last']  ?? 0).toInt();
 }
 
-// ───────────────────────────── Favoris ───────────────────────────────────────
+// ───────────────────────────── Favoris (local + Supabase) ────────────────────
 class FavoritesStore {
   static const _key = 'fav_food_ids_v2';
   Set<String> _ids = <String>{};
   Set<String> get ids => _ids;
+
   Future<void> load() async {
     final sp = await SharedPreferences.getInstance();
+
+    // 1) On charge d'abord la version locale (pour ne rien casser hors ligne)
     final raw = sp.getString(_key);
     if (raw?.isNotEmpty == true) {
-      try { _ids = (jsonDecode(raw!) as List).map((e) => e.toString()).toSet(); } catch (_) {}
+      try {
+        _ids =
+            (jsonDecode(raw!) as List).map((e) => e.toString()).toSet();
+      } catch (_) {}
+    }
+
+    // 2) Puis on essaie de synchroniser avec Supabase (si connecté)
+    try {
+      final user = _supabaseClient.auth.currentUser;
+      if (user == null) return;
+
+      final List<dynamic> rows = await _supabaseClient
+          .from('favorite_foods')
+          .select('food_id')
+          .eq('user_id', user.id);
+
+      if (rows.isNotEmpty) {
+        _ids = rows
+            .map((r) => (r['food_id'] ?? '').toString())
+            .where((id) => id.isNotEmpty)
+            .toSet();
+
+        // On écrase la version locale avec la version "cloud"
+        await sp.setString(_key, jsonEncode(_ids.toList()));
+      }
+    } catch (e) {
+      // En cas d'erreur réseau : on garde simplement la version locale
+      debugPrint('Erreur load favoris Supabase: $e');
     }
   }
+
   Future<void> toggle(String id) async {
     final sp = await SharedPreferences.getInstance();
-    _ids.contains(id) ? _ids.remove(id) : _ids.add(id);
+
+    final isRemove = _ids.contains(id);
+    isRemove ? _ids.remove(id) : _ids.add(id);
+
+    // Toujours : on met à jour le local
     await sp.setString(_key, jsonEncode(_ids.toList()));
+
+    // Puis on tente de synchroniser avec Supabase
+    try {
+      final user = _supabaseClient.auth.currentUser;
+      if (user == null) return;
+
+      if (isRemove) {
+        await _supabaseClient
+            .from('favorite_foods')
+            .delete()
+            .eq('user_id', user.id)
+            .eq('food_id', id);
+      } else {
+        await _supabaseClient.from('favorite_foods').upsert({
+          'user_id': user.id,
+          'food_id': id,
+        });
+      }
+    } catch (e) {
+      debugPrint('Erreur toggle favoris Supabase: $e');
+    }
   }
+
   bool isFav(String id) => _ids.contains(id);
 }
+
 
 // ───────────────────────────── Customs (aliments perso) ──────────────────────
 class _CustomFood {
@@ -141,20 +204,116 @@ class _CustomFood {
 class _CustomFoodsStore {
   static const _key = 'custom_foods_v1';
   List<_CustomFood> list = [];
+
   Future<void> load() async {
     final sp = await SharedPreferences.getInstance();
+
+    // 1) On lit d'abord le local (pour garder le comportement historique)
     final raw = sp.getString(_key);
     if (raw?.isNotEmpty == true) {
-      try { list = (jsonDecode(raw!) as List).map((e) => _CustomFood.fromJson(Map<String, dynamic>.from(e))).toList(); } catch (_) {}
+      try {
+        list = (jsonDecode(raw!) as List)
+            .map((e) => _CustomFood.fromJson(
+                Map<String, dynamic>.from(e as Map)))
+            .toList();
+      } catch (_) {}
+    }
+
+    // 2) Puis on tente de charger depuis Supabase (source de vérité multi-appareils)
+    try {
+      final user = _supabaseClient.auth.currentUser;
+      if (user == null) return;
+
+      final List<dynamic> rows = await _supabaseClient
+          .from('custom_foods')
+          .select()
+          .eq('user_id', user.id);
+
+      if (rows.isNotEmpty) {
+        list = rows.map((r) {
+          final m = Map<String, dynamic>.from(r);
+          return _CustomFood(
+            id: (m['id'] ?? '').toString(),
+            name: (m['name'] ?? '').toString(),
+            kcal100: (m['kcal100'] as num?)?.toDouble(),
+            prot100: (m['prot100'] as num?)?.toDouble(),
+            carb100: (m['carb100'] as num?)?.toDouble(),
+            fat100: (m['fat100'] as num?)?.toDouble(),
+            fiber100: (m['fiber100'] as num?)?.toDouble(),
+            micros100: Map<String, double>.from(
+              (m['micros100'] as Map? ?? const {})
+                  .map((k, v) => MapEntry(
+                      k.toString(), (v as num).toDouble())),
+            ),
+          );
+        }).toList();
+
+        // On synchronise aussi le local à partir du cloud
+        await sp.setString(
+          _key,
+          jsonEncode(list.map((e) => e.toJson()).toList()),
+        );
+      }
+    } catch (e) {
+      debugPrint('Erreur load custom_foods Supabase: $e');
     }
   }
+
   Future<void> save() async {
     final sp = await SharedPreferences.getInstance();
-    await sp.setString(_key, jsonEncode(list.map((e) => e.toJson()).toList()));
+    await sp.setString(
+      _key,
+      jsonEncode(list.map((e) => e.toJson()).toList()),
+    );
+
+    // Sync Supabase (si connecté)
+    try {
+      final user = _supabaseClient.auth.currentUser;
+      if (user == null) return;
+
+      // Stratégie simple : on efface tout pour ce user, puis on ré-insère
+      await _supabaseClient
+          .from('custom_foods')
+          .delete()
+          .eq('user_id', user.id);
+
+      if (list.isNotEmpty) {
+        await _supabaseClient.from('custom_foods').insert(
+          list.map((f) {
+            return {
+              'id': f.id,
+              'user_id': user.id,
+              'name': f.name,
+              'kcal100': f.kcal100,
+              'prot100': f.prot100,
+              'carb100': f.carb100,
+              'fat100': f.fat100,
+              'fiber100': f.fiber100,
+              'micros100': f.micros100,
+            };
+          }).toList(),
+        );
+      }
+    } catch (e) {
+      debugPrint('Erreur sync custom_foods Supabase: $e');
+    }
   }
-  Future<void> add(_CustomFood f) async { list.add(f); await save(); }
-  Future<void> remove(String id) async { list.removeWhere((e) => e.id == id); await save(); }
-  Future<void> update(_CustomFood f) async { final i = list.indexWhere((e) => e.id == f.id); if (i >= 0) list[i] = f; await save(); }
+
+  Future<void> add(_CustomFood f) async {
+    list.add(f);
+    await save();
+  }
+
+  Future<void> remove(String id) async {
+    list.removeWhere((e) => e.id == id);
+    await save();
+  }
+
+  Future<void> update(_CustomFood f) async {
+    final i = list.indexWhere((e) => e.id == f.id);
+    if (i >= 0) list[i] = f;
+    await save();
+  }
 }
 
 // ───────────────────────────── Écran principal ───────────────────────────────
@@ -169,6 +328,9 @@ class JournalScreen extends StatefulWidget {
 class _JournalScreenState extends State<JournalScreen> with SingleTickerProviderStateMixin {
   late final TabController _tabCtl = TabController(length: 3, vsync: this);
   final TextEditingController _searchCtrl = TextEditingController();
+
+    // Supabase
+  SupabaseClient get _client => Supabase.instance.client;
 
   bool loading = false;
   final FavoritesStore _fav = FavoritesStore();
@@ -193,21 +355,99 @@ class _JournalScreenState extends State<JournalScreen> with SingleTickerProvider
     final now = DateTime.now();
     return 'journal_${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
   }
+
   Future<void> _loadJournalForToday() async {
-    final sp = await SharedPreferences.getInstance();
-    final raw = sp.getString(_journalKeyForToday());
-    if (raw == null || raw.isEmpty) return;
+  final sp = await SharedPreferences.getInstance();
+
+  // 1) Chargement LOCAL comme avant (compatibilité + hors-ligne)
+  final raw = sp.getString(_journalKeyForToday());
+  if (raw != null && raw.isNotEmpty) {
     try {
       final decoded = (jsonDecode(raw) as Map<String, dynamic>);
-      final Map<String, List<dynamic>> m = decoded.map((k, v) => MapEntry(k, (v as List)));
+      final Map<String, List<dynamic>> m =
+          decoded.map((k, v) => MapEntry(k, (v as List)));
+
       setState(() {
         _journal.forEach((meal, _) {
-          _journal[meal] = m[meal]?.map((e) => Map<String, dynamic>.from(e as Map)).toList() ?? [];
+          _journal[meal] = m[meal]
+                  ?.map((e) => Map<String, dynamic>.from(e as Map))
+                  .toList() ??
+              [];
         });
       });
       _recomputeTotals();
-    } catch (_) {}
+    } catch (_) {
+      // on ignore en silence, on va essayer Supabase derrière
+    }
   }
+
+  // 2) Chargement DISTANT : si utilisateur connecté et données en base
+  try {
+    final user = _client.auth.currentUser;
+    if (user == null) return; // pas connecté → on reste sur le local
+
+    final now = DateTime.now();
+    final ymd = '${now.year.toString().padLeft(4, '0')}-'
+        '${now.month.toString().padLeft(2, '0')}-'
+        '${now.day.toString().padLeft(2, '0')}';
+
+    final List<dynamic> rows = await _client
+        .from('food_entries')
+        .select()
+        .eq('user_id', user.id)
+        .eq('entry_date', ymd)
+        .order('created_at');
+
+    if (rows.isEmpty) return; // rien en base → on garde le local
+
+    final Map<String, List<Map<String, dynamic>>> byMeal = {
+      'Petit-déjeuner': [],
+      'Déjeuner': [],
+      'Dîner': [],
+      'Collation': [],
+    };
+
+    for (final row in rows) {
+      final r = row as Map<String, dynamic>;
+      final mealType = (r['meal_type'] as String?) ?? 'Déjeuner';
+      if (!byMeal.containsKey(mealType)) continue;
+
+      final grams = (r['quantity_grams'] as num?)?.toDouble() ?? 0.0;
+      final kcal  = (r['energy_kcal']   as num?)?.toDouble() ?? 0.0;
+      final prot  = (r['protein_g']     as num?)?.toDouble() ?? 0.0;
+      final carb  = (r['carbs_g']       as num?)?.toDouble() ?? 0.0;
+      final fat   = (r['fat_g']         as num?)?.toDouble() ?? 0.0;
+      final fiber = (r['fiber_g']       as num?)?.toDouble() ?? 0.0;
+
+      byMeal[mealType]!.add({
+        // ID de l'aliment
+        'id': r['food_id'] as String? ?? (r['food_name'] as String? ?? 'Aliment'),
+        'name': r['food_name'] as String? ?? 'Aliment',
+        'grams': grams,
+        'kcal': kcal,
+        'prot': prot,
+        'carb': carb,
+        'fat': fat,
+        'fiber': fiber,
+
+        // 🆕 ID de la ligne dans la table food_entries
+        'entry_id': r['id'],
+      });
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _journal.forEach((meal, _) {
+        _journal[meal] = byMeal[meal] ?? [];
+      });
+    });
+    _recomputeTotals();
+    await _saveDailySnapshot(); // on met aussi à jour l'historique local
+  } catch (e) {
+    debugPrint('Erreur chargement journal Supabase: $e');
+  }
+}
+
   Future<void> _persistJournalForToday() async {
     final sp = await SharedPreferences.getInstance();
     await sp.setString(_journalKeyForToday(), jsonEncode({for (final meal in _journal.keys) meal: _journal[meal]}));
@@ -306,19 +546,81 @@ class _JournalScreenState extends State<JournalScreen> with SingleTickerProvider
           }).toList();
   }
 
-  // ─────────── Ajout au journal + stats ───────────
+  // ─────────── Ajout au journal + stats + Sync Supabase ───────────
   Future<void> _addToJournal(String meal, dynamic it, double grams) async {
     double getD(dynamic v) => (v is num) ? v.toDouble() : 0.0;
+
     final f = grams / 100.0;
-    final kcal = getD((it as dynamic).kcal100) * f,
-           prot = getD((it).prot100) * f,
-           carb = getD((it).carb100) * f,
-           fat  = getD((it).fat100)  * f,
-           fiber= getD((it).fiber100)* f;
-    final name = (((it).name) as String?) ?? 'Aliment';
-    final id   = (((it).id)   as String?) ?? 'custom:temp';
-    _journal[meal]!.add({'id': id, 'name': name, 'grams': grams, 'kcal': kcal, 'prot': prot, 'carb': carb, 'fat': fat, 'fiber': fiber});
+
+    final kcal  = getD(it.kcal100)  * f;
+    final prot  = getD(it.prot100)  * f;
+    final carb  = getD(it.carb100)  * f;
+    final fat   = getD(it.fat100)   * f;
+    final fiber = getD(it.fiber100) * f;
+
+    final name = (it.name as String?) ?? 'Aliment';
+    final id   = (it.id   as String?) ?? 'custom:temp';
+
+    // --- Ajout local (COMPORTEMENT ACTUEL) ---
+    _journal[meal]!.add({
+      'id': id,
+      'name': name,
+      'grams': grams,
+      'kcal': kcal,
+      'prot': prot,
+      'carb': carb,
+      'fat': fat,
+      'fiber': fiber,
+    });
+
     await _stats.bump(id);
+
+    // --- AJOUT SUPABASE (doit être À L’INTÉRIEUR DE LA FONCTION !) ---
+    try {
+      final user = _client.auth.currentUser;
+
+      if (user != null) {
+        final now = DateTime.now();
+        final ymd =
+            '${now.year.toString().padLeft(4, '0')}-'
+            '${now.month.toString().padLeft(2, '0')}-'
+            '${now.day.toString().padLeft(2, '0')}';
+
+        // On insère ET on récupère l'id de la ligne
+        final inserted = await _client
+            .from('food_entries')
+            .insert({
+              'user_id': user.id,
+              'entry_date': ymd,
+              'meal_type': meal,
+              'food_id': id,
+              'food_name': name,
+              'quantity_grams': grams,
+              'energy_kcal': kcal,
+              'protein_g': prot,
+              'carbs_g': carb,
+              'fat_g': fat,
+              'fiber_g': fiber,
+            })
+            .select('id')
+            .single();
+
+        // On stocke cet id sur la DERNIÈRE entrée ajoutée dans le journal
+        try {
+          final entryId = inserted['id'];
+          final list = _journal[meal];
+          if (entryId != null && list != null && list.isNotEmpty) {
+            list.last['entry_id'] = entryId;
+          }
+        } catch (_) {
+          // en cas de petit souci de cast, on ignore, ça restera juste sans entry_id
+        }
+      }
+    } catch (e) {
+      debugPrint('Erreur ajout food_entries Supabase: $e');
+    }
+
+    // --- Fin : recalcul interne (COMPORTEMENT EXISTANT) ---
     _recomputeTotals();
     await _saveDailySnapshot();
   }
@@ -335,8 +637,7 @@ class _JournalScreenState extends State<JournalScreen> with SingleTickerProvider
       setState(() => loading = false);
     });
   }
-  @override
-  void dispose() { _tabCtl.dispose(); _searchCtrl.dispose(); super.dispose(); }
+
 
   // ───────────────────────────── Fiche Aliment (live + bouton figé) ─────────
   Future<void> _openFoodSheet(dynamic it) async {
@@ -577,6 +878,19 @@ class _JournalScreenState extends State<JournalScreen> with SingleTickerProvider
       appBar: AppBar(
         title: const Text('Journal'),
         actions: [
+          // Bouton USDA : base étendue
+          IconButton(
+            icon: const Icon(Icons.search_off),
+            tooltip: 'Plus d’aliments (USDA)',
+            onPressed: _openUsdaSearch,
+          ),
+          // Bouton scanner : Open Food Facts
+          IconButton(
+            icon: const Icon(Icons.qr_code_scanner),
+            tooltip: 'Scanner un produit',
+            onPressed: _openBarcodeScanner,
+          ),
+          // Bouton compte (inchangé)
           IconButton(
             icon: const Icon(Icons.account_circle),
             tooltip: 'Mon compte',
@@ -607,8 +921,52 @@ class _JournalScreenState extends State<JournalScreen> with SingleTickerProvider
                     goals: _goals,
                     totals: DayTotals(kcal: sumKcal, prot: sumProt, carb: sumCarb, fat: sumFat, fiber: sumFib),
                     onRemoveAt: (meal, index) async {
-                      _journal[meal]!.removeAt(index);
-                      _recomputeTotals();
+                      final list = _journal[meal];
+                      if (list == null || index < 0 || index >= list.length) return;
+
+                      // On garde une copie de l'entrée avant de la retirer
+                      final entry = Map<String, dynamic>.from(list[index]);
+
+                      // 1) Suppression locale (journal + totaux + SharedPreferences)
+                      list.removeAt(index);
+                      _recomputeTotals(); // met aussi à jour journal_YYYY-MM-DD
+
+                      // 2) Suppression dans Supabase (si utilisateur connecté)
+                      try {
+                        final user = _client.auth.currentUser;
+                        if (user != null) {
+                          final now = DateTime.now();
+                          final ymd =
+                              '${now.year.toString().padLeft(4, '0')}-'
+                              '${now.month.toString().padLeft(2, '0')}-'
+                              '${now.day.toString().padLeft(2, '0')}';
+
+                          var query = _client
+                              .from('food_entries')
+                              .delete()
+                              .eq('user_id', user.id)
+                              .eq('entry_date', ymd)
+                              .eq('meal_type', meal);
+
+                          final dynamic entryId = entry['entry_id'];
+
+                          if (entryId != null) {
+                            // Cas idéal : on a l'ID exact de la ligne
+                            query = query.eq('id', entryId);
+                          } else {
+                            // Fallback : on cible par caractéristiques (rare mais ça sauve les anciens enregistrements)
+                            query = query
+                                .eq('food_id', (entry['id'] ?? '').toString())
+                                .eq('quantity_grams', (entry['grams'] as num?) ?? 0);
+                          }
+
+                          await query;
+                        }
+                      } catch (e) {
+                        debugPrint('Erreur suppression entrée Supabase: $e');
+                      }
+
+                      // 3) On met à jour l'historique énergétique 7/30/90 (graphique Bilan)
                       await _saveDailySnapshot();
                     },
                   ),
@@ -714,6 +1072,380 @@ class _JournalScreenState extends State<JournalScreen> with SingleTickerProvider
   }
 
   // ───────────────────────────── Ajout / édition aliment perso ───────────────
+
+  /// Ajoute un aliment externe (USDA ou Open Food Facts)
+  /// dans le FoodsRepository, pour qu’il apparaisse comme un aliment normal,
+  /// puis ouvre directement la fiche pour l’ajouter au journal.
+  Future<void> _addExternalFoodAsCustom(foods_loader.FoodItem item) async {
+    final repo = foods_loader.FoodsRepository.instance;
+
+    // 1) On l’ajoute dans le repo "foods" (custom interne)
+    repo.addCustomFood(item);
+    await repo.saveCustomFoods();
+
+    // 2) On recharge la liste d’aliments pour la recherche
+    await _ensureFoodsLoaded(force: true);
+    if (!mounted) return;
+    setState(() {});
+
+    // 3) On ouvre la fiche détaillée pour que tu puisses l’ajouter au journal
+    await _openFoodSheet(item);
+  }
+  
+    Future<void> _openUsdaSearch() async {
+    final queryCtrl = TextEditingController();
+    List<UsdaFoodResult> results = [];
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setModalState) {
+            Future<void> _doSearch() async {
+              final q = queryCtrl.text.trim();
+              if (q.isEmpty) return;
+              final r = await UsdaService.searchFoods(q);
+              setModalState(() => results = r);
+            }
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(ctx).viewInsets.bottom,
+                left: 16, right: 16, top: 16,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Base étendue (USDA)',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: queryCtrl,
+                    decoration: InputDecoration(
+                      labelText: 'Rechercher un aliment (USDA)',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: _doSearch,
+                      ),
+                    ),
+                    onSubmitted: (_) => _doSearch(),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 320,
+                    child: results.isEmpty
+                        ? const Center(
+                            child: Text('Tape un mot-clé puis lance la recherche'),
+                          )
+                        : ListView.builder(
+                            itemCount: results.length,
+                            itemBuilder: (ctx, i) {
+                              final r = results[i];
+                              return ListTile(
+                                title: Text(r.description),
+                                onTap: () async {
+                                  final food = await UsdaService.getFoodItem(r.fdcId);
+                                  if (food != null) {
+                                    await _addExternalFoodAsCustom(food);
+                                    if (mounted) Navigator.of(ctx).pop();
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+    Future<void> _openBarcodeScanner() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BarcodeScanScreen(
+          onBarcode: (code) async {
+            await _handleBarcode(code);
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleBarcode(String barcode) async {
+    try {
+      final uri = Uri.https(
+        'world.openfoodfacts.org',
+        '/api/v0/product/$barcode.json',
+      );
+      final resp = await http.get(uri);
+
+      if (resp.statusCode != 200) {
+        _showSnack('Produit introuvable (erreur réseau)');
+        return;
+      }
+
+      final data = jsonDecode(resp.body) as Map<String, dynamic>;
+      if ((data['status'] as int? ?? 0) != 1) {
+        _showSnack('Produit introuvable dans Open Food Facts');
+        return;
+      }
+
+      final product = data['product'] as Map<String, dynamic>;
+      final Map<String, dynamic> nutriments =
+          (product['nutriments'] as Map?)?.cast<String, dynamic>() ?? {};
+
+      // ───────── Helpers de conversion ─────────
+      double _toDouble(dynamic v) {
+        if (v == null) return 0.0;
+        if (v is num) return v.toDouble();
+        if (v is String) {
+          return double.tryParse(v.replaceAll(',', '.')) ?? 0.0;
+        }
+        return 0.0;
+      }
+
+      double? _toDoubleOrNull(dynamic v) {
+        if (v == null) return null;
+        if (v is num) return v.toDouble();
+        if (v is String) {
+          return double.tryParse(v.replaceAll(',', '.'));
+        }
+        return null;
+      }
+
+      String name = (product['product_name'] ?? '').toString().trim();
+      if (name.isEmpty) {
+        name = 'Produit scanné';
+      }
+
+      // ───────── MACROS (par clés explicites) ─────────
+      final kcal100 = _toDoubleOrNull(
+            nutriments['energy-kcal_100g'] ??
+            nutriments['energy-kcal'] ??
+            nutriments['energy_100g'],
+          );
+      final prot100 = _toDoubleOrNull(
+            nutriments['proteins_100g'] ??
+            nutriments['proteins'],
+          );
+      final carb100 = _toDoubleOrNull(
+            nutriments['carbohydrates_100g'] ??
+            nutriments['carbohydrates'],
+          );
+      final fat100 = _toDoubleOrNull(
+            nutriments['fat_100g'] ??
+            nutriments['fat'],
+          );
+      final fiber100 = _toDoubleOrNull(
+            nutriments['fiber_100g'] ??
+            nutriments['fiber'],
+          );
+
+      // ───────── Initialisation des MICROS (toutes tes colonnes) ─────────
+      final Map<String, double> micros = {
+        // Lipides détaillés / sucres / sel
+        'AG_saturés_g_100g': 0,
+        'Acide_oléique_W9_g_100g': 0,
+        'Acide_linoléique_W6_LA_g_100g': 0,
+        'Acide_alpha-linolénique_W3_ALA_g_100g': 0,
+        'EPA_g_100g': 0,
+        'DHA_g_100g': 0,
+        'Sucres_g_100g': 0,
+        'Sel_g_100g': 0,
+        'Cholestérol_mg_100g': 0,
+
+        // Minéraux
+        'Calcium_mg_100g': 0,
+        'Cuivre_mg_100g': 0,
+        'Fer_mg_100g': 0,
+        'Iode_µg_100g': 0,
+        'Magnésium_mg_100g': 0,
+        'Manganèse_mg_100g': 0,
+        'Phosphore_mg_100g': 0,
+        'Potassium_mg_100g': 0,
+        'Sélénium_µg_100g': 0,
+        'Sodium_mg_100g': 0,
+        'Zinc_mg_100g': 0,
+
+        // Vitamines
+        'Rétinol_µg_100g': 0,
+        'Vitamine_D_µg_100g': 0,
+        'Vitamine_E_mg_100g': 0,
+        'Vitamine_K1_µg_100g': 0,
+        'Vitamine_K2_µg_100g': 0,
+        'Vitamine_C_mg_100g': 0,
+        'Vitamine_B1_mg_100g': 0,
+        'Vitamine_B2_mg_100g': 0,
+        'Vitamine_B3_mg_100g': 0,
+        'Vitamine_B5_mg_100g': 0,
+        'Vitamine_B6_mg_100g': 0,
+        'Vitamine_B9_µg_100g': 0,
+        'Vitamine_B12_µg_100g': 0,
+      };
+
+      bool _isZero(String key) => (micros[key] ?? 0) == 0;
+
+      // ───────── Parcours générique de tous les nutriments OFF ─────────
+      nutriments.forEach((rawKey, rawVal) {
+        final key = rawKey.toString().toLowerCase();
+        // On ignore clairement les suffixes "unit", "label", "modifier"
+        if (key.endsWith('_unit') ||
+            key.endsWith('_label') ||
+            key.endsWith('_modifier')) {
+          return;
+        }
+
+        final v = _toDouble(rawVal);
+        if (v == 0.0) return;
+
+        // ---- Lipides / sucres / sel / cholestérol ----
+        if (key.contains('saturated-fat')) {
+          micros['AG_saturés_g_100g'] = v;
+        }
+        if (key.contains('oleic') || key.contains('omega-9')) {
+          micros['Acide_oléique_W9_g_100g'] = v;
+        }
+        if (key.contains('linoleic') || key.contains('omega-6')) {
+          micros['Acide_linoléique_W6_LA_g_100g'] = v;
+        }
+        if (key.contains('alpha-linolenic') || key.contains('omega-3')) {
+          if (_isZero('Acide_alpha-linolénique_W3_ALA_g_100g')) {
+            micros['Acide_alpha-linolénique_W3_ALA_g_100g'] = v;
+          }
+        }
+        if (key.contains('epa') || key.contains('eicosapentaenoic')) {
+          micros['EPA_g_100g'] = v;
+        }
+        if (key.contains('dha') || key.contains('docosahexaenoic')) {
+          micros['DHA_g_100g'] = v;
+        }
+        if (key == 'sugars' || key == 'sugars_100g' || key.contains('sugars-')) {
+          micros['Sucres_g_100g'] = v;
+        }
+        if (key == 'salt' || key == 'salt_100g') {
+          micros['Sel_g_100g'] = v;
+        }
+        if (key.startsWith('cholesterol')) {
+          micros['Cholestérol_mg_100g'] = v;
+        }
+
+        // ---- Minéraux ----
+        if (key.startsWith('calcium')) {
+          micros['Calcium_mg_100g'] = v;
+        }
+        if (key.startsWith('copper')) {
+          micros['Cuivre_mg_100g'] = v;
+        }
+        if (key.startsWith('iron')) {
+          micros['Fer_mg_100g'] = v;
+        }
+        if (key.startsWith('iodine')) {
+          micros['Iode_µg_100g'] = v;
+        }
+        if (key.startsWith('magnesium')) {
+          micros['Magnésium_mg_100g'] = v;
+        }
+        if (key.startsWith('manganese')) {
+          micros['Manganèse_mg_100g'] = v;
+        }
+        if (key.startsWith('phosphorus')) {
+          micros['Phosphore_mg_100g'] = v;
+        }
+        if (key.startsWith('potassium')) {
+          micros['Potassium_mg_100g'] = v;
+        }
+        if (key.startsWith('selenium')) {
+          micros['Sélénium_µg_100g'] = v;
+        }
+        if (key.startsWith('sodium')) {
+          micros['Sodium_mg_100g'] = v;
+        }
+        if (key.startsWith('zinc')) {
+          micros['Zinc_mg_100g'] = v;
+        }
+
+        // ---- Vitamines liposolubles ----
+        if (key.startsWith('vitamin-a') || key.startsWith('retinol')) {
+          micros['Rétinol_µg_100g'] = v;
+        }
+        if (key.startsWith('vitamin-d')) {
+          micros['Vitamine_D_µg_100g'] = v;
+        }
+        if (key.startsWith('vitamin-e')) {
+          micros['Vitamine_E_mg_100g'] = v;
+        }
+        if (key.startsWith('vitamin-k')) {
+          micros['Vitamine_K1_µg_100g'] = v;
+        }
+        if (key.contains('vitamin k-2') || key.contains('menaquinone')) {
+          micros['Vitamine_K2_µg_100g'] = v;
+        }
+
+        // ---- Vitamines hydrosolubles ----
+        if (key.startsWith('vitamin-c')) {
+          micros['Vitamine_C_mg_100g'] = v;
+        }
+        if (key.startsWith('vitamin-b1') || key.startsWith('thiamin')) {
+          micros['Vitamine_B1_mg_100g'] = v;
+        }
+        if (key.startsWith('vitamin-b2') || key.startsWith('riboflavin')) {
+          micros['Vitamine_B2_mg_100g'] = v;
+        }
+        if (key.startsWith('vitamin-pp') || key.startsWith('niacin')) {
+          micros['Vitamine_B3_mg_100g'] = v;
+        }
+        if (key.startsWith('pantothenic-acid')) {
+          micros['Vitamine_B5_mg_100g'] = v;
+        }
+        if (key.startsWith('vitamin-b6')) {
+          micros['Vitamine_B6_mg_100g'] = v;
+        }
+        if (key.startsWith('vitamin-b9') ||
+            key.startsWith('folates') ||
+            key.startsWith('folic-acid')) {
+          micros['Vitamine_B9_µg_100g'] = v;
+        }
+        if (key.startsWith('vitamin-b12')) {
+          micros['Vitamine_B12_µg_100g'] = v;
+        }
+      });
+
+      // ───────── Création de l’aliment et ouverture de la fiche ─────────
+      final item = foods_loader.FoodItem(
+        id: 'off:$barcode',
+        name: name,
+        kcal100: kcal100,
+        prot100: prot100,
+        carb100: carb100,
+        fat100: fat100,
+        fiber100: fiber100,
+        micros100: micros,
+      );
+
+      await _addExternalFoodAsCustom(item);
+      _showSnack('Produit ajouté : $name');
+    } catch (e) {
+      _showSnack('Erreur lors du scan du produit');
+    }
+  }
+
+
+    void _showSnack(String msg) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg)),
+      );
+    }
+
+
   Future<void> _openCustomDialog({dynamic editItem}) async {
     final isEdit = editItem != null && _isPersonal(editItem);
     final id = isEdit ? ((editItem as dynamic).id as String) : 'custom:${DateTime.now().millisecondsSinceEpoch}';

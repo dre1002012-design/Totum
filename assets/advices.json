@@ -119,6 +119,54 @@
     {
       "title": "🧭 Identité nutritionnelle",
       "body": "« Je suis quelqu’un qui prend soin de mon énergie. »"
+    },
+    {
+      "title": "🛒 Sourcing local",
+      "body": "Priorise les aliments bruts, locaux, de saison : plus de nutriments et moins de traitement."
+    },
+    {
+      "title": "🗄️ Gestion de l'environnement",
+      "body": "Si c'est dans le placard, ce sera mangé. Fais des réserves de 'bons' aliments visibles."
+    },
+    {
+      "title": "⚖️ Poids mental du choix",
+      "body": "Mange la même chose le matin et/ou midi pour alléger la charge mentale des décisions."
+    },
+    {
+      "title": "👂 Écoute du corps",
+      "body": "Fais la différence entre faim de l'estomac (physique) et faim des yeux/de la tête (émotionnelle)."
+    },
+    {
+      "title": "🖥️ Détox numérique soir",
+      "body": "Bloque la consultation d'écrans (téléphone/PC) 1h avant le coucher (lumière bleue)."
+    },
+    {
+      "title": "📚 Deep Work (Focus)",
+      "body": "Bloque 90 min sans interruption/notification pour la tâche la plus importante."
+    },
+    {
+      "title": "🌅 Intention du soir",
+      "body": "Avant de dormir, note ce qui sera la première action réussie le lendemain."
+    },
+    {
+      "title": "🍃 Ancrage Sensoriel",
+      "body": "Quand tu es stressé, nomme 5 choses que tu vois, 4 que tu touches, 3 que tu entends."
+    },
+    {
+      "title": "🙏 Gratitude Bref",
+      "body": "Note 3 choses que tu as appréciées dans ta journée pour ancrer le positif."
+    },
+    {
+      "title": "🌪️ Nettoyage Émotionnel",
+      "body": "Identifie et nomme l'émotion dominante du moment. Cela réduit son intensité (validé par la science)."
+    },
+    {
+      "title": "🔇 Gestion du Bruit",
+      "body": "Évite les environnements bruyants pendant les repas. Le stress sonore affecte la digestion."
+    },
+    {
+      "title": "🍎 Conscience Alimentaire",
+      "body": "Prends 3 respirations profondes avant le premier coup de fourchette pour te reconnecter à ton repas."
     }
   ],
   "coach": {
@@ -130,7 +178,8 @@
       "Marche lumière du jour 10–15 min : humeur/sommeil boostés.",
       "1 séance technique/sem (gainage, équilibre).",
       "2–3 min d’étirements lents en fin de journée.",
-      "Hydratation avant/pendant/après l’activité."
+      "Hydratation avant/pendant/après l’activité.",
+      "**NEAT (activité non-sportive)** : Téléphoner debout, ranger, marcher en réfléchissant."
     ],
     "perte": [
       "Déficit léger (10–20 %) + protéines suffisantes + fibres.",
@@ -140,7 +189,8 @@
       "Marche post-prandiale 8–12 min.",
       "Répartis protéines sur 3–4 prises/j.",
       "Séances courtes mais fréquentes > longues et rares.",
-      "Tour de taille 1×/sem comme indicateur simple."
+      "Tour de taille 1×/sem comme indicateur simple.",
+      "**Focus NEAT** : Augmente l'activité non-sportive pour brûler sans stresser la récupération."
     ],
     "masse": [
       "Surplus +10–15 %, protéines 1.6–2.2 g/kg, glucides autour séances.",
@@ -150,7 +200,8 @@
       "Deload toutes les 6–8 semaines.",
       "Accent excentrique contrôlé (3 s) pour hypertrophie.",
       "Glucides complexes pré/post séance + protéines faciles.",
-      "Magnésium en soirée via l’assiette (amandes, verts, cacao)."
+      "Magnésium en soirée via l’assiette (amandes, verts, cacao).",
+      "**Puissance/Vitesse** : 1 séance légère par mois axée sur l'explosivité (sauts/lancers)."
     ],
     "maintien": [
       "3–4 séances variées/sem, modulation d’intensité.",
@@ -160,7 +211,8 @@
       "Exposition lumière du matin : motivation accrue.",
       "Mix tirage/press/hinge/squat + locomotion.",
       "1 jour plaisir (sport de jeu) pour l’adhérence.",
-      "Hydratation + un peu de sel si forte transpiration."
+      "Hydratation + un peu de sel si forte transpiration.",
+      "**Force Max** : Maintiens un cycle de force pour conserver le recrutement neuromusculaire."
     ]
   },
   "heroPool": {
@@ -378,6 +430,126 @@
         "theme": "Synchronisation circadienne",
         "insight": "10–15 min dehors dès que possible."
       }
+    ],
+    "proteines_veg": [
+      {
+        "title": "🌱 Protéines végétales complètes",
+        "theme": "Satiété durable & fibres",
+        "insight": "Associe légumineuse + céréale (riz + lentilles) pour un spectre d'AA complet."
+      },
+      {
+        "title": "🍲 Absorption optimale",
+        "theme": "Fermentation & trempage",
+        "insight": "Trempe et rince les légumineuses pour améliorer leur digestibilité."
+      }
+    ],
+    "sodium": [
+      {
+        "title": "🧂 Sodium de qualité",
+        "theme": "Hydratation, influx nerveux, récupération",
+        "insight": "Utilise du sel de mer complet ou de l'Himalaya pour les minéraux (avec modération)."
+      },
+      {
+        "title": "🏃 Électrolytes post-effort",
+        "theme": "Contre la déshydratation",
+        "insight": "Après effort intense/long : eau + pincée de sel + citron/jus de fruit."
+      }
+    ],
+    "iode": [
+      {
+        "title": "🌊 Iode & thyroïde",
+        "theme": "Métabolisme de base, énergie",
+        "insight": "Algues (nori, wakamé) 1–2x/sem ou sel iodé si peu de produits marins."
+      }
+    ],
+    "antistress_aigu": [
+      {
+        "title": "🛑 Stop & Respiration (3 min)",
+        "theme": "Calmer le système nerveux",
+        "insight": "Technique 4-7-8 : Inspire 4s, retiens 7s, expire 8s. 3 cycles."
+      },
+      {
+        "title": "🧊 Eau froide rapide",
+        "theme": "Réinitialisation vagale",
+        "insight": "Une poignée d'eau fraîche sur le visage ou la nuque pour un 'reset'."
+      }
+    ],
+    "sante_intestinale": [
+      {
+        "title": "🦠 Microbiote & Humeur",
+        "theme": "Axe intestin-cerveau",
+        "insight": "Mange varié (30 végétaux différents/sem) pour nourrir la diversité bactérienne."
+      },
+      {
+        "title": "🍎 Prébiotiques (Nourriture)",
+        "theme": "Ciboulette, asperge, ail, oignon, avoine",
+        "insight": "Fais de ces aliments la base quotidienne pour les bonnes bactéries."
+      },
+      {
+        "title": "🥛 Probiotiques (Bactéries)",
+        "theme": "Kéfir, choucroute, yaourt fermenté, kombucha",
+        "insight": "Introduis une petite quantité chaque jour pour enrichir la flore."
+      }
+    ],
+    "lumiere_environnement": [
+      {
+        "title": "💡 Lumière Matinale Puissante",
+        "theme": "Cortisol/Éveil naturel",
+        "insight": "Ouvre grand les fenêtres/sorts 10 min dans l’heure suivant le réveil."
+      },
+      {
+        "title": "🕶️ Filtre Lumière Bleue",
+        "theme": "Mélatonine & Qualité de sommeil",
+        "insight": "Utilise des lunettes anti-lumière bleue ou des filtres (Night Shift) après 19h."
+      }
+    ],
+    "cognition_focus": [
+      {
+        "title": "✅ La Règle des 3",
+        "theme": "Priorisation de la journée",
+        "insight": "Note les 3 tâches NON NÉGOCIABLES que tu dois accomplir."
+      },
+      {
+        "title": "☕ Caféine Timing",
+        "theme": "Éviter le pic de cortisol",
+        "insight": "Attends 60–90 min après le réveil pour ton premier café/thé."
+      }
+    ],
+    "sante_feminine": [
+      {
+        "title": "🩸 Cycle & Nutriments",
+        "theme": "Équilibre hormonal naturel",
+        "insight": "Phase folliculaire : Protéines + Vit E. Phase lutéale : Fibres + Magnésium."
+      },
+      {
+        "title": "🤰 Fertilité & Lipides",
+        "theme": "Cellules reproductrices",
+        "insight": "Optimise l'apport en Oméga-3 et évite les graisses trans pour la qualité des ovocytes/spermatozoïdes."
+      }
+    ],
+    "detox_foie": [
+      {
+        "title": "🌿 Soutien Hépatique Quotidien",
+        "theme": "Phase I et II de détoxification",
+        "insight": "Légumes crucifères (choux, brocolis) + aliments soufrés (ail, oignon) chaque jour."
+      },
+      {
+        "title": "💦 Émonctoires et Hydratation",
+        "theme": "Nettoyage du corps",
+        "insight": "Boire de l'eau tiède citronnée le matin pour stimuler le foie et les reins."
+      }
+    ],
+    "antioxydants_poly": [
+      {
+        "title": "🍇 Polyphénols Champions",
+        "theme": "Protection Cellulaire (Anti-âge)",
+        "insight": "Baies foncées, thé vert, cacao cru, curcuma : consommer crus et variés."
+      },
+      {
+        "title": "🌈 Le Spectre ORAC",
+        "theme": "Capacité Antioxydante",
+        "insight": "Plus l'aliment est coloré et amer, plus son potentiel antioxydant est élevé. Ne pas le surcuire !"
+      }
     ]
   },
   "recipesByKey": {
@@ -500,6 +672,46 @@
       "Salade niçoise • huile d’olive",
       "Taboulé libanais + pois chiches",
       "Gazpacho + tartine chèvre/tomate"
+    ],
+    "snacks_sains": [
+      "Pomme au beurre de cacahuète/amande + cannelle",
+      "Yaourt skyr/grec nature + baies et graines de chia",
+      "Œufs durs (préparés à l'avance) + sel de qualité"
+    ],
+    "abats": [
+      "Terrine/rillettes de foie de volaille + pain au levain",
+      "Foie de veau (ou volaille) poêlé + persillade",
+      "Pâté de campagne ou boudin noir (quantité modérée)"
+    ],
+    "iode": [
+      "Soupe miso + algues wakamé",
+      "Salade de concombre + algues nori grillées",
+      "Poisson blanc vapeur + beurre d'algues"
+    ],
+    "fermentation": [
+      "Choucroute crue (ou Kimchi) en accompagnement du plat principal",
+      "Boisson Kéfir de fruits/lait (faible en sucre) le matin ou en collation",
+      "Yaourt de chèvre/brebis nature (fermentation longue) + miel"
+    ],
+    "saison_automne": [
+      "Soupe de légumes racines (panais, céleri, carotte) + noisettes",
+      "Curry de potimarron + lentilles corail",
+      "Salade de betteraves rôties + fêta + noix"
+    ],
+    "anti_inflammation": [
+      "Lait d'or (Curcuma, Gingembre, Poivre noir, Lait végétal) en soirée.",
+      "Salade de quinoa, avocat, légumes verts, graines de chanvre, vinaigrette citron/huile d'olive.",
+      "Thé vert matcha (riche en EGCG) en remplacement du café l'après-midi."
+    ],
+    "soutien_foie": [
+      "Jus de légumes frais : betterave, carotte, citron, gingembre.",
+      "Salade d'artichauts crus ou vapeur + vinaigrette moutardée.",
+      "Infusion de chardon-marie ou de romarin après le dîner."
+    ],
+    "boissons_therapeu": [
+      "Infusion de camomille ou valériane pour le sommeil.",
+      "Eau tiède + vinaigre de cidre (non pasteurisé) avant les repas (digestion).",
+      "Jus de cranberry pur (sans sucre) pour le soutien des voies urinaires."
     ]
   }
 }

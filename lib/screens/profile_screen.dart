@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'account_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // ==== Palette moderne Totum ====
 const kTotumOrange = Color(0xFFFF7A00);
@@ -30,6 +31,36 @@ enum Goal {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
+    // Supabase
+  SupabaseClient get _client => Supabase.instance.client;
+
+  // Mapping Activity/Goal <-> texte en base
+  String _activityToDb(Activity a) {
+    switch (a) {
+      case Activity.sedentary:
+        return 'sedentary';
+      case Activity.light:
+        return 'light';
+      case Activity.moderate:
+        return 'moderate';
+      case Activity.intense:
+        return 'intense';
+      case Activity.veryIntense:
+        return 'very_intense';
+    }
+  }
+
+  String _goalToDb(Goal g) {
+    switch (g) {
+      case Goal.loss:
+        return 'loss';
+      case Goal.maintain:
+        return 'maintain';
+      case Goal.gain:
+        return 'gain';
+    }
+  }
+
 
   // Champs
   Sex _sex = Sex.male;
@@ -105,10 +136,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // 1) BMR → TDEE → objectif
   final bmr  = _bmrMifflin(sex: _sex, kg: kg, cm: cm, age: age);
-  final tdee = bmr * _activityFactor(_activity);
+  final tdee = _activityFactor(_activity) * bmr;
   final kcal = tdee * _goalMultiplier(_goal);
 
-  // 2) Macro-cibles (prot en g/kg selon activité, lipides 35% kcal, glucides 55%, fibres fixes)
+  // 2) Macro-cibles
   final prot     = _proteinPerKg(_activity) * kg; // g
   final kcalFat  = kcal * 0.35;  // 35%
   final fat      = kcalFat / 9.0;
@@ -116,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final carb     = kcalCarb / 4.0;
   const fib      = 30.0;
 
-  // 3) Sauvegarde
+  // 3) Sauvegarde locale (inchangée)
   final sp = await SharedPreferences.getInstance();
 
   // 3a) Profil
@@ -127,14 +158,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
   await sp.setDouble('profile_height', cm.toDouble());
   await sp.setDouble('profile_weight', kg);
 
-  // 3b) Cibles
+  // 3b) Objectifs
   await sp.setDouble('goals_kcal', kcal);
   await sp.setDouble('goals_prot', prot);
   await sp.setDouble('goals_carb', carb);
   await sp.setDouble('goals_fat',  fat);
   await sp.setDouble('goals_fiber', fib);
 
-  // 4) Affichage local
+  // 3c) Sauvegarde distante (Supabase)
+  try {
+    final user = _client.auth.currentUser;
+    if (user != null) {
+      await _client
+          .from('user_profile')
+          .upsert(
+            {
+              'user_id': user.id,
+              'sex': _sex == Sex.female ? 'female' : 'male',
+              'age': age,
+              'height_cm': cm,
+              'weight_kg': kg,
+              'activity_level': _activityToDb(_activity),
+              'goal': _goalToDb(_goal),
+            },
+            onConflict: 'user_id',
+          );
+    }
+  } catch (e) {
+    // On ne bloque pas l’utilisateur si Supabase est KO
+    debugPrint('Erreur Supabase user_profile: $e');
+  }
+
+  // 4) Mise à jour de l’affichage
+  if (!mounted) return;
   setState(() {
     _kcal = kcal;
     _prot = prot;
@@ -143,11 +199,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _fib  = fib;
   });
 
-  if (mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Profil et objectifs sauvegardés ✅')),
-    );
-  }
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text('Profil et objectifs sauvegardés ✅')),
+  );
 }
 
   @override
@@ -159,23 +213,127 @@ void initState() {
 Future<void> _loadProfile() async {
   final sp = await SharedPreferences.getInstance();
 
-  // Profil (inchangé)
-  final sexStr = sp.getString('profile_sex');
-  final activityIndex = sp.getInt('profile_activity');
-  final goalIndex = sp.getInt('profile_goal');
-  final age = sp.getDouble('profile_age');
-  final height = sp.getDouble('profile_height');
-  final weight = sp.getDouble('profile_weight');
+  // — 1) Lecture locale par défaut
+  var sexStr        = sp.getString('profile_sex');
+  var activityIndex = sp.getInt('profile_activity');
+  var goalIndex     = sp.getInt('profile_goal');
+  var age           = sp.getDouble('profile_age');
+  var height        = sp.getDouble('profile_height');
+  var weight        = sp.getDouble('profile_weight');
 
-  // ✅ Objectifs (nouveau : relit les valeurs persistées)
-  final goalsKcal  = sp.getDouble('goals_kcal');
-  final goalsProt  = sp.getDouble('goals_prot');
-  final goalsCarb  = sp.getDouble('goals_carb');
-  final goalsFat   = sp.getDouble('goals_fat');
-  final goalsFiber = sp.getDouble('goals_fiber');
+  var goalsKcal  = sp.getDouble('goals_kcal');
+  var goalsProt  = sp.getDouble('goals_prot');
+  var goalsCarb  = sp.getDouble('goals_carb');
+  var goalsFat   = sp.getDouble('goals_fat');
+  var goalsFiber = sp.getDouble('goals_fiber');
 
+  // — 2) Si l’utilisateur est connecté, on essaye de récupérer la version Supabase
+  try {
+    final user = _client.auth.currentUser;
+    if (user != null) {
+      final remote = await _client
+          .from('user_profile')
+          .select()
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+      if (remote != null) {
+        final remoteSex      = remote['sex'] as String?;
+        final remoteAct      = remote['activity_level'] as String?;
+        final remoteGoal     = remote['goal'] as String?;
+        final remoteAge      = (remote['age'] as num?)?.toDouble();
+        final remoteHeight   = (remote['height_cm'] as num?)?.toDouble();
+        final remoteWeight   = (remote['weight_kg'] as num?)?.toDouble();
+
+        if (remoteSex != null) sexStr = remoteSex;
+        if (remoteAge != null) age = remoteAge;
+        if (remoteHeight != null) height = remoteHeight;
+        if (remoteWeight != null) weight = remoteWeight;
+
+        if (remoteAct != null) {
+          final mapAct = <String, int>{
+            'sedentary':   Activity.sedentary.index,
+            'light':       Activity.light.index,
+            'moderate':    Activity.moderate.index,
+            'intense':     Activity.intense.index,
+            'very_intense': Activity.veryIntense.index,
+          };
+          activityIndex = mapAct[remoteAct] ?? activityIndex;
+        }
+
+        if (remoteGoal != null) {
+          final mapGoal = <String, int>{
+            'loss':     Goal.loss.index,
+            'maintain': Goal.maintain.index,
+            'gain':     Goal.gain.index,
+          };
+          goalIndex = mapGoal[remoteGoal] ?? goalIndex;
+        }
+
+        // On remet aussi ces valeurs dans SharedPreferences pour les autres écrans
+        if (sexStr != null) {
+          await sp.setString('profile_sex', sexStr);
+        }
+        if (activityIndex != null) {
+          await sp.setInt('profile_activity', activityIndex);
+        }
+        if (goalIndex != null) {
+          await sp.setInt('profile_goal', goalIndex);
+        }
+        if (age != null) {
+          await sp.setDouble('profile_age', age);
+        }
+        if (height != null) {
+          await sp.setDouble('profile_height', height);
+        }
+        if (weight != null) {
+          await sp.setDouble('profile_weight', weight);
+        }
+      }
+    }
+  } catch (e) {
+    debugPrint('Erreur chargement profil Supabase: $e');
+  }
+
+  // — 3) Si on n’a pas d’objectifs mais qu’on a un profil complet, on recalcule en silence
+  if (goalsKcal == null &&
+      age != null &&
+      height != null &&
+      weight != null &&
+      sexStr != null &&
+      activityIndex != null &&
+      goalIndex != null) {
+    final sexEnum = (sexStr == 'female') ? Sex.female : Sex.male;
+    final activityEnum = Activity.values[activityIndex];
+    final goalEnum     = Goal.values[goalIndex];
+
+    final bmr  = _bmrMifflin(sex: sexEnum, kg: weight, cm: height, age: age.round());
+    final tdee = _activityFactor(activityEnum) * bmr;
+    final kcal = tdee * _goalMultiplier(goalEnum);
+
+    final prot     = _proteinPerKg(activityEnum) * weight;
+    final kcalFat  = kcal * 0.35;
+    final fat      = kcalFat / 9.0;
+    final kcalCarb = kcal * 0.55;
+    final carb     = kcalCarb / 4.0;
+    const fib      = 30.0;
+
+    goalsKcal  = kcal;
+    goalsProt  = prot;
+    goalsCarb  = carb;
+    goalsFat   = fat;
+    goalsFiber = fib;
+
+    await sp.setDouble('goals_kcal', kcal);
+    await sp.setDouble('goals_prot', prot);
+    await sp.setDouble('goals_carb', carb);
+    await sp.setDouble('goals_fat',  fat);
+    await sp.setDouble('goals_fiber', fib);
+  }
+
+  // — 4) Application dans l’UI
+  if (!mounted) return;
   setState(() {
-    // Profil (inchangé)
     _sex = (sexStr == 'female') ? Sex.female : Sex.male;
     if (activityIndex != null) _activity = Activity.values[activityIndex];
     if (goalIndex != null) _goal = Goal.values[goalIndex];
@@ -183,7 +341,6 @@ Future<void> _loadProfile() async {
     if (height != null) _heightCtrl.text = height.toStringAsFixed(0);
     if (weight != null) _weightCtrl.text = weight.toStringAsFixed(0);
 
-    // ✅ Objectifs (chargés si disponibles, sinon on garde les valeurs actuelles)
     if (goalsKcal  != null) _kcal = goalsKcal;
     if (goalsProt  != null) _prot = goalsProt;
     if (goalsCarb  != null) _carb = goalsCarb;
@@ -191,8 +348,6 @@ Future<void> _loadProfile() async {
     if (goalsFiber != null) _fib  = goalsFiber;
   });
 }
-
-
 
     @override
   Widget build(BuildContext context) {
