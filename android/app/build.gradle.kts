@@ -27,7 +27,9 @@ android {
 
     // 🆔 Identité de ton appli sur Android
     namespace = "com.totumapp.totum"
-    compileSdk = flutter.compileSdkVersion
+
+    // ✅ Correction : compileSdk 36 (requis par tes plugins)
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -40,34 +42,34 @@ android {
     }
 
     defaultConfig {
-        // ID unique de l'application (doit matcher la Play Console)
         applicationId = "com.totumapp.totum"
 
-        // Ces valeurs sont gérées par Flutter (depuis ton pubspec)
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+
+        // >> Option recommandé :
+        // targetSdk 36 pour cohérence, mais succès possible avec 35
+        targetSdk = 36
+
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    // Packaging legacy (tolérance 16 ko)
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+
     buildTypes {
         release {
-            // 🔐 Utilise la config de signature "release"
             signingConfig = signingConfigs.getByName("release")
-
-            // Nettoyage de code activé (nécessaire si on enlève les ressources inutiles)
             isMinifyEnabled = true
-            // Tu peux ajouter aussi :
-            // isShrinkResources = true
-            // si tu veux encore réduire la taille plus tard.
         }
-        debug {
-            // Config debug par défaut
-        }
+        debug { }
     }
 }
 
-// ⚙️ Dit au plugin Flutter où se trouve ton code Dart
 flutter {
     source = "../.."
 }

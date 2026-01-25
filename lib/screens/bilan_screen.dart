@@ -1281,7 +1281,7 @@ class _MacroOverview extends StatelessWidget {
     final target = energy.target ?? 0.0;
     final pct = (target == 0)
         ? 0.0
-        : (energy.value / target).clamp(0.0, 2.0);
+        : (energy.value / target).clamp(0.0, double.infinity);
     final color = _barColor(pct);
 
     final remaining =
@@ -1329,7 +1329,7 @@ class _MacroOverview extends StatelessWidget {
                         backgroundColor: color.withOpacity(0.18),
                       ),
                       Text(
-                        '${(pct * 100).clamp(0, 200).toStringAsFixed(0)}%',
+                        '${(pct * 100).toStringAsFixed(0)}%',
                         style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 18,
@@ -1365,7 +1365,7 @@ class _MacroOverview extends StatelessWidget {
                 final t = m.target ?? 0.0;
                 final pct = (t == 0)
                     ? 0.0
-                    : (m.value / t).clamp(0.0, 2.0);
+                    : (m.value / t).clamp(0.0, double.infinity);
                 final c = _barColor(pct);
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
@@ -1393,7 +1393,7 @@ class _MacroOverview extends StatelessWidget {
                             border: Border.all(color: c.withOpacity(0.35)),
                           ),
                           child: Text(
-                            '${(pct * 100).clamp(0, 200).toStringAsFixed(0)}%',
+                            '${(pct * 100).toStringAsFixed(0)}%',
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
@@ -1473,7 +1473,7 @@ class _Section extends StatelessWidget {
           children: metrics.map((m) {
             final pct = (m.target == null || m.target == 0)
                 ? null
-                : (m.value / m.target!).clamp(0.0, 2.0).toDouble();
+                : (m.value / m.target!).clamp(0.0, double.infinity).toDouble();
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Column(
@@ -1500,7 +1500,7 @@ class _Section extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          '${(pct * 100).clamp(0, 200).toStringAsFixed(0)}%',
+                          '${(pct * 100).toStringAsFixed(0)}%',
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             color: colorOf(pct),
@@ -1566,7 +1566,7 @@ class _HydrationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pct = data.ratio.clamp(0.0, 2.0);
+    final pct = data.ratio.clamp(0.0, double.infinity);
     final color = _barColor(pct);
 
     return Card(
@@ -1611,7 +1611,7 @@ class _HydrationSection extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '${(pct * 100).clamp(0, 200).toStringAsFixed(0)}%',
+                  '${(pct * 100).toStringAsFixed(0)}%',
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: color,

@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/profile.dart'
@@ -988,7 +989,7 @@ class _JournalScreenState extends State<JournalScreen> with SingleTickerProvider
                   child: TextField(
                     controller: _searchCtrl,
                     decoration: InputDecoration(
-                      labelText: 'Rechercher un aliment',
+                      labelText: 'Rechercher un aliment (CIQUAL)',
                       prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     ),
@@ -1093,79 +1094,162 @@ class _JournalScreenState extends State<JournalScreen> with SingleTickerProvider
   }
   
     Future<void> _openUsdaSearch() async {
-    final queryCtrl = TextEditingController();
-    List<UsdaFoodResult> results = [];
+      final TextEditingController queryCtrl = TextEditingController();
+      Timer? debounce;
+      List<UsdaFoodResult> results = [];
+      bool sortAZ = false; // false = pertinence, true = A→Z
 
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) {
-        return StatefulBuilder(
-          builder: (ctx, setModalState) {
-            Future<void> _doSearch() async {
-              final q = queryCtrl.text.trim();
-              if (q.isEmpty) return;
-              final r = await UsdaService.searchFoods(q);
-              setModalState(() => results = r);
-            }
+      // Cache local des kcal
+      final Map<int, double?> usdaKcalCache = {};
 
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(ctx).viewInsets.bottom,
-                left: 16, right: 16, top: 16,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Base étendue (USDA)',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: queryCtrl,
-                    decoration: InputDecoration(
-                      labelText: 'Rechercher un aliment (USDA)',
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: _doSearch,
-                      ),
+      await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (ctx) {
+          return StatefulBuilder(
+            builder: (ctx, setModalState) {
+              Future<void> doSearch() async {
+                final q = queryCtrl.text.trim();
+                if (q.isEmpty) {
+                  setModalState(() => results = []);
+                  return;
+                }
+
+                final res = await UsdaService.searchFoods(q);
+
+                // Tri naturel = pertinence
+                List<UsdaFoodResult> sorted = [...res];
+
+                if (sortAZ) {
+                  sorted.sort((a, b) =>
+                      a.description.toLowerCase().compareTo(b.description.toLowerCase()));
+                }
+
+                setModalState(() => results = sorted);
+              }
+
+              void onQueryChanged(String _) {
+                debounce?.cancel();
+                debounce = Timer(const Duration(milliseconds: 300), doSearch);
+              }
+
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(ctx).viewInsets.bottom,
+                  left: 16, right: 16, top: 16,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Titre
+                    const Text(
+                      'Base étendue (USDA)',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    onSubmitted: (_) => _doSearch(),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 320,
-                    child: results.isEmpty
-                        ? const Center(
-                            child: Text('Tape un mot-clé puis lance la recherche'),
-                          )
-                        : ListView.builder(
-                            itemCount: results.length,
-                            itemBuilder: (ctx, i) {
-                              final r = results[i];
-                              return ListTile(
-                                title: Text(r.description),
-                                onTap: () async {
-                                  final food = await UsdaService.getFoodItem(r.fdcId);
-                                  if (food != null) {
-                                    await _addExternalFoodAsCustom(food);
-                                    if (mounted) Navigator.of(ctx).pop();
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+
+                    const SizedBox(height: 12),
+
+                    // Barre de recherche
+                    TextField(
+                      controller: queryCtrl,
+                      decoration: InputDecoration(
+                        labelText: 'Rechercher un aliment (USDA)',
+                        prefixIcon: const Icon(Icons.search),
+                        border:
+                            OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      onChanged: onQueryChanged,
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Tri pertinence / A→Z
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ChoiceChip(
+                          label: const Text('Pertinence'),
+                          selected: !sortAZ,
+                          onSelected: (_) {
+                            setModalState(() => sortAZ = false);
+                            doSearch();
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        ChoiceChip(
+                          label: const Text('A → Z'),
+                          selected: sortAZ,
+                          onSelected: (_) {
+                            setModalState(() => sortAZ = true);
+                            doSearch();
+                          },
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Résultats
+                    SizedBox(
+                      height: 360,
+                      child: results.isEmpty
+                          ? const Center(
+                              child: Text('Tape quelques lettres pour commencer la recherche'),
+                            )
+                          : ListView.builder(
+                              itemCount: results.length,
+                              itemBuilder: (ctx, i) {
+                                final r = results[i];
+
+                                // Construction du sous-titre avec kcal
+                                String subtitle;
+
+                                if (usdaKcalCache.containsKey(r.fdcId)) {
+                                  final v = usdaKcalCache[r.fdcId];
+                                  subtitle = v == null
+                                      ? '??? kcal / 100 g'
+                                      : '${v.toStringAsFixed(0)} kcal / 100 g';
+                                } else {
+                                  subtitle = 'Chargement...';
+
+                                  // Charger les kcal en arrière-plan puis rafraîchir
+                                  usdaKcalCache[r.fdcId] = null;
+                                  UsdaService.getFoodItem(r.fdcId).then((food) {
+                                    if (food != null) {
+                                      usdaKcalCache[r.fdcId] = food.kcal100;
+                                    }
+                                    setModalState(() {});
+                                  });
+                                }
+
+                                return Card(
+                                  child: ListTile(
+                                    title: Text(r.description),
+                                    subtitle: Text(subtitle),
+                                    onTap: () async {
+                                      final food =
+                                          await UsdaService.getFoodItem(r.fdcId);
+
+                                      if (food != null) {
+                                        await _addExternalFoodAsCustom(food);
+                                        if (mounted) Navigator.of(ctx).pop();
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      );
+    }
+
 
     Future<void> _openBarcodeScanner() async {
     await Navigator.of(context).push(
@@ -1844,7 +1928,7 @@ class _DayMacroOverview extends StatelessWidget {
     final targetKcal = gKcal > 0 ? gKcal : 2000.0;
     final pctKcal = targetKcal == 0
         ? 0.0
-        : (totals.kcal / targetKcal).clamp(0.0, 2.0);
+        : (totals.kcal / targetKcal).clamp(0.0, double.infinity);
     final colorKcal = _barColor(pctKcal);
 
     final remainingKcal = targetKcal > 0
@@ -1995,10 +2079,10 @@ class _MacroBarRow extends StatelessWidget {
     final target = item.target;
     final pct = target == 0
         ? 0.0
-        : (item.value / target).clamp(0.0, 2.0);
+        : (item.value / target).clamp(0.0, double.infinity);
     final color = _barColor(pct);
 
-    final pctText = (pct * 100).clamp(0, 200).toStringAsFixed(0);
+    final pctText = (pct * 100).toStringAsFixed(0);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2266,7 +2350,7 @@ class _Section extends StatelessWidget {
         initiallyExpanded: initiallyExpanded,
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
         children: metrics.map((m) {
-          final pct = (m.target == null || m.target == 0) ? null : (m.value / m.target!).clamp(0.0, 2.0).toDouble();
+          final pct = (m.target == null || m.target == 0) ? null : (m.value / m.target!).clamp(0.0, double.infinity).toDouble();
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -2280,7 +2364,7 @@ class _Section extends StatelessWidget {
                       borderRadius: BorderRadius.circular(999),
                       border: Border.all(color: _barColor(pct).withOpacity(0.35)),
                     ),
-                    child: Text('${(pct * 100).clamp(0, 200).toStringAsFixed(0)}%',
+                    child: Text('${(pct * 100).toStringAsFixed(0)}%',
                         style: TextStyle(fontWeight: FontWeight.w700, color: _barColor(pct), fontSize: 12)),
                   ),
               ]),
