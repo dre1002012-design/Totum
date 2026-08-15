@@ -6863,6 +6863,138 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Aucun aliment ajouté.'**
   String get jrnlNoFoodAdded;
+
+  /// No description provided for @jrnlChooseMeal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir le repas'**
+  String get jrnlChooseMeal;
+
+  /// No description provided for @jrnlCiqualVsUsdaTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'CIQUAL vs USDA'**
+  String get jrnlCiqualVsUsdaTitle;
+
+  /// No description provided for @jrnlCiqualDefaultTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'🇫🇷 CIQUAL — base par défaut'**
+  String get jrnlCiqualDefaultTitle;
+
+  /// No description provided for @jrnlCiqualDefaultBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Table de composition nutritionnelle officielle française, publiée par l\'ANSES (Agence nationale de sécurité sanitaire). Couvre les aliments du quotidien en France. C\'est la base de référence de Totum, sélectionnée par défaut dans toutes les recherches.'**
+  String get jrnlCiqualDefaultBody;
+
+  /// No description provided for @jrnlUsdaReinforceTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'🇺🇸 USDA — en renfort'**
+  String get jrnlUsdaReinforceTitle;
+
+  /// No description provided for @jrnlUsdaReinforceBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'FoodData Central, la base nutritionnelle officielle du gouvernement américain (U.S. Department of Agriculture). Aliments analysés en laboratoire (Foundation Foods/SR Legacy) — même niveau d\'exigence scientifique que CIQUAL, traduite en français, mais pensée pour les habitudes alimentaires américaines (portions, recettes, produits de marque).'**
+  String get jrnlUsdaReinforceBody;
+
+  /// No description provided for @jrnlWhyBothTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pourquoi les deux ?'**
+  String get jrnlWhyBothTitle;
+
+  /// No description provided for @jrnlWhyBothBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'CIQUAL ne couvre pas tout, notamment certains aliments d\'origine anglo-saxonne. Activer \"Inclure la base USDA\" élargit la recherche à ces ~7500 aliments supplémentaires — chaque résultat USDA reste identifié par un badge, pour toujours savoir d\'où vient la donnée.'**
+  String get jrnlWhyBothBody;
+
+  /// No description provided for @jrnlSearchOptionsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Options de recherche d\'aliments'**
+  String get jrnlSearchOptionsTitle;
+
+  /// No description provided for @jrnlMultiSelectToggleTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activer l\'ajout multiple'**
+  String get jrnlMultiSelectToggleTitle;
+
+  /// No description provided for @jrnlMultiSelectToggleDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Coche plusieurs aliments dans \"Commun\" et ajoute-les d\'un coup à un repas.'**
+  String get jrnlMultiSelectToggleDesc;
+
+  /// No description provided for @jrnlCategoryTabsToggleTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Onglets de catégorie'**
+  String get jrnlCategoryTabsToggleTitle;
+
+  /// No description provided for @jrnlCategoryTabsToggleDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commun/Favoris/Perso/Marques/Restaurant — désactive pour gagner de la place.'**
+  String get jrnlCategoryTabsToggleDesc;
+
+  /// No description provided for @jrnlSortByLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trier par'**
+  String get jrnlSortByLabel;
+
+  /// No description provided for @jrnlSortFrequent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le + fréquent'**
+  String get jrnlSortFrequent;
+
+  /// No description provided for @jrnlSortRecent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le + récent'**
+  String get jrnlSortRecent;
+
+  /// No description provided for @jrnlSortAZ.
+  ///
+  /// In fr, this message translates to:
+  /// **'A → Z'**
+  String get jrnlSortAZ;
+
+  /// No description provided for @jrnlSortZA.
+  ///
+  /// In fr, this message translates to:
+  /// **'Z → A'**
+  String get jrnlSortZA;
+
+  /// No description provided for @jrnlSearchOverridesSortHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pendant une recherche, la meilleure correspondance prime toujours sur ce tri.'**
+  String get jrnlSearchOverridesSortHint;
+
+  /// No description provided for @jrnlDatabaseLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Base de données'**
+  String get jrnlDatabaseLabel;
+
+  /// No description provided for @jrnlCiqualDefaultCheckbox.
+  ///
+  /// In fr, this message translates to:
+  /// **'CIQUAL (France) — par défaut'**
+  String get jrnlCiqualDefaultCheckbox;
+
+  /// No description provided for @jrnlUsdaReinforceCheckbox.
+  ///
+  /// In fr, this message translates to:
+  /// **'USDA (États-Unis) — en renfort'**
+  String get jrnlUsdaReinforceCheckbox;
 }
 
 class _AppLocalizationsDelegate

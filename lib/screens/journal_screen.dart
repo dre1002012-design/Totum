@@ -4461,6 +4461,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
   /// Fiche d'info CIQUAL vs USDA (Priorité 39) : permet un choix éclairé
   /// plutôt qu'un interrupteur sans contexte — retour explicite d'Alex.
   Future<void> _showUsdaInfoSheet() async {
+    final l10n = context.l10n;
     Widget row(String title, String body) => Padding(
           padding: const EdgeInsets.only(bottom: 14),
           child: Column(
@@ -4484,30 +4485,17 @@ class _AddFoodPageState extends State<_AddFoodPage>
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('CIQUAL vs USDA', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+            Text(l10n.jrnlCiqualVsUsdaTitle, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
             const SizedBox(height: 16),
-            row('🇫🇷 CIQUAL — base par défaut',
-                'Table de composition nutritionnelle officielle française, publiée par l\'ANSES '
-                '(Agence nationale de sécurité sanitaire). Couvre les aliments du quotidien en '
-                'France. C\'est la base de référence de Totum, sélectionnée par défaut dans '
-                'toutes les recherches.'),
-            row('🇺🇸 USDA — en renfort',
-                'FoodData Central, la base nutritionnelle officielle du gouvernement américain '
-                '(U.S. Department of Agriculture). Aliments analysés en laboratoire '
-                '(Foundation Foods/SR Legacy) — même niveau d\'exigence scientifique que CIQUAL, '
-                'traduite en français, mais pensée pour les habitudes alimentaires '
-                'américaines (portions, recettes, produits de marque).'),
-            row('Pourquoi les deux ?',
-                'CIQUAL ne couvre pas tout, notamment certains aliments d\'origine anglo-saxonne. '
-                'Activer "Inclure la base USDA" élargit la recherche à ces ~7500 aliments '
-                'supplémentaires — chaque résultat USDA reste identifié par un badge, pour '
-                'toujours savoir d\'où vient la donnée.'),
+            row(l10n.jrnlCiqualDefaultTitle, l10n.jrnlCiqualDefaultBody),
+            row(l10n.jrnlUsdaReinforceTitle, l10n.jrnlUsdaReinforceBody),
+            row(l10n.jrnlWhyBothTitle, l10n.jrnlWhyBothBody),
             const SizedBox(height: 4),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () => Navigator.of(ctx).pop(),
-                child: const Text('Compris'),
+                child: Text(l10n.jrnlUnderstood),
               ),
             ),
           ],
@@ -4530,6 +4518,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
+        final l10n = ctx.l10n;
         return StatefulBuilder(
           builder: (ctx, setSheetState) {
             return SafeArea(
@@ -4546,15 +4535,15 @@ class _AddFoodPageState extends State<_AddFoodPage>
                     // ordre et libellés alignés sur la référence — "Activer
                     // l'ajout multiple" et "Onglets de catégorie" en tête,
                     // puis Tri, puis Base de données.
-                    const Text('Options de recherche d\'aliments',
-                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+                    Text(l10n.jrnlSearchOptionsTitle,
+                        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
                     const SizedBox(height: 14),
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Activer l\'ajout multiple',
-                          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                      title: Text(l10n.jrnlMultiSelectToggleTitle,
+                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
                       subtitle: Text(
-                        'Coche plusieurs aliments dans "Commun" et ajoute-les d\'un coup à un repas.',
+                        l10n.jrnlMultiSelectToggleDesc,
                         style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
                       ),
                       value: _multiSelectEnabled,
@@ -4566,10 +4555,10 @@ class _AddFoodPageState extends State<_AddFoodPage>
                     ),
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Onglets de catégorie',
-                          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                      title: Text(l10n.jrnlCategoryTabsToggleTitle,
+                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
                       subtitle: Text(
-                        'Commun/Favoris/Perso/Marques/Restaurant — désactive pour gagner de la place.',
+                        l10n.jrnlCategoryTabsToggleDesc,
                         style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
                       ),
                       value: _showCategoryTabs,
@@ -4580,17 +4569,17 @@ class _AddFoodPageState extends State<_AddFoodPage>
                       },
                     ),
                     const Divider(height: 28),
-                    Text('Trier par', style: TextStyle(
+                    Text(l10n.jrnlSortByLabel, style: TextStyle(
                         fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8, runSpacing: 8,
                       children: [
-                        for (final entry in const {
-                          _SortMode.frequent: 'Le + fréquent',
-                          _SortMode.recent: 'Le + récent',
-                          _SortMode.az: 'A → Z',
-                          _SortMode.za: 'Z → A',
+                        for (final entry in {
+                          _SortMode.frequent: l10n.jrnlSortFrequent,
+                          _SortMode.recent: l10n.jrnlSortRecent,
+                          _SortMode.az: l10n.jrnlSortAZ,
+                          _SortMode.za: l10n.jrnlSortZA,
                         }.entries)
                           ChoiceChip(
                             label: Text(entry.value),
@@ -4614,14 +4603,14 @@ class _AddFoodPageState extends State<_AddFoodPage>
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        'Pendant une recherche, la meilleure correspondance prime toujours sur ce tri.',
+                        l10n.jrnlSearchOverridesSortHint,
                         style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted),
                       ),
                     ),
                     const Divider(height: 28),
                     Row(
                       children: [
-                        Text('Base de données', style: TextStyle(
+                        Text(l10n.jrnlDatabaseLabel, style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
                         const SizedBox(width: 4),
                         // Retour d'Alex (11/08/2026, Priorité 39) : une
@@ -4647,8 +4636,8 @@ class _AddFoodPageState extends State<_AddFoodPage>
                       contentPadding: EdgeInsets.zero,
                       controlAffinity: ListTileControlAffinity.leading,
                       dense: true,
-                      title: const Text('CIQUAL (France) — par défaut',
-                          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                      title: Text(l10n.jrnlCiqualDefaultCheckbox,
+                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
                       value: _includeCiqual,
                       activeColor: TotumColors.accent,
                       onChanged: (v) {
@@ -4660,8 +4649,8 @@ class _AddFoodPageState extends State<_AddFoodPage>
                       contentPadding: EdgeInsets.zero,
                       controlAffinity: ListTileControlAffinity.leading,
                       dense: true,
-                      title: const Text('USDA (États-Unis) — en renfort',
-                          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                      title: Text(l10n.jrnlUsdaReinforceCheckbox,
+                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
                       value: _includeUsda,
                       activeColor: TotumColors.accent,
                       onChanged: (v) {
@@ -4766,11 +4755,12 @@ class _AddFoodPageState extends State<_AddFoodPage>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
         title: PopupMenuButton<String>(
           initialValue: _selectedMeal,
-          tooltip: 'Choisir le repas',
+          tooltip: l10n.jrnlChooseMeal,
           onSelected: (v) => setState(() => _selectedMeal = v),
           itemBuilder: (ctx) => [
             for (final m in _mealOptions)
@@ -4780,7 +4770,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
                   children: [
                     Icon(_mealIcons[m], size: 18, color: TotumColors.textSecondary),
                     const SizedBox(width: 10),
-                    Text(m),
+                    Text(_mealTypeLabel(m, l10n)),
                   ],
                 ),
               ),
@@ -4791,7 +4781,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
               Icon(_mealIcons[_selectedMeal], size: 19),
               const SizedBox(width: 8),
               Flexible(
-                child: Text(_selectedMeal,
+                child: Text(_mealTypeLabel(_selectedMeal, l10n),
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
               ),

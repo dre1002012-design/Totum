@@ -4086,4 +4086,76 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get jrnlNoFoodAdded => 'Aucun aliment ajouté.';
+
+  @override
+  String get jrnlChooseMeal => 'Choisir le repas';
+
+  @override
+  String get jrnlCiqualVsUsdaTitle => 'CIQUAL vs USDA';
+
+  @override
+  String get jrnlCiqualDefaultTitle => '🇫🇷 CIQUAL — base par défaut';
+
+  @override
+  String get jrnlCiqualDefaultBody =>
+      'Table de composition nutritionnelle officielle française, publiée par l\'ANSES (Agence nationale de sécurité sanitaire). Couvre les aliments du quotidien en France. C\'est la base de référence de Totum, sélectionnée par défaut dans toutes les recherches.';
+
+  @override
+  String get jrnlUsdaReinforceTitle => '🇺🇸 USDA — en renfort';
+
+  @override
+  String get jrnlUsdaReinforceBody =>
+      'FoodData Central, la base nutritionnelle officielle du gouvernement américain (U.S. Department of Agriculture). Aliments analysés en laboratoire (Foundation Foods/SR Legacy) — même niveau d\'exigence scientifique que CIQUAL, traduite en français, mais pensée pour les habitudes alimentaires américaines (portions, recettes, produits de marque).';
+
+  @override
+  String get jrnlWhyBothTitle => 'Pourquoi les deux ?';
+
+  @override
+  String get jrnlWhyBothBody =>
+      'CIQUAL ne couvre pas tout, notamment certains aliments d\'origine anglo-saxonne. Activer \"Inclure la base USDA\" élargit la recherche à ces ~7500 aliments supplémentaires — chaque résultat USDA reste identifié par un badge, pour toujours savoir d\'où vient la donnée.';
+
+  @override
+  String get jrnlSearchOptionsTitle => 'Options de recherche d\'aliments';
+
+  @override
+  String get jrnlMultiSelectToggleTitle => 'Activer l\'ajout multiple';
+
+  @override
+  String get jrnlMultiSelectToggleDesc =>
+      'Coche plusieurs aliments dans \"Commun\" et ajoute-les d\'un coup à un repas.';
+
+  @override
+  String get jrnlCategoryTabsToggleTitle => 'Onglets de catégorie';
+
+  @override
+  String get jrnlCategoryTabsToggleDesc =>
+      'Commun/Favoris/Perso/Marques/Restaurant — désactive pour gagner de la place.';
+
+  @override
+  String get jrnlSortByLabel => 'Trier par';
+
+  @override
+  String get jrnlSortFrequent => 'Le + fréquent';
+
+  @override
+  String get jrnlSortRecent => 'Le + récent';
+
+  @override
+  String get jrnlSortAZ => 'A → Z';
+
+  @override
+  String get jrnlSortZA => 'Z → A';
+
+  @override
+  String get jrnlSearchOverridesSortHint =>
+      'Pendant une recherche, la meilleure correspondance prime toujours sur ce tri.';
+
+  @override
+  String get jrnlDatabaseLabel => 'Base de données';
+
+  @override
+  String get jrnlCiqualDefaultCheckbox => 'CIQUAL (France) — par défaut';
+
+  @override
+  String get jrnlUsdaReinforceCheckbox => 'USDA (États-Unis) — en renfort';
 }

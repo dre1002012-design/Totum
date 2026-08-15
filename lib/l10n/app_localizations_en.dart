@@ -4049,4 +4049,76 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jrnlNoFoodAdded => 'No food added.';
+
+  @override
+  String get jrnlChooseMeal => 'Choose the meal';
+
+  @override
+  String get jrnlCiqualVsUsdaTitle => 'CIQUAL vs USDA';
+
+  @override
+  String get jrnlCiqualDefaultTitle => '🇫🇷 CIQUAL — default database';
+
+  @override
+  String get jrnlCiqualDefaultBody =>
+      'France\'s official nutritional composition table, published by ANSES (French Agency for Food, Environmental and Occupational Health & Safety). Covers everyday foods in France. This is Totum\'s reference database, selected by default in all searches.';
+
+  @override
+  String get jrnlUsdaReinforceTitle => '🇺🇸 USDA — as backup';
+
+  @override
+  String get jrnlUsdaReinforceBody =>
+      'FoodData Central, the official U.S. government nutrition database (U.S. Department of Agriculture). Lab-analyzed foods (Foundation Foods/SR Legacy) — the same level of scientific rigor as CIQUAL, translated to French, but built around U.S. eating habits (portions, recipes, branded products).';
+
+  @override
+  String get jrnlWhyBothTitle => 'Why both?';
+
+  @override
+  String get jrnlWhyBothBody =>
+      'CIQUAL doesn\'t cover everything, especially some foods of Anglo-Saxon origin. Turning on \"Include the USDA database\" expands the search to these ~7500 extra foods — every USDA result stays marked with a badge, so you always know where the data comes from.';
+
+  @override
+  String get jrnlSearchOptionsTitle => 'Food search options';
+
+  @override
+  String get jrnlMultiSelectToggleTitle => 'Enable multi-add';
+
+  @override
+  String get jrnlMultiSelectToggleDesc =>
+      'Check several foods in \"Common\" and add them all at once to a meal.';
+
+  @override
+  String get jrnlCategoryTabsToggleTitle => 'Category tabs';
+
+  @override
+  String get jrnlCategoryTabsToggleDesc =>
+      'Common/Favorites/Personal/Brands/Restaurant — turn off to save screen space.';
+
+  @override
+  String get jrnlSortByLabel => 'Sort by';
+
+  @override
+  String get jrnlSortFrequent => 'Most frequent';
+
+  @override
+  String get jrnlSortRecent => 'Most recent';
+
+  @override
+  String get jrnlSortAZ => 'A → Z';
+
+  @override
+  String get jrnlSortZA => 'Z → A';
+
+  @override
+  String get jrnlSearchOverridesSortHint =>
+      'While searching, the best match always takes priority over this sort.';
+
+  @override
+  String get jrnlDatabaseLabel => 'Database';
+
+  @override
+  String get jrnlCiqualDefaultCheckbox => 'CIQUAL (France) — default';
+
+  @override
+  String get jrnlUsdaReinforceCheckbox => 'USDA (United States) — backup';
 }
