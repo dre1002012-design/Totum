@@ -3088,4 +3088,187 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get advQuoteDefault =>
       '« Les micronutriments, code source de ta vitalité. »';
+
+  @override
+  String get coachNoData =>
+      'Renseigne tes repas et je te dis en un coup d\'œil où tu en es et quoi ajuster.';
+
+  @override
+  String coachEtatGoodStart(int s) {
+    return 'Bon début : $s/100 sur ce que tu as déjà mangé.';
+  }
+
+  @override
+  String coachEtatStarting(int s) {
+    return 'Journée qui démarre : $s/100 pour l\'instant, tout reste à construire.';
+  }
+
+  @override
+  String coachEtatExcellent(int s) {
+    return 'Excellente journée : $s/100. C\'est ce niveau-là qui construit ta santé sur le long terme.';
+  }
+
+  @override
+  String coachEtatGood(int s) {
+    return 'Bonne journée : $s/100, avec encore un peu de marge.';
+  }
+
+  @override
+  String coachEtatOk(int s) {
+    return 'Journée correcte : $s/100. Un geste ciblé et tu passes un cap.';
+  }
+
+  @override
+  String coachEtatToRebalance(int s) {
+    return 'Journée à rééquilibrer : $s/100. Rien de grave, un bon repas inverse la tendance.';
+  }
+
+  @override
+  String coachProgressUp(int diff) {
+    return ' En hausse de $diff points vs ta dernière journée 📈.';
+  }
+
+  @override
+  String coachProgressDown(int diff) {
+    return ' En baisse de $diff points vs ta dernière journée.';
+  }
+
+  @override
+  String coachActionSleepCritical(String hours) {
+    return ' Ta priorité aujourd\'hui n\'est pas dans l\'assiette : tu n\'as dormi que $hours h. Tes fringales seront plus fortes — mise sur du brut et du rassasiant, et vise une nuit plus longue ce soir.';
+  }
+
+  @override
+  String coachActionStressHigh(int stress) {
+    return ' Ton stress est à $stress/10 : c\'est le point à travailler en priorité. Prends 5 respirations lentes avant chaque repas — ça apaise le mental et améliore ta digestion.';
+  }
+
+  @override
+  String coachActionDeficitMajorWithFix(String label, int pct, String fix) {
+    return ' Le point à corriger en priorité : $label ($pct% de ta cible). Le réflexe : $fix.';
+  }
+
+  @override
+  String coachActionDeficitMajor(String label, int pct) {
+    return ' Le point à corriger en priorité : $label ($pct% de ta cible).';
+  }
+
+  @override
+  String coachActionSleepMedium(String hours) {
+    return ' Ta nuit a été un peu courte ($hours h) : privilégie du rassasiant aujourd\'hui et lève le pied sur les excitants.';
+  }
+
+  @override
+  String coachActionStressNotable(int stress) {
+    return ' Ton stress ($stress/10) mérite un peu d\'attention : quelques respirations lentes dans la journée te feront du bien.';
+  }
+
+  @override
+  String coachActionDeficitMinorWithFix(String label, int pct, String fix) {
+    return ' Petit point d\'amélioration : $label ($pct% de ta cible). Pense à $fix.';
+  }
+
+  @override
+  String coachActionDeficitMinor(String label, int pct) {
+    return ' Petit point d\'amélioration : $label ($pct% de ta cible).';
+  }
+
+  @override
+  String get coachActionNoneEvening =>
+      ' Rien à corriger d\'urgence : laisse la nuit faire son travail de récupération.';
+
+  @override
+  String get coachActionNoneLoss =>
+      ' Rien à corriger : garde le cap avec le duo protéines + légumes à chaque repas, c\'est lui qui tient la satiété.';
+
+  @override
+  String get coachActionNoneGain =>
+      ' Rien à corriger : pense à répartir tes protéines sur la journée pour bien nourrir ton muscle.';
+
+  @override
+  String get coachActionNoneMaintain =>
+      ' Rien à corriger : garde le cap avec du brut et de la variété, c\'est la régularité qui paie.';
+
+  @override
+  String get quickFixIron =>
+      'des lentilles ou un peu de boudin, avec un filet de citron pour l\'absorption';
+
+  @override
+  String get quickFixMagnesium =>
+      'une poignée d\'amandes ou un carré de chocolat noir';
+
+  @override
+  String get quickFixCalcium =>
+      'des sardines, un yaourt ou une poignée d\'amandes';
+
+  @override
+  String get quickFixZinc => 'des graines de courge, du bœuf ou des huîtres';
+
+  @override
+  String get quickFixIodine => 'du poisson, des fruits de mer ou un œuf';
+
+  @override
+  String get quickFixSelenium => 'une sardine, un œuf ou des fruits de mer';
+
+  @override
+  String get quickFixPotassium =>
+      'un avocat, une patate douce ou des légumineuses';
+
+  @override
+  String get quickFixVitC => 'un kiwi, un poivron rouge ou quelques fraises';
+
+  @override
+  String get quickFixVitD =>
+      'un poisson gras (sardine, maquereau) et un peu de soleil';
+
+  @override
+  String get quickFixVitE =>
+      'des amandes, des noisettes ou un filet d\'huile vierge';
+
+  @override
+  String get quickFixVitA =>
+      'une carotte, de la patate douce ou du jaune d\'œuf';
+
+  @override
+  String get quickFixVitK =>
+      'des légumes verts (épinard, chou) ou un peu de fromage affiné';
+
+  @override
+  String get quickFixB9 => 'des légumes verts à feuilles ou des légumineuses';
+
+  @override
+  String get quickFixB12 => 'des œufs, du poisson ou de la viande';
+
+  @override
+  String get quickFixB6 => 'de la volaille, une banane ou des pois chiches';
+
+  @override
+  String get quickFixOmega3 =>
+      'des graines de chanvre ou de lin moulues, ou des noix';
+
+  @override
+  String get quickFixOmega3Marine => 'des sardines, du maquereau ou du hareng';
+
+  @override
+  String get quickFixCopper =>
+      'des oléagineux, du chocolat noir ou des fruits de mer';
+
+  @override
+  String get quickFixManganese =>
+      'des céréales complètes, des oléagineux ou du thé';
+
+  @override
+  String get quickFixPhosphorus => 'des œufs, du poisson ou des légumineuses';
+
+  @override
+  String get quickFixFibers =>
+      'des légumineuses, un fruit entier ou des légumes';
+
+  @override
+  String get dietFixMarineOmega3 =>
+      'un complément d\'oméga 3 issu de micro-algues (source végétale d\'EPA/DHA)';
+
+  @override
+  String get dietFixB12Vegan =>
+      'un complément de vitamine B12 (indispensable en régime végétalien)';
 }

@@ -1614,7 +1614,7 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
   final suggestedRecipes = suggestRecipes(decision.microRatios, count: 3);
   // Message coach dynamique, direct et actionnable.
   final coachMessage = _coachDailyMessage(
-      coachCtx, totumScore, deficits.isNotEmpty ? deficits.first : null);
+      coachCtx, totumScore, deficits.isNotEmpty ? deficits.first : null, l10n);
 
   return AdviceScript(
     score: totumScore,
@@ -1829,37 +1829,38 @@ CoachAdvice? _pickAdvice(String pillar, CoachContext ctx, int daySeed,
 /// SANS répéter la priorité (qui a sa propre vignette juste en dessous).
 /// Aliment brut concret qui corrige le mieux chaque carence — l'action « à faire
 /// maintenant » que le coach recommande. Choisis pour rester simples et courants.
-const Map<String, String> _kQuickFix = {
-  'iron': 'des lentilles ou un peu de boudin, avec un filet de citron pour l\'absorption',
-  'magnesium': 'une poignée d\'amandes ou un carré de chocolat noir',
-  'calcium': 'des sardines, un yaourt ou une poignée d\'amandes',
-  'zinc': 'des graines de courge, du bœuf ou des huîtres',
-  'iodine': 'du poisson, des fruits de mer ou un œuf',
-  'selenium': 'une sardine, un œuf ou des fruits de mer',
-  'potassium': 'un avocat, une patate douce ou des légumineuses',
-  'vitC': 'un kiwi, un poivron rouge ou quelques fraises',
-  'vitD': 'un poisson gras (sardine, maquereau) et un peu de soleil',
-  'vitE': 'des amandes, des noisettes ou un filet d\'huile vierge',
-  'vitA': 'une carotte, de la patate douce ou du jaune d\'œuf',
-  'vitK': 'des légumes verts (épinard, chou) ou un peu de fromage affiné',
-  'B9': 'des légumes verts à feuilles ou des légumineuses',
-  'B12': 'des œufs, du poisson ou de la viande',
-  'B6': 'de la volaille, une banane ou des pois chiches',
-  'omega3': 'des graines de chanvre ou de lin moulues, ou des noix',
-  'omega3_marins': 'des sardines, du maquereau ou du hareng',
-  'copper': 'des oléagineux, du chocolat noir ou des fruits de mer',
-  'manganese': 'des céréales complètes, des oléagineux ou du thé',
-  'phosphorus': 'des œufs, du poisson ou des légumineuses',
-  'fibers': 'des légumineuses, un fruit entier ou des légumes',
-};
+String? _quickFixFor(String ratioKey, AppLocalizations l10n) => switch (ratioKey) {
+      'iron' => l10n.quickFixIron,
+      'magnesium' => l10n.quickFixMagnesium,
+      'calcium' => l10n.quickFixCalcium,
+      'zinc' => l10n.quickFixZinc,
+      'iodine' => l10n.quickFixIodine,
+      'selenium' => l10n.quickFixSelenium,
+      'potassium' => l10n.quickFixPotassium,
+      'vitC' => l10n.quickFixVitC,
+      'vitD' => l10n.quickFixVitD,
+      'vitE' => l10n.quickFixVitE,
+      'vitA' => l10n.quickFixVitA,
+      'vitK' => l10n.quickFixVitK,
+      'B9' => l10n.quickFixB9,
+      'B12' => l10n.quickFixB12,
+      'B6' => l10n.quickFixB6,
+      'omega3' => l10n.quickFixOmega3,
+      'omega3_marins' => l10n.quickFixOmega3Marine,
+      'copper' => l10n.quickFixCopper,
+      'manganese' => l10n.quickFixManganese,
+      'phosphorus' => l10n.quickFixPhosphorus,
+      'fibers' => l10n.quickFixFibers,
+      _ => null,
+    };
 
-String _coachDailyMessage(
-    CoachContext ctx, TotumScore? score, DeficitInfo? mainDeficit) {
+String _coachDailyMessage(CoachContext ctx, TotumScore? score,
+    DeficitInfo? mainDeficit, AppLocalizations l10n) {
   final now = DateTime.now();
   final hour = now.hour;
 
   if (score == null) {
-    return 'Renseigne tes repas et je te dis en un coup d\'œil où tu en es et quoi ajuster.';
+    return l10n.coachNoData;
   }
 
   final s = score.global.round();
@@ -1867,17 +1868,15 @@ String _coachDailyMessage(
   // 1) État chiffré, court et clair.
   String etat;
   if (score.isProvisional && score.dayPercent < 45) {
-    etat = s >= 70
-        ? 'Bon début : $s/100 sur ce que tu as déjà mangé.'
-        : 'Journée qui démarre : $s/100 pour l\'instant, tout reste à construire.';
+    etat = s >= 70 ? l10n.coachEtatGoodStart(s) : l10n.coachEtatStarting(s);
   } else if (s >= 85) {
-    etat = 'Excellente journée : $s/100. C\'est ce niveau-là qui construit ta santé sur le long terme.';
+    etat = l10n.coachEtatExcellent(s);
   } else if (s >= 70) {
-    etat = 'Bonne journée : $s/100, avec encore un peu de marge.';
+    etat = l10n.coachEtatGood(s);
   } else if (s >= 55) {
-    etat = 'Journée correcte : $s/100. Un geste ciblé et tu passes un cap.';
+    etat = l10n.coachEtatOk(s);
   } else {
-    etat = 'Journée à rééquilibrer : $s/100. Rien de grave, un bon repas inverse la tendance.';
+    etat = l10n.coachEtatToRebalance(s);
   }
 
   // 2) Progression vs la dernière journée complète.
@@ -1885,9 +1884,9 @@ String _coachDailyMessage(
   if (_coachYesterdayScore != null && !score.isProvisional) {
     final diff = (score.global - _coachYesterdayScore!).round();
     if (diff >= 5) {
-      progression = ' En hausse de $diff points vs ta dernière journée 📈.';
+      progression = l10n.coachProgressUp(diff);
     } else if (diff <= -5) {
-      progression = ' En baisse de ${-diff} points vs ta dernière journée.';
+      progression = l10n.coachProgressDown(-diff);
     }
   }
 
@@ -1898,57 +1897,51 @@ String _coachDailyMessage(
   final sleep = ctx.sleepHours;
   final stress = ctx.stress;
   final defPct = mainDeficit?.percent ?? 100;
-  final defLabel = mainDeficit?.label.toLowerCase() ?? '';
+  final defLabel = mainDeficit != null
+      ? nutrientDisplayLabel(mainDeficit.label, l10n).toLowerCase()
+      : '';
   final defFix = mainDeficit != null
-      ? (_dietAwareFix(mainDeficit.ratioKey, ctx.diet) ??
-          _kQuickFix[mainDeficit.ratioKey])
+      ? (_dietAwareFix(mainDeficit.ratioKey, ctx.diet, l10n) ??
+          _quickFixFor(mainDeficit.ratioKey, l10n))
       : null;
 
   String action;
   if (sleep != null && sleep < 6.0) {
     // A — sommeil vraiment court : LA priorité, avant l'assiette
-    action =
-        ' Ta priorité aujourd\'hui n\'est pas dans l\'assiette : tu n\'as dormi que ${sleep.toStringAsFixed(1)} h. Tes fringales seront plus fortes — mise sur du brut et du rassasiant, et vise une nuit plus longue ce soir.';
+    action = l10n.coachActionSleepCritical(sleep.toStringAsFixed(1));
   } else if (stress != null && stress >= 8) {
     // B — stress fort : priorité bien-être
-    action =
-        ' Ton stress est à $stress/10 : c\'est le point à travailler en priorité. Prends 5 respirations lentes avant chaque repas — ça apaise le mental et améliore ta digestion.';
+    action = l10n.coachActionStressHigh(stress);
   } else if (mainDeficit != null && defPct < 65) {
     // C — carence marquée : priorité nutrition
     action = defFix != null
-        ? ' Le point à corriger en priorité : $defLabel ($defPct% de ta cible). Le réflexe : $defFix.'
-        : ' Le point à corriger en priorité : $defLabel ($defPct% de ta cible).';
+        ? l10n.coachActionDeficitMajorWithFix(defLabel, defPct, defFix)
+        : l10n.coachActionDeficitMajor(defLabel, defPct);
   } else if (sleep != null && sleep < 6.5) {
     // D — sommeil moyen
-    action =
-        ' Ta nuit a été un peu courte (${sleep.toStringAsFixed(1)} h) : privilégie du rassasiant aujourd\'hui et lève le pied sur les excitants.';
+    action = l10n.coachActionSleepMedium(sleep.toStringAsFixed(1));
   } else if (stress != null && stress >= 7) {
     // D bis — stress notable
-    action =
-        ' Ton stress ($stress/10) mérite un peu d\'attention : quelques respirations lentes dans la journée te feront du bien.';
+    action = l10n.coachActionStressNotable(stress);
   } else if (mainDeficit != null && defPct < 80) {
     // E — carence légère
     action = defFix != null
-        ? ' Petit point d\'amélioration : $defLabel ($defPct% de ta cible). Pense à $defFix.'
-        : ' Petit point d\'amélioration : $defLabel ($defPct% de ta cible).';
+        ? l10n.coachActionDeficitMinorWithFix(defLabel, defPct, defFix)
+        : l10n.coachActionDeficitMinor(defLabel, defPct);
   } else {
     // F — rien de marquant : on célèbre et on oriente selon l'objectif
     if (hour >= 18) {
-      action =
-          ' Rien à corriger d\'urgence : laisse la nuit faire son travail de récupération.';
+      action = l10n.coachActionNoneEvening;
     } else {
       switch (ctx.goalKey) {
         case 'loss':
-          action =
-              ' Rien à corriger : garde le cap avec le duo protéines + légumes à chaque repas, c\'est lui qui tient la satiété.';
+          action = l10n.coachActionNoneLoss;
           break;
         case 'gain':
-          action =
-              ' Rien à corriger : pense à répartir tes protéines sur la journée pour bien nourrir ton muscle.';
+          action = l10n.coachActionNoneGain;
           break;
         default:
-          action =
-              ' Rien à corriger : garde le cap avec du brut et de la variété, c\'est la régularité qui paie.';
+          action = l10n.coachActionNoneMaintain;
       }
     }
   }
@@ -2192,12 +2185,12 @@ const Set<String> _kPriorityRatioKeys = {
   'omega3_marins', 'vitC', 'vitK', 'iodine', 'B9',
 };
 
-String? _dietAwareFix(String ratioKey, int diet) {
+String? _dietAwareFix(String ratioKey, int diet, AppLocalizations l10n) {
   if (diet >= 1 && _kMarineKeys.contains(ratioKey)) {
-    return 'un complément d\'oméga 3 issu de micro-algues (source végétale d\'EPA/DHA)';
+    return l10n.dietFixMarineOmega3;
   }
   if (diet == 2 && ratioKey == 'B12') {
-    return 'un complément de vitamine B12 (indispensable en régime végétalien)';
+    return l10n.dietFixB12Vegan;
   }
   return null;
 }

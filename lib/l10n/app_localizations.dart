@@ -5357,6 +5357,270 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'« Les micronutriments, code source de ta vitalité. »'**
   String get advQuoteDefault;
+
+  /// No description provided for @coachNoData.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renseigne tes repas et je te dis en un coup d\'œil où tu en es et quoi ajuster.'**
+  String get coachNoData;
+
+  /// No description provided for @coachEtatGoodStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bon début : {s}/100 sur ce que tu as déjà mangé.'**
+  String coachEtatGoodStart(int s);
+
+  /// No description provided for @coachEtatStarting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Journée qui démarre : {s}/100 pour l\'instant, tout reste à construire.'**
+  String coachEtatStarting(int s);
+
+  /// No description provided for @coachEtatExcellent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Excellente journée : {s}/100. C\'est ce niveau-là qui construit ta santé sur le long terme.'**
+  String coachEtatExcellent(int s);
+
+  /// No description provided for @coachEtatGood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonne journée : {s}/100, avec encore un peu de marge.'**
+  String coachEtatGood(int s);
+
+  /// No description provided for @coachEtatOk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Journée correcte : {s}/100. Un geste ciblé et tu passes un cap.'**
+  String coachEtatOk(int s);
+
+  /// No description provided for @coachEtatToRebalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Journée à rééquilibrer : {s}/100. Rien de grave, un bon repas inverse la tendance.'**
+  String coachEtatToRebalance(int s);
+
+  /// No description provided for @coachProgressUp.
+  ///
+  /// In fr, this message translates to:
+  /// **' En hausse de {diff} points vs ta dernière journée 📈.'**
+  String coachProgressUp(int diff);
+
+  /// No description provided for @coachProgressDown.
+  ///
+  /// In fr, this message translates to:
+  /// **' En baisse de {diff} points vs ta dernière journée.'**
+  String coachProgressDown(int diff);
+
+  /// No description provided for @coachActionSleepCritical.
+  ///
+  /// In fr, this message translates to:
+  /// **' Ta priorité aujourd\'hui n\'est pas dans l\'assiette : tu n\'as dormi que {hours} h. Tes fringales seront plus fortes — mise sur du brut et du rassasiant, et vise une nuit plus longue ce soir.'**
+  String coachActionSleepCritical(String hours);
+
+  /// No description provided for @coachActionStressHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **' Ton stress est à {stress}/10 : c\'est le point à travailler en priorité. Prends 5 respirations lentes avant chaque repas — ça apaise le mental et améliore ta digestion.'**
+  String coachActionStressHigh(int stress);
+
+  /// No description provided for @coachActionDeficitMajorWithFix.
+  ///
+  /// In fr, this message translates to:
+  /// **' Le point à corriger en priorité : {label} ({pct}% de ta cible). Le réflexe : {fix}.'**
+  String coachActionDeficitMajorWithFix(String label, int pct, String fix);
+
+  /// No description provided for @coachActionDeficitMajor.
+  ///
+  /// In fr, this message translates to:
+  /// **' Le point à corriger en priorité : {label} ({pct}% de ta cible).'**
+  String coachActionDeficitMajor(String label, int pct);
+
+  /// No description provided for @coachActionSleepMedium.
+  ///
+  /// In fr, this message translates to:
+  /// **' Ta nuit a été un peu courte ({hours} h) : privilégie du rassasiant aujourd\'hui et lève le pied sur les excitants.'**
+  String coachActionSleepMedium(String hours);
+
+  /// No description provided for @coachActionStressNotable.
+  ///
+  /// In fr, this message translates to:
+  /// **' Ton stress ({stress}/10) mérite un peu d\'attention : quelques respirations lentes dans la journée te feront du bien.'**
+  String coachActionStressNotable(int stress);
+
+  /// No description provided for @coachActionDeficitMinorWithFix.
+  ///
+  /// In fr, this message translates to:
+  /// **' Petit point d\'amélioration : {label} ({pct}% de ta cible). Pense à {fix}.'**
+  String coachActionDeficitMinorWithFix(String label, int pct, String fix);
+
+  /// No description provided for @coachActionDeficitMinor.
+  ///
+  /// In fr, this message translates to:
+  /// **' Petit point d\'amélioration : {label} ({pct}% de ta cible).'**
+  String coachActionDeficitMinor(String label, int pct);
+
+  /// No description provided for @coachActionNoneEvening.
+  ///
+  /// In fr, this message translates to:
+  /// **' Rien à corriger d\'urgence : laisse la nuit faire son travail de récupération.'**
+  String get coachActionNoneEvening;
+
+  /// No description provided for @coachActionNoneLoss.
+  ///
+  /// In fr, this message translates to:
+  /// **' Rien à corriger : garde le cap avec le duo protéines + légumes à chaque repas, c\'est lui qui tient la satiété.'**
+  String get coachActionNoneLoss;
+
+  /// No description provided for @coachActionNoneGain.
+  ///
+  /// In fr, this message translates to:
+  /// **' Rien à corriger : pense à répartir tes protéines sur la journée pour bien nourrir ton muscle.'**
+  String get coachActionNoneGain;
+
+  /// No description provided for @coachActionNoneMaintain.
+  ///
+  /// In fr, this message translates to:
+  /// **' Rien à corriger : garde le cap avec du brut et de la variété, c\'est la régularité qui paie.'**
+  String get coachActionNoneMaintain;
+
+  /// No description provided for @quickFixIron.
+  ///
+  /// In fr, this message translates to:
+  /// **'des lentilles ou un peu de boudin, avec un filet de citron pour l\'absorption'**
+  String get quickFixIron;
+
+  /// No description provided for @quickFixMagnesium.
+  ///
+  /// In fr, this message translates to:
+  /// **'une poignée d\'amandes ou un carré de chocolat noir'**
+  String get quickFixMagnesium;
+
+  /// No description provided for @quickFixCalcium.
+  ///
+  /// In fr, this message translates to:
+  /// **'des sardines, un yaourt ou une poignée d\'amandes'**
+  String get quickFixCalcium;
+
+  /// No description provided for @quickFixZinc.
+  ///
+  /// In fr, this message translates to:
+  /// **'des graines de courge, du bœuf ou des huîtres'**
+  String get quickFixZinc;
+
+  /// No description provided for @quickFixIodine.
+  ///
+  /// In fr, this message translates to:
+  /// **'du poisson, des fruits de mer ou un œuf'**
+  String get quickFixIodine;
+
+  /// No description provided for @quickFixSelenium.
+  ///
+  /// In fr, this message translates to:
+  /// **'une sardine, un œuf ou des fruits de mer'**
+  String get quickFixSelenium;
+
+  /// No description provided for @quickFixPotassium.
+  ///
+  /// In fr, this message translates to:
+  /// **'un avocat, une patate douce ou des légumineuses'**
+  String get quickFixPotassium;
+
+  /// No description provided for @quickFixVitC.
+  ///
+  /// In fr, this message translates to:
+  /// **'un kiwi, un poivron rouge ou quelques fraises'**
+  String get quickFixVitC;
+
+  /// No description provided for @quickFixVitD.
+  ///
+  /// In fr, this message translates to:
+  /// **'un poisson gras (sardine, maquereau) et un peu de soleil'**
+  String get quickFixVitD;
+
+  /// No description provided for @quickFixVitE.
+  ///
+  /// In fr, this message translates to:
+  /// **'des amandes, des noisettes ou un filet d\'huile vierge'**
+  String get quickFixVitE;
+
+  /// No description provided for @quickFixVitA.
+  ///
+  /// In fr, this message translates to:
+  /// **'une carotte, de la patate douce ou du jaune d\'œuf'**
+  String get quickFixVitA;
+
+  /// No description provided for @quickFixVitK.
+  ///
+  /// In fr, this message translates to:
+  /// **'des légumes verts (épinard, chou) ou un peu de fromage affiné'**
+  String get quickFixVitK;
+
+  /// No description provided for @quickFixB9.
+  ///
+  /// In fr, this message translates to:
+  /// **'des légumes verts à feuilles ou des légumineuses'**
+  String get quickFixB9;
+
+  /// No description provided for @quickFixB12.
+  ///
+  /// In fr, this message translates to:
+  /// **'des œufs, du poisson ou de la viande'**
+  String get quickFixB12;
+
+  /// No description provided for @quickFixB6.
+  ///
+  /// In fr, this message translates to:
+  /// **'de la volaille, une banane ou des pois chiches'**
+  String get quickFixB6;
+
+  /// No description provided for @quickFixOmega3.
+  ///
+  /// In fr, this message translates to:
+  /// **'des graines de chanvre ou de lin moulues, ou des noix'**
+  String get quickFixOmega3;
+
+  /// No description provided for @quickFixOmega3Marine.
+  ///
+  /// In fr, this message translates to:
+  /// **'des sardines, du maquereau ou du hareng'**
+  String get quickFixOmega3Marine;
+
+  /// No description provided for @quickFixCopper.
+  ///
+  /// In fr, this message translates to:
+  /// **'des oléagineux, du chocolat noir ou des fruits de mer'**
+  String get quickFixCopper;
+
+  /// No description provided for @quickFixManganese.
+  ///
+  /// In fr, this message translates to:
+  /// **'des céréales complètes, des oléagineux ou du thé'**
+  String get quickFixManganese;
+
+  /// No description provided for @quickFixPhosphorus.
+  ///
+  /// In fr, this message translates to:
+  /// **'des œufs, du poisson ou des légumineuses'**
+  String get quickFixPhosphorus;
+
+  /// No description provided for @quickFixFibers.
+  ///
+  /// In fr, this message translates to:
+  /// **'des légumineuses, un fruit entier ou des légumes'**
+  String get quickFixFibers;
+
+  /// No description provided for @dietFixMarineOmega3.
+  ///
+  /// In fr, this message translates to:
+  /// **'un complément d\'oméga 3 issu de micro-algues (source végétale d\'EPA/DHA)'**
+  String get dietFixMarineOmega3;
+
+  /// No description provided for @dietFixB12Vegan.
+  ///
+  /// In fr, this message translates to:
+  /// **'un complément de vitamine B12 (indispensable en régime végétalien)'**
+  String get dietFixB12Vegan;
 }
 
 class _AppLocalizationsDelegate

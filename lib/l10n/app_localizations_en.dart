@@ -3068,4 +3068,179 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get advQuoteDefault =>
       '\"Micronutrients: the source code of your vitality.\"';
+
+  @override
+  String get coachNoData =>
+      'Log your meals and I\'ll show you at a glance where you stand and what to adjust.';
+
+  @override
+  String coachEtatGoodStart(int s) {
+    return 'Good start: $s/100 for what you\'ve eaten so far.';
+  }
+
+  @override
+  String coachEtatStarting(int s) {
+    return 'Day just starting: $s/100 for now, everything\'s still to build.';
+  }
+
+  @override
+  String coachEtatExcellent(int s) {
+    return 'Excellent day: $s/100. This is the level that builds your long-term health.';
+  }
+
+  @override
+  String coachEtatGood(int s) {
+    return 'Good day: $s/100, with a bit more room to grow.';
+  }
+
+  @override
+  String coachEtatOk(int s) {
+    return 'Decent day: $s/100. One targeted move and you level up.';
+  }
+
+  @override
+  String coachEtatToRebalance(int s) {
+    return 'Day to rebalance: $s/100. Nothing serious, one good meal turns the trend around.';
+  }
+
+  @override
+  String coachProgressUp(int diff) {
+    return ' Up $diff points vs your last full day 📈.';
+  }
+
+  @override
+  String coachProgressDown(int diff) {
+    return ' Down $diff points vs your last full day.';
+  }
+
+  @override
+  String coachActionSleepCritical(String hours) {
+    return ' Your priority today isn\'t on your plate: you only slept $hours h. Cravings will hit harder — lean on whole, filling foods, and aim for a longer night tonight.';
+  }
+
+  @override
+  String coachActionStressHigh(int stress) {
+    return ' Your stress is at $stress/10: that\'s the priority to work on. Take 5 slow breaths before each meal — it calms the mind and helps digestion.';
+  }
+
+  @override
+  String coachActionDeficitMajorWithFix(String label, int pct, String fix) {
+    return ' Top priority to fix: $label ($pct% of your target). Quick fix: $fix.';
+  }
+
+  @override
+  String coachActionDeficitMajor(String label, int pct) {
+    return ' Top priority to fix: $label ($pct% of your target).';
+  }
+
+  @override
+  String coachActionSleepMedium(String hours) {
+    return ' Your night was a bit short ($hours h): favor filling foods today and ease up on stimulants.';
+  }
+
+  @override
+  String coachActionStressNotable(int stress) {
+    return ' Your stress ($stress/10) deserves a bit of attention: a few slow breaths during the day will do you good.';
+  }
+
+  @override
+  String coachActionDeficitMinorWithFix(String label, int pct, String fix) {
+    return ' Small improvement point: $label ($pct% of your target). Think about $fix.';
+  }
+
+  @override
+  String coachActionDeficitMinor(String label, int pct) {
+    return ' Small improvement point: $label ($pct% of your target).';
+  }
+
+  @override
+  String get coachActionNoneEvening =>
+      ' Nothing urgent to fix: let the night do its recovery work.';
+
+  @override
+  String get coachActionNoneLoss =>
+      ' Nothing to fix: stick with the protein + vegetables combo at every meal, it\'s what keeps you full.';
+
+  @override
+  String get coachActionNoneGain =>
+      ' Nothing to fix: remember to spread your protein through the day to properly feed your muscle.';
+
+  @override
+  String get coachActionNoneMaintain =>
+      ' Nothing to fix: keep it up with whole foods and variety, consistency is what pays off.';
+
+  @override
+  String get quickFixIron =>
+      'lentils or a bit of blood sausage, with a squeeze of lemon for absorption';
+
+  @override
+  String get quickFixMagnesium =>
+      'a handful of almonds or a square of dark chocolate';
+
+  @override
+  String get quickFixCalcium => 'sardines, a yogurt or a handful of almonds';
+
+  @override
+  String get quickFixZinc => 'pumpkin seeds, beef or oysters';
+
+  @override
+  String get quickFixIodine => 'fish, seafood or an egg';
+
+  @override
+  String get quickFixSelenium => 'a sardine, an egg or seafood';
+
+  @override
+  String get quickFixPotassium => 'an avocado, a sweet potato or legumes';
+
+  @override
+  String get quickFixVitC => 'a kiwi, a red pepper or a few strawberries';
+
+  @override
+  String get quickFixVitD =>
+      'an oily fish (sardine, mackerel) and a bit of sunshine';
+
+  @override
+  String get quickFixVitE => 'almonds, hazelnuts or a drizzle of virgin oil';
+
+  @override
+  String get quickFixVitA => 'a carrot, sweet potato or an egg yolk';
+
+  @override
+  String get quickFixVitK =>
+      'leafy greens (spinach, cabbage) or a bit of aged cheese';
+
+  @override
+  String get quickFixB9 => 'leafy greens or legumes';
+
+  @override
+  String get quickFixB12 => 'eggs, fish or meat';
+
+  @override
+  String get quickFixB6 => 'poultry, a banana or chickpeas';
+
+  @override
+  String get quickFixOmega3 => 'ground hemp or flax seeds, or walnuts';
+
+  @override
+  String get quickFixOmega3Marine => 'sardines, mackerel or herring';
+
+  @override
+  String get quickFixCopper => 'nuts, dark chocolate or seafood';
+
+  @override
+  String get quickFixManganese => 'whole grains, nuts or tea';
+
+  @override
+  String get quickFixPhosphorus => 'eggs, fish or legumes';
+
+  @override
+  String get quickFixFibers => 'legumes, a whole fruit or vegetables';
+
+  @override
+  String get dietFixMarineOmega3 =>
+      'an algae-based omega-3 supplement (plant source of EPA/DHA)';
+
+  @override
+  String get dietFixB12Vegan =>
+      'a vitamin B12 supplement (essential on a vegan diet)';
 }
