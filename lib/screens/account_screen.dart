@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../l10n/l10n_ext.dart';
 import '../services/app_settings.dart';
 import '../services/units.dart';
 import '../services/export/journal_export.dart';
@@ -208,9 +209,10 @@ class _AccountScreenState extends State<AccountScreen> {
       return;
     }
     if (resp.productDetails.isEmpty) {
+      if (!mounted) return;
       setState(() {
         _storeAvailable = false;
-        _purchaseError = 'Produit Premium introuvable sur le Store.';
+        _purchaseError = context.l10n.accountProductNotFound;
       });
       return;
     }
@@ -229,8 +231,7 @@ class _AccountScreenState extends State<AccountScreen> {
     // On vend désormais l'ABONNEMENT annuel (plus l'achat unique).
     if (!_storeAvailable || _subProduct == null) {
       setState(() {
-        _purchaseError =
-            'Abonnement non disponible pour le moment. Réessaie dans quelques instants.';
+        _purchaseError = context.l10n.accountSubscriptionUnavailable;
       });
       return;
     }
@@ -268,16 +269,14 @@ class _AccountScreenState extends State<AccountScreen> {
             await _activatePremium();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Tu possédais déjà TOTUM Premium sur ce compte Google, ton accès a été restauré.',
-                  ),
+                SnackBar(
+                  content: Text(context.l10n.accountAlreadyOwnedRestored),
                 ),
               );
             }
           } else {
-            setState(() =>
-                _purchaseError = msg.isEmpty ? 'Erreur inconnue.' : msg);
+            setState(() => _purchaseError =
+                msg.isEmpty ? context.l10n.accountUnknownError : msg);
           }
         }
         if (p.pendingCompletePurchase) await _iap.completePurchase(p);
@@ -297,14 +296,13 @@ class _AccountScreenState extends State<AccountScreen> {
       if (!mounted) return;
       if (showMessage) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Merci ! TOTUM Premium est activé !')),
+          SnackBar(content: Text(context.l10n.accountPremiumActivated)),
         );
       }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de l\'activation : $e')),
+        SnackBar(content: Text(context.l10n.accountActivationError(e.toString()))),
       );
     }
   }
@@ -340,14 +338,13 @@ class _AccountScreenState extends State<AccountScreen> {
       if (!mounted) return;
       if (showMessage) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Merci ! Ton abonnement TOTUM Premium est actif !')),
+          SnackBar(content: Text(context.l10n.accountSubscriptionActivated)),
         );
       }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de l\'activation : $e')),
+        SnackBar(content: Text(context.l10n.accountActivationError(e.toString()))),
       );
     }
   }
@@ -402,6 +399,7 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     final user = _client.auth.currentUser;
+    final l10n = context.l10n;
 
     return Scaffold(
       backgroundColor: TotumColors.page,
@@ -410,7 +408,7 @@ class _AccountScreenState extends State<AccountScreen> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         foregroundColor: TotumColors.textPrimary,
-        title: const Text('Compte & Paramètres', style: TextStyle(fontWeight: FontWeight.w900)),
+        title: Text(l10n.accountScreenTitle, style: const TextStyle(fontWeight: FontWeight.w900)),
       ),
       body: SafeArea(
         child: _loading
@@ -424,7 +422,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   const SizedBox(height: 26),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Réglages',
+                    child: Text(l10n.accountSettingsSectionLabel,
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
                   ),
                   const SizedBox(height: 12),
@@ -434,35 +432,35 @@ class _AccountScreenState extends State<AccountScreen> {
                       children: [
                         _menuRow(
                           icon: Icons.person_outline,
-                          label: 'Compte',
+                          label: l10n.accountMenuAccount,
                           onTap: () => Navigator.of(context).push(MaterialPageRoute(
                               builder: (_) => AccountDetailsScreen(client: _client))),
                         ),
                         Divider(height: 1, color: TotumColors.outline),
                         _menuRow(
                           icon: Icons.palette_outlined,
-                          label: 'Apparence',
+                          label: l10n.accountMenuAppearance,
                           onTap: () => Navigator.of(context)
                               .push(MaterialPageRoute(builder: (_) => const AppearanceSettingsScreen())),
                         ),
                         Divider(height: 1, color: TotumColors.outline),
                         _menuRow(
                           icon: Icons.translate,
-                          label: 'Langue & unités',
+                          label: l10n.accountMenuLanguageUnits,
                           onTap: () => Navigator.of(context)
                               .push(MaterialPageRoute(builder: (_) => const LanguageUnitsSettingsScreen())),
                         ),
                         Divider(height: 1, color: TotumColors.outline),
                         _menuRow(
                           icon: Icons.download_outlined,
-                          label: 'Mes données',
+                          label: l10n.accountMenuMyData,
                           onTap: () => Navigator.of(context)
                               .push(MaterialPageRoute(builder: (_) => const DataExportScreen())),
                         ),
                         Divider(height: 1, color: TotumColors.outline),
                         _menuRow(
                           icon: Icons.info_outline,
-                          label: 'À propos',
+                          label: l10n.accountMenuAbout,
                           onTap: () => Navigator.of(context)
                               .push(MaterialPageRoute(builder: (_) => const AboutScreen())),
                         ),
@@ -503,7 +501,7 @@ class _AccountScreenState extends State<AccountScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(email.isNotEmpty ? email : 'Compte TOTUM',
+                Text(email.isNotEmpty ? email : context.l10n.accountDefaultName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
@@ -518,19 +516,22 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _statusChip() {
+    final l10n = context.l10n;
     IconData icon;
     String label;
     if (_isPremium) {
       icon = Icons.workspace_premium_outlined;
-      label = 'Premium à vie';
+      label = l10n.accountStatusLifetimePremium;
     } else if (_subActive) {
       icon = Icons.workspace_premium_outlined;
-      label = 'Abonné·e annuel';
+      label = l10n.accountStatusAnnualSubscriber;
     } else {
       final end = _trialEnd;
       final remaining = end != null ? end.difference(DateTime.now().toUtc()).inDays + 1 : null;
       icon = Icons.hourglass_top_rounded;
-      label = (remaining != null && remaining >= 0) ? 'Essai — $remaining j restants' : 'Essai terminé';
+      label = (remaining != null && remaining >= 0)
+          ? l10n.accountStatusTrialRemaining(remaining)
+          : l10n.accountStatusTrialEnded;
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
@@ -547,6 +548,7 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _subscriptionCard() {
+    final l10n = context.l10n;
     final String storePriceText = kIsWeb ? '14,99 €/an' : (_subProduct?.price ?? '14,99 €/an');
 
     if (_isPremium) {
@@ -565,9 +567,9 @@ class _AccountScreenState extends State<AccountScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Premium à vie', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                  Text(l10n.accountStatusLifetimePremium, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                   const SizedBox(height: 2),
-                  Text('Accès complet, sans publicité — merci pour ta confiance.',
+                  Text(l10n.accountSubLifetimeSubtitle,
                       style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
                 ],
               ),
@@ -596,10 +598,10 @@ class _AccountScreenState extends State<AccountScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Abonnement annuel actif',
+                      Text(l10n.accountSubActiveTitle,
                           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                       const SizedBox(height: 2),
-                      Text('Jusqu\'au ${_frDate(_premiumUntil!)} · 14,99 €/an',
+                      Text(l10n.accountSubActiveSubtitle(_frDate(_premiumUntil!)),
                           style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
                     ],
                   ),
@@ -616,13 +618,13 @@ class _AccountScreenState extends State<AccountScreen> {
                   onPressed: _openManageSubscription,
                   style: TextButton.styleFrom(foregroundColor: TotumColors.accent, padding: const EdgeInsets.symmetric(vertical: 8)),
                   icon: const Icon(Icons.settings_outlined, size: 17),
-                  label: const Text('Gérer mon abonnement', style: TextStyle(fontWeight: FontWeight.w700)),
+                  label: Text(l10n.accountManageSubscription, style: const TextStyle(fontWeight: FontWeight.w700)),
                 ),
               ),
             ] else ...[
               const SizedBox(height: 10),
               Text(
-                'Pour gérer ou annuler ton abonnement, utilise le lien « Gérer votre abonnement » présent dans tes reçus Stripe.',
+                l10n.accountManageViaStripeReceipt,
                 style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted),
               ),
             ],
@@ -637,10 +639,10 @@ class _AccountScreenState extends State<AccountScreen> {
     final remaining = end != null ? end.difference(now).inDays + 1 : null;
     final inTrial = remaining != null && remaining >= 0;
     final subtitle = end == null
-        ? 'Nous n\'avons pas encore pu déterminer ton essai. Si besoin, déconnecte-toi puis reconnecte-toi.'
+        ? l10n.accountTrialUnknown
         : inTrial
-            ? 'Il te reste $remaining jour${remaining > 1 ? 's' : ''} d\'accès complet à TOTUM.'
-            : 'Ton essai gratuit est terminé — abonne-toi pour retrouver un accès complet.';
+            ? l10n.accountTrialRemainingDays(remaining)
+            : l10n.accountTrialEndedSubtitle;
 
     return TotumCard(
       child: Column(
@@ -659,7 +661,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(inTrial ? 'Essai gratuit en cours' : 'Essai gratuit terminé',
+                    Text(inTrial ? l10n.accountTrialInProgressTitle : l10n.accountTrialEndedTitle,
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                     const SizedBox(height: 2),
                     Text(subtitle, style: TextStyle(fontSize: 12, color: TotumColors.textSecondary, height: 1.3)),
@@ -680,7 +682,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 13),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: Text(_purchasePending ? 'Traitement en cours…' : 'S\'abonner ($storePriceText)',
+                child: Text(_purchasePending ? l10n.accountProcessing : l10n.accountSubscribeWithPrice(storePriceText),
                     style: const TextStyle(fontWeight: FontWeight.w800)),
               ),
             )
@@ -695,17 +697,17 @@ class _AccountScreenState extends State<AccountScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 13),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text('S\'abonner — 14,99 €/an', style: TextStyle(fontWeight: FontWeight.w800)),
+                child: Text(l10n.accountSubscribeAnnualWeb, style: const TextStyle(fontWeight: FontWeight.w800)),
               ),
             )
           else if (!_storeAvailable)
-            Text('Le paiement in-app n\'est pas disponible sur cet appareil.',
+            Text(l10n.accountInAppUnavailable,
                 style: TextStyle(fontSize: 12, color: TotumColors.textMuted)),
           if (kIsWeb)
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Text(
-                'Paiement 100 % sécurisé via Stripe · renouvelé automatiquement chaque année, annulable à tout moment.',
+                l10n.accountStripeSecurePayment,
                 style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
               ),
             ),
@@ -758,17 +760,14 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Supprimer mon compte'),
-        content: const Text(
-          'Cette action est irréversible : ta demande de suppression sera enregistrée, ton compte et toutes tes données '
-          '(journal, objectifs, historique de poids) seront supprimés définitivement. Tu seras déconnecté immédiatement.',
-        ),
+        title: Text(context.l10n.accountDeleteDialogTitle),
+        content: Text(context.l10n.accountDeleteDialogContent),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annuler')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(context.l10n.commonCancel)),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: TotumColors.negative),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Supprimer définitivement'),
+            child: Text(context.l10n.accountDeletePermanently),
           ),
         ],
       ),
@@ -826,7 +825,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                 : Icon(icon, size: 20, color: color),
             const SizedBox(width: 14),
             Expanded(
-              child: Text(loading ? 'Suppression…' : label,
+              child: Text(loading ? context.l10n.accountDeletingInProgress : label,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: color)),
             ),
             if (!danger) Icon(Icons.chevron_right, size: 18, color: TotumColors.textMuted),
@@ -839,12 +838,13 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final email = widget.client.auth.currentUser?.email ?? '';
-    return _settingsScaffold(title: 'Compte', children: [
+    final l10n = context.l10n;
+    return _settingsScaffold(title: l10n.accountDetailsScreenTitle, children: [
       TotumCard(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Adresse courriel', style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
+            Text(l10n.accountEmailLabel, style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
             Flexible(
               child: Text(email,
                   textAlign: TextAlign.right,
@@ -861,7 +861,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
           children: [
             _actionRow(
               icon: Icons.logout_rounded,
-              label: 'Se déconnecter',
+              label: l10n.accountSignOut,
               onTap: () async {
                 await widget.client.auth.signOut();
                 if (context.mounted) Navigator.of(context).pop();
@@ -870,7 +870,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
             Divider(height: 1, color: TotumColors.outline),
             _actionRow(
               icon: Icons.delete_outline,
-              label: 'Supprimer mon compte',
+              label: l10n.accountDeleteDialogTitle,
               danger: true,
               loading: _deleting,
               onTap: _deleting ? null : _confirmDeleteAccount,
@@ -891,12 +891,13 @@ class AppearanceSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _settingsScaffold(title: 'Apparence', children: [
+    final l10n = context.l10n;
+    return _settingsScaffold(title: l10n.appearanceScreenTitle, children: [
       TotumCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sectionHeader(Icons.palette_outlined, 'Thème'),
+            _sectionHeader(Icons.palette_outlined, l10n.appearanceThemeSectionTitle),
             const SizedBox(height: 16),
             // Priorité 60 (15/08/2026) : mode sombre réel — TotumColors est
             // désormais adaptative (voir totum_style.dart), donc ce choix
@@ -938,9 +939,9 @@ class AppearanceSettingsScreen extends StatelessWidget {
 
                 return Row(
                   children: [
-                    option(ThemeMode.light, Icons.light_mode_outlined, 'Clair'),
-                    option(ThemeMode.dark, Icons.dark_mode_outlined, 'Sombre'),
-                    option(ThemeMode.system, Icons.brightness_auto_outlined, 'Système'),
+                    option(ThemeMode.light, Icons.light_mode_outlined, l10n.appearanceThemeLight),
+                    option(ThemeMode.dark, Icons.dark_mode_outlined, l10n.appearanceThemeDark),
+                    option(ThemeMode.system, Icons.brightness_auto_outlined, l10n.appearanceThemeSystem),
                   ],
                 );
               },
@@ -953,7 +954,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sectionHeader(Icons.format_size, 'Taille du texte'),
+            _sectionHeader(Icons.format_size, l10n.appearanceTextSizeSectionTitle),
             const SizedBox(height: 16),
             ValueListenableBuilder<double>(
               valueListenable: AppSettings.textScale,
@@ -1013,21 +1014,21 @@ class LanguageUnitsSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _settingsScaffold(title: 'Langue & unités', children: [
+    final l10n = context.l10n;
+    return _settingsScaffold(title: l10n.languageUnitsScreenTitle, children: [
       TotumCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sectionHeader(Icons.restaurant_menu, 'Langue des aliments'),
+            _sectionHeader(Icons.translate, l10n.languageSectionTitle),
             const SizedBox(height: 16),
-            _subLabel('Nom des aliments',
-                hint: 'Dans la recherche et le journal — le reste de l\'app reste en français.'),
+            _subLabel(l10n.languageSubLabel, hint: l10n.languageSubLabelHint),
             ValueListenableBuilder<String>(
               valueListenable: AppSettings.language,
               builder: (context, lang, _) => SegmentedButton<String>(
-                segments: const [
-                  ButtonSegment(value: 'fr', label: Text('Français')),
-                  ButtonSegment(value: 'en', label: Text('Anglais')),
+                segments: [
+                  ButtonSegment(value: 'fr', label: Text(l10n.languageFrench)),
+                  ButtonSegment(value: 'en', label: Text(l10n.languageEnglish)),
                 ],
                 selected: {lang},
                 style: SegmentedButton.styleFrom(
@@ -1045,9 +1046,9 @@ class LanguageUnitsSettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sectionHeader(Icons.straighten, 'Unités de mesure'),
+            _sectionHeader(Icons.straighten, l10n.unitsSectionTitle),
             const SizedBox(height: 16),
-            _subLabel('Poids et taille', hint: 'Les calculs internes restent toujours en métrique.'),
+            _subLabel(l10n.unitsSubLabel, hint: l10n.unitsSubLabelHint),
             ValueListenableBuilder<UnitSystem>(
               valueListenable: AppSettings.unitSystem,
               builder: (context, units, _) => SegmentedButton<UnitSystem>(
@@ -1085,25 +1086,26 @@ class _DataExportScreenState extends State<DataExportScreen> {
   bool _exporting = false;
 
   Future<void> _exportData() async {
+    final l10n = context.l10n;
     final now = DateTime.now();
     final range = await showDateRangePicker(
       context: context,
       firstDate: DateTime(2020),
       lastDate: now,
       initialDateRange: DateTimeRange(start: now.subtract(const Duration(days: 89)), end: now),
-      helpText: 'Période à exporter',
-      saveText: 'EXPORTER',
+      helpText: l10n.dataExportPeriodHelpText,
+      saveText: l10n.dataExportSaveText,
     );
     if (range == null || !mounted) return;
     setState(() => _exporting = true);
     try {
       await JournalExporter.exportHtml(from: range.start, to: range.end);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Rapport exporté')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.dataExportSuccessSnackbar)));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur export : $e')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.dataExportErrorSnackbar(e.toString()))));
       }
     } finally {
       if (mounted) setState(() => _exporting = false);
@@ -1112,15 +1114,16 @@ class _DataExportScreenState extends State<DataExportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _settingsScaffold(title: 'Mes données', children: [
+    final l10n = context.l10n;
+    return _settingsScaffold(title: l10n.dataExportScreenTitle, children: [
       TotumCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sectionHeader(Icons.download_outlined, 'Exporter mon journal'),
+            _sectionHeader(Icons.download_outlined, l10n.dataExportSectionTitle),
             const SizedBox(height: 14),
             Text(
-              'Exporte ton journal alimentaire, tes objectifs et tes micronutriments sur une période, au format HTML (convertible en PDF, ex. pour un professionnel de santé).',
+              l10n.dataExportDescription,
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4),
             ),
             const SizedBox(height: 14),
@@ -1132,7 +1135,7 @@ class _DataExportScreenState extends State<DataExportScreen> {
                     ? const SizedBox(
                         width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: TotumColors.accent))
                     : const Icon(Icons.ios_share, size: 18),
-                label: Text(_exporting ? 'Génération…' : 'Exporter mes données'),
+                label: Text(_exporting ? l10n.dataExportGenerating : l10n.dataExportButton),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 13),
                   side: BorderSide(color: TotumColors.accentBorder, width: 1.4),
@@ -1165,7 +1168,8 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _settingsScaffold(title: 'À propos', children: [
+    final l10n = context.l10n;
+    return _settingsScaffold(title: l10n.aboutScreenTitle, children: [
       TotumCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1175,7 +1179,7 @@ class AboutScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Version', style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
+                Text(l10n.aboutVersionLabel, style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
                 FutureBuilder<String>(
                   future: _loadVersion(),
                   builder: (context, snap) => Text(snap.data ?? '…',

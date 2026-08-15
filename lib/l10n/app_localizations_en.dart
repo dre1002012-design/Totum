@@ -465,4 +465,238 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sunUvExtreme => 'Extreme — use great caution';
+
+  @override
+  String get accountScreenTitle => 'Account & Settings';
+
+  @override
+  String get accountSettingsSectionLabel => 'Settings';
+
+  @override
+  String get accountMenuAccount => 'Account';
+
+  @override
+  String get accountMenuAppearance => 'Appearance';
+
+  @override
+  String get accountMenuLanguageUnits => 'Language & units';
+
+  @override
+  String get accountMenuMyData => 'My data';
+
+  @override
+  String get accountMenuAbout => 'About';
+
+  @override
+  String get accountDefaultName => 'TOTUM account';
+
+  @override
+  String get accountStatusLifetimePremium => 'Lifetime Premium';
+
+  @override
+  String get accountStatusAnnualSubscriber => 'Annual subscriber';
+
+  @override
+  String accountStatusTrialRemaining(int days) {
+    return 'Trial — ${days}d left';
+  }
+
+  @override
+  String get accountStatusTrialEnded => 'Trial ended';
+
+  @override
+  String get accountSubLifetimeSubtitle =>
+      'Full access, no ads — thank you for your trust.';
+
+  @override
+  String get accountSubActiveTitle => 'Annual subscription active';
+
+  @override
+  String accountSubActiveSubtitle(String date) {
+    return 'Until $date · €14.99/year';
+  }
+
+  @override
+  String get accountManageSubscription => 'Manage my subscription';
+
+  @override
+  String get accountManageViaStripeReceipt =>
+      'To manage or cancel your subscription, use the \"Manage your subscription\" link found in your Stripe receipts.';
+
+  @override
+  String get accountTrialUnknown =>
+      'We haven\'t been able to determine your trial yet. If needed, sign out and sign back in.';
+
+  @override
+  String accountTrialRemainingDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You have $count days of full access to TOTUM left.',
+      one: 'You have 1 day of full access to TOTUM left.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountTrialEndedSubtitle =>
+      'Your free trial has ended — subscribe to regain full access.';
+
+  @override
+  String get accountTrialInProgressTitle => 'Free trial in progress';
+
+  @override
+  String get accountTrialEndedTitle => 'Free trial ended';
+
+  @override
+  String get accountProcessing => 'Processing…';
+
+  @override
+  String accountSubscribeWithPrice(String price) {
+    return 'Subscribe ($price)';
+  }
+
+  @override
+  String get accountSubscribeAnnualWeb => 'Subscribe — €14.99/year';
+
+  @override
+  String get accountInAppUnavailable =>
+      'In-app payment isn\'t available on this device.';
+
+  @override
+  String get accountStripeSecurePayment =>
+      '100% secure payment via Stripe · renewed automatically every year, cancellable anytime.';
+
+  @override
+  String get accountProductNotFound =>
+      'Premium product not found on the Store.';
+
+  @override
+  String get accountSubscriptionUnavailable =>
+      'Subscription unavailable right now. Try again in a moment.';
+
+  @override
+  String get accountAlreadyOwnedRestored =>
+      'You already owned TOTUM Premium on this Google account, your access has been restored.';
+
+  @override
+  String get accountUnknownError => 'Unknown error.';
+
+  @override
+  String get accountPremiumActivated =>
+      'Thank you! TOTUM Premium is activated!';
+
+  @override
+  String accountActivationError(String error) {
+    return 'Error during activation: $error';
+  }
+
+  @override
+  String get accountSubscriptionActivated =>
+      'Thank you! Your TOTUM Premium subscription is active!';
+
+  @override
+  String get accountDeleteDialogTitle => 'Delete my account';
+
+  @override
+  String get accountDeleteDialogContent =>
+      'This action is irreversible: your deletion request will be recorded, and your account and all your data (journal, goals, weight history) will be permanently deleted. You\'ll be signed out immediately.';
+
+  @override
+  String get accountDeletePermanently => 'Delete permanently';
+
+  @override
+  String get accountDeletingInProgress => 'Deleting…';
+
+  @override
+  String get accountDetailsScreenTitle => 'Account';
+
+  @override
+  String get accountEmailLabel => 'Email address';
+
+  @override
+  String get accountSignOut => 'Sign out';
+
+  @override
+  String get appearanceScreenTitle => 'Appearance';
+
+  @override
+  String get appearanceThemeSectionTitle => 'Theme';
+
+  @override
+  String get appearanceThemeLight => 'Light';
+
+  @override
+  String get appearanceThemeDark => 'Dark';
+
+  @override
+  String get appearanceThemeSystem => 'System';
+
+  @override
+  String get appearanceTextSizeSectionTitle => 'Text size';
+
+  @override
+  String get languageUnitsScreenTitle => 'Language & units';
+
+  @override
+  String get languageSectionTitle => 'App language';
+
+  @override
+  String get languageSubLabel => 'Interface language';
+
+  @override
+  String get languageSubLabelHint =>
+      'Applies to the whole app, including food names in search and the journal.';
+
+  @override
+  String get languageFrench => 'French';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get unitsSectionTitle => 'Units of measurement';
+
+  @override
+  String get unitsSubLabel => 'Weight and height';
+
+  @override
+  String get unitsSubLabelHint =>
+      'Internal calculations always stay in metric.';
+
+  @override
+  String get dataExportScreenTitle => 'My data';
+
+  @override
+  String get dataExportSectionTitle => 'Export my journal';
+
+  @override
+  String get dataExportDescription =>
+      'Export your food journal, goals and micronutrients over a period, in HTML format (convertible to PDF, e.g. for a healthcare professional).';
+
+  @override
+  String get dataExportPeriodHelpText => 'Period to export';
+
+  @override
+  String get dataExportSaveText => 'EXPORT';
+
+  @override
+  String get dataExportSuccessSnackbar => 'Report exported';
+
+  @override
+  String dataExportErrorSnackbar(String error) {
+    return 'Export error: $error';
+  }
+
+  @override
+  String get dataExportGenerating => 'Generating…';
+
+  @override
+  String get dataExportButton => 'Export my data';
+
+  @override
+  String get aboutScreenTitle => 'About';
+
+  @override
+  String get aboutVersionLabel => 'Version';
 }

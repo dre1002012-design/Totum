@@ -467,4 +467,237 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sunUvExtreme => 'Extrême — grande prudence';
+
+  @override
+  String get accountScreenTitle => 'Compte & Paramètres';
+
+  @override
+  String get accountSettingsSectionLabel => 'Réglages';
+
+  @override
+  String get accountMenuAccount => 'Compte';
+
+  @override
+  String get accountMenuAppearance => 'Apparence';
+
+  @override
+  String get accountMenuLanguageUnits => 'Langue & unités';
+
+  @override
+  String get accountMenuMyData => 'Mes données';
+
+  @override
+  String get accountMenuAbout => 'À propos';
+
+  @override
+  String get accountDefaultName => 'Compte TOTUM';
+
+  @override
+  String get accountStatusLifetimePremium => 'Premium à vie';
+
+  @override
+  String get accountStatusAnnualSubscriber => 'Abonné·e annuel';
+
+  @override
+  String accountStatusTrialRemaining(int days) {
+    return 'Essai — $days j restants';
+  }
+
+  @override
+  String get accountStatusTrialEnded => 'Essai terminé';
+
+  @override
+  String get accountSubLifetimeSubtitle =>
+      'Accès complet, sans publicité — merci pour ta confiance.';
+
+  @override
+  String get accountSubActiveTitle => 'Abonnement annuel actif';
+
+  @override
+  String accountSubActiveSubtitle(String date) {
+    return 'Jusqu\'au $date · 14,99 €/an';
+  }
+
+  @override
+  String get accountManageSubscription => 'Gérer mon abonnement';
+
+  @override
+  String get accountManageViaStripeReceipt =>
+      'Pour gérer ou annuler ton abonnement, utilise le lien « Gérer votre abonnement » présent dans tes reçus Stripe.';
+
+  @override
+  String get accountTrialUnknown =>
+      'Nous n\'avons pas encore pu déterminer ton essai. Si besoin, déconnecte-toi puis reconnecte-toi.';
+
+  @override
+  String accountTrialRemainingDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Il te reste $count jours d\'accès complet à TOTUM.',
+      one: 'Il te reste 1 jour d\'accès complet à TOTUM.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountTrialEndedSubtitle =>
+      'Ton essai gratuit est terminé — abonne-toi pour retrouver un accès complet.';
+
+  @override
+  String get accountTrialInProgressTitle => 'Essai gratuit en cours';
+
+  @override
+  String get accountTrialEndedTitle => 'Essai gratuit terminé';
+
+  @override
+  String get accountProcessing => 'Traitement en cours…';
+
+  @override
+  String accountSubscribeWithPrice(String price) {
+    return 'S\'abonner ($price)';
+  }
+
+  @override
+  String get accountSubscribeAnnualWeb => 'S\'abonner — 14,99 €/an';
+
+  @override
+  String get accountInAppUnavailable =>
+      'Le paiement in-app n\'est pas disponible sur cet appareil.';
+
+  @override
+  String get accountStripeSecurePayment =>
+      'Paiement 100 % sécurisé via Stripe · renouvelé automatiquement chaque année, annulable à tout moment.';
+
+  @override
+  String get accountProductNotFound =>
+      'Produit Premium introuvable sur le Store.';
+
+  @override
+  String get accountSubscriptionUnavailable =>
+      'Abonnement non disponible pour le moment. Réessaie dans quelques instants.';
+
+  @override
+  String get accountAlreadyOwnedRestored =>
+      'Tu possédais déjà TOTUM Premium sur ce compte Google, ton accès a été restauré.';
+
+  @override
+  String get accountUnknownError => 'Erreur inconnue.';
+
+  @override
+  String get accountPremiumActivated => 'Merci ! TOTUM Premium est activé !';
+
+  @override
+  String accountActivationError(String error) {
+    return 'Erreur lors de l\'activation : $error';
+  }
+
+  @override
+  String get accountSubscriptionActivated =>
+      'Merci ! Ton abonnement TOTUM Premium est actif !';
+
+  @override
+  String get accountDeleteDialogTitle => 'Supprimer mon compte';
+
+  @override
+  String get accountDeleteDialogContent =>
+      'Cette action est irréversible : ta demande de suppression sera enregistrée, ton compte et toutes tes données (journal, objectifs, historique de poids) seront supprimés définitivement. Tu seras déconnecté immédiatement.';
+
+  @override
+  String get accountDeletePermanently => 'Supprimer définitivement';
+
+  @override
+  String get accountDeletingInProgress => 'Suppression…';
+
+  @override
+  String get accountDetailsScreenTitle => 'Compte';
+
+  @override
+  String get accountEmailLabel => 'Adresse courriel';
+
+  @override
+  String get accountSignOut => 'Se déconnecter';
+
+  @override
+  String get appearanceScreenTitle => 'Apparence';
+
+  @override
+  String get appearanceThemeSectionTitle => 'Thème';
+
+  @override
+  String get appearanceThemeLight => 'Clair';
+
+  @override
+  String get appearanceThemeDark => 'Sombre';
+
+  @override
+  String get appearanceThemeSystem => 'Système';
+
+  @override
+  String get appearanceTextSizeSectionTitle => 'Taille du texte';
+
+  @override
+  String get languageUnitsScreenTitle => 'Langue & unités';
+
+  @override
+  String get languageSectionTitle => 'Langue de l\'application';
+
+  @override
+  String get languageSubLabel => 'Langue de l\'interface';
+
+  @override
+  String get languageSubLabelHint =>
+      'S\'applique à toute l\'application, y compris les noms d\'aliments dans la recherche et le journal.';
+
+  @override
+  String get languageFrench => 'Français';
+
+  @override
+  String get languageEnglish => 'Anglais';
+
+  @override
+  String get unitsSectionTitle => 'Unités de mesure';
+
+  @override
+  String get unitsSubLabel => 'Poids et taille';
+
+  @override
+  String get unitsSubLabelHint =>
+      'Les calculs internes restent toujours en métrique.';
+
+  @override
+  String get dataExportScreenTitle => 'Mes données';
+
+  @override
+  String get dataExportSectionTitle => 'Exporter mon journal';
+
+  @override
+  String get dataExportDescription =>
+      'Exporte ton journal alimentaire, tes objectifs et tes micronutriments sur une période, au format HTML (convertible en PDF, ex. pour un professionnel de santé).';
+
+  @override
+  String get dataExportPeriodHelpText => 'Période à exporter';
+
+  @override
+  String get dataExportSaveText => 'EXPORTER';
+
+  @override
+  String get dataExportSuccessSnackbar => 'Rapport exporté';
+
+  @override
+  String dataExportErrorSnackbar(String error) {
+    return 'Erreur export : $error';
+  }
+
+  @override
+  String get dataExportGenerating => 'Génération…';
+
+  @override
+  String get dataExportButton => 'Exporter mes données';
+
+  @override
+  String get aboutScreenTitle => 'À propos';
+
+  @override
+  String get aboutVersionLabel => 'Version';
 }

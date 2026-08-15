@@ -889,6 +889,408 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Extrême — grande prudence'**
   String get sunUvExtreme;
+
+  /// No description provided for @accountScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte & Paramètres'**
+  String get accountScreenTitle;
+
+  /// No description provided for @accountSettingsSectionLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages'**
+  String get accountSettingsSectionLabel;
+
+  /// No description provided for @accountMenuAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte'**
+  String get accountMenuAccount;
+
+  /// No description provided for @accountMenuAppearance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apparence'**
+  String get accountMenuAppearance;
+
+  /// No description provided for @accountMenuLanguageUnits.
+  ///
+  /// In fr, this message translates to:
+  /// **'Langue & unités'**
+  String get accountMenuLanguageUnits;
+
+  /// No description provided for @accountMenuMyData.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes données'**
+  String get accountMenuMyData;
+
+  /// No description provided for @accountMenuAbout.
+  ///
+  /// In fr, this message translates to:
+  /// **'À propos'**
+  String get accountMenuAbout;
+
+  /// No description provided for @accountDefaultName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte TOTUM'**
+  String get accountDefaultName;
+
+  /// No description provided for @accountStatusLifetimePremium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Premium à vie'**
+  String get accountStatusLifetimePremium;
+
+  /// No description provided for @accountStatusAnnualSubscriber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonné·e annuel'**
+  String get accountStatusAnnualSubscriber;
+
+  /// No description provided for @accountStatusTrialRemaining.
+  ///
+  /// In fr, this message translates to:
+  /// **'Essai — {days} j restants'**
+  String accountStatusTrialRemaining(int days);
+
+  /// No description provided for @accountStatusTrialEnded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Essai terminé'**
+  String get accountStatusTrialEnded;
+
+  /// No description provided for @accountSubLifetimeSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accès complet, sans publicité — merci pour ta confiance.'**
+  String get accountSubLifetimeSubtitle;
+
+  /// No description provided for @accountSubActiveTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnement annuel actif'**
+  String get accountSubActiveTitle;
+
+  /// No description provided for @accountSubActiveSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jusqu\'au {date} · 14,99 €/an'**
+  String accountSubActiveSubtitle(String date);
+
+  /// No description provided for @accountManageSubscription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gérer mon abonnement'**
+  String get accountManageSubscription;
+
+  /// No description provided for @accountManageViaStripeReceipt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour gérer ou annuler ton abonnement, utilise le lien « Gérer votre abonnement » présent dans tes reçus Stripe.'**
+  String get accountManageViaStripeReceipt;
+
+  /// No description provided for @accountTrialUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nous n\'avons pas encore pu déterminer ton essai. Si besoin, déconnecte-toi puis reconnecte-toi.'**
+  String get accountTrialUnknown;
+
+  /// No description provided for @accountTrialRemainingDays.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Il te reste 1 jour d\'accès complet à TOTUM.} other{Il te reste {count} jours d\'accès complet à TOTUM.}}'**
+  String accountTrialRemainingDays(int count);
+
+  /// No description provided for @accountTrialEndedSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton essai gratuit est terminé — abonne-toi pour retrouver un accès complet.'**
+  String get accountTrialEndedSubtitle;
+
+  /// No description provided for @accountTrialInProgressTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Essai gratuit en cours'**
+  String get accountTrialInProgressTitle;
+
+  /// No description provided for @accountTrialEndedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Essai gratuit terminé'**
+  String get accountTrialEndedTitle;
+
+  /// No description provided for @accountProcessing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Traitement en cours…'**
+  String get accountProcessing;
+
+  /// No description provided for @accountSubscribeWithPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'S\'abonner ({price})'**
+  String accountSubscribeWithPrice(String price);
+
+  /// No description provided for @accountSubscribeAnnualWeb.
+  ///
+  /// In fr, this message translates to:
+  /// **'S\'abonner — 14,99 €/an'**
+  String get accountSubscribeAnnualWeb;
+
+  /// No description provided for @accountInAppUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le paiement in-app n\'est pas disponible sur cet appareil.'**
+  String get accountInAppUnavailable;
+
+  /// No description provided for @accountStripeSecurePayment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement 100 % sécurisé via Stripe · renouvelé automatiquement chaque année, annulable à tout moment.'**
+  String get accountStripeSecurePayment;
+
+  /// No description provided for @accountProductNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produit Premium introuvable sur le Store.'**
+  String get accountProductNotFound;
+
+  /// No description provided for @accountSubscriptionUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnement non disponible pour le moment. Réessaie dans quelques instants.'**
+  String get accountSubscriptionUnavailable;
+
+  /// No description provided for @accountAlreadyOwnedRestored.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu possédais déjà TOTUM Premium sur ce compte Google, ton accès a été restauré.'**
+  String get accountAlreadyOwnedRestored;
+
+  /// No description provided for @accountUnknownError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur inconnue.'**
+  String get accountUnknownError;
+
+  /// No description provided for @accountPremiumActivated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Merci ! TOTUM Premium est activé !'**
+  String get accountPremiumActivated;
+
+  /// No description provided for @accountActivationError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur lors de l\'activation : {error}'**
+  String accountActivationError(String error);
+
+  /// No description provided for @accountSubscriptionActivated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Merci ! Ton abonnement TOTUM Premium est actif !'**
+  String get accountSubscriptionActivated;
+
+  /// No description provided for @accountDeleteDialogTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer mon compte'**
+  String get accountDeleteDialogTitle;
+
+  /// No description provided for @accountDeleteDialogContent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette action est irréversible : ta demande de suppression sera enregistrée, ton compte et toutes tes données (journal, objectifs, historique de poids) seront supprimés définitivement. Tu seras déconnecté immédiatement.'**
+  String get accountDeleteDialogContent;
+
+  /// No description provided for @accountDeletePermanently.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer définitivement'**
+  String get accountDeletePermanently;
+
+  /// No description provided for @accountDeletingInProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suppression…'**
+  String get accountDeletingInProgress;
+
+  /// No description provided for @accountDetailsScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte'**
+  String get accountDetailsScreenTitle;
+
+  /// No description provided for @accountEmailLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse courriel'**
+  String get accountEmailLabel;
+
+  /// No description provided for @accountSignOut.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se déconnecter'**
+  String get accountSignOut;
+
+  /// No description provided for @appearanceScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apparence'**
+  String get appearanceScreenTitle;
+
+  /// No description provided for @appearanceThemeSectionTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Thème'**
+  String get appearanceThemeSectionTitle;
+
+  /// No description provided for @appearanceThemeLight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clair'**
+  String get appearanceThemeLight;
+
+  /// No description provided for @appearanceThemeDark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sombre'**
+  String get appearanceThemeDark;
+
+  /// No description provided for @appearanceThemeSystem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Système'**
+  String get appearanceThemeSystem;
+
+  /// No description provided for @appearanceTextSizeSectionTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taille du texte'**
+  String get appearanceTextSizeSectionTitle;
+
+  /// No description provided for @languageUnitsScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Langue & unités'**
+  String get languageUnitsScreenTitle;
+
+  /// No description provided for @languageSectionTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Langue de l\'application'**
+  String get languageSectionTitle;
+
+  /// No description provided for @languageSubLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Langue de l\'interface'**
+  String get languageSubLabel;
+
+  /// No description provided for @languageSubLabelHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'S\'applique à toute l\'application, y compris les noms d\'aliments dans la recherche et le journal.'**
+  String get languageSubLabelHint;
+
+  /// No description provided for @languageFrench.
+  ///
+  /// In fr, this message translates to:
+  /// **'Français'**
+  String get languageFrench;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In fr, this message translates to:
+  /// **'Anglais'**
+  String get languageEnglish;
+
+  /// No description provided for @unitsSectionTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Unités de mesure'**
+  String get unitsSectionTitle;
+
+  /// No description provided for @unitsSubLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids et taille'**
+  String get unitsSubLabel;
+
+  /// No description provided for @unitsSubLabelHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les calculs internes restent toujours en métrique.'**
+  String get unitsSubLabelHint;
+
+  /// No description provided for @dataExportScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes données'**
+  String get dataExportScreenTitle;
+
+  /// No description provided for @dataExportSectionTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter mon journal'**
+  String get dataExportSectionTitle;
+
+  /// No description provided for @dataExportDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporte ton journal alimentaire, tes objectifs et tes micronutriments sur une période, au format HTML (convertible en PDF, ex. pour un professionnel de santé).'**
+  String get dataExportDescription;
+
+  /// No description provided for @dataExportPeriodHelpText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Période à exporter'**
+  String get dataExportPeriodHelpText;
+
+  /// No description provided for @dataExportSaveText.
+  ///
+  /// In fr, this message translates to:
+  /// **'EXPORTER'**
+  String get dataExportSaveText;
+
+  /// No description provided for @dataExportSuccessSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rapport exporté'**
+  String get dataExportSuccessSnackbar;
+
+  /// No description provided for @dataExportErrorSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur export : {error}'**
+  String dataExportErrorSnackbar(String error);
+
+  /// No description provided for @dataExportGenerating.
+  ///
+  /// In fr, this message translates to:
+  /// **'Génération…'**
+  String get dataExportGenerating;
+
+  /// No description provided for @dataExportButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter mes données'**
+  String get dataExportButton;
+
+  /// No description provided for @aboutScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'À propos'**
+  String get aboutScreenTitle;
+
+  /// No description provided for @aboutVersionLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version'**
+  String get aboutVersionLabel;
 }
 
 class _AppLocalizationsDelegate
