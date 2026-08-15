@@ -5621,6 +5621,366 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'un complément de vitamine B12 (indispensable en régime végétalien)'**
   String get dietFixB12Vegan;
+
+  /// No description provided for @sleepRitualTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rituel du soir'**
+  String get sleepRitualTitle;
+
+  /// No description provided for @sleepRitualIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un sommeil de qualité n\'est pas une chance, c\'est le résultat de bonnes habitudes. Voici les leviers qui comptent vraiment — coche ceux que tu mets en place.'**
+  String get sleepRitualIntro;
+
+  /// No description provided for @sleepRitualLeversHeading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les 6 leviers de ton sommeil'**
+  String get sleepRitualLeversHeading;
+
+  /// No description provided for @sleepRitualLeversSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appuie sur un levier pour voir les gestes et cocher ceux que tu mets en place.'**
+  String get sleepRitualLeversSubtitle;
+
+  /// No description provided for @sleepPillarLightTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'La lumière'**
+  String get sleepPillarLightTitle;
+
+  /// No description provided for @sleepPillarLightIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'La lumière est le principal régulateur de ton horloge biologique. Bien gérée, elle cale ton sommeil naturellement.'**
+  String get sleepPillarLightIntro;
+
+  /// No description provided for @sleepActionLightWakeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vois la lumière du jour dès le réveil'**
+  String get sleepActionLightWakeTitle;
+
+  /// No description provided for @sleepActionLightWakeWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'10 à 30 minutes de lumière naturelle le matin calent ton horloge interne et déclenchent, 14 à 16 h plus tard, la sécrétion de mélatonine du soir. C\'est le geste le plus puissant pour bien dormir — et il se fait le matin.'**
+  String get sleepActionLightWakeWhy;
+
+  /// No description provided for @sleepActionLightDimTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Baisse les lumières 1 à 2 h avant le coucher'**
+  String get sleepActionLightDimTitle;
+
+  /// No description provided for @sleepActionLightDimWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une lumière vive le soir fait croire à ton cerveau qu\'il fait encore jour et bloque la mélatonine. Passe en éclairage tamisé, chaud, indirect.'**
+  String get sleepActionLightDimWhy;
+
+  /// No description provided for @sleepActionLightScreensTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Coupe les écrans ou filtre la lumière bleue'**
+  String get sleepActionLightScreensTitle;
+
+  /// No description provided for @sleepActionLightScreensWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'La lumière bleue des écrans est celle qui supprime le plus la mélatonine. Mode nuit, lunettes anti-lumière bleue, ou mieux : pose l\'écran.'**
+  String get sleepActionLightScreensWhy;
+
+  /// No description provided for @sleepActionLightDarkTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dors dans l\'obscurité totale'**
+  String get sleepActionLightDarkTitle;
+
+  /// No description provided for @sleepActionLightDarkWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'La moindre source lumineuse, même une veilleuse ou une LED de chargeur, perçue à travers les paupières, réduit la qualité du sommeil profond. Rideaux occultants ou masque.'**
+  String get sleepActionLightDarkWhy;
+
+  /// No description provided for @sleepPillarTempTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'La température'**
+  String get sleepPillarTempTitle;
+
+  /// No description provided for @sleepPillarTempIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'S\'endormir exige que la température de ton corps baisse d\'environ 1 °C. Tout ce qui favorise ce refroidissement aide à dormir.'**
+  String get sleepPillarTempIntro;
+
+  /// No description provided for @sleepActionTempRoomTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Garde ta chambre autour de 18 °C'**
+  String get sleepActionTempRoomTitle;
+
+  /// No description provided for @sleepActionTempRoomWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une chambre fraîche facilite la baisse de température corporelle nécessaire à l\'endormissement. Trop chaude, elle est l\'une des causes les plus fréquentes de réveils nocturnes.'**
+  String get sleepActionTempRoomWhy;
+
+  /// No description provided for @sleepActionTempShowerTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prends une douche tiède 1 à 2 h avant'**
+  String get sleepActionTempShowerTitle;
+
+  /// No description provided for @sleepActionTempShowerWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paradoxalement, une douche tiède dilate les vaisseaux et aide le corps à évacuer sa chaleur ensuite : la température chute plus vite, et l\'endormissement suit.'**
+  String get sleepActionTempShowerWhy;
+
+  /// No description provided for @sleepActionTempExtremitiesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Garde les extrémités au chaud'**
+  String get sleepActionTempExtremitiesTitle;
+
+  /// No description provided for @sleepActionTempExtremitiesWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Des pieds froids resserrent les vaisseaux et empêchent le corps d\'évacuer sa chaleur centrale. Des chaussettes peuvent, contre l\'intuition, aider à s\'endormir plus vite.'**
+  String get sleepActionTempExtremitiesWhy;
+
+  /// No description provided for @sleepPillarFoodTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Stimulants & alimentation'**
+  String get sleepPillarFoodTitle;
+
+  /// No description provided for @sleepPillarFoodIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que tu consommes dans la seconde partie de journée pèse lourd sur ta nuit.'**
+  String get sleepPillarFoodIntro;
+
+  /// No description provided for @sleepActionFoodCaffeineTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière caféine 6 à 8 h avant le coucher'**
+  String get sleepActionFoodCaffeineTitle;
+
+  /// No description provided for @sleepActionFoodCaffeineWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'La caféine bloque l\'adénosine, la molécule qui te rend somnolent, pendant 6 h et plus. Un café de milieu d\'après-midi ampute le sommeil profond sans même t\'empêcher de t\'endormir. Pense aussi au thé, au maté, au chocolat noir.'**
+  String get sleepActionFoodCaffeineWhy;
+
+  /// No description provided for @sleepActionFoodDinnerTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dîne léger et tôt, 3 h avant'**
+  String get sleepActionFoodDinnerTitle;
+
+  /// No description provided for @sleepActionFoodDinnerWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une digestion en cours élève la température du corps et mobilise l\'organisme, à l\'opposé de ce que demande le sommeil. Un dîner léger et précoce améliore nettement la profondeur de la nuit.'**
+  String get sleepActionFoodDinnerWhy;
+
+  /// No description provided for @sleepActionFoodLiquidsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modère les liquides en soirée'**
+  String get sleepActionFoodLiquidsTitle;
+
+  /// No description provided for @sleepActionFoodLiquidsWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trop boire juste avant de dormir multiplie les réveils nocturnes pour aller aux toilettes, qui fragmentent les cycles. Hydrate-toi surtout en journée.'**
+  String get sleepActionFoodLiquidsWhy;
+
+  /// No description provided for @sleepActionFoodChoicesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mise sur les aliments favorables au sommeil'**
+  String get sleepActionFoodChoicesTitle;
+
+  /// No description provided for @sleepActionFoodChoicesWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Certains aliments bruts apportent du tryptophane, du magnésium et de la glycine, précurseurs de la mélatonine et de la sérotonine : amandes, noix, banane, flocons d\'avoine, kiwi, poisson gras.'**
+  String get sleepActionFoodChoicesWhy;
+
+  /// No description provided for @sleepPillarMentalTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mental & stress'**
+  String get sleepPillarMentalTitle;
+
+  /// No description provided for @sleepPillarMentalIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un mental agité est la cause n°1 des difficultés d\'endormissement. L\'apaiser est un entraînement.'**
+  String get sleepPillarMentalIntro;
+
+  /// No description provided for @sleepActionMentalDumpTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fais une décharge mentale'**
+  String get sleepActionMentalDumpTitle;
+
+  /// No description provided for @sleepActionMentalDumpWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note sur papier ce qui t\'préoccupe et tes tâches du lendemain. Sortir les pensées de ta tête pour les poser ailleurs réduit la rumination qui tourne en boucle au coucher.'**
+  String get sleepActionMentalDumpWhy;
+
+  /// No description provided for @sleepActionMentalCoherenceTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pratique quelques minutes de cohérence cardiaque'**
+  String get sleepActionMentalCoherenceTitle;
+
+  /// No description provided for @sleepActionMentalCoherenceWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ralentir le souffle active le système parasympathique, celui du repos. Quelques cycles de respiration lente préparent physiologiquement le corps au sommeil.'**
+  String get sleepActionMentalCoherenceWhy;
+
+  /// No description provided for @sleepActionMentalGratitudeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Termine sur trois gratitudes'**
+  String get sleepActionMentalGratitudeTitle;
+
+  /// No description provided for @sleepActionMentalGratitudeWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repenser à trois moments positifs de la journée oriente le mental vers le calme plutôt que vers l\'anxiété, et facilite un endormissement serein.'**
+  String get sleepActionMentalGratitudeWhy;
+
+  /// No description provided for @sleepActionMentalAvoidTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évite les contenus anxiogènes le soir'**
+  String get sleepActionMentalAvoidTitle;
+
+  /// No description provided for @sleepActionMentalAvoidWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actualités, mails de travail, débats en ligne activent le système de vigilance juste avant de dormir. Réserve la soirée à ce qui apaise.'**
+  String get sleepActionMentalAvoidWhy;
+
+  /// No description provided for @sleepPillarRhythmTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rythme & régularité'**
+  String get sleepPillarRhythmTitle;
+
+  /// No description provided for @sleepPillarRhythmIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le sommeil aime la régularité plus que tout. Un rythme stable vaut mieux qu\'une longue grasse matinée de rattrapage.'**
+  String get sleepPillarRhythmIntro;
+
+  /// No description provided for @sleepActionRhythmScheduleTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couche-toi et lève-toi à heures régulières'**
+  String get sleepActionRhythmScheduleTitle;
+
+  /// No description provided for @sleepActionRhythmScheduleWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Des horaires constants, même le week-end, renforcent ton horloge biologique. C\'est la régularité, plus que la durée seule, qui détermine la qualité du sommeil.'**
+  String get sleepActionRhythmScheduleWhy;
+
+  /// No description provided for @sleepActionRhythmCyclesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Respecte tes cycles de 90 minutes'**
+  String get sleepActionRhythmCyclesTitle;
+
+  /// No description provided for @sleepActionRhythmCyclesWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le sommeil se déroule par cycles d\'environ 90 min. Se réveiller en fin de cycle, plutôt qu\'en plein sommeil profond, rend le réveil bien plus facile.'**
+  String get sleepActionRhythmCyclesWhy;
+
+  /// No description provided for @sleepActionRhythmSignsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couche-toi dès les premiers signes'**
+  String get sleepActionRhythmSignsTitle;
+
+  /// No description provided for @sleepActionRhythmSignsWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bâillements, paupières lourdes, yeux qui piquent : c\'est ton train du sommeil qui passe. Le rater, c\'est attendre le prochain cycle 90 min plus tard.'**
+  String get sleepActionRhythmSignsWhy;
+
+  /// No description provided for @sleepActionRhythmNapsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gère tes siestes'**
+  String get sleepActionRhythmNapsTitle;
+
+  /// No description provided for @sleepActionRhythmNapsWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une sieste de 10 à 20 min en début d\'après-midi récupère sans empiéter sur la nuit. Trop longue ou trop tardive, elle sabote l\'endormissement du soir.'**
+  String get sleepActionRhythmNapsWhy;
+
+  /// No description provided for @sleepPillarEnvTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'environnement'**
+  String get sleepPillarEnvTitle;
+
+  /// No description provided for @sleepPillarEnvIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta chambre doit devenir un sanctuaire que ton cerveau associe uniquement au repos.'**
+  String get sleepPillarEnvIntro;
+
+  /// No description provided for @sleepActionEnvBedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réserve le lit au sommeil'**
+  String get sleepActionEnvBedTitle;
+
+  /// No description provided for @sleepActionEnvBedWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Travailler, manger ou scroller au lit brouille l\'association mentale lit = sommeil. Ton cerveau doit apprendre qu\'entrer dans le lit signifie dormir.'**
+  String get sleepActionEnvBedWhy;
+
+  /// No description provided for @sleepActionEnvNoiseTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chasse le bruit'**
+  String get sleepActionEnvNoiseTitle;
+
+  /// No description provided for @sleepActionEnvNoiseWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Même sans te réveiller, un bruit perturbe la profondeur du sommeil. Bouchons d\'oreilles ou bruit blanc régulier peuvent masquer les nuisances imprévisibles.'**
+  String get sleepActionEnvNoiseWhy;
+
+  /// No description provided for @sleepActionEnvBeddingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Soigne ta literie'**
+  String get sleepActionEnvBeddingTitle;
+
+  /// No description provided for @sleepActionEnvBeddingWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un matelas et un oreiller adaptés évitent les micro-réveils liés à l\'inconfort. On y passe un tiers de sa vie : c\'est un investissement santé.'**
+  String get sleepActionEnvBeddingWhy;
 }
 
 class _AppLocalizationsDelegate

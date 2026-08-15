@@ -3271,4 +3271,225 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get dietFixB12Vegan =>
       'un complément de vitamine B12 (indispensable en régime végétalien)';
+
+  @override
+  String get sleepRitualTitle => 'Rituel du soir';
+
+  @override
+  String get sleepRitualIntro =>
+      'Un sommeil de qualité n\'est pas une chance, c\'est le résultat de bonnes habitudes. Voici les leviers qui comptent vraiment — coche ceux que tu mets en place.';
+
+  @override
+  String get sleepRitualLeversHeading => 'Les 6 leviers de ton sommeil';
+
+  @override
+  String get sleepRitualLeversSubtitle =>
+      'Appuie sur un levier pour voir les gestes et cocher ceux que tu mets en place.';
+
+  @override
+  String get sleepPillarLightTitle => 'La lumière';
+
+  @override
+  String get sleepPillarLightIntro =>
+      'La lumière est le principal régulateur de ton horloge biologique. Bien gérée, elle cale ton sommeil naturellement.';
+
+  @override
+  String get sleepActionLightWakeTitle =>
+      'Vois la lumière du jour dès le réveil';
+
+  @override
+  String get sleepActionLightWakeWhy =>
+      '10 à 30 minutes de lumière naturelle le matin calent ton horloge interne et déclenchent, 14 à 16 h plus tard, la sécrétion de mélatonine du soir. C\'est le geste le plus puissant pour bien dormir — et il se fait le matin.';
+
+  @override
+  String get sleepActionLightDimTitle =>
+      'Baisse les lumières 1 à 2 h avant le coucher';
+
+  @override
+  String get sleepActionLightDimWhy =>
+      'Une lumière vive le soir fait croire à ton cerveau qu\'il fait encore jour et bloque la mélatonine. Passe en éclairage tamisé, chaud, indirect.';
+
+  @override
+  String get sleepActionLightScreensTitle =>
+      'Coupe les écrans ou filtre la lumière bleue';
+
+  @override
+  String get sleepActionLightScreensWhy =>
+      'La lumière bleue des écrans est celle qui supprime le plus la mélatonine. Mode nuit, lunettes anti-lumière bleue, ou mieux : pose l\'écran.';
+
+  @override
+  String get sleepActionLightDarkTitle => 'Dors dans l\'obscurité totale';
+
+  @override
+  String get sleepActionLightDarkWhy =>
+      'La moindre source lumineuse, même une veilleuse ou une LED de chargeur, perçue à travers les paupières, réduit la qualité du sommeil profond. Rideaux occultants ou masque.';
+
+  @override
+  String get sleepPillarTempTitle => 'La température';
+
+  @override
+  String get sleepPillarTempIntro =>
+      'S\'endormir exige que la température de ton corps baisse d\'environ 1 °C. Tout ce qui favorise ce refroidissement aide à dormir.';
+
+  @override
+  String get sleepActionTempRoomTitle => 'Garde ta chambre autour de 18 °C';
+
+  @override
+  String get sleepActionTempRoomWhy =>
+      'Une chambre fraîche facilite la baisse de température corporelle nécessaire à l\'endormissement. Trop chaude, elle est l\'une des causes les plus fréquentes de réveils nocturnes.';
+
+  @override
+  String get sleepActionTempShowerTitle =>
+      'Prends une douche tiède 1 à 2 h avant';
+
+  @override
+  String get sleepActionTempShowerWhy =>
+      'Paradoxalement, une douche tiède dilate les vaisseaux et aide le corps à évacuer sa chaleur ensuite : la température chute plus vite, et l\'endormissement suit.';
+
+  @override
+  String get sleepActionTempExtremitiesTitle => 'Garde les extrémités au chaud';
+
+  @override
+  String get sleepActionTempExtremitiesWhy =>
+      'Des pieds froids resserrent les vaisseaux et empêchent le corps d\'évacuer sa chaleur centrale. Des chaussettes peuvent, contre l\'intuition, aider à s\'endormir plus vite.';
+
+  @override
+  String get sleepPillarFoodTitle => 'Stimulants & alimentation';
+
+  @override
+  String get sleepPillarFoodIntro =>
+      'Ce que tu consommes dans la seconde partie de journée pèse lourd sur ta nuit.';
+
+  @override
+  String get sleepActionFoodCaffeineTitle =>
+      'Dernière caféine 6 à 8 h avant le coucher';
+
+  @override
+  String get sleepActionFoodCaffeineWhy =>
+      'La caféine bloque l\'adénosine, la molécule qui te rend somnolent, pendant 6 h et plus. Un café de milieu d\'après-midi ampute le sommeil profond sans même t\'empêcher de t\'endormir. Pense aussi au thé, au maté, au chocolat noir.';
+
+  @override
+  String get sleepActionFoodDinnerTitle => 'Dîne léger et tôt, 3 h avant';
+
+  @override
+  String get sleepActionFoodDinnerWhy =>
+      'Une digestion en cours élève la température du corps et mobilise l\'organisme, à l\'opposé de ce que demande le sommeil. Un dîner léger et précoce améliore nettement la profondeur de la nuit.';
+
+  @override
+  String get sleepActionFoodLiquidsTitle => 'Modère les liquides en soirée';
+
+  @override
+  String get sleepActionFoodLiquidsWhy =>
+      'Trop boire juste avant de dormir multiplie les réveils nocturnes pour aller aux toilettes, qui fragmentent les cycles. Hydrate-toi surtout en journée.';
+
+  @override
+  String get sleepActionFoodChoicesTitle =>
+      'Mise sur les aliments favorables au sommeil';
+
+  @override
+  String get sleepActionFoodChoicesWhy =>
+      'Certains aliments bruts apportent du tryptophane, du magnésium et de la glycine, précurseurs de la mélatonine et de la sérotonine : amandes, noix, banane, flocons d\'avoine, kiwi, poisson gras.';
+
+  @override
+  String get sleepPillarMentalTitle => 'Mental & stress';
+
+  @override
+  String get sleepPillarMentalIntro =>
+      'Un mental agité est la cause n°1 des difficultés d\'endormissement. L\'apaiser est un entraînement.';
+
+  @override
+  String get sleepActionMentalDumpTitle => 'Fais une décharge mentale';
+
+  @override
+  String get sleepActionMentalDumpWhy =>
+      'Note sur papier ce qui t\'préoccupe et tes tâches du lendemain. Sortir les pensées de ta tête pour les poser ailleurs réduit la rumination qui tourne en boucle au coucher.';
+
+  @override
+  String get sleepActionMentalCoherenceTitle =>
+      'Pratique quelques minutes de cohérence cardiaque';
+
+  @override
+  String get sleepActionMentalCoherenceWhy =>
+      'Ralentir le souffle active le système parasympathique, celui du repos. Quelques cycles de respiration lente préparent physiologiquement le corps au sommeil.';
+
+  @override
+  String get sleepActionMentalGratitudeTitle => 'Termine sur trois gratitudes';
+
+  @override
+  String get sleepActionMentalGratitudeWhy =>
+      'Repenser à trois moments positifs de la journée oriente le mental vers le calme plutôt que vers l\'anxiété, et facilite un endormissement serein.';
+
+  @override
+  String get sleepActionMentalAvoidTitle =>
+      'Évite les contenus anxiogènes le soir';
+
+  @override
+  String get sleepActionMentalAvoidWhy =>
+      'Actualités, mails de travail, débats en ligne activent le système de vigilance juste avant de dormir. Réserve la soirée à ce qui apaise.';
+
+  @override
+  String get sleepPillarRhythmTitle => 'Rythme & régularité';
+
+  @override
+  String get sleepPillarRhythmIntro =>
+      'Le sommeil aime la régularité plus que tout. Un rythme stable vaut mieux qu\'une longue grasse matinée de rattrapage.';
+
+  @override
+  String get sleepActionRhythmScheduleTitle =>
+      'Couche-toi et lève-toi à heures régulières';
+
+  @override
+  String get sleepActionRhythmScheduleWhy =>
+      'Des horaires constants, même le week-end, renforcent ton horloge biologique. C\'est la régularité, plus que la durée seule, qui détermine la qualité du sommeil.';
+
+  @override
+  String get sleepActionRhythmCyclesTitle =>
+      'Respecte tes cycles de 90 minutes';
+
+  @override
+  String get sleepActionRhythmCyclesWhy =>
+      'Le sommeil se déroule par cycles d\'environ 90 min. Se réveiller en fin de cycle, plutôt qu\'en plein sommeil profond, rend le réveil bien plus facile.';
+
+  @override
+  String get sleepActionRhythmSignsTitle =>
+      'Couche-toi dès les premiers signes';
+
+  @override
+  String get sleepActionRhythmSignsWhy =>
+      'Bâillements, paupières lourdes, yeux qui piquent : c\'est ton train du sommeil qui passe. Le rater, c\'est attendre le prochain cycle 90 min plus tard.';
+
+  @override
+  String get sleepActionRhythmNapsTitle => 'Gère tes siestes';
+
+  @override
+  String get sleepActionRhythmNapsWhy =>
+      'Une sieste de 10 à 20 min en début d\'après-midi récupère sans empiéter sur la nuit. Trop longue ou trop tardive, elle sabote l\'endormissement du soir.';
+
+  @override
+  String get sleepPillarEnvTitle => 'L\'environnement';
+
+  @override
+  String get sleepPillarEnvIntro =>
+      'Ta chambre doit devenir un sanctuaire que ton cerveau associe uniquement au repos.';
+
+  @override
+  String get sleepActionEnvBedTitle => 'Réserve le lit au sommeil';
+
+  @override
+  String get sleepActionEnvBedWhy =>
+      'Travailler, manger ou scroller au lit brouille l\'association mentale lit = sommeil. Ton cerveau doit apprendre qu\'entrer dans le lit signifie dormir.';
+
+  @override
+  String get sleepActionEnvNoiseTitle => 'Chasse le bruit';
+
+  @override
+  String get sleepActionEnvNoiseWhy =>
+      'Même sans te réveiller, un bruit perturbe la profondeur du sommeil. Bouchons d\'oreilles ou bruit blanc régulier peuvent masquer les nuisances imprévisibles.';
+
+  @override
+  String get sleepActionEnvBeddingTitle => 'Soigne ta literie';
+
+  @override
+  String get sleepActionEnvBeddingWhy =>
+      'Un matelas et un oreiller adaptés évitent les micro-réveils liés à l\'inconfort. On y passe un tiers de sa vie : c\'est un investissement santé.';
 }

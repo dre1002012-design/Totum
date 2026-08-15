@@ -3243,4 +3243,220 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get dietFixB12Vegan =>
       'a vitamin B12 supplement (essential on a vegan diet)';
+
+  @override
+  String get sleepRitualTitle => 'Evening Ritual';
+
+  @override
+  String get sleepRitualIntro =>
+      'Good sleep isn\'t luck, it\'s the result of good habits. Here are the levers that actually matter — check off the ones you put in place.';
+
+  @override
+  String get sleepRitualLeversHeading => 'The 6 levers of your sleep';
+
+  @override
+  String get sleepRitualLeversSubtitle =>
+      'Tap a lever to see the actions and check off the ones you\'re putting in place.';
+
+  @override
+  String get sleepPillarLightTitle => 'Light';
+
+  @override
+  String get sleepPillarLightIntro =>
+      'Light is the main regulator of your biological clock. Managed well, it naturally sets your sleep schedule.';
+
+  @override
+  String get sleepActionLightWakeTitle => 'Get daylight as soon as you wake up';
+
+  @override
+  String get sleepActionLightWakeWhy =>
+      '10 to 30 minutes of natural light in the morning sets your internal clock and triggers, 14 to 16 h later, the evening release of melatonin. It\'s the single most powerful move for good sleep — and it happens in the morning.';
+
+  @override
+  String get sleepActionLightDimTitle => 'Dim the lights 1 to 2 h before bed';
+
+  @override
+  String get sleepActionLightDimWhy =>
+      'Bright light in the evening tricks your brain into thinking it\'s still daytime and blocks melatonin. Switch to dim, warm, indirect lighting.';
+
+  @override
+  String get sleepActionLightScreensTitle => 'Cut screens or filter blue light';
+
+  @override
+  String get sleepActionLightScreensWhy =>
+      'Blue light from screens suppresses melatonin the most. Night mode, blue-light-blocking glasses, or better yet: put the screen down.';
+
+  @override
+  String get sleepActionLightDarkTitle => 'Sleep in total darkness';
+
+  @override
+  String get sleepActionLightDarkWhy =>
+      'Even a small light source, like a night-light or a charger LED, perceived through closed eyelids, reduces deep-sleep quality. Blackout curtains or a sleep mask.';
+
+  @override
+  String get sleepPillarTempTitle => 'Temperature';
+
+  @override
+  String get sleepPillarTempIntro =>
+      'Falling asleep requires your body temperature to drop by about 1 °C. Anything that helps this cooling helps you sleep.';
+
+  @override
+  String get sleepActionTempRoomTitle => 'Keep your room around 18 °C';
+
+  @override
+  String get sleepActionTempRoomWhy =>
+      'A cool room makes it easier for your body temperature to drop, which is needed to fall asleep. Too warm, and it\'s one of the most common causes of nighttime waking.';
+
+  @override
+  String get sleepActionTempShowerTitle =>
+      'Take a warm shower 1 to 2 h before bed';
+
+  @override
+  String get sleepActionTempShowerWhy =>
+      'Paradoxically, a warm shower dilates blood vessels and helps your body release heat afterward: your temperature drops faster, and sleep follows.';
+
+  @override
+  String get sleepActionTempExtremitiesTitle => 'Keep your extremities warm';
+
+  @override
+  String get sleepActionTempExtremitiesWhy =>
+      'Cold feet constrict blood vessels and prevent your body from releasing core heat. Socks can, counterintuitively, help you fall asleep faster.';
+
+  @override
+  String get sleepPillarFoodTitle => 'Stimulants & food';
+
+  @override
+  String get sleepPillarFoodIntro =>
+      'What you consume in the second half of the day weighs heavily on your night.';
+
+  @override
+  String get sleepActionFoodCaffeineTitle =>
+      'Last caffeine 6 to 8 h before bed';
+
+  @override
+  String get sleepActionFoodCaffeineWhy =>
+      'Caffeine blocks adenosine, the molecule that makes you sleepy, for 6 h or more. A mid-afternoon coffee cuts into deep sleep even without stopping you from falling asleep. Also watch tea, mate, and dark chocolate.';
+
+  @override
+  String get sleepActionFoodDinnerTitle =>
+      'Eat a light dinner, early, 3 h before bed';
+
+  @override
+  String get sleepActionFoodDinnerWhy =>
+      'Ongoing digestion raises body temperature and keeps the body busy, the opposite of what sleep needs. A light, early dinner clearly improves the depth of your night.';
+
+  @override
+  String get sleepActionFoodLiquidsTitle => 'Ease up on liquids in the evening';
+
+  @override
+  String get sleepActionFoodLiquidsWhy =>
+      'Drinking too much right before bed multiplies bathroom trips at night, which fragment your sleep cycles. Hydrate mostly during the day.';
+
+  @override
+  String get sleepActionFoodChoicesTitle => 'Favor sleep-friendly foods';
+
+  @override
+  String get sleepActionFoodChoicesWhy =>
+      'Some whole foods provide tryptophan, magnesium and glycine, precursors of melatonin and serotonin: almonds, walnuts, banana, oats, kiwi, oily fish.';
+
+  @override
+  String get sleepPillarMentalTitle => 'Mind & stress';
+
+  @override
+  String get sleepPillarMentalIntro =>
+      'A restless mind is cause No.1 of trouble falling asleep. Calming it is a practice.';
+
+  @override
+  String get sleepActionMentalDumpTitle => 'Do a mental brain dump';
+
+  @override
+  String get sleepActionMentalDumpWhy =>
+      'Write down what\'s on your mind and tomorrow\'s tasks. Getting thoughts out of your head and onto paper reduces the rumination that loops at bedtime.';
+
+  @override
+  String get sleepActionMentalCoherenceTitle =>
+      'Practice a few minutes of coherent breathing';
+
+  @override
+  String get sleepActionMentalCoherenceWhy =>
+      'Slowing your breath activates the parasympathetic system, the one in charge of rest. A few slow breathing cycles physiologically prepare the body for sleep.';
+
+  @override
+  String get sleepActionMentalGratitudeTitle => 'End with three gratitudes';
+
+  @override
+  String get sleepActionMentalGratitudeWhy =>
+      'Thinking back on three positive moments from the day steers the mind toward calm rather than anxiety, and eases a peaceful drift to sleep.';
+
+  @override
+  String get sleepActionMentalAvoidTitle =>
+      'Avoid anxiety-inducing content in the evening';
+
+  @override
+  String get sleepActionMentalAvoidWhy =>
+      'News, work emails, and online debates activate your vigilance system right before sleep. Save the evening for what soothes you.';
+
+  @override
+  String get sleepPillarRhythmTitle => 'Rhythm & regularity';
+
+  @override
+  String get sleepPillarRhythmIntro =>
+      'Sleep loves regularity above all else. A steady rhythm beats a long catch-up lie-in.';
+
+  @override
+  String get sleepActionRhythmScheduleTitle =>
+      'Go to bed and wake up at consistent times';
+
+  @override
+  String get sleepActionRhythmScheduleWhy =>
+      'Consistent hours, even on weekends, reinforce your biological clock. Regularity, more than duration alone, determines sleep quality.';
+
+  @override
+  String get sleepActionRhythmCyclesTitle => 'Respect your 90-minute cycles';
+
+  @override
+  String get sleepActionRhythmCyclesWhy =>
+      'Sleep unfolds in cycles of about 90 min. Waking at the end of a cycle, rather than in deep sleep, makes waking up far easier.';
+
+  @override
+  String get sleepActionRhythmSignsTitle => 'Go to bed at the first signs';
+
+  @override
+  String get sleepActionRhythmSignsWhy =>
+      'Yawning, heavy eyelids, itchy eyes: that\'s your sleep train passing by. Miss it, and you wait for the next cycle 90 min later.';
+
+  @override
+  String get sleepActionRhythmNapsTitle => 'Manage your naps';
+
+  @override
+  String get sleepActionRhythmNapsWhy =>
+      'A 10 to 20 min nap in early afternoon recovers energy without cutting into your night. Too long or too late, and it sabotages your evening sleep onset.';
+
+  @override
+  String get sleepPillarEnvTitle => 'Environment';
+
+  @override
+  String get sleepPillarEnvIntro =>
+      'Your bedroom should become a sanctuary your brain associates only with rest.';
+
+  @override
+  String get sleepActionEnvBedTitle => 'Reserve the bed for sleep';
+
+  @override
+  String get sleepActionEnvBedWhy =>
+      'Working, eating or scrolling in bed blurs the mental association bed = sleep. Your brain needs to learn that getting into bed means sleeping.';
+
+  @override
+  String get sleepActionEnvNoiseTitle => 'Eliminate noise';
+
+  @override
+  String get sleepActionEnvNoiseWhy =>
+      'Even without waking you, noise disrupts sleep depth. Earplugs or steady white noise can mask unpredictable disturbances.';
+
+  @override
+  String get sleepActionEnvBeddingTitle => 'Take care of your bedding';
+
+  @override
+  String get sleepActionEnvBeddingWhy =>
+      'A suitable mattress and pillow prevent micro-awakenings caused by discomfort. You spend a third of your life in it: it\'s a health investment.';
 }

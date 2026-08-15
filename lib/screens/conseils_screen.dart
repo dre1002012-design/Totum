@@ -6628,151 +6628,110 @@ class _SleepPillar {
 class _RituelSoirScreenState extends State<RituelSoirScreen> {
   static const _accent = TotumColors.accent;
 
-  static const _pillars = <_SleepPillar>[
-    _SleepPillar(
-      'La lumière',
-      Icons.wb_sunny_outlined,
-      'La lumière est le principal régulateur de ton horloge biologique. Bien gérée, elle cale ton sommeil naturellement.',
-      [
-        _SleepAction(
-          'Vois la lumière du jour dès le réveil',
-          '10 à 30 minutes de lumière naturelle le matin calent ton horloge interne et déclenchent, 14 à 16 h plus tard, la sécrétion de mélatonine du soir. C\'est le geste le plus puissant pour bien dormir — et il se fait le matin.',
+  List<_SleepPillar> _pillarsFor(AppLocalizations l10n) => [
+        _SleepPillar(
+          l10n.sleepPillarLightTitle,
+          Icons.wb_sunny_outlined,
+          l10n.sleepPillarLightIntro,
+          [
+            _SleepAction(
+                l10n.sleepActionLightWakeTitle, l10n.sleepActionLightWakeWhy),
+            _SleepAction(
+                l10n.sleepActionLightDimTitle, l10n.sleepActionLightDimWhy),
+            _SleepAction(l10n.sleepActionLightScreensTitle,
+                l10n.sleepActionLightScreensWhy),
+            _SleepAction(
+                l10n.sleepActionLightDarkTitle, l10n.sleepActionLightDarkWhy),
+          ],
         ),
-        _SleepAction(
-          'Baisse les lumières 1 à 2 h avant le coucher',
-          'Une lumière vive le soir fait croire à ton cerveau qu\'il fait encore jour et bloque la mélatonine. Passe en éclairage tamisé, chaud, indirect.',
+        _SleepPillar(
+          l10n.sleepPillarTempTitle,
+          Icons.thermostat,
+          l10n.sleepPillarTempIntro,
+          [
+            _SleepAction(
+                l10n.sleepActionTempRoomTitle, l10n.sleepActionTempRoomWhy),
+            _SleepAction(l10n.sleepActionTempShowerTitle,
+                l10n.sleepActionTempShowerWhy),
+            _SleepAction(l10n.sleepActionTempExtremitiesTitle,
+                l10n.sleepActionTempExtremitiesWhy),
+          ],
         ),
-        _SleepAction(
-          'Coupe les écrans ou filtre la lumière bleue',
-          'La lumière bleue des écrans est celle qui supprime le plus la mélatonine. Mode nuit, lunettes anti-lumière bleue, ou mieux : pose l\'écran.',
+        _SleepPillar(
+          l10n.sleepPillarFoodTitle,
+          Icons.no_food,
+          l10n.sleepPillarFoodIntro,
+          [
+            _SleepAction(l10n.sleepActionFoodCaffeineTitle,
+                l10n.sleepActionFoodCaffeineWhy),
+            _SleepAction(l10n.sleepActionFoodDinnerTitle,
+                l10n.sleepActionFoodDinnerWhy),
+            _SleepAction(l10n.sleepActionFoodLiquidsTitle,
+                l10n.sleepActionFoodLiquidsWhy),
+            _SleepAction(l10n.sleepActionFoodChoicesTitle,
+                l10n.sleepActionFoodChoicesWhy),
+          ],
         ),
-        _SleepAction(
-          'Dors dans l\'obscurité totale',
-          'La moindre source lumineuse, même une veilleuse ou une LED de chargeur, perçue à travers les paupières, réduit la qualité du sommeil profond. Rideaux occultants ou masque.',
+        _SleepPillar(
+          l10n.sleepPillarMentalTitle,
+          Icons.self_improvement,
+          l10n.sleepPillarMentalIntro,
+          [
+            _SleepAction(
+                l10n.sleepActionMentalDumpTitle, l10n.sleepActionMentalDumpWhy),
+            _SleepAction(l10n.sleepActionMentalCoherenceTitle,
+                l10n.sleepActionMentalCoherenceWhy),
+            _SleepAction(l10n.sleepActionMentalGratitudeTitle,
+                l10n.sleepActionMentalGratitudeWhy),
+            _SleepAction(l10n.sleepActionMentalAvoidTitle,
+                l10n.sleepActionMentalAvoidWhy),
+          ],
         ),
-      ],
-    ),
-    _SleepPillar(
-      'La température',
-      Icons.thermostat,
-      'S\'endormir exige que la température de ton corps baisse d\'environ 1 °C. Tout ce qui favorise ce refroidissement aide à dormir.',
-      [
-        _SleepAction(
-          'Garde ta chambre autour de 18 °C',
-          'Une chambre fraîche facilite la baisse de température corporelle nécessaire à l\'endormissement. Trop chaude, elle est l\'une des causes les plus fréquentes de réveils nocturnes.',
+        _SleepPillar(
+          l10n.sleepPillarRhythmTitle,
+          Icons.schedule,
+          l10n.sleepPillarRhythmIntro,
+          [
+            _SleepAction(l10n.sleepActionRhythmScheduleTitle,
+                l10n.sleepActionRhythmScheduleWhy),
+            _SleepAction(l10n.sleepActionRhythmCyclesTitle,
+                l10n.sleepActionRhythmCyclesWhy),
+            _SleepAction(l10n.sleepActionRhythmSignsTitle,
+                l10n.sleepActionRhythmSignsWhy),
+            _SleepAction(
+                l10n.sleepActionRhythmNapsTitle, l10n.sleepActionRhythmNapsWhy),
+          ],
         ),
-        _SleepAction(
-          'Prends une douche tiède 1 à 2 h avant',
-          'Paradoxalement, une douche tiède dilate les vaisseaux et aide le corps à évacuer sa chaleur ensuite : la température chute plus vite, et l\'endormissement suit.',
+        _SleepPillar(
+          l10n.sleepPillarEnvTitle,
+          Icons.bedroom_parent_outlined,
+          l10n.sleepPillarEnvIntro,
+          [
+            _SleepAction(
+                l10n.sleepActionEnvBedTitle, l10n.sleepActionEnvBedWhy),
+            _SleepAction(
+                l10n.sleepActionEnvNoiseTitle, l10n.sleepActionEnvNoiseWhy),
+            _SleepAction(l10n.sleepActionEnvBeddingTitle,
+                l10n.sleepActionEnvBeddingWhy),
+          ],
         ),
-        _SleepAction(
-          'Garde les extrémités au chaud',
-          'Des pieds froids resserrent les vaisseaux et empêchent le corps d\'évacuer sa chaleur centrale. Des chaussettes peuvent, contre l\'intuition, aider à s\'endormir plus vite.',
-        ),
-      ],
-    ),
-    _SleepPillar(
-      'Stimulants & alimentation',
-      Icons.no_food,
-      'Ce que tu consommes dans la seconde partie de journée pèse lourd sur ta nuit.',
-      [
-        _SleepAction(
-          'Dernière caféine 6 à 8 h avant le coucher',
-          'La caféine bloque l\'adénosine, la molécule qui te rend somnolent, pendant 6 h et plus. Un café de milieu d\'après-midi ampute le sommeil profond sans même t\'empêcher de t\'endormir. Pense aussi au thé, au maté, au chocolat noir.',
-        ),
-        _SleepAction(
-          'Dîne léger et tôt, 3 h avant',
-          'Une digestion en cours élève la température du corps et mobilise l\'organisme, à l\'opposé de ce que demande le sommeil. Un dîner léger et précoce améliore nettement la profondeur de la nuit.',
-        ),
-        _SleepAction(
-          'Modère les liquides en soirée',
-          'Trop boire juste avant de dormir multiplie les réveils nocturnes pour aller aux toilettes, qui fragmentent les cycles. Hydrate-toi surtout en journée.',
-        ),
-        _SleepAction(
-          'Mise sur les aliments favorables au sommeil',
-          'Certains aliments bruts apportent du tryptophane, du magnésium et de la glycine, précurseurs de la mélatonine et de la sérotonine : amandes, noix, banane, flocons d\'avoine, kiwi, poisson gras.',
-        ),
-      ],
-    ),
-    _SleepPillar(
-      'Mental & stress',
-      Icons.self_improvement,
-      'Un mental agité est la cause n°1 des difficultés d\'endormissement. L\'apaiser est un entraînement.',
-      [
-        _SleepAction(
-          'Fais une décharge mentale',
-          'Note sur papier ce qui t\'préoccupe et tes tâches du lendemain. Sortir les pensées de ta tête pour les poser ailleurs réduit la rumination qui tourne en boucle au coucher.',
-        ),
-        _SleepAction(
-          'Pratique quelques minutes de cohérence cardiaque',
-          'Ralentir le souffle active le système parasympathique, celui du repos. Quelques cycles de respiration lente préparent physiologiquement le corps au sommeil.',
-        ),
-        _SleepAction(
-          'Termine sur trois gratitudes',
-          'Repenser à trois moments positifs de la journée oriente le mental vers le calme plutôt que vers l\'anxiété, et facilite un endormissement serein.',
-        ),
-        _SleepAction(
-          'Évite les contenus anxiogènes le soir',
-          'Actualités, mails de travail, débats en ligne activent le système de vigilance juste avant de dormir. Réserve la soirée à ce qui apaise.',
-        ),
-      ],
-    ),
-    _SleepPillar(
-      'Rythme & régularité',
-      Icons.schedule,
-      'Le sommeil aime la régularité plus que tout. Un rythme stable vaut mieux qu\'une longue grasse matinée de rattrapage.',
-      [
-        _SleepAction(
-          'Couche-toi et lève-toi à heures régulières',
-          'Des horaires constants, même le week-end, renforcent ton horloge biologique. C\'est la régularité, plus que la durée seule, qui détermine la qualité du sommeil.',
-        ),
-        _SleepAction(
-          'Respecte tes cycles de 90 minutes',
-          'Le sommeil se déroule par cycles d\'environ 90 min. Se réveiller en fin de cycle, plutôt qu\'en plein sommeil profond, rend le réveil bien plus facile.',
-        ),
-        _SleepAction(
-          'Couche-toi dès les premiers signes',
-          'Bâillements, paupières lourdes, yeux qui piquent : c\'est ton train du sommeil qui passe. Le rater, c\'est attendre le prochain cycle 90 min plus tard.',
-        ),
-        _SleepAction(
-          'Gère tes siestes',
-          'Une sieste de 10 à 20 min en début d\'après-midi récupère sans empiéter sur la nuit. Trop longue ou trop tardive, elle sabote l\'endormissement du soir.',
-        ),
-      ],
-    ),
-    _SleepPillar(
-      'L\'environnement',
-      Icons.bedroom_parent_outlined,
-      'Ta chambre doit devenir un sanctuaire que ton cerveau associe uniquement au repos.',
-      [
-        _SleepAction(
-          'Réserve le lit au sommeil',
-          'Travailler, manger ou scroller au lit brouille l\'association mentale lit = sommeil. Ton cerveau doit apprendre qu\'entrer dans le lit signifie dormir.',
-        ),
-        _SleepAction(
-          'Chasse le bruit',
-          'Même sans te réveiller, un bruit perturbe la profondeur du sommeil. Bouchons d\'oreilles ou bruit blanc régulier peuvent masquer les nuisances imprévisibles.',
-        ),
-        _SleepAction(
-          'Soigne ta literie',
-          'Un matelas et un oreiller adaptés évitent les micro-réveils liés à l\'inconfort. On y passe un tiers de sa vie : c\'est un investissement santé.',
-        ),
-      ],
-    ),
-  ];
+      ];
 
   final Set<String> _done = {};
 
-  int get _totalActions =>
-      _pillars.fold(0, (a, p) => a + p.actions.length);
+  int _totalActionsFor(List<_SleepPillar> pillars) =>
+      pillars.fold(0, (a, p) => a + p.actions.length);
 
   @override
   Widget build(BuildContext context) {
-    final progress = _totalActions > 0 ? _done.length / _totalActions : 0.0;
+    final l10n = context.l10n;
+    final pillars = _pillarsFor(l10n);
+    final totalActions = _totalActionsFor(pillars);
+    final progress = totalActions > 0 ? _done.length / totalActions : 0.0;
     return Scaffold(
       backgroundColor: TotumColors.page,
       appBar: AppBar(
-        title: const Text('Rituel du soir'),
+        title: Text(l10n.sleepRitualTitle),
         backgroundColor: TotumColors.surface,
         foregroundColor: TotumColors.textPrimary,
         elevation: 0,
@@ -6796,7 +6755,7 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Un sommeil de qualité n\'est pas une chance, c\'est le résultat de bonnes habitudes. Voici les leviers qui comptent vraiment — coche ceux que tu mets en place.',
+                  l10n.sleepRitualIntro,
                   style: TextStyle(
                       fontSize: 13, height: 1.5, color: TotumColors.textPrimary),
                 ),
@@ -6815,7 +6774,7 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Text('${_done.length}/$_totalActions',
+                    Text('${_done.length}/$totalActions',
                         style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
@@ -6826,10 +6785,10 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
             ),
           ),
           const SizedBox(height: 18),
-          const Text('Les 6 leviers de ton sommeil',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
+          Text(l10n.sleepRitualLeversHeading,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
-          Text('Appuie sur un levier pour voir les gestes et cocher ceux que tu mets en place.',
+          Text(l10n.sleepRitualLeversSubtitle,
               style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary, height: 1.4)),
           const SizedBox(height: 14),
           GridView.builder(
@@ -6841,8 +6800,8 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
               mainAxisSpacing: 12,
               childAspectRatio: 1.15,
             ),
-            itemCount: _pillars.length,
-            itemBuilder: (context, p) => _buildPillarCard(_pillars[p]),
+            itemCount: pillars.length,
+            itemBuilder: (context, p) => _buildPillarCard(pillars[p]),
           ),
         ],
       ),
