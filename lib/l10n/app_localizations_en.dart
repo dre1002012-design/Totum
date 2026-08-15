@@ -4383,4 +4383,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get jrnlCreateFirstRecipeHint =>
       'Create your first recipe with the + button in the bottom right';
+
+  @override
+  String get jrnlLibraryBadge => 'TOTUM Library';
 }

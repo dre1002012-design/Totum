@@ -7391,6 +7391,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Crée ta première recette avec le bouton + en bas à droite'**
   String get jrnlCreateFirstRecipeHint;
+
+  /// No description provided for @jrnlLibraryBadge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèque TOTUM'**
+  String get jrnlLibraryBadge;
 }
 
 class _AppLocalizationsDelegate

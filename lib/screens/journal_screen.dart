@@ -7597,8 +7597,8 @@ class _FoodListView extends StatelessWidget {
                       // désormais (sauf graines) ; juste le nom et les kcal/100g.
                       subtitle: Text(
                           [
-                            '${kcal100.toStringAsFixed(0)} kcal / 100 g',
-                            if (isFromLibrary) 'Bibliothèque TOTUM',
+                            context.l10n.jrnlKcalPer100g(kcal100.toStringAsFixed(0)),
+                            if (isFromLibrary) context.l10n.jrnlLibraryBadge,
                           ].join(' · '),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

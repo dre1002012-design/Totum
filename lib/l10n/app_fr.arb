@@ -1534,5 +1534,6 @@
   "jrnlNoPersonalFoodYet": "Aucun aliment perso pour le moment",
   "jrnlNoRecipeYet": "Aucune recette pour le moment",
   "jrnlCreateFirstFoodHint": "Crée ton premier aliment avec le bouton + en bas à droite",
-  "jrnlCreateFirstRecipeHint": "Crée ta première recette avec le bouton + en bas à droite"
+  "jrnlCreateFirstRecipeHint": "Crée ta première recette avec le bouton + en bas à droite",
+  "jrnlLibraryBadge": "Bibliothèque TOTUM"
 }
