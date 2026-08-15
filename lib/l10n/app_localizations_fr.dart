@@ -92,4 +92,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dayAbbrev => 'j';
+
+  @override
+  String get commonCancel => 'Annuler';
+
+  @override
+  String get commonConfirm => 'Valider';
+
+  @override
+  String get barcodeEnterTitle => 'Saisir le code-barres';
+
+  @override
+  String get barcodeDigitsLabel => 'Chiffres du code-barres';
+
+  @override
+  String get barcodeScanScreenTitle => 'Scanner un produit';
+
+  @override
+  String get barcodeEnableFlash => 'Activer le flash';
+
+  @override
+  String barcodeCameraError(String error) {
+    return 'Erreur caméra : $error';
+  }
+
+  @override
+  String get barcodeAimInstruction => 'Visez le code-barre';
+
+  @override
+  String get barcodeAutoDetect => 'Détection automatique';
+
+  @override
+  String get barcodeManualEntry => 'Saisir le code manuellement';
 }

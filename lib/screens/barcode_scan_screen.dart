@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+import '../l10n/l10n_ext.dart';
+
 class BarcodeScanScreen extends StatefulWidget {
   final void Function(String barcode) onBarcode;
 
@@ -83,22 +85,22 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
     final code = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Saisir le code-barres'),
+        title: Text(context.l10n.barcodeEnterTitle),
         content: TextField(
           controller: ctrl,
           autofocus: true,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Chiffres du code-barres',
+          decoration: InputDecoration(
+            labelText: context.l10n.barcodeDigitsLabel,
             hintText: 'ex. 3017620422003',
           ),
           onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annuler')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(context.l10n.commonCancel)),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, ctrl.text.trim()),
-            child: const Text('Valider'),
+            child: Text(context.l10n.commonConfirm),
           ),
         ],
       ),
@@ -123,7 +125,7 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Scanner un produit'),
+        title: Text(context.l10n.barcodeScanScreenTitle),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -133,7 +135,7 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
           if (!kIsWeb)
             IconButton(
               icon: const Icon(Icons.flash_on, color: Colors.white),
-              tooltip: "Activer le flash",
+              tooltip: context.l10n.barcodeEnableFlash,
               onPressed: () => _controller.toggleTorch(),
             ),
         ],
@@ -150,7 +152,7 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    'Erreur caméra: $error',
+                    context.l10n.barcodeCameraError(error.toString()),
                     style: const TextStyle(color: Colors.red),
                     textAlign: TextAlign.center,
                   ),
@@ -172,15 +174,15 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
             right: 20,
             child: Column(
               children: [
-                const Text(
-                  "Visez le code-barre",
-                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  context.l10n.barcodeAimInstruction,
+                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  "Détection automatique",
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                Text(
+                  context.l10n.barcodeAutoDetect,
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 14),
@@ -189,8 +191,8 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
                 TextButton.icon(
                   onPressed: _openManualEntry,
                   icon: const Icon(Icons.keyboard, color: Colors.white70, size: 18),
-                  label: const Text('Saisir le code manuellement',
-                      style: TextStyle(color: Colors.white70, fontSize: 13)),
+                  label: Text(context.l10n.barcodeManualEntry,
+                      style: const TextStyle(color: Colors.white70, fontSize: 13)),
                 ),
               ],
             ),

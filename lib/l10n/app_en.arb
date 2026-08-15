@@ -26,5 +26,17 @@
   "expenditureDisclaimer": "This estimate is calculated from your weight and food journal (same principle as TOTUM's adaptive calibration) — it is not a direct measurement, nor a reproduction of another app's proprietary algorithm. The more regularly you log your weight and meals, the tighter the uncertainty margin becomes.",
   "expenditureRecentEvolution": "Recent evolution",
   "kcalPerDay": "kcal/day",
-  "dayAbbrev": "d"
+  "dayAbbrev": "d",
+
+  "commonCancel": "Cancel",
+  "commonConfirm": "Confirm",
+
+  "barcodeEnterTitle": "Enter the barcode",
+  "barcodeDigitsLabel": "Barcode digits",
+  "barcodeScanScreenTitle": "Scan a product",
+  "barcodeEnableFlash": "Turn on flash",
+  "barcodeCameraError": "Camera error: {error}",
+  "barcodeAimInstruction": "Aim at the barcode",
+  "barcodeAutoDetect": "Automatic detection",
+  "barcodeManualEntry": "Enter the code manually"
 }

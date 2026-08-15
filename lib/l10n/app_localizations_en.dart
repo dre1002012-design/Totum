@@ -92,4 +92,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dayAbbrev => 'd';
+
+  @override
+  String get commonCancel => 'Cancel';
+
+  @override
+  String get commonConfirm => 'Confirm';
+
+  @override
+  String get barcodeEnterTitle => 'Enter the barcode';
+
+  @override
+  String get barcodeDigitsLabel => 'Barcode digits';
+
+  @override
+  String get barcodeScanScreenTitle => 'Scan a product';
+
+  @override
+  String get barcodeEnableFlash => 'Turn on flash';
+
+  @override
+  String barcodeCameraError(String error) {
+    return 'Camera error: $error';
+  }
+
+  @override
+  String get barcodeAimInstruction => 'Aim at the barcode';
+
+  @override
+  String get barcodeAutoDetect => 'Automatic detection';
+
+  @override
+  String get barcodeManualEntry => 'Enter the code manually';
 }

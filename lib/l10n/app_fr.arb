@@ -39,5 +39,22 @@
   "expenditureDisclaimer": "Cette estimation est calculée à partir de ton poids et de ton journal alimentaire (même principe que la calibration adaptative de TOTUM) — ce n'est pas une mesure directe, ni une reproduction de l'algorithme propriétaire d'une autre application. Plus tu renseignes ton poids et tes repas régulièrement, plus la marge d'incertitude se resserre.",
   "expenditureRecentEvolution": "Évolution récente",
   "kcalPerDay": "kcal/j",
-  "dayAbbrev": "j"
+  "dayAbbrev": "j",
+
+  "commonCancel": "Annuler",
+  "commonConfirm": "Valider",
+
+  "barcodeEnterTitle": "Saisir le code-barres",
+  "barcodeDigitsLabel": "Chiffres du code-barres",
+  "barcodeScanScreenTitle": "Scanner un produit",
+  "barcodeEnableFlash": "Activer le flash",
+  "barcodeCameraError": "Erreur caméra : {error}",
+  "@barcodeCameraError": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "barcodeAimInstruction": "Visez le code-barre",
+  "barcodeAutoDetect": "Détection automatique",
+  "barcodeManualEntry": "Saisir le code manuellement"
 }

@@ -247,6 +247,66 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'j'**
   String get dayAbbrev;
+
+  /// No description provided for @commonCancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get commonCancel;
+
+  /// No description provided for @commonConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get commonConfirm;
+
+  /// No description provided for @barcodeEnterTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisir le code-barres'**
+  String get barcodeEnterTitle;
+
+  /// No description provided for @barcodeDigitsLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chiffres du code-barres'**
+  String get barcodeDigitsLabel;
+
+  /// No description provided for @barcodeScanScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Scanner un produit'**
+  String get barcodeScanScreenTitle;
+
+  /// No description provided for @barcodeEnableFlash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activer le flash'**
+  String get barcodeEnableFlash;
+
+  /// No description provided for @barcodeCameraError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur caméra : {error}'**
+  String barcodeCameraError(String error);
+
+  /// No description provided for @barcodeAimInstruction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Visez le code-barre'**
+  String get barcodeAimInstruction;
+
+  /// No description provided for @barcodeAutoDetect.
+  ///
+  /// In fr, this message translates to:
+  /// **'Détection automatique'**
+  String get barcodeAutoDetect;
+
+  /// No description provided for @barcodeManualEntry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisir le code manuellement'**
+  String get barcodeManualEntry;
 }
 
 class _AppLocalizationsDelegate
