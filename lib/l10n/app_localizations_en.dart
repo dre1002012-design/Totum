@@ -1140,4 +1140,88 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileApplyGoals => 'Apply my goals';
+
+  @override
+  String get nutrientEnergy => 'Energy';
+
+  @override
+  String get nutrientProtein => 'Protein';
+
+  @override
+  String get nutrientCarbs => 'Carbs';
+
+  @override
+  String get nutrientFat => 'Fat';
+
+  @override
+  String get nutrientFiber => 'Fiber';
+
+  @override
+  String get nutrientOmega9 => 'Omega-9 (Oleic)';
+
+  @override
+  String get nutrientOmega6 => 'Omega-6 (LA)';
+
+  @override
+  String get nutrientOmega3 => 'Omega-3 (ALA)';
+
+  @override
+  String get nutrientSatFat => 'Saturated fat';
+
+  @override
+  String get nutrientSugars => 'Sugars';
+
+  @override
+  String get nutrientSalt => 'Salt';
+
+  @override
+  String get nutrientAlcohol => 'Alcohol';
+
+  @override
+  String get nutrientRetinol => 'Retinol';
+
+  @override
+  String get nutrientBetaCarotene => 'Beta-car.';
+
+  @override
+  String get nutrientCopper => 'Copper';
+
+  @override
+  String get nutrientIron => 'Iron';
+
+  @override
+  String get nutrientIodine => 'Iodine';
+
+  @override
+  String get nutrientMagnesium => 'Magnesium';
+
+  @override
+  String get nutrientManganese => 'Manganese';
+
+  @override
+  String get nutrientPhosphorus => 'Phosphorus';
+
+  @override
+  String get nutrientSelenium => 'Selenium';
+
+  @override
+  String get nutrientCholesterol => 'Cholesterol';
+
+  @override
+  String get nutrientVitaminDFull => 'Vitamin D';
+
+  @override
+  String get nutrientVitaminCFull => 'Vitamin C';
+
+  @override
+  String get nutrientVitaminKFull => 'Vitamin K';
+
+  @override
+  String get nutrientVitaminB9Full => 'Vitamin B9';
+
+  @override
+  String get nutrientVitaminB12Full => 'Vitamin B12';
+
+  @override
+  String get nutrientOmega3Marine => 'Marine omega-3';
 }

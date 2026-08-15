@@ -2073,6 +2073,174 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Appliquer mes objectifs'**
   String get profileApplyGoals;
+
+  /// No description provided for @nutrientEnergy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Énergie'**
+  String get nutrientEnergy;
+
+  /// No description provided for @nutrientProtein.
+  ///
+  /// In fr, this message translates to:
+  /// **'Protéines'**
+  String get nutrientProtein;
+
+  /// No description provided for @nutrientCarbs.
+  ///
+  /// In fr, this message translates to:
+  /// **'Glucides'**
+  String get nutrientCarbs;
+
+  /// No description provided for @nutrientFat.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lipides'**
+  String get nutrientFat;
+
+  /// No description provided for @nutrientFiber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fibres'**
+  String get nutrientFiber;
+
+  /// No description provided for @nutrientOmega9.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga 9 (Oléique)'**
+  String get nutrientOmega9;
+
+  /// No description provided for @nutrientOmega6.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga 6 (LA)'**
+  String get nutrientOmega6;
+
+  /// No description provided for @nutrientOmega3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga 3 (ALA)'**
+  String get nutrientOmega3;
+
+  /// No description provided for @nutrientSatFat.
+  ///
+  /// In fr, this message translates to:
+  /// **'AG saturés'**
+  String get nutrientSatFat;
+
+  /// No description provided for @nutrientSugars.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sucres'**
+  String get nutrientSugars;
+
+  /// No description provided for @nutrientSalt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sel'**
+  String get nutrientSalt;
+
+  /// No description provided for @nutrientAlcohol.
+  ///
+  /// In fr, this message translates to:
+  /// **'Alcool'**
+  String get nutrientAlcohol;
+
+  /// No description provided for @nutrientRetinol.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rétinol'**
+  String get nutrientRetinol;
+
+  /// No description provided for @nutrientBetaCarotene.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bêta-car.'**
+  String get nutrientBetaCarotene;
+
+  /// No description provided for @nutrientCopper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cuivre'**
+  String get nutrientCopper;
+
+  /// No description provided for @nutrientIron.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fer'**
+  String get nutrientIron;
+
+  /// No description provided for @nutrientIodine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Iode'**
+  String get nutrientIodine;
+
+  /// No description provided for @nutrientMagnesium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Magnésium'**
+  String get nutrientMagnesium;
+
+  /// No description provided for @nutrientManganese.
+  ///
+  /// In fr, this message translates to:
+  /// **'Manganèse'**
+  String get nutrientManganese;
+
+  /// No description provided for @nutrientPhosphorus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Phosphore'**
+  String get nutrientPhosphorus;
+
+  /// No description provided for @nutrientSelenium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sélénium'**
+  String get nutrientSelenium;
+
+  /// No description provided for @nutrientCholesterol.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cholestérol'**
+  String get nutrientCholesterol;
+
+  /// No description provided for @nutrientVitaminDFull.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine D'**
+  String get nutrientVitaminDFull;
+
+  /// No description provided for @nutrientVitaminCFull.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine C'**
+  String get nutrientVitaminCFull;
+
+  /// No description provided for @nutrientVitaminKFull.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine K'**
+  String get nutrientVitaminKFull;
+
+  /// No description provided for @nutrientVitaminB9Full.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine B9'**
+  String get nutrientVitaminB9Full;
+
+  /// No description provided for @nutrientVitaminB12Full.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine B12'**
+  String get nutrientVitaminB12Full;
+
+  /// No description provided for @nutrientOmega3Marine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga 3 marins'**
+  String get nutrientOmega3Marine;
 }
 
 class _AppLocalizationsDelegate

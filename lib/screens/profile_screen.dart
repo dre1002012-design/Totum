@@ -9,6 +9,7 @@ import '../services/profile.dart' as nutri;
 import '../services/calibration_service.dart';
 import '../services/day_totals.dart';
 import '../services/priority_nutrients.dart';
+import '../services/nutrient_labels.dart';
 import '../services/app_settings.dart';
 import '../services/units.dart';
 import '../theme/totum_style.dart';
@@ -1122,7 +1123,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     final target = priorityNutrientTarget(key, targets) ?? 0;
     final consumed = priorityNutrientConsumed(key, today.micros);
     final fraction = target > 0 ? (consumed / target).clamp(0.0, 1.0) : 0.0;
-    final label = kPriorityNutrientLabel[key] ?? key;
+    final label = nutrientDisplayLabel(kPriorityNutrientLabel[key] ?? key, context.l10n);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
