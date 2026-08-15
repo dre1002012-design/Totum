@@ -1524,5 +1524,15 @@
   "jrnlNovaOfficial": "Cet aliment est classé NOVA {score} par Open Food Facts (donnée officielle du produit scanné).",
   "@jrnlNovaOfficial": { "placeholders": { "score": {"type": "int"} } },
   "jrnlNovaSource": "Source : classification NOVA (Monteiro et al.), reprise par Open Food Facts.",
-  "jrnlConfirmDeleteTooltip": "Confirmer la suppression"
+  "jrnlConfirmDeleteTooltip": "Confirmer la suppression",
+  "jrnlAddButtonCount": "Ajouter ({count})",
+  "@jrnlAddButtonCount": { "placeholders": { "count": {"type": "int"} } },
+  "jrnlNoPersonalMealsYet": "Aucun repas perso pour le moment",
+  "jrnlCreateFirstPersonalMealHint": "Crée ton premier repas perso avec le bouton + en bas à droite,\nou depuis un repas du journal via \"Copier ce repas\" → \"Repas perso\".",
+  "jrnlLibraryChipLabel": "Bibliothèque TOTUM ({count})",
+  "@jrnlLibraryChipLabel": { "placeholders": { "count": {"type": "int"} } },
+  "jrnlNoPersonalFoodYet": "Aucun aliment perso pour le moment",
+  "jrnlNoRecipeYet": "Aucune recette pour le moment",
+  "jrnlCreateFirstFoodHint": "Crée ton premier aliment avec le bouton + en bas à droite",
+  "jrnlCreateFirstRecipeHint": "Crée ta première recette avec le bouton + en bas à droite"
 }

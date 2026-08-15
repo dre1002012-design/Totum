@@ -7087,6 +7087,7 @@ class _MultiSelectFoodListState extends State<_MultiSelectFoodList> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final selectedItems =
         widget.items.where((it) => _selected.contains(_idOf(it))).toList();
 
@@ -7095,7 +7096,7 @@ class _MultiSelectFoodListState extends State<_MultiSelectFoodList> {
         Expanded(
           child: widget.items.isEmpty
               ? Center(
-                  child: Text('Aucun résultat', style: TextStyle(color: TotumColors.textSecondary)),
+                  child: Text(l10n.jrnlNoResults, style: TextStyle(color: TotumColors.textSecondary)),
                 )
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
@@ -7104,7 +7105,7 @@ class _MultiSelectFoodListState extends State<_MultiSelectFoodList> {
                   itemBuilder: (_, i) {
                     final it = widget.items[i];
                     final id = _idOf(it);
-                    final name = displayNameOf(it, ((it as dynamic).name as String?) ?? 'Aliment');
+                    final name = displayNameOf(it, ((it as dynamic).name as String?) ?? l10n.jrnlGenericFoodFallback);
                     final kcal = ((it as dynamic).kcal100 as num?)?.toDouble();
                     final pictogram = _pictogramOf(it);
                     final checked = _selected.contains(id);
@@ -7128,7 +7129,7 @@ class _MultiSelectFoodListState extends State<_MultiSelectFoodList> {
                       ),
                       title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                       subtitle: kcal != null
-                          ? Text('${kcal.toStringAsFixed(0)} kcal / 100 g',
+                          ? Text(l10n.jrnlKcalPer100g(kcal.toStringAsFixed(0)),
                               style: TextStyle(fontSize: 12, color: TotumColors.textSecondary))
                           : null,
                     );
@@ -7150,15 +7151,15 @@ class _MultiSelectFoodListState extends State<_MultiSelectFoodList> {
                         initialValue: _targetMeal,
                         isDense: true,
                         decoration: InputDecoration(
-                          labelText: 'Vers le repas',
+                          labelText: l10n.jrnlTowardMeal,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         ),
-                        items: const [
-                          DropdownMenuItem(value: 'Petit-déjeuner', child: Text('Petit-déjeuner')),
-                          DropdownMenuItem(value: 'Déjeuner', child: Text('Déjeuner')),
-                          DropdownMenuItem(value: 'Dîner', child: Text('Dîner')),
-                          DropdownMenuItem(value: 'Collation', child: Text('Collation')),
+                        items: [
+                          DropdownMenuItem(value: 'Petit-déjeuner', child: Text(l10n.consCatBreakfast)),
+                          DropdownMenuItem(value: 'Déjeuner', child: Text(l10n.consCatLunch)),
+                          DropdownMenuItem(value: 'Dîner', child: Text(l10n.consCatDinner)),
+                          DropdownMenuItem(value: 'Collation', child: Text(l10n.consCatSnack)),
                         ],
                         onChanged: (v) => setState(() => _targetMeal = v ?? 'Déjeuner'),
                       ),
@@ -7174,14 +7175,14 @@ class _MultiSelectFoodListState extends State<_MultiSelectFoodList> {
                               if (!context.mounted) return;
                               setState(() { _selected.clear(); _adding = false; });
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text('${selectedItems.length} aliment(s) ajouté(s) à $_targetMeal '
-                                    '(100 g par défaut, ajustable ensuite)'),
+                                content: Text(l10n.jrnlItemsAddedTo(
+                                    selectedItems.length, _mealTypeLabel(_targetMeal, l10n))),
                               ));
                             },
                       child: _adding
                           ? const SizedBox(width: 18, height: 18,
                               child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                          : Text('Ajouter (${selectedItems.length})'),
+                          : Text(l10n.jrnlAddButtonCount(selectedItems.length)),
                     ),
                   ],
                 ),
@@ -7260,11 +7261,10 @@ class _FoodListView extends StatelessWidget {
             children: [
               Icon(Icons.bookmark_outline, size: 42, color: TotumColors.textMuted),
               const SizedBox(height: 10),
-              Text('Aucun repas perso pour le moment', style: TextStyle(color: TotumColors.textSecondary)),
+              Text(context.l10n.jrnlNoPersonalMealsYet, style: TextStyle(color: TotumColors.textSecondary)),
               const SizedBox(height: 4),
               Text(
-                'Crée ton premier repas perso avec le bouton + en bas à droite,\n'
-                'ou depuis un repas du journal via "Copier ce repas" → "Repas perso".',
+                context.l10n.jrnlCreateFirstPersonalMealHint,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12, color: TotumColors.textMuted),
               ),
@@ -7388,7 +7388,7 @@ class _FoodListView extends StatelessWidget {
                     avatar: Icon(Icons.verified,
                         size: 16,
                         color: onlyLibraryRecipes ? Colors.white : TotumColors.accent),
-                    label: Text('Bibliothèque TOTUM ($libraryRecipeCount)'),
+                    label: Text(context.l10n.jrnlLibraryChipLabel(libraryRecipeCount)),
                     selected: onlyLibraryRecipes,
                     onSelected: (v) => onOnlyLibraryChanged!(v),
                     selectedColor: TotumColors.accent,
@@ -7409,7 +7409,7 @@ class _FoodListView extends StatelessWidget {
           child: items.isEmpty
               ? Center(
                   child: persoFilter == null
-                      ? const Text('Aucun résultat')
+                      ? Text(context.l10n.jrnlNoResults)
                       : Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -7422,15 +7422,15 @@ class _FoodListView extends StatelessWidget {
                             const SizedBox(height: 10),
                             Text(
                               persoFilter == 0
-                                  ? 'Aucun aliment perso pour le moment'
-                                  : 'Aucune recette pour le moment',
+                                  ? context.l10n.jrnlNoPersonalFoodYet
+                                  : context.l10n.jrnlNoRecipeYet,
                               style: TextStyle(color: TotumColors.textSecondary),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               persoFilter == 0
-                                  ? 'Crée ton premier aliment avec le bouton + en bas à droite'
-                                  : 'Crée ta première recette avec le bouton + en bas à droite',
+                                  ? context.l10n.jrnlCreateFirstFoodHint
+                                  : context.l10n.jrnlCreateFirstRecipeHint,
                               style: TextStyle(
                                   fontSize: 12, color: TotumColors.textMuted),
                             ),

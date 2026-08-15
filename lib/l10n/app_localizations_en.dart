@@ -4352,4 +4352,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jrnlConfirmDeleteTooltip => 'Confirm deletion';
+
+  @override
+  String jrnlAddButtonCount(int count) {
+    return 'Add ($count)';
+  }
+
+  @override
+  String get jrnlNoPersonalMealsYet => 'No personal meals yet';
+
+  @override
+  String get jrnlCreateFirstPersonalMealHint =>
+      'Create your first personal meal with the + button in the bottom right,\nor from a journal meal via \"Copy this meal\" → \"Personal meal\".';
+
+  @override
+  String jrnlLibraryChipLabel(int count) {
+    return 'TOTUM Library ($count)';
+  }
+
+  @override
+  String get jrnlNoPersonalFoodYet => 'No personal food yet';
+
+  @override
+  String get jrnlNoRecipeYet => 'No recipe yet';
+
+  @override
+  String get jrnlCreateFirstFoodHint =>
+      'Create your first food with the + button in the bottom right';
+
+  @override
+  String get jrnlCreateFirstRecipeHint =>
+      'Create your first recipe with the + button in the bottom right';
 }

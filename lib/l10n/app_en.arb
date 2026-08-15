@@ -1348,5 +1348,13 @@
   "jrnlNovaEstimated": "This food is estimated as NOVA {score} by TOTUM, based on its CIQUAL food family — the CIQUAL database doesn't provide an official NOVA score. Take it as an indication, not a certified measurement.",
   "jrnlNovaOfficial": "This food is classified as NOVA {score} by Open Food Facts (official data for the scanned product).",
   "jrnlNovaSource": "Source: NOVA classification (Monteiro et al.), as used by Open Food Facts.",
-  "jrnlConfirmDeleteTooltip": "Confirm deletion"
+  "jrnlConfirmDeleteTooltip": "Confirm deletion",
+  "jrnlAddButtonCount": "Add ({count})",
+  "jrnlNoPersonalMealsYet": "No personal meals yet",
+  "jrnlCreateFirstPersonalMealHint": "Create your first personal meal with the + button in the bottom right,\nor from a journal meal via \"Copy this meal\" → \"Personal meal\".",
+  "jrnlLibraryChipLabel": "TOTUM Library ({count})",
+  "jrnlNoPersonalFoodYet": "No personal food yet",
+  "jrnlNoRecipeYet": "No recipe yet",
+  "jrnlCreateFirstFoodHint": "Create your first food with the + button in the bottom right",
+  "jrnlCreateFirstRecipeHint": "Create your first recipe with the + button in the bottom right"
 }

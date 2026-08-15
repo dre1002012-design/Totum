@@ -4390,4 +4390,35 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get jrnlConfirmDeleteTooltip => 'Confirmer la suppression';
+
+  @override
+  String jrnlAddButtonCount(int count) {
+    return 'Ajouter ($count)';
+  }
+
+  @override
+  String get jrnlNoPersonalMealsYet => 'Aucun repas perso pour le moment';
+
+  @override
+  String get jrnlCreateFirstPersonalMealHint =>
+      'Crée ton premier repas perso avec le bouton + en bas à droite,\nou depuis un repas du journal via \"Copier ce repas\" → \"Repas perso\".';
+
+  @override
+  String jrnlLibraryChipLabel(int count) {
+    return 'Bibliothèque TOTUM ($count)';
+  }
+
+  @override
+  String get jrnlNoPersonalFoodYet => 'Aucun aliment perso pour le moment';
+
+  @override
+  String get jrnlNoRecipeYet => 'Aucune recette pour le moment';
+
+  @override
+  String get jrnlCreateFirstFoodHint =>
+      'Crée ton premier aliment avec le bouton + en bas à droite';
+
+  @override
+  String get jrnlCreateFirstRecipeHint =>
+      'Crée ta première recette avec le bouton + en bas à droite';
 }

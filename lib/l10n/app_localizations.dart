@@ -7343,6 +7343,54 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Confirmer la suppression'**
   String get jrnlConfirmDeleteTooltip;
+
+  /// No description provided for @jrnlAddButtonCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter ({count})'**
+  String jrnlAddButtonCount(int count);
+
+  /// No description provided for @jrnlNoPersonalMealsYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun repas perso pour le moment'**
+  String get jrnlNoPersonalMealsYet;
+
+  /// No description provided for @jrnlCreateFirstPersonalMealHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Crée ton premier repas perso avec le bouton + en bas à droite,\nou depuis un repas du journal via \"Copier ce repas\" → \"Repas perso\".'**
+  String get jrnlCreateFirstPersonalMealHint;
+
+  /// No description provided for @jrnlLibraryChipLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèque TOTUM ({count})'**
+  String jrnlLibraryChipLabel(int count);
+
+  /// No description provided for @jrnlNoPersonalFoodYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun aliment perso pour le moment'**
+  String get jrnlNoPersonalFoodYet;
+
+  /// No description provided for @jrnlNoRecipeYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune recette pour le moment'**
+  String get jrnlNoRecipeYet;
+
+  /// No description provided for @jrnlCreateFirstFoodHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Crée ton premier aliment avec le bouton + en bas à droite'**
+  String get jrnlCreateFirstFoodHint;
+
+  /// No description provided for @jrnlCreateFirstRecipeHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Crée ta première recette avec le bouton + en bas à droite'**
+  String get jrnlCreateFirstRecipeHint;
 }
 
 class _AppLocalizationsDelegate
