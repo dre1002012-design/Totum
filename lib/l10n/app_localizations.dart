@@ -7031,6 +7031,54 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Recette'**
   String get jrnlTagRecipe;
+
+  /// No description provided for @jrnlMealEmptyToCopy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce repas est vide, rien à copier.'**
+  String get jrnlMealEmptyToCopy;
+
+  /// No description provided for @jrnlCopyMealTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier ce repas'**
+  String get jrnlCopyMealTitle;
+
+  /// No description provided for @jrnlItemsFromMeal.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 aliment} other{{count} aliments}} de {meal}'**
+  String jrnlItemsFromMeal(int count, String meal);
+
+  /// No description provided for @jrnlToDaySegment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers un jour'**
+  String get jrnlToDaySegment;
+
+  /// No description provided for @jrnlPersonalMealSegment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repas perso'**
+  String get jrnlPersonalMealSegment;
+
+  /// No description provided for @jrnlPersonalMealNameField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du repas perso'**
+  String get jrnlPersonalMealNameField;
+
+  /// No description provided for @jrnlCopyButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier'**
+  String get jrnlCopyButton;
+
+  /// No description provided for @jrnlSavedToPersonalMeals.
+  ///
+  /// In fr, this message translates to:
+  /// **'\"{name}\" enregistré dans tes repas perso'**
+  String jrnlSavedToPersonalMeals(String name);
 }
 
 class _AppLocalizationsDelegate

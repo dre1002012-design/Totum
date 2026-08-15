@@ -1296,5 +1296,13 @@
   "jrnlTypeToSearchFood": "Type to search a food",
   "jrnlPersonalMealSummary": "Personal meal · {count, plural, =1{1 item} other{{count} items}} · {kcal} kcal",
   "jrnlTagPersonal": "Personal",
-  "jrnlTagRecipe": "Recipe"
+  "jrnlTagRecipe": "Recipe",
+  "jrnlMealEmptyToCopy": "This meal is empty, nothing to copy.",
+  "jrnlCopyMealTitle": "Copy this meal",
+  "jrnlItemsFromMeal": "{count, plural, =1{1 item} other{{count} items}} from {meal}",
+  "jrnlToDaySegment": "To a day",
+  "jrnlPersonalMealSegment": "Personal meal",
+  "jrnlPersonalMealNameField": "Personal meal name",
+  "jrnlCopyButton": "Copy",
+  "jrnlSavedToPersonalMeals": "\"{name}\" saved to your personal meals"
 }

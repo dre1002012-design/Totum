@@ -5560,7 +5560,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDlg) => AlertDialog(
-          title: Text(displayNameOf(entryFood, (entry['name'] ?? 'Aliment').toString()),
+          title: Text(displayNameOf(entryFood, (entry['name'] ?? ctx.l10n.jrnlGenericFoodFallback).toString()),
               style: const TextStyle(fontSize: 16),
               overflow: TextOverflow.ellipsis),
           content: Column(
@@ -5570,7 +5570,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                 controller: qtyCtrl,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: 'Quantité (g)',
+                  labelText: ctx.l10n.jrnlQtyLabel,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
@@ -5578,14 +5578,14 @@ class _DayJournalViewState extends State<_DayJournalView> {
               DropdownButtonFormField<String>(
                 initialValue: newMeal,
                 decoration: InputDecoration(
-                  labelText: 'Repas',
+                  labelText: ctx.l10n.jrnlMealDropdownLabel,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                items: const [
-                  DropdownMenuItem(value: 'Petit-déjeuner', child: Text('Petit-déjeuner')),
-                  DropdownMenuItem(value: 'Déjeuner', child: Text('Déjeuner')),
-                  DropdownMenuItem(value: 'Dîner', child: Text('Dîner')),
-                  DropdownMenuItem(value: 'Collation', child: Text('Collation')),
+                items: [
+                  DropdownMenuItem(value: 'Petit-déjeuner', child: Text(ctx.l10n.consCatBreakfast)),
+                  DropdownMenuItem(value: 'Déjeuner', child: Text(ctx.l10n.consCatLunch)),
+                  DropdownMenuItem(value: 'Dîner', child: Text(ctx.l10n.consCatDinner)),
+                  DropdownMenuItem(value: 'Collation', child: Text(ctx.l10n.consCatSnack)),
                 ],
                 onChanged: (v) { if (v != null) setDlg(() => newMeal = v); },
               ),
@@ -5594,7 +5594,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('Annuler')),
+                child: Text(ctx.l10n.commonCancel)),
             FilledButton(
               style: FilledButton.styleFrom(
                   backgroundColor: kTotumOrange, foregroundColor: Colors.white),
@@ -5606,7 +5606,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                     entry, currentMeal, newMeal, newGrams, _currentDate);
                 await _fetchDate(_currentDate, showSpinner: false);
               },
-              child: const Text('Enregistrer'),
+              child: Text(ctx.l10n.commonSave),
             ),
           ],
         ),
@@ -5618,7 +5618,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
       String sourceMeal, List<Map<String, dynamic>> items) async {
     if (items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ce repas est vide, rien à copier.')));
+          SnackBar(content: Text(context.l10n.jrnlMealEmptyToCopy)));
       return;
     }
     String targetMeal = sourceMeal;
@@ -5634,17 +5634,17 @@ class _DayJournalViewState extends State<_DayJournalView> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDlg) => AlertDialog(
-          title: const Text('Copier ce repas'),
+          title: Text(ctx.l10n.jrnlCopyMealTitle),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('${items.length} aliment(s) de $sourceMeal',
+              Text(ctx.l10n.jrnlItemsFromMeal(items.length, _mealTypeLabel(sourceMeal, ctx.l10n)),
                   style: TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
               const SizedBox(height: 14),
               SegmentedButton<bool>(
-                segments: const [
-                  ButtonSegment(value: false, icon: Icon(Icons.calendar_today, size: 16), label: Text('Vers un jour')),
-                  ButtonSegment(value: true, icon: Icon(Icons.bookmark_add_outlined, size: 16), label: Text('Repas perso')),
+                segments: [
+                  ButtonSegment(value: false, icon: const Icon(Icons.calendar_today, size: 16), label: Text(ctx.l10n.jrnlToDaySegment)),
+                  ButtonSegment(value: true, icon: const Icon(Icons.bookmark_add_outlined, size: 16), label: Text(ctx.l10n.jrnlPersonalMealSegment)),
                 ],
                 selected: {saveAsTemplate},
                 onSelectionChanged: (s) => setDlg(() => saveAsTemplate = s.first),
@@ -5672,7 +5672,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                   },
                   child: InputDecorator(
                     decoration: InputDecoration(
-                      labelText: 'Vers le jour',
+                      labelText: ctx.l10n.jrnlTowardDay,
                       suffixIcon: const Icon(Icons.calendar_today, size: 18),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     ),
@@ -5683,14 +5683,14 @@ class _DayJournalViewState extends State<_DayJournalView> {
                 DropdownButtonFormField<String>(
                   initialValue: targetMeal,
                   decoration: InputDecoration(
-                    labelText: 'Vers le repas',
+                    labelText: ctx.l10n.jrnlTowardMeal,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  items: const [
-                    DropdownMenuItem(value: 'Petit-déjeuner', child: Text('Petit-déjeuner')),
-                    DropdownMenuItem(value: 'Déjeuner', child: Text('Déjeuner')),
-                    DropdownMenuItem(value: 'Dîner', child: Text('Dîner')),
-                    DropdownMenuItem(value: 'Collation', child: Text('Collation')),
+                  items: [
+                    DropdownMenuItem(value: 'Petit-déjeuner', child: Text(ctx.l10n.consCatBreakfast)),
+                    DropdownMenuItem(value: 'Déjeuner', child: Text(ctx.l10n.consCatLunch)),
+                    DropdownMenuItem(value: 'Dîner', child: Text(ctx.l10n.consCatDinner)),
+                    DropdownMenuItem(value: 'Collation', child: Text(ctx.l10n.consCatSnack)),
                   ],
                   onChanged: (v) { if (v != null) setDlg(() => targetMeal = v); },
                 ),
@@ -5698,7 +5698,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                 TextField(
                   controller: nameCtrl,
                   decoration: InputDecoration(
-                    labelText: 'Nom du repas perso',
+                    labelText: ctx.l10n.jrnlPersonalMealNameField,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
@@ -5707,29 +5707,30 @@ class _DayJournalViewState extends State<_DayJournalView> {
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('Annuler')),
+                child: Text(ctx.l10n.commonCancel)),
             FilledButton(
               style: FilledButton.styleFrom(
                   backgroundColor: kTotumOrange, foregroundColor: Colors.white),
               onPressed: () async {
+                final l10n = ctx.l10n;
                 Navigator.pop(ctx);
                 if (saveAsTemplate) {
                   await widget.onSaveAsCustomMeal(nameCtrl.text, items);
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('"${nameCtrl.text.trim()}" enregistré dans tes repas perso'),
+                      content: Text(l10n.jrnlSavedToPersonalMeals(nameCtrl.text.trim())),
                     ));
                   }
                 } else {
                   await widget.onCopyMeal(items, sourceMeal, targetMeal, targetDate);
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('${items.length} aliment(s) copié(s) vers $targetMeal'),
+                      content: Text(l10n.jrnlItemsCopiedTo(items.length, _mealTypeLabel(targetMeal, l10n))),
                     ));
                   }
                 }
               },
-              child: const Text('Copier'),
+              child: Text(ctx.l10n.jrnlCopyButton),
             ),
           ],
         ),

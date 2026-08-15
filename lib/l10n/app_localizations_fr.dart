@@ -4186,4 +4186,38 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get jrnlTagRecipe => 'Recette';
+
+  @override
+  String get jrnlMealEmptyToCopy => 'Ce repas est vide, rien à copier.';
+
+  @override
+  String get jrnlCopyMealTitle => 'Copier ce repas';
+
+  @override
+  String jrnlItemsFromMeal(int count, String meal) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aliments',
+      one: '1 aliment',
+    );
+    return '$_temp0 de $meal';
+  }
+
+  @override
+  String get jrnlToDaySegment => 'Vers un jour';
+
+  @override
+  String get jrnlPersonalMealSegment => 'Repas perso';
+
+  @override
+  String get jrnlPersonalMealNameField => 'Nom du repas perso';
+
+  @override
+  String get jrnlCopyButton => 'Copier';
+
+  @override
+  String jrnlSavedToPersonalMeals(String name) {
+    return '\"$name\" enregistré dans tes repas perso';
+  }
 }

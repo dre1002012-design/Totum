@@ -1461,5 +1461,15 @@
   "jrnlPersonalMealSummary": "Repas perso · {count, plural, =1{1 aliment} other{{count} aliments}} · {kcal} kcal",
   "@jrnlPersonalMealSummary": { "placeholders": { "count": {"type": "int"}, "kcal": {"type": "String"} } },
   "jrnlTagPersonal": "Perso",
-  "jrnlTagRecipe": "Recette"
+  "jrnlTagRecipe": "Recette",
+  "jrnlMealEmptyToCopy": "Ce repas est vide, rien à copier.",
+  "jrnlCopyMealTitle": "Copier ce repas",
+  "jrnlItemsFromMeal": "{count, plural, =1{1 aliment} other{{count} aliments}} de {meal}",
+  "@jrnlItemsFromMeal": { "placeholders": { "count": {"type": "int"}, "meal": {"type": "String"} } },
+  "jrnlToDaySegment": "Vers un jour",
+  "jrnlPersonalMealSegment": "Repas perso",
+  "jrnlPersonalMealNameField": "Nom du repas perso",
+  "jrnlCopyButton": "Copier",
+  "jrnlSavedToPersonalMeals": "\"{name}\" enregistré dans tes repas perso",
+  "@jrnlSavedToPersonalMeals": { "placeholders": { "name": {"type": "String"} } }
 }
