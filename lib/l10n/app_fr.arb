@@ -43,6 +43,8 @@
 
   "commonCancel": "Annuler",
   "commonAdd": "Ajouter",
+  "commonNameField": "Nom",
+  "commonSave": "Enregistrer",
   "commonConfirm": "Valider",
 
   "barcodeEnterTitle": "Saisir le code-barres",
@@ -1400,5 +1402,8 @@
   "jrnlItemsAddedTo": "{count, plural, =1{1 aliment ajouté} other{{count} aliments ajoutés}} à {meal} (100 g par défaut, ajustable ensuite)",
   "@jrnlItemsAddedTo": { "placeholders": { "count": {"type": "int"}, "meal": {"type": "String"} } },
   "jrnlAddedTo": "\"{name}\" ajouté à {meal}",
-  "@jrnlAddedTo": { "placeholders": { "name": {"type": "String"}, "meal": {"type": "String"} } }
+  "@jrnlAddedTo": { "placeholders": { "name": {"type": "String"}, "meal": {"type": "String"} } },
+  "jrnlCustomFoodEditTitle": "Modifier un aliment perso",
+  "jrnlCustomFoodAddTitle": "Ajouter un aliment perso",
+  "jrnlMicronutrientsOptional": "Micronutriments (optionnel)"
 }

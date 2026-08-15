@@ -100,6 +100,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonAdd => 'Add';
 
   @override
+  String get commonNameField => 'Name';
+
+  @override
+  String get commonSave => 'Save';
+
+  @override
   String get commonConfirm => 'Confirm';
 
   @override
@@ -3956,4 +3962,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String jrnlAddedTo(String name, String meal) {
     return '\"$name\" added to $meal';
   }
+
+  @override
+  String get jrnlCustomFoodEditTitle => 'Edit a personal food';
+
+  @override
+  String get jrnlCustomFoodAddTitle => 'Add a personal food';
+
+  @override
+  String get jrnlMicronutrientsOptional => 'Micronutrients (optional)';
 }

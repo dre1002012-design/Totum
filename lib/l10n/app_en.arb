@@ -30,6 +30,8 @@
 
   "commonCancel": "Cancel",
   "commonAdd": "Add",
+  "commonNameField": "Name",
+  "commonSave": "Save",
   "commonConfirm": "Confirm",
 
   "barcodeEnterTitle": "Enter the barcode",
@@ -1239,5 +1241,8 @@
   "jrnlItemsSelected": "{count, plural, =1{1 item selected} other{{count} items selected}}",
   "jrnlItemsCopiedTo": "{count, plural, =1{1 item copied} other{{count} items copied}} to {meal}",
   "jrnlItemsAddedTo": "{count, plural, =1{1 item added} other{{count} items added}} to {meal} (100 g by default, adjustable after)",
-  "jrnlAddedTo": "\"{name}\" added to {meal}"
+  "jrnlAddedTo": "\"{name}\" added to {meal}",
+  "jrnlCustomFoodEditTitle": "Edit a personal food",
+  "jrnlCustomFoodAddTitle": "Add a personal food",
+  "jrnlMicronutrientsOptional": "Micronutrients (optional)"
 }

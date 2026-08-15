@@ -260,6 +260,18 @@ abstract class AppLocalizations {
   /// **'Ajouter'**
   String get commonAdd;
 
+  /// No description provided for @commonNameField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom'**
+  String get commonNameField;
+
+  /// No description provided for @commonSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get commonSave;
+
   /// No description provided for @commonConfirm.
   ///
   /// In fr, this message translates to:
@@ -6689,6 +6701,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'\"{name}\" ajouté à {meal}'**
   String jrnlAddedTo(String name, String meal);
+
+  /// No description provided for @jrnlCustomFoodEditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier un aliment perso'**
+  String get jrnlCustomFoodEditTitle;
+
+  /// No description provided for @jrnlCustomFoodAddTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un aliment perso'**
+  String get jrnlCustomFoodAddTitle;
+
+  /// No description provided for @jrnlMicronutrientsOptional.
+  ///
+  /// In fr, this message translates to:
+  /// **'Micronutriments (optionnel)'**
+  String get jrnlMicronutrientsOptional;
 }
 
 class _AppLocalizationsDelegate

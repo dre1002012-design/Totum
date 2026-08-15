@@ -2919,65 +2919,68 @@ class JournalScreenState extends State<JournalScreen> {
 
     await showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(isEdit ? 'Modifier un aliment perso' : 'Ajouter un aliment perso'),
+      builder: (ctx) {
+        final l10n = ctx.l10n;
+        String fl(String key, String unit) => '${nutrientDisplayLabel(key, l10n)} ($unit)';
+        return AlertDialog(
+        title: Text(isEdit ? l10n.jrnlCustomFoodEditTitle : l10n.jrnlCustomFoodAddTitle),
         content: SingleChildScrollView(
           child: Column(children: [
             TextField(
-                decoration: const InputDecoration(labelText: 'Nom'),
+                decoration: InputDecoration(labelText: l10n.commonNameField),
                 controller: nameCtl),
             const SizedBox(height: 12),
             _TwoFieldsRow(
-              leftLabel: 'Énergie (kcal/100g)', leftInit: kcal?.toString() ?? '',
-              rightLabel: 'Protéines (g/100g)', rightInit: prot?.toString() ?? '',
+              leftLabel: fl('Énergie', 'kcal/100g'), leftInit: kcal?.toString() ?? '',
+              rightLabel: fl('Protéines', 'g/100g'), rightInit: prot?.toString() ?? '',
               onLeftChanged: (s) => kcal = parse(s),
               onRightChanged: (s) => prot = parse(s),
             ),
             const SizedBox(height: 8),
             _TwoFieldsRow(
-              leftLabel: 'Glucides (g/100g)', leftInit: carb?.toString() ?? '',
-              rightLabel: 'Lipides (g/100g)', rightInit: fat?.toString() ?? '',
+              leftLabel: fl('Glucides', 'g/100g'), leftInit: carb?.toString() ?? '',
+              rightLabel: fl('Lipides', 'g/100g'), rightInit: fat?.toString() ?? '',
               onLeftChanged: (s) => carb = parse(s),
               onRightChanged: (s) => fat = parse(s),
             ),
             const SizedBox(height: 8),
             _TwoFieldsRow(
-              leftLabel: 'Fibres (g/100g)', leftInit: fiber?.toString() ?? '',
-              rightLabel: 'AG saturés (g/100g)',
+              leftLabel: fl('Fibres', 'g/100g'), leftInit: fiber?.toString() ?? '',
+              rightLabel: fl('AG saturés', 'g/100g'),
               rightInit: micros['AG_saturés_g_100g']!.toString(),
               onLeftChanged: (s) => fiber = parse(s),
               onRightChanged: (s) => micros['AG_saturés_g_100g'] = parse(s) ?? 0,
             ),
             const SizedBox(height: 8),
             _TwoFieldsRow(
-              leftLabel: 'Oméga 9 (g/100g)',
+              leftLabel: fl('Oméga 9', 'g/100g'),
               leftInit: micros['Acide_oléique_W9_g_100g']!.toString(),
-              rightLabel: 'Oméga 6 (g/100g)',
+              rightLabel: fl('Oméga 6', 'g/100g'),
               rightInit: micros['Acide_linoléique_W6_LA_g_100g']!.toString(),
               onLeftChanged: (s) => micros['Acide_oléique_W9_g_100g'] = parse(s) ?? 0,
               onRightChanged: (s) => micros['Acide_linoléique_W6_LA_g_100g'] = parse(s) ?? 0,
             ),
             const SizedBox(height: 8),
             _TwoFieldsRow(
-              leftLabel: 'Oméga 3 ALA (g/100g)',
+              leftLabel: fl('Oméga 3 (ALA)', 'g/100g'),
               leftInit: micros['Acide_alpha-linolénique_W3_ALA_g_100g']!.toString(),
-              rightLabel: 'EPA (g/100g)',
+              rightLabel: fl('EPA', 'g/100g'),
               rightInit: micros['EPA_g_100g']!.toString(),
               onLeftChanged: (s) => micros['Acide_alpha-linolénique_W3_ALA_g_100g'] = parse(s) ?? 0,
               onRightChanged: (s) => micros['EPA_g_100g'] = parse(s) ?? 0,
             ),
             const SizedBox(height: 8),
             _TwoFieldsRow(
-              leftLabel: 'DHA (g/100g)',
+              leftLabel: fl('DHA', 'g/100g'),
               leftInit: micros['DHA_g_100g']!.toString(),
-              rightLabel: 'Sucres (g/100g)',
+              rightLabel: fl('Sucres', 'g/100g'),
               rightInit: micros['Sucres_g_100g']!.toString(),
               onLeftChanged: (s) => micros['DHA_g_100g'] = parse(s) ?? 0,
               onRightChanged: (s) => micros['Sucres_g_100g'] = parse(s) ?? 0,
             ),
             const SizedBox(height: 8),
             _TwoFieldsRow(
-              leftLabel: 'Sel (g/100g)',
+              leftLabel: fl('Sel', 'g/100g'),
               leftInit: micros['Sel_g_100g']!.toString(),
               rightLabel: '', rightInit: '',
               onLeftChanged: (s) => micros['Sel_g_100g'] = parse(s) ?? 0,
@@ -2985,73 +2988,73 @@ class JournalScreenState extends State<JournalScreen> {
             ),
             const SizedBox(height: 12),
             ExpansionTile(
-              title: const Text('Micronutriments (optionnel)'),
+              title: Text(l10n.jrnlMicronutrientsOptional),
               children: [
                 _TwoFieldsRow(
-                  leftLabel: 'Calcium (mg/100g)',
+                  leftLabel: fl('Calcium', 'mg/100g'),
                   leftInit: micros['Calcium_mg_100g']!.toString(),
-                  rightLabel: 'Cuivre (mg/100g)',
+                  rightLabel: fl('Cuivre', 'mg/100g'),
                   rightInit: micros['Cuivre_mg_100g']!.toString(),
                   onLeftChanged: (s) => micros['Calcium_mg_100g'] = parse(s) ?? 0,
                   onRightChanged: (s) => micros['Cuivre_mg_100g'] = parse(s) ?? 0,
                 ),
                 const SizedBox(height: 8),
                 _TwoFieldsRow(
-                  leftLabel: 'Fer (mg/100g)',
+                  leftLabel: fl('Fer', 'mg/100g'),
                   leftInit: micros['Fer_mg_100g']!.toString(),
-                  rightLabel: 'Iode (µg/100g)',
+                  rightLabel: fl('Iode', 'µg/100g'),
                   rightInit: micros['Iode_µg_100g']!.toString(),
                   onLeftChanged: (s) => micros['Fer_mg_100g'] = parse(s) ?? 0,
                   onRightChanged: (s) => micros['Iode_µg_100g'] = parse(s) ?? 0,
                 ),
                 const SizedBox(height: 8),
                 _TwoFieldsRow(
-                  leftLabel: 'Magnésium (mg/100g)',
+                  leftLabel: fl('Magnésium', 'mg/100g'),
                   leftInit: micros['Magnésium_mg_100g']!.toString(),
-                  rightLabel: 'Manganèse (mg/100g)',
+                  rightLabel: fl('Manganèse', 'mg/100g'),
                   rightInit: micros['Manganèse_mg_100g']!.toString(),
                   onLeftChanged: (s) => micros['Magnésium_mg_100g'] = parse(s) ?? 0,
                   onRightChanged: (s) => micros['Manganèse_mg_100g'] = parse(s) ?? 0,
                 ),
                 const SizedBox(height: 8),
                 _TwoFieldsRow(
-                  leftLabel: 'Phosphore (mg/100g)',
+                  leftLabel: fl('Phosphore', 'mg/100g'),
                   leftInit: micros['Phosphore_mg_100g']!.toString(),
-                  rightLabel: 'Potassium (mg/100g)',
+                  rightLabel: fl('Potassium', 'mg/100g'),
                   rightInit: micros['Potassium_mg_100g']!.toString(),
                   onLeftChanged: (s) => micros['Phosphore_mg_100g'] = parse(s) ?? 0,
                   onRightChanged: (s) => micros['Potassium_mg_100g'] = parse(s) ?? 0,
                 ),
                 const SizedBox(height: 8),
                 _TwoFieldsRow(
-                  leftLabel: 'Sélénium (µg/100g)',
+                  leftLabel: fl('Sélénium', 'µg/100g'),
                   leftInit: micros['Sélénium_µg_100g']!.toString(),
-                  rightLabel: 'Sodium (mg/100g)',
+                  rightLabel: fl('Sodium', 'mg/100g'),
                   rightInit: micros['Sodium_mg_100g']!.toString(),
                   onLeftChanged: (s) => micros['Sélénium_µg_100g'] = parse(s) ?? 0,
                   onRightChanged: (s) => micros['Sodium_mg_100g'] = parse(s) ?? 0,
                 ),
                 const SizedBox(height: 8),
                 _TwoFieldsRow(
-                  leftLabel: 'Zinc (mg/100g)',
+                  leftLabel: fl('Zinc', 'mg/100g'),
                   leftInit: micros['Zinc_mg_100g']!.toString(),
-                  rightLabel: 'Vitamine E (mg/100g)',
+                  rightLabel: fl('Vitamine E', 'mg/100g'),
                   rightInit: micros['Vitamine_E_mg_100g']!.toString(),
                   onLeftChanged: (s) => micros['Zinc_mg_100g'] = parse(s) ?? 0,
                   onRightChanged: (s) => micros['Vitamine_E_mg_100g'] = parse(s) ?? 0,
                 ),
                 const SizedBox(height: 8),
                 _TwoFieldsRow(
-                  leftLabel: 'Rétinol (µg/100g)',
+                  leftLabel: fl('Rétinol', 'µg/100g'),
                   leftInit: micros['Rétinol_µg_100g']!.toString(),
-                  rightLabel: 'Bêta-car. (µg/100g)',
+                  rightLabel: fl('Bêta-car.', 'µg/100g'),
                   rightInit: (micros['Beta-Carotène_µg_100g'] ?? 0).toString(),
                   onLeftChanged: (s) => micros['Rétinol_µg_100g'] = parse(s) ?? 0,
                   onRightChanged: (s) => micros['Beta-Carotène_µg_100g'] = parse(s) ?? 0,
                 ),
                 const SizedBox(height: 8),
                 _TwoFieldsRow(
-                  leftLabel: 'Vit D (µg/100g)',
+                  leftLabel: fl('Vit D', 'µg/100g'),
                   leftInit: micros['Vitamine_D_µg_100g']!.toString(),
                   rightLabel: 'Vit K1 (µg/100g)',
                   rightInit: micros['Vitamine_K1_µg_100g']!.toString(),
@@ -3108,16 +3111,17 @@ class JournalScreenState extends State<JournalScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Annuler')),
+              child: Text(l10n.commonCancel)),
           FilledButton(
             onPressed: () async {
               await saveItem();
               if (context.mounted) Navigator.pop(ctx);
             },
-            child: Text(isEdit ? 'Enregistrer' : 'Ajouter'),
+            child: Text(isEdit ? l10n.commonSave : l10n.commonAdd),
           ),
         ],
-      ),
+      );
+      },
     );
   }
 }
