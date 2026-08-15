@@ -75,10 +75,15 @@ flutter:
     - assets/icons/apple.png
     - assets/icons/apple_white.png
     - assets/advices.json
+    - assets/advices_en.json
     - assets/nutrient_fiches.json
+    - assets/nutrient_fiches_en.json
     - assets/coach_advices.json
+    - assets/coach_advices_en.json
     - assets/totum_recipes.json
+    - assets/totum_recipes_en.json
     - assets/limites_securite.json
+    - assets/limites_securite_en.json
     - assets/common_foods.json
     # Dossier entier plutôt qu'un fichier par fichier (13/08/2026) : la build
     # a cassé 2 fois de suite (Priorité 47) parce que pubspec listait des

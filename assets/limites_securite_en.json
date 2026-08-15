@@ -1,0 +1,105 @@
+{
+  "_comment": "Explanations of TOTUM's upper safety limits (UL). ANSES / EFSA references. Educational, reassuring tone: a one-off overshoot isn't dangerous, repetition is what matters. Keys aligned with bilan_screen.dart's ficheKey.",
+  "limites": {
+    "retinol": {
+      "nutriment": "Retinol (preformed vitamin A)",
+      "limite": "3,000 µg per day",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "Retinol is a fat-soluble vitamin: unlike water-soluble vitamins, the body doesn't eliminate it in urine — it stores it in the liver. That storage is a daily strength, but it also means excesses build up over weeks. The limit protects against this gradual accumulation.",
+      "consequences": "An occasional overshoot has no consequence. It's repetition over several weeks that becomes a problem: it can weaken bone tissue, strain the liver, and cause headaches, fatigue or nausea. During pregnancy, extra caution is needed, since excess retinol is harmful to fetal development.",
+      "sources_risque": "Liver, by far the top source: a single serving of veal or poultry liver can represent several times the daily limit. Other offal, cod liver oil and supplements follow.",
+      "que_faire": "Simply space out how often you eat liver and offal: one serving every two or three weeks is a comfortable pace. To cover your vitamin A needs the rest of the time, rely on beta-carotene from colorful vegetables — carrot, sweet potato, squash, spinach. It has no safety limit, since the body only converts it to vitamin A according to its actual needs.",
+      "rassurance": "If the alert appears after a meal containing liver, that's entirely expected and not a concern. Plant beta-carotene is never affected by this limit."
+    },
+    "fer": {
+      "nutriment": "Iron",
+      "limite": "40 mg per day",
+      "reference": "EFSA 2024",
+      "pourquoi": "The body finely regulates iron absorption, but has no active mechanism to eliminate it once absorbed. Free iron is a powerful pro-oxidant: in excess, it generates oxidative stress in cells. The limit protects against this buildup, which the body can't correct on its own.",
+      "consequences": "In the short term, excess mainly shows up as digestive trouble: constipation, nausea, abdominal pain. Long term, it increases oxidative stress and strains the liver. The risk is markedly higher in people with hemochromatosis, a common and often unrecognized genetic predisposition.",
+      "sources_risque": "Whole-food eating rarely reaches this threshold. The main contributors are blood sausage, liver and other offal. In practice, the most frequent cause of overshoot remains iron supplementation taken without a blood test.",
+      "que_faire": "Never supplement with iron without a prior blood test — ferritin in particular. Iron from plants, so-called non-heme iron, is very poorly absorbed and doesn't carry this risk. If you regularly eat blood sausage or offal, simply space it out.",
+      "rassurance": "Reaching 40 mg through food alone is uncommon. A single day over the limit needs no particular action."
+    },
+    "zinc": {
+      "nutriment": "Zinc",
+      "limite": "25 mg per day",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "Zinc and copper use the same transporters to cross the intestinal wall. When zinc arrives in excess, it occupies these transporters and mechanically blocks copper absorption. The limit therefore protects less against a direct toxicity of zinc than against a copper deficiency caused by its excess.",
+      "consequences": "Prolonged excess can induce a copper deficiency, with anemia and neurological issues as a result. Paradoxically, it can also weaken immunity even though zinc is known to support it. Digestive trouble often accompanies high intakes.",
+      "sources_risque": "Oysters are far in the lead: a single serving alone can exceed the limit several times over. Wheat germ, offal and supplements follow.",
+      "que_faire": "Oysters remain a remarkable food — just space out the meals that include them. Above all, avoid stacking a zinc supplement on top of an already zinc-rich diet, and think about copper if you supplement long term.",
+      "rassurance": "An oyster meal that spikes the counter is a one-off overshoot with no consequence. It's a high weekly rhythm that would warrant an adjustment."
+    },
+    "selenium": {
+      "nutriment": "Selenium",
+      "limite": "255 µg per day",
+      "reference": "EFSA 2023",
+      "pourquoi": "Selenium has one of the narrowest windows of any micronutrient: the daily requirement is around 70 µg, and the first adverse effects appear at a few hundred. The gap between optimal intake and excess is therefore much smaller than for most other minerals — it's a precision nutrient.",
+      "consequences": "Prolonged excess causes what's known as selenosis: brittle or ridged nails, hair loss, a characteristic garlic-like breath odor, digestive trouble. At an advanced and rare stage, neurological issues can appear. These effects recede once overconsumption stops.",
+      "sources_risque": "Contrary to popular belief, Brazil nuts aren't the only culprit. Seafood is very rich in selenium and, eaten regularly, is often the real source of an overshoot: tuna, sardines, oysters, mussels, shrimp. Eggs, offal and supplements also contribute. Brazil nuts remain a special case worth knowing: their content is extremely variable depending on the soil of origin (by a factor of 1 to over 100), so a single nut can sometimes be enough to saturate the day.",
+      "que_faire": "If you often eat seafood, you're already covering your needs comfortably: no need to add a concentrated source on top. As for Brazil nuts, one or two a day is plenty, and it's best not to stack them with a lot of fish on the same day. It's the whole day that counts, not one isolated food.",
+      "rassurance": "This is an easy limit to cross without noticing, precisely because its sources are healthy foods (fish, eggs, nuts). A one-off overshoot is nothing dramatic: it's repetition that's worth watching."
+    },
+    "vitd": {
+      "nutriment": "Vitamin D",
+      "limite": "100 µg per day (4,000 IU)",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "Like retinol, vitamin D is fat-soluble and stored in the body. Its main role is to increase intestinal calcium absorption: in prolonged excess, it therefore pushes more calcium into the blood than the body can manage.",
+      "consequences": "Excess results in hypercalcemia: nausea, unusual fatigue, intense thirst, frequent urges to urinate. Over time, the excess calcium can deposit in soft tissue and the kidneys rather than in bone.",
+      "sources_risque": "Diet alone almost never reaches this threshold, except with heavy consumption of cod liver oil. The real risk comes from high-dose supplements, particularly quarterly ampoules. Sun exposure, on the other hand, cannot cause excess: the skin stops producing it once reserves are sufficient.",
+      "que_faire": "If you supplement, do it under medical advice and ideally after a blood test. A moderate daily dose is better tolerated and better used than a large, spaced-out dose.",
+      "rassurance": "A dietary overshoot is rare and usually linked to cod liver oil. Sun exposure carries no risk on this front."
+    },
+    "vite": {
+      "nutriment": "Vitamin E",
+      "limite": "300 mg per day",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "At high doses, vitamin E has a blood-thinning effect by interfering with coagulation. It's this effect, not cellular toxicity, that justifies the limit.",
+      "consequences": "The main risk is hemorrhagic, and it becomes significant mainly in combination with anticoagulant treatment or in the days before surgery. Outside these situations, the effects of a moderate excess remain minor.",
+      "sources_risque": "Vegetable oils, particularly wheat germ oil, which is very concentrated. Antioxidant supplements dosed with vitamin E are the second source.",
+      "que_faire": "Virgin oils used for seasoning pose no problem at typical amounts. If you're on anticoagulant treatment, mention any vitamin E supplementation to your doctor.",
+      "rassurance": "Crossing this threshold through diet alone is extremely unusual."
+    },
+    "b6": {
+      "nutriment": "Vitamin B6",
+      "limite": "12 mg per day",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "B6 is an exception among water-soluble vitamins. These vitamins are generally considered to be easily eliminated in urine, which makes them low-risk. B6 is the only one for which nerve toxicity has been clearly demonstrated at high, prolonged doses.",
+      "consequences": "Excessive, sustained intake can cause peripheral neuropathy: tingling, numbness in the hands and feet, sometimes balance issues. These symptoms usually recede once intake stops, but recovery isn't always complete.",
+      "sources_risque": "Diet almost never comes close to this threshold. The cause is almost exclusively supplementation, particularly B-complex vitamins whose B6 dosages are often very high.",
+      "que_faire": "Check the B6 dosage of any B-complex supplement you take, and avoid prolonged high doses without medical guidance.",
+      "rassurance": "If this alert appears without you taking any supplement, double-check your entry: that's the most likely sign of a mis-logged quantity."
+    },
+    "iode": {
+      "nutriment": "Iodine",
+      "limite": "600 µg per day",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "The thyroid is as sensitive to excess iodine as it is to a shortage. It's even one of the rare nutrients where too much and too little produce comparable disorders. Faced with a sudden iodine surge, the thyroid activates a protective mechanism that can, paradoxically, slow down its own function.",
+      "consequences": "Excess intake can throw the thyroid off in either direction — hypo- or hyperthyroidism. In predisposed people, it can also trigger autoimmune thyroiditis.",
+      "sources_risque": "Dried seaweed is by far the top source of overshoot: kombu in particular can contain several thousand micrograms per gram. Heavily iodized salt consumed in large amounts and certain supplements follow.",
+      "que_faire": "Eat seaweed sparingly — a few grams is plenty, and kombu deserves particular caution. Fish and seafood, on the other hand, pose no problem at typical amounts.",
+      "rassurance": "If the alert appears, look at seaweed first. It's almost always the explanation."
+    },
+    "calcium": {
+      "nutriment": "Calcium",
+      "limite": "2,500 mg per day",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "Beyond a certain intake, additional calcium is no longer used effectively by bone. It then circulates in the body with no useful destination, with the risk of depositing where it isn't wanted. The limit also protects the absorption of other minerals, which calcium directly competes with.",
+      "consequences": "Chronic excess favors kidney stones and constipation. Above all, it hinders the absorption of iron, zinc and magnesium, which share common pathways: excess calcium can therefore create deficiencies elsewhere.",
+      "sources_risque": "Stacking is almost always the cause: large amounts of dairy, combined with highly mineralized water, and sometimes a supplement on top. None of these sources is a problem on its own.",
+      "que_faire": "Vary your water instead of always drinking the same highly mineralized one. Avoid stacking a supplement on an already calcium-rich diet. Also remember that vitamin D and vitamin K2 are what let calcium settle into bone rather than deposit in arteries: they matter as much as the amount of calcium itself.",
+      "rassurance": "A one-off overshoot has no consequence. It's a high daily stacking that would warrant rebalancing."
+    },
+    "cuivre": {
+      "nutriment": "Copper",
+      "limite": "4.9 mg per day",
+      "reference": "EFSA (0.07 mg/kg — 70 kg adult)",
+      "pourquoi": "Copper is essential, but shares a tricky property with iron: in free form, it's a pro-oxidant. The body has transport proteins that neutralize it, and the limit corresponds to the threshold beyond which these protections can be overwhelmed.",
+      "consequences": "The first signs of excess are digestive — nausea, abdominal pain. Significant chronic excess strains the liver, which is copper's storage organ. Balance with zinc is also disrupted, since the two minerals are closely linked.",
+      "sources_risque": "Liver is far in the lead: a single serving alone can exceed the limit several times over. Oysters, dark chocolate eaten in large amounts and supplements follow.",
+      "que_faire": "Space out your offal intake, as with vitamin A — these are often the same meals that trigger both alerts. The rest of your diet will easily cover your copper needs.",
+      "rassurance": "If the copper alert and the vitamin A alert appear together, it's a sign of a meal containing liver. Nothing to worry about if it stays occasional."
+    }
+  }
+}

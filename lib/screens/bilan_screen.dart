@@ -17,6 +17,7 @@ import 'account_screen.dart'; // ✅
 import '../theme/totum_style.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/l10n_ext.dart';
+import '../services/app_settings.dart';
 
 // Supabase client global (comme dans les autres écrans)
 SupabaseClient get _client => Supabase.instance.client;
@@ -1795,19 +1796,26 @@ class NutrientFicheRepo {
   static final NutrientFicheRepo instance = NutrientFicheRepo._();
 
   final Map<String, NutrientFiche> _fiches = {};
-  bool get isLoaded => _fiches.isNotEmpty;
+  String? _loadedLang;
+  bool get isLoaded =>
+      _fiches.isNotEmpty && _loadedLang == AppSettings.language.value;
 
   Future<void> load() async {
-    if (_fiches.isNotEmpty) return;
+    final lang = AppSettings.language.value;
+    if (isLoaded) return;
     try {
-      final raw =
-          await rootBundle.loadString('assets/nutrient_fiches.json');
+      final asset = lang == 'en'
+          ? 'assets/nutrient_fiches_en.json'
+          : 'assets/nutrient_fiches.json';
+      final raw = await rootBundle.loadString(asset);
       final map = jsonDecode(raw) as Map<String, dynamic>;
       final f = (map['fiches'] as Map?) ?? const {};
+      _fiches.clear();
       f.forEach((k, v) {
         _fiches[k.toString()] =
             NutrientFiche.fromJson(v as Map<String, dynamic>);
       });
+      _loadedLang = lang;
     } catch (e) {
       debugPrint('Erreur chargement fiches: $e');
     }
@@ -1851,18 +1859,26 @@ class LimitesRepo {
   static final LimitesRepo instance = LimitesRepo._();
 
   final Map<String, LimiteSecurite> _lim = {};
-  bool get isLoaded => _lim.isNotEmpty;
+  String? _loadedLang;
+  bool get isLoaded =>
+      _lim.isNotEmpty && _loadedLang == AppSettings.language.value;
 
   Future<void> load() async {
-    if (_lim.isNotEmpty) return;
+    final lang = AppSettings.language.value;
+    if (isLoaded) return;
     try {
-      final raw = await rootBundle.loadString('assets/limites_securite.json');
+      final asset = lang == 'en'
+          ? 'assets/limites_securite_en.json'
+          : 'assets/limites_securite.json';
+      final raw = await rootBundle.loadString(asset);
       final map = jsonDecode(raw) as Map<String, dynamic>;
       final l = (map['limites'] as Map?) ?? const {};
+      _lim.clear();
       l.forEach((k, v) {
         _lim[k.toString()] =
             LimiteSecurite.fromJson(Map<String, dynamic>.from(v as Map));
       });
+      _loadedLang = lang;
     } catch (e) {
       debugPrint('Erreur chargement limites: $e');
     }

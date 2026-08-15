@@ -28,6 +28,7 @@ import 'account_screen.dart';
 import '../theme/totum_style.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/l10n_ext.dart';
+import '../services/app_settings.dart';
 
 // === THEME =========================================================
 const Color kTotumOrange = TotumColors.accent;
@@ -310,11 +311,17 @@ class AdviceContentRepo {
   Map<String, List<Map<String, String>>> heroPool = {};
   Map<String, List<String>> recipesByKey = {};
 
-  bool get isLoaded => heroPool.isNotEmpty;
+  String? _loadedLang;
+  bool get isLoaded =>
+      heroPool.isNotEmpty && _loadedLang == AppSettings.language.value;
 
   Future<void> loadFromAsset(String path, AppLocalizations l10n) async {
+    final lang = AppSettings.language.value;
+    final asset = lang == 'en'
+        ? path.replaceFirst('.json', '_en.json')
+        : path;
     try {
-      final raw = await rootBundle.loadString(path);
+      final raw = await rootBundle.loadString(asset);
       final jsonMap = jsonDecode(raw) as Map<String, dynamic>;
 
       // Mindset
@@ -360,8 +367,10 @@ class AdviceContentRepo {
           (v as List).map((e) => e.toString()).toList(),
         ),
       );
+      _loadedLang = lang;
     } catch (_) {
       _loadFallback(l10n); // si asset KO → on garde une base interne
+      _loadedLang = lang;
     }
   }
 
@@ -1670,13 +1679,20 @@ class CoachAdvicesRepo {
   static final CoachAdvicesRepo instance = CoachAdvicesRepo._();
 
   final Map<String, List<CoachAdvice>> _byPillar = {};
-  bool get isLoaded => _byPillar.isNotEmpty;
+  String? _loadedLang;
+  bool get isLoaded =>
+      _byPillar.isNotEmpty && _loadedLang == AppSettings.language.value;
 
   Future<void> load() async {
-    if (_byPillar.isNotEmpty) return;
+    final lang = AppSettings.language.value;
+    if (isLoaded) return;
     try {
-      final raw = await rootBundle.loadString('assets/coach_advices.json');
+      final asset = lang == 'en'
+          ? 'assets/coach_advices_en.json'
+          : 'assets/coach_advices.json';
+      final raw = await rootBundle.loadString(asset);
       final map = jsonDecode(raw) as Map<String, dynamic>;
+      _byPillar.clear();
       for (final entry in map.entries) {
         if (entry.key.startsWith('_')) continue;
         final list = (entry.value as List)
@@ -1690,6 +1706,7 @@ class CoachAdvicesRepo {
             .toList();
         _byPillar[entry.key] = list;
       }
+      _loadedLang = lang;
     } catch (e) {
       debugPrint('Erreur chargement coach_advices: $e');
     }
@@ -2090,15 +2107,22 @@ class TotumRecipesRepo {
   static final TotumRecipesRepo instance = TotumRecipesRepo._();
 
   final List<TotumRecipe> _all = [];
-  bool get isLoaded => _all.isNotEmpty;
+  String? _loadedLang;
+  bool get isLoaded =>
+      _all.isNotEmpty && _loadedLang == AppSettings.language.value;
   List<TotumRecipe> get all => List.unmodifiable(_all);
 
   Future<void> load() async {
-    if (_all.isNotEmpty) return;
+    final lang = AppSettings.language.value;
+    if (isLoaded) return;
     try {
-      final raw = await rootBundle.loadString('assets/totum_recipes.json');
+      final asset = lang == 'en'
+          ? 'assets/totum_recipes_en.json'
+          : 'assets/totum_recipes.json';
+      final raw = await rootBundle.loadString(asset);
       final map = jsonDecode(raw) as Map<String, dynamic>;
       final list = (map['recipes'] as List?) ?? [];
+      _all.clear();
       for (final e in list) {
         final r = e as Map<String, dynamic>;
         final ings = ((r['ingredients'] as List?) ?? []).map((x) {
@@ -2133,6 +2157,7 @@ class TotumRecipesRepo {
               .toList(),
         ));
       }
+      _loadedLang = lang;
     } catch (e) {
       debugPrint('Erreur chargement totum_recipes: $e');
     }

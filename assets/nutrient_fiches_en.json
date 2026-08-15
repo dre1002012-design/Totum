@@ -1,0 +1,405 @@
+{
+  "_comment": "Nutrient explainer sheets — TOTUM. Content based on ANSES and EFSA references. Warm, accessible tone. Keys match the ficheKey field of each bilan Metric.",
+  "fiches": {
+    "omega9": {
+      "titre": "Omega-9 (oleic)",
+      "emoji": "🫒",
+      "sousTitre": "The stable fat in olive oil",
+      "benefices": "Oleic acid is a monounsaturated omega-9, the star of olive oil and the Mediterranean diet. Unlike omega-3 and omega-6, it isn't \"essential\" (the body can make it), but it's still very beneficial: it supports a healthy lipid profile, protects the heart, and holds up well under heat, making it an excellent cooking fat.",
+      "apports": "No strict reference intake: it fits naturally into an intake of good fats. The Mediterranean diet, rich in oleic acid, is one of the best-documented for longevity.",
+      "limite": "No safety limit: it's a stable, well-tolerated fatty acid.",
+      "sources": "Extra virgin olive oil leads the way, followed by avocado, nuts (almonds, hazelnuts, macadamia), and rapeseed oil.",
+      "savaisTu": "Because oleic acid is monounsaturated, it's far more heat-stable than the polyunsaturated omega-3s and omega-6s — which is why extra virgin olive oil handles gentle to medium cooking perfectly, unlike oils rich in polyunsaturates, which oxidize. For cooking, it's one of the best options there is."
+    },
+    "omega6": {
+      "titre": "Omega-6 (LA)",
+      "emoji": "🌻",
+      "sousTitre": "Essential, but in large excess today",
+      "benefices": "Linoleic acid (LA) is an essential omega-6, needed for cell membranes, skin and certain signaling functions. The paradox: it's indispensable, but the modern diet supplies far too much of it, which throws off the balance with omega-3 and tips the body toward a pro-inflammatory state.",
+      "apports": "The reference is about 4% of energy intake. In practice, almost nobody is short on it: the real issue is not overdoing it, and above all rebalancing with enough omega-3.",
+      "limite": "No formal limit, but an excess of omega-6 relative to omega-3 favors low-grade chronic inflammation, implicated in many modern diseases. The problem isn't omega-6 itself, it's the imbalance.",
+      "sources": "Sunflower, corn and grapeseed oils, most industrial oils, and heavily, ultra-processed foods and fried foods. It's precisely their omnipresence that's the issue.",
+      "savaisTu": "The real challenge with omega-6 isn't running short — that's nearly impossible today — but cutting back the excess to restore balance with omega-3. In practice: less refined oil and ultra-processed food, more rapeseed, flax and small oily fish. The ratio matters more than each fatty acid taken in isolation."
+    },
+    "omega3": {
+      "titre": "Omega-3 (ALA)",
+      "emoji": "🌱",
+      "sousTitre": "The anti-inflammatory fatty acid, often deficient",
+      "benefices": "Alpha-linolenic acid (ALA) is an essential omega-3: the body can't make it. It leads a family with powerful anti-inflammatory effects that protect the heart, brain and cell membranes. The modern diet is severely short on it while overflowing with omega-6: restoring this ratio is one of the most important health levers there is.",
+      "apports": "The reference is about 2 g of ALA per day (around 1% of energy intake). But the real issue isn't just the amount: it's the omega-6/omega-3 RATIO, ideally around 4 to 1, whereas it often exceeds 15 to 1 in the industrial diet.",
+      "limite": "No safety limit from diet. Omega-3s are to be encouraged, not restricted — the real problem is that we don't get enough of them.",
+      "sources": "Hemp seeds and hemp oil are an exceptional source: beyond abundant ALA, hemp provides SDA (stearidonic acid), an omega-3 already partly \"converted\" that the body makes far better use of than ALA alone — all with an ideal omega-3/6 ratio and a rare richness in protein and minerals. Next come ground flax and chia seeds, walnuts, and virgin flax and walnut oils. Rapeseed oil is a stopgap but less interesting (often refined, less noble profile). For the active forms EPA and DHA, see their own sheets: small oily fish remain irreplaceable.",
+      "savaisTu": "The body converts plant-based ALA into active EPA very poorly — often less than 10%. Hemp's SDA is clever: it skips the most limiting conversion step, which makes it noticeably more effective than flax at actually raising your omega-3 status. On the flip side, these oils are fragile: hemp and flax should be eaten raw, kept cool, never heated — a treasure worth respecting."
+    },
+    "epa": {
+      "titre": "EPA",
+      "emoji": "🐟",
+      "sousTitre": "The anti-inflammatory marine omega-3",
+      "benefices": "EPA (eicosapentaenoic acid) is a long-chain, directly active marine omega-3. It's the great modulator of inflammation: it's the precursor of molecules that calm inflammatory processes. It supports cardiovascular health, mood and recovery. The body converts plant ALA to EPA very poorly — hence the importance of direct marine sources.",
+      "apports": "About 250 mg per day of combined EPA + DHA is recommended for an adult, more with a cardiovascular goal in mind. Two to three servings of small oily fish per week are enough.",
+      "limite": "No safety limit at dietary doses. At very high doses (concentrated supplements), a mild blood-thinning effect can appear.",
+      "sources": "Small wild oily fish: sardine, mackerel, herring, anchovy. Small fish are preferable to large ones, as they carry less of a heavy-metal load.",
+      "savaisTu": "The conversion of plant omega-3 (flax ALA) into active EPA is very low in humans — often under 10%. That's why, even with a good plant-based diet, small oily fish (or supplementation for vegans) remain the most reliable way to get EPA. Plant and marine sources are complementary, not interchangeable."
+    },
+    "dha": {
+      "titre": "DHA",
+      "emoji": "🧠",
+      "sousTitre": "The structural omega-3 of the brain",
+      "benefices": "DHA (docosahexaenoic acid) is a marine omega-3 that makes up a major part of the structure of your brain and retina. It's essential for brain function, vision and nervous system development, crucial in the fetus and infant. A brain well supplied with DHA is a pillar of cognitive health and longevity.",
+      "apports": "About 250 mg per day of combined DHA + EPA for an adult, with an increased need during pregnancy and breastfeeding for the baby's brain development.",
+      "limite": "No safety limit at dietary doses. Like EPA, a mild blood-thinning effect can appear at very high supplement doses.",
+      "sources": "Small oily fish (sardine, mackerel, herring), and for vegans, micro-algae — the original source of DHA, the very one fish feed on.",
+      "savaisTu": "The DHA found in fish originally comes from the micro-algae they eat: vegans can therefore get it directly from algae, as a supplement. Since your brain is made up of nearly 60% fat, a good share of it DHA, supplying it regularly is one of the most direct things you can do for your long-term cognitive health."
+    },
+    "retinol": {
+      "titre": "Retinol (vitamin A)",
+      "emoji": "👁️",
+      "sousTitre": "Powerful and active — to be respected",
+      "benefices": "Retinol is the active, directly usable form of vitamin A. It's essential for vision (especially night vision), skin and mucous membrane renewal, immunity and reproduction. Unlike beta-carotene, which needs converting, retinol acts immediately — hence its power, but also the need to respect it.",
+      "apports": "The reference for an adult is about 650 to 750 µg per day, combining all sources of vitamin A.",
+      "limite": "It's a fat-soluble vitamin that is STORED in the liver: a limit of 3,000 µg per day is set. Chronic excess weakens bone and the liver; during pregnancy, extra caution is needed since excess is harmful to the fetus. Animal liver, very concentrated, can alone exceed the limit several times over.",
+      "sources": "Liver and offal (very rich, best spaced out), cod liver oil, egg yolk, butter, whole dairy, oily fish.",
+      "savaisTu": "A single serving of liver can supply several times the daily vitamin A limit: it's a remarkable food, but one to eat in moderation, once every two or three weeks. The rest of the time, beta-carotene from colorful vegetables covers your needs with zero risk — nature has provided both a safe route and a powerful one."
+    },
+    "betacarotene": {
+      "titre": "Beta-carotene",
+      "emoji": "🥕",
+      "sousTitre": "Provitamin A, risk-free",
+      "benefices": "Beta-carotene is an antioxidant pigment that the body converts into vitamin A according to its needs. It protects cells from oxidative stress and supports vision, skin and immunity. Its big advantage over retinol: the body only converts as much as it needs, which makes it risk-free for overdose.",
+      "apports": "No strict standalone reference: it helps cover vitamin A needs (about 650 to 750 µg equivalents/day). A colorful diet supplies it generously.",
+      "limite": "No safety limit from diet: that's its whole appeal. The only \"effect\" of excess is carotenodermia, a harmless, reversible orange tint to the skin. Note: at very high doses in an isolated supplement, caution is warranted for heavy smokers.",
+      "sources": "Orange and dark-green vegetables and fruit: carrot, sweet potato, squash, pumpkin, apricot, mango, spinach, kale. The more colorful, the richer.",
+      "savaisTu": "Beta-carotene is better absorbed with a bit of fat and gentle cooking: a grated carrot drizzled with olive oil, or a pumpkin soup, releases far more of it than a raw, dry vegetable. A drizzle of virgin oil on your colorful vegetables isn't just about taste — it's biochemistry."
+    },
+    "vitd": {
+      "titre": "Vitamin D",
+      "emoji": "☀️",
+      "sousTitre": "The sunshine hormone, deficient in winter",
+      "benefices": "Vitamin D is actually a pro-hormone that acts on hundreds of genes. It enables calcium and phosphorus absorption (strong bones and teeth), powerfully modulates immunity, and supports muscle function and mood. Its role goes well beyond bone: low levels are linked to many disorders, making it a pillar of health and longevity.",
+      "apports": "The reference is about 15 µg (600 IU) per day, but the real requirement to maintain good blood levels is often higher, especially in winter. Deficiency is extremely widespread at our latitudes from October to April.",
+      "limite": "EFSA sets a limit of 100 µg (4,000 IU) per day. Being fat-soluble, it's stored: prolonged excess from high-dose supplements can cause hypercalcemia. The sun, on the other hand, can never cause excess — the skin self-regulates.",
+      "sources": "Few foods truly contain it: oily fish (sardine, mackerel, herring), egg yolk, liver, and above all skin exposure to sunlight, the main natural source.",
+      "savaisTu": "In France, the skin makes almost no vitamin D from October to April: the sun is too low. That's why winter supplementation is now widely agreed upon, including among naturopaths — ideally paired with vitamin K2, which directs the calcium that D helps absorb toward the bone."
+    },
+    "vite": {
+      "titre": "Vitamin E",
+      "emoji": "🫒",
+      "sousTitre": "The shield for your cells' fats",
+      "benefices": "Vitamin E is the fat-soluble antioxidant par excellence: it protects the fats in your cell membranes and your fatty acids (including precious omega-3s) from oxidation. It supports skin, immunity and cardiovascular health, and works in synergy with vitamin C, which regenerates it after it neutralizes a free radical.",
+      "apports": "The reference for an adult is about 10 to 12 mg per day, easily covered by virgin oils and nuts.",
+      "limite": "EFSA sets a limit of 300 mg per day. At very high doses (supplements), it can thin the blood, which calls for caution with anticoagulant treatment or before surgery. No risk from diet.",
+      "sources": "Virgin vegetable oils (sunflower, wheat germ, olive), nuts (almonds, hazelnuts), sunflower seeds, avocado, green vegetables.",
+      "savaisTu": "Vitamin E and omega-3s form a logical duo: the more fragile fatty acids you eat, the more antioxidants you need to protect them from oxidation. That's why nature often packages the two together — in nuts and virgin oils, vitamin E naturally protects the good fats they contain."
+    },
+    "vitk": {
+      "titre": "Vitamin K",
+      "emoji": "🥬",
+      "sousTitre": "Two forms, two roles: clotting and directing calcium",
+      "benefices": "Vitamin K exists in two complementary forms, and that's the richness of this nutrient. K1 (from green plants) mainly handles blood clotting, essential for healing. K2 (from fermented and animal foods) plays a subtler, more precious role for longevity: it activates the proteins that direct calcium to the right place — osteocalcin, which fixes it into bone, and MGP, which stops it from depositing in the arteries. In short, K2 helps send calcium toward your skeleton rather than your blood vessels.",
+      "apports": "The reference for an adult is about 1 µg per kilo of body weight, or ~70 µg per day. This target mainly covers K1, easily met by a serving of green vegetables. Your report adds up K1 and K2: K2, rarer, comes as a bonus when you eat foods that contain it.",
+      "limite": "No safety limit established: vitamin K from food isn't toxic, even in generous amounts. One real precaution: if you're on anticoagulant treatment (vitamin K antagonists), your intake needs to be regular and stable — talk to your doctor, but don't cut out green vegetables because of it.",
+      "sources": "For K1: spinach, kale, broccoli, chard, parsley, lettuce, virgin oils. For K2, much rarer: natto (fermented soy, the absolute champion), aged cheeses (Edam, gouda), egg yolk, liver, poultry and butter from grass-fed animals. Fermentation and quality animal products are the keys to K2.",
+      "savaisTu": "For a long time, vitamin K was reduced to blood clotting. We now know K2 is a true \"conductor\" of calcium: a clinical trial published in 2026 showed that K2 (MK-7) supplementation slowed the progression of coronary artery calcification by about 29% over two years. That's why the calcium + vitamin D + K2 trio is increasingly seen as inseparable: D helps absorb calcium, K2 sends it into bone rather than arteries."
+    },
+    "vitc": {
+      "titre": "Vitamin C",
+      "emoji": "🍊",
+      "sousTitre": "The versatile antioxidant, fragile and needing renewal",
+      "benefices": "Vitamin C is a major antioxidant that protects your cells from oxidative stress. It's essential for making collagen (skin, blood vessels, joints, gums, wound healing), boosts absorption of plant iron, powerfully supports immunity, and takes part in neurotransmitter synthesis. The human body can neither make nor store it — hence the need for a daily supply.",
+      "apports": "The reference for an adult is about 110 mg per day, more for smokers and during infection or significant stress. A diet rich in fresh fruit and vegetables covers it easily.",
+      "limite": "No strict safety limit: excess is eliminated in urine. At very high doses (supplements, several grams), it can cause digestive trouble and, in predisposed people, favor kidney stones.",
+      "sources": "Contrary to the orange cliché, the real champions are elsewhere: red pepper, parsley, blackcurrant, kiwi, cabbages (broccoli, cauliflower), citrus, strawberry. Raw, fresh vegetables and fruit are richest.",
+      "savaisTu": "Vitamin C is one of the most fragile nutrients: it oxidizes in air, light and heat. A freshly pressed juice loses its vitamin C within a few dozen minutes, and prolonged cooking destroys much of it. Eating fruit and vegetables raw, fresh and quickly is the best way to get the full benefit."
+    },
+    "b1": {
+      "titre": "Vitamin B1 (thiamine)",
+      "emoji": "🌾",
+      "sousTitre": "The fuel for energy and nerves",
+      "benefices": "Thiamine is the vitamin that turns carbohydrates into energy your cells can use. It's essential for the nervous system, the brain and the heart, all heavy consumers of glucose. The more active you are, or the more carb-rich your diet, the higher your needs climb — it's an energy vitamin in the truest sense.",
+      "apports": "The need is proportional to energy intake: about 1.3 to 1.5 mg per day for an adult, more for athletes. Since it's barely stored, a regular supply is needed.",
+      "limite": "No safety limit: excess is eliminated in urine, B1 is entirely safe from diet as well as supplements.",
+      "sources": "Whole grains (the grain's outer layer is rich in it), legumes, pork, sunflower seeds, nutritional yeast, nuts. Whole, unprocessed foods are by far the best sources.",
+      "savaisTu": "Refining grains destroys much of the thiamine: white rice contains up to ten times less than brown rice. Historically, the beriberi epidemic (B1 deficiency) appeared when polished white rice became widespread in Asia — a powerful reminder that refining strips our foods of far more than just calories."
+    },
+    "b2": {
+      "titre": "Vitamin B2 (riboflavin)",
+      "emoji": "🥛",
+      "sousTitre": "The spark of your energy plants",
+      "benefices": "Riboflavin sits at the heart of energy production in every one of your cells: it forms the coenzymes FAD and FMN, essential for mitochondria, your energy plants. It helps reduce fatigue, protects cells from oxidative stress, and helps recycle other B vitamins (including B6 and B9). It also contributes to normal skin and vision.",
+      "apports": "The reference for an adult is about 1.5 to 1.6 mg per day. Needs rise slightly for athletes and during pregnancy.",
+      "limite": "No safety limit: excess is eliminated harmlessly (it simply turns urine bright yellow, which is normal and of no consequence).",
+      "sources": "Dairy, eggs, almonds, liver, mushrooms, green vegetables, whole grains, nutritional yeast.",
+      "savaisTu": "Riboflavin is destroyed by light: that's precisely why milk is no longer sold in clear glass bottles but in opaque packaging. A food exposed to light loses part of its B2 within hours."
+    },
+    "b3": {
+      "titre": "Vitamin B3 (niacin)",
+      "emoji": "🥜",
+      "sousTitre": "NAD+, the longevity molecule",
+      "benefices": "Niacin is the precursor of NAD+, one of the most studied molecules in aging research. NAD+ is involved in hundreds of reactions: energy production, DNA repair, cell communication. Its levels decline with age, which explains the growing scientific interest in niacin and its derivatives. B3 also helps reduce fatigue and keep skin and the nervous system in good shape.",
+      "apports": "The reference for an adult is about 14 to 16 mg per day. The body can also make it from tryptophan in protein.",
+      "limite": "As nicotinic acid in supplements, a limit of 10 mg/day applies because it can cause temporary skin flushing (the \"niacin flush\"). No risk from diet.",
+      "sources": "Meat, fish, peanuts, whole grains, legumes, mushrooms, yeast. Protein-rich foods provide it twice over (niacin + tryptophan).",
+      "savaisTu": "Your body makes B3 from tryptophan, an amino acid found in protein: about 60 mg of tryptophan yields 1 mg of niacin. Eating enough protein therefore indirectly supports your B3 status — and through it, your NAD+ production, at the heart of current longevity research."
+    },
+    "b5": {
+      "titre": "Vitamin B5 (pantothenic acid)",
+      "emoji": "🥚",
+      "sousTitre": "Everywhere, and at the heart of your energy",
+      "benefices": "Its name comes from the Greek \"pantos,\" everywhere — because it's found in almost all foods. B5 is the central component of coenzyme A, a molecule essential for energy production, the synthesis of steroid hormones and neurotransmitters, and fatty acid manufacturing. It also helps reduce fatigue and supports mental performance.",
+      "apports": "The reference for an adult is about 5 to 6 mg per day, easily reached with a varied diet.",
+      "limite": "No safety limit: B5 is perfectly safe, with excess eliminated in urine.",
+      "sources": "Truly everywhere, with peaks in offal, egg yolk, mushrooms, avocado, legumes, whole grains and broccoli.",
+      "savaisTu": "B5 deficiencies are so rare that they almost never occur in isolation, precisely because it's present in nearly every whole food. It's a good example of the TOTUM logic: a varied, whole-food diet naturally covers a huge share of your needs, with no math or supplement required."
+    },
+    "b6": {
+      "titre": "Vitamin B6 (pyridoxine)",
+      "emoji": "🍗",
+      "sousTitre": "Protein, mood and the nervous system",
+      "benefices": "B6 is the champion of protein metabolism: the more protein you eat, the more you need. It's essential for making neurotransmitters — serotonin (mood), dopamine (motivation), GABA (calm) — which links it directly to nervous and emotional balance. It supports immunity, red blood cell formation, and helps reduce fatigue.",
+      "apports": "The reference for an adult is about 1.6 to 1.7 mg per day, a bit more with a very high-protein diet.",
+      "limite": "It's the exception among water-soluble vitamins: EFSA sets a limit of 12 mg per day. At high, sustained doses (supplements, poorly dosed B-complexes), B6 can cause neuropathy — tingling, numbness. No risk from diet, but check the dosage of any B-complex supplement.",
+      "sources": "Poultry, fish, banana, potato, chickpeas, pistachios, nuts, whole grains.",
+      "savaisTu": "Because it makes serotonin and dopamine, B6 is a quiet ally of mood and motivation. It's also the only water-soluble vitamin with a real safety limit: proof that \"natural\" and \"water-soluble\" don't mean \"limitless\" — the dose still makes the poison, even for a vitamin."
+    },
+    "b9": {
+      "titre": "Vitamin B9 (folate)",
+      "emoji": "🥬",
+      "sousTitre": "Cell renewal and DNA",
+      "benefices": "Folate is essential for making new cells and replicating DNA — everywhere the body renews itself fast: blood, mucous membranes, skin. B9 is crucial before and during pregnancy (it prevents neural tube defects in the baby), but also throughout life for forming red blood cells, reducing fatigue and regulating homocysteine, a cardiovascular marker.",
+      "apports": "The reference for an adult is about 330 µg per day, and 400 µg or more for women who are or want to become pregnant — ideally from before conception.",
+      "limite": "EFSA sets a limit of 1,000 µg per day for folic acid (the synthetic form found in supplements), not for dietary folate. Note: natural food folate is better regulated by the body than synthetic folic acid.",
+      "sources": "The name comes from \"foliage\": leafy green vegetables lead the way (spinach, lamb's lettuce, cabbage), followed by legumes, liver, citrus, eggs, beetroot.",
+      "savaisTu": "Folate is fragile: up to half can leach into cooking water or be destroyed by long cooking. Eating some of your green vegetables raw or just steamed preserves this vitamin far better — one more reason for raw veggies and gentle cooking."
+    },
+    "b12": {
+      "titre": "Vitamin B12 (cobalamin)",
+      "emoji": "🥩",
+      "sousTitre": "Nerves, blood and energy — the vegan watch-point",
+      "benefices": "B12 is essential for forming red blood cells, keeping the nervous system working properly (it protects the nerve sheath), and DNA synthesis. Along with B9, it regulates homocysteine. A deficiency builds slowly but can cause deep fatigue, neurological issues and anemia — hence the importance of monitoring it.",
+      "apports": "The reference for an adult is about 4 µg per day. The liver stores substantial reserves, which explains why a deficiency can take months, even years, to show up.",
+      "limite": "No safety limit: excess is eliminated harmlessly.",
+      "sources": "Exclusively animal-derived: offal, meat, fish, seafood, eggs, dairy. That's the key point.",
+      "savaisTu": "B12 is the Achilles' heel of vegan diets: it's found almost exclusively in animal products. Supplementation is then essential, not optional — it's one of the rare cases where a supplement is broadly agreed upon, including among naturopaths. After age 60, absorption also declines, which deserves attention even for omnivores."
+    },
+    "calcium": {
+      "titre": "Calcium",
+      "emoji": "🦴",
+      "sousTitre": "The bone-builder, best kept on target",
+      "benefices": "Calcium is the most abundant mineral in the body: 99% makes up the skeleton and teeth, which it continuously builds and maintains. The remaining 1% is vital: muscle contraction (including the heart), clotting, nerve transmission, cell signaling. Bone isn't fixed, it renews throughout life — bone capital is built young and maintained afterward.",
+      "apports": "The reference for an adult is about 950 to 1,000 mg per day, a bit more in adolescence and after age 60. But the amount is only part of the equation: what really matters is that the calcium is well directed toward bone.",
+      "limite": "EFSA sets a limit of 2,500 mg per day. No risk from a typical diet; caution concerns stacking supplements with highly mineralized water. Chronic excess favors kidney stones and hinders absorption of iron, zinc and magnesium.",
+      "sources": "Dairy, sardines and small fish with bones, almonds, green vegetables (kale, broccoli), tofu, legumes, and certain calcium-rich mineral waters. Plant sources have the advantage of also providing other minerals.",
+      "savaisTu": "Taking in calcium isn't enough: it still needs to be sent to the right place. Vitamin D enables its absorption, and vitamin K2 activates the proteins that fix it into bone rather than into arteries. Without this calcium + D + K2 trio, some of the calcium risks depositing where it shouldn't. That's why it's better to rely on a complete diet than on a plain, isolated calcium supplement."
+    },
+    "cuivre": {
+      "titre": "Copper",
+      "emoji": "🔶",
+      "sousTitre": "Iron's quiet partner",
+      "benefices": "Copper works hand in hand with iron: it helps mobilize it and form hemoglobin. It takes part in energy production, the formation of collagen and elastin (skin, blood vessels, joints), antioxidant defense, and proper functioning of the nervous and immune systems.",
+      "apports": "The reference for an adult is about 1.3 to 1.5 mg per day, easily covered by a varied diet.",
+      "limite": "EFSA sets a limit of about 5 mg per day. Like iron, free copper is a pro-oxidant: the liver stores and regulates it, but chronic excess (often from copper-pipe water or supplements) can overwhelm that. Its balance with zinc is tight — too much of one drops the other.",
+      "sources": "Liver leads, followed by oysters and seafood, dark chocolate, nuts, legumes, mushrooms.",
+      "savaisTu": "Zinc and copper act like a scale: prolonged excess zinc (often from a supplement) drops copper, and vice versa. That's why long-term zinc supplementation should always come with an eye on copper. In a whole, varied diet, this balance happens naturally."
+    },
+    "fer": {
+      "titre": "Iron",
+      "emoji": "🩸",
+      "sousTitre": "Blood's oxygen, two very unequal forms",
+      "benefices": "Iron carries oxygen throughout your body via hemoglobin, and stores it in muscles via myoglobin. It's central to energy, endurance, concentration and immunity. A deficiency — common in menstruating women, athletes and vegetarians — causes fatigue, breathlessness, paleness and reduced performance well before visible anemia.",
+      "apports": "The reference is about 11 mg/day for men and up to 16 mg for menstruating women. But it all depends on the form: heme iron (animal) is absorbed at 25-30%, non-heme iron (plant) at only 2-10%.",
+      "limite": "EFSA sets a limit of 40 mg/day. The body can regulate absorption but can't eliminate excess iron: never supplement without a blood test (ferritin). The risk is real for people with hemochromatosis, a common and often unrecognized genetic predisposition.",
+      "sources": "Well-absorbed heme iron: blood sausage, liver, red meat, shellfish (mussels, oysters). Non-heme iron: legumes, tofu, pumpkin seeds, green vegetables — best paired with vitamin C, which boosts its absorption.",
+      "savaisTu": "Vitamin C multiplies the absorption of plant iron: a squeeze of lemon on lentils or parsley in a legume dish changes everything. Conversely, tea and coffee taken during a meal strongly hinder it, because of tannins. Timing and pairing sometimes matter as much as quantity."
+    },
+    "iode": {
+      "titre": "Iodine",
+      "emoji": "🧂",
+      "sousTitre": "The thyroid's conductor",
+      "benefices": "Iodine is essential for making thyroid hormones, which regulate your entire metabolism: energy, temperature, weight, mood, growth. It's especially crucial during pregnancy for the baby's brain development. Neither too much nor too little: the thyroid is a delicate balance organ.",
+      "apports": "The reference for an adult is about 150 µg per day, and more during pregnancy and breastfeeding (up to 200 µg).",
+      "limite": "EFSA sets a limit of 600 µg per day. Rare among nutrients, iodine is one where both excess and shortage cause comparable disorders: both can throw off the thyroid. Caution mainly concerns dried seaweed, whose content can be dizzyingly high.",
+      "sources": "Seafood (fish, crustaceans, shellfish), seaweed, iodized salt, eggs, dairy. Fish remains the most consistent and reliable source.",
+      "savaisTu": "Dried seaweed, especially kombu, can contain several thousand micrograms of iodine per gram: a few grams are enough to blow past the safety limit. It's excellent in moderation, but deserves real caution — a case where \"natural\" doesn't mean \"limitless.\""
+    },
+    "magnesium": {
+      "titre": "Magnesium",
+      "emoji": "✨",
+      "sousTitre": "The anti-stress mineral, quietly deficient",
+      "benefices": "Magnesium is the cofactor of more than 300 enzymatic reactions: cellular energy production (ATP needs it), muscle and nerve function, heart rhythm regulation, bone strength, nervous system balance. It plays a central role in stress management and sleep quality. It's one of the most strategic minerals for vitality and longevity — and one of the most often deficient.",
+      "apports": "The reference is around 300 to 400 mg per day (a bit more for men and athletes). A number worth knowing: about a third of the world's population doesn't reach this intake, partly because soil depletion has cut the magnesium content of grains by about 20% over a few decades.",
+      "limite": "No limit for dietary magnesium: excess is simply eliminated by the kidneys. On the supplement side, beyond about 250 mg of added magnesium per day, a laxative effect can appear, without seriousness. Note: citrate, glycinate or malate forms are far better absorbed than the often-cheap but poorly bioavailable oxide.",
+      "sources": "Dark chocolate (the real kind, cocoa-rich), nuts (almonds, cashews, Brazil nuts), legumes, whole grains, leafy green vegetables, banana, and certain magnesium-rich mineral waters. Whole, unprocessed foods are consistently richer than their refined versions.",
+      "savaisTu": "Stress and magnesium form a vicious circle: stress flushes magnesium out through urine, and low magnesium amplifies your reactivity to stress. That's why an intense stretch of tension quickly drains reserves — and why raising your intake concretely helps you find calm and better sleep."
+    },
+    "manganese": {
+      "titre": "Manganese",
+      "emoji": "🌰",
+      "sousTitre": "The antioxidant for mitochondria and bone",
+      "benefices": "Manganese is the cofactor of key enzymes, including mitochondrial SOD, one of your most powerful internal antioxidants, which protects your energy plants. It takes part in forming bone and cartilage, carbohydrate and lipid metabolism, and wound healing. Discreet but foundational.",
+      "apports": "The reference for an adult is about 3 mg per day, amply covered by plants, whole grains and tea.",
+      "limite": "No formal dietary limit, where both deficiency and excess are rare. Caution only applies to certain occupational exposures or heavily dosed supplements.",
+      "sources": "Whole grains, nuts, legumes, tea (especially green), pineapple, spinach, dark chocolate. Whole plant foods are packed with it.",
+      "savaisTu": "A single cup of tea can cover a good share of daily manganese needs — it's one of the most concentrated sources there is. Manganese is a good example of these trace elements we rarely talk about but that work behind the scenes, notably to protect your mitochondria from aging."
+    },
+    "phosphore": {
+      "titre": "Phosphorus",
+      "emoji": "🦴",
+      "sousTitre": "Calcium's partner, rarely lacking",
+      "benefices": "Phosphorus is the second most abundant mineral in the body after calcium, with which it forms the structure of bones and teeth. It's also at the heart of cellular energy (ATP is a phosphate molecule), makes up DNA and cell membranes, and regulates acid-base balance.",
+      "apports": "The reference for an adult is about 550 mg per day. Deficiency is very rare since phosphorus is present in almost every food.",
+      "limite": "No strict upper limit from whole foods. The real modern issue lies elsewhere: phosphates ADDED to ultra-processed products (cola sodas, ready meals, processed cheese) supply an oversized, poorly balanced dose of phosphorus, which can strain the kidneys and bones long term.",
+      "sources": "Almost everywhere: fish, meat, eggs, dairy, legumes, nuts, whole grains.",
+      "savaisTu": "The problem with phosphorus is almost never a shortage, but the hidden excess from additives (the E338 to E452 codes in sodas and industrial meals). It's one more example of ultra-processed food throwing off a nutrient that whole-food eating handles perfectly — here, by disrupting the phosphorus/calcium ratio."
+    },
+    "potassium": {
+      "titre": "Potassium",
+      "emoji": "🍌",
+      "sousTitre": "Salt's counterweight, often overlooked",
+      "benefices": "Potassium is the main intracellular mineral and sodium's natural counterweight. It regulates blood pressure, fluid balance, muscle contraction (including the heart) and nerve transmission. A good intake protects the heart and blood vessels, and supports muscle function during exercise. Most people are slightly short on it while eating too much salt — exactly the opposite of the ideal balance.",
+      "apports": "The reference for an adult is about 3,500 mg per day. Few people reach it, since that requires a generous intake of plants — precisely the marker of a quality diet.",
+      "limite": "No limit for dietary potassium in a healthy person: the kidneys regulate it perfectly. Caution only applies to supplements in cases of kidney failure or certain heart treatments (talk to your doctor in that case).",
+      "sources": "Contrary to the banana cliché, the best sources are often elsewhere: potato and sweet potato, legumes, spinach and green vegetables, avocado, dried fruit, beetroot, and of course banana. In reality, almost all whole plant foods are rich in it.",
+      "savaisTu": "For blood pressure, raising potassium is as important as cutting salt — it's the ratio between the two that matters most. A diet rich in plants and low in ultra-processed food naturally restores this ratio, whereas the industrial diet flips it (too much sodium, not enough potassium)."
+    },
+    "selenium": {
+      "titre": "Selenium",
+      "emoji": "🐟",
+      "sousTitre": "Much more than the Brazil nut",
+      "benefices": "Selenium is a major antioxidant trace element: it's the cofactor of glutathione peroxidases, which protect cells from oxidative stress, and it's essential for converting thyroid hormones. It supports immunity, male fertility, and plays a protective role against certain cancers. In small amounts it's essential; it's a precision nutrient.",
+      "apports": "The reference is about 55 to 70 µg per day for an adult. Selenium from seafood and eggs is particularly well absorbed (85-90%, as selenomethionine), much better than from inorganic supplements.",
+      "limite": "Selenium has a narrow safety window: the upper limit sits around 300-400 µg/day, and chronic excess (selenosis) causes brittle nails, hair loss, digestive trouble. This is exactly why you shouldn't rely on a single, concentrated source.",
+      "sources": "Selenium is too often reduced to the Brazil nut — that's a misleading simplification. Its content is extremely VARIABLE (depending on the soil of origin, by a factor of 1 to over 100), so \"one nut covers your needs\" is false and can even lead to overdosing. The more reliable, consistent sources are elsewhere: seafood (tuna, sardines, oysters, mussels, shrimp), eggs, offal and quality meat. They contain a lot of it, in a better-absorbed form. Nature offers far more than a single option.",
+      "savaisTu": "If you regularly eat seafood and eggs, you can easily reach — or even exceed — your selenium needs without ever touching a Brazil nut. It's a good example of why you should look at your whole diet rather than chase a single \"miracle\" food."
+    },
+    "sodium": {
+      "titre": "Sodium (salt)",
+      "emoji": "🧂",
+      "sousTitre": "Essential, to be calibrated to your activity",
+      "benefices": "Sodium, salt's main component, is vital: it regulates fluid balance, blood pressure and nerve transmission. We almost never run short of sodium in our societies — but for someone active who sweats heavily (sport, heat, physical work), losses through sweat are real, and a sufficient intake becomes necessary to perform and recover well.",
+      "apports": "For a fairly sedentary person, the WHO advises not exceeding about 5 g of salt per day (roughly ~2 g of sodium). For athletes, that reference rises to compensate for sweat losses: that's why your target automatically adjusts to your activity level in the app.",
+      "limite": "The real problem with salt mainly concerns sedentary people: for them, excess weighs on blood pressure. And that excess almost always comes from HIDDEN salt in ultra-processed products (ready meals, cured meats, industrial bread, snacks), not from a pinch added to home cooking. That's the salt to track first.",
+      "sources": "To favor: an unrefined salt (grey sea salt, pink salt), added thoughtfully to home cooking based on whole foods. Some whole foods naturally contain it (celery, seaweed, seafood). To limit: all ultra-processed food, where salt is everywhere and invisible.",
+      "savaisTu": "About 70 to 80% of the salt a sedentary person eats comes from industrial products, not the salt shaker. Cooking for yourself from whole foods means taking back full control of your sodium — and then freely adjusting it to your activity level."
+    },
+    "zinc": {
+      "titre": "Zinc",
+      "emoji": "🛡️",
+      "sousTitre": "Immunity, repair and fertility",
+      "benefices": "Zinc is a trace element essential to more than 300 enzymes. It's central to immunity (defense cells depend on it directly), wound healing, the health of skin, hair and nails, fertility — particularly male fertility, where it supports testosterone and sperm quality — and protein synthesis. Heavily drawn on by athletes and during infections.",
+      "apports": "The reference for an adult ranges from about 7.5 to 14 mg per day, depending on sex and the diet's fiber and phytate content. Needs rise for vegetarians (lower absorption) and athletes (higher losses).",
+      "limite": "EFSA sets a safety limit of 25 mg per day. The real risk of prolonged excess, almost always from supplements, isn't a direct toxicity of zinc but a block on copper absorption: zinc and copper share the same transporters. Excess zinc can therefore, paradoxically, create a copper deficiency and weaken the very immunity it's meant to support.",
+      "sources": "Oysters are by far the richest source (one serving covers several days' worth of needs). Then come red meat, pumpkin seeds, beef, legumes, cheeses and nuts.",
+      "savaisTu": "Zinc from plants is less well absorbed because of phytates in grains and legumes, which trap it. An age-old, effective trick: soaking, sprouting or fermenting (like sourdough bread) neutralizes much of the phytate and frees up the zinc. Our ancestors prepared their grains this way without knowing the biochemical reason."
+    },
+    "cholesterol": {
+      "titre": "Cholesterol",
+      "emoji": "🥚",
+      "sousTitre": "Vital, and long misunderstood",
+      "benefices": "Cholesterol isn't a poison, it's a VITAL molecule. It makes up the membrane of every one of your cells, serves as the base for making vitamin D, sex hormones (testosterone, estrogen), cortisol and bile salts. Your brain is particularly rich in it. Without cholesterol, life is simply impossible.",
+      "apports": "There's no dietary requirement for cholesterol: your liver makes most of it (about 80%), and adjusts its output based on what you eat. That's the key point long overlooked: cholesterol is mostly ENDOGENOUS. When you eat more, your body makes less, and vice versa. Regulation is internal.",
+      "limite": "The idea that you should avoid dietary cholesterol (and separate out the egg yolk) is a largely outdated dogma. For most people, dietary cholesterol has a modest impact on blood cholesterol. The real levers of your lipid profile lie elsewhere: excess sugar and ultra-processed food, lack of fiber and physical activity, chronic inflammation. That's where to act, not in fear of an egg.",
+      "sources": "Cholesterol is found in animal-derived foods: eggs (especially the yolk), offal, butter, cheese, meat. Long demonized, whole eggs are actually one of the most complete foods there is — yolk included, which concentrates choline, lutein and fat-soluble vitamins.",
+      "savaisTu": "For a long time, people were advised to throw away the egg yolk out of fear of cholesterol. That's a mistake: the yolk concentrates almost all the egg's nutrients (choline for the brain, lutein for the eyes, vitamins A, D, E, K). Eating the whole egg makes far more nutritional sense than keeping only the white."
+    },
+    "agsatures": {
+      "titre": "Saturated fatty acids",
+      "emoji": "🧈",
+      "sousTitre": "Not all created equal, far from it",
+      "benefices": "Saturated fatty acids aren't a uniform block, and recent science has shattered the idea that they're all \"bad.\" Some, like the ODD-chain fatty acids — C15:0 (pentadecanoic acid) and C17:0 (heptadecanoic acid), found in quality dairy fat (raw-milk butter, cheese), certain fish and grass-fed beef — are even associated with BETTER health: higher blood levels go along with less diabetes, less cardiovascular disease and lower mortality. C15:0 activates AMPK and inhibits mTOR, two central longevity levers, to the point that some researchers propose it as a new essential fatty acid.",
+      "apports": "There's no set \"requirement\" for saturated fats: the body makes them. Public health guidelines suggest limiting them to about 10-12% of energy intake, but that overall figure hides the essential point — it's the SOURCE that matters, not the raw percentage. Saturated fats from whole foods (raw butter, eggs, cheese, quality meat) don't behave the same as those from ultra-processed products.",
+      "limite": "The real caution concerns excess saturated fat from ultra-processed, refined foods, especially combined with fast sugars (pastries, industrial meals, fried food). It's that combination, not farm butter, that's the problem. Careful: recognizing the benefits of odd-chain fats doesn't mean \"eat unlimited saturated fat\" — it's a nuance, not a free pass.",
+      "sources": "Good whole sources: raw-milk butter and cheese, eggs, meat from grass-fed ruminants, oily fish. These foods also supply the valuable C15:0 and C17:0. To avoid: saturated fat hidden in ultra-processed food and hydrogenated oils.",
+      "savaisTu": "C15:0 was discovered while studying the longevity of US Navy dolphins: the healthiest, oldest ones had high levels of this fatty acid. Yet its intake in the population has fallen over the past 40 years, as whole dairy fat was demonized — a possible historical mistake that science is now correcting."
+    },
+    "sucres": {
+      "titre": "Sugars",
+      "emoji": "🍯",
+      "sousTitre": "Natural and whole rather than added",
+      "benefices": "Sugar is a fuel, useful particularly around physical exercise. But the SOURCE changes everything. Sugars naturally present in whole foods (whole fruit, vegetables, tubers) come packaged with fiber, water, vitamins and antioxidants: this matrix slows their absorption and avoids blood sugar spikes. The same sugar, isolated and refined, behaves completely differently.",
+      "apports": "There's no requirement for added sugar: zero is perfectly viable. The WHO recommends limiting added sugar to under 10% of energy intake, ideally 5%. Sugars from whole foods aren't subject to this limit.",
+      "limite": "The truly harmful sugars are refined added sugars, and above all glucose-fructose syrup in processed products and sodas. Fructose is the key: in a whole fruit, it's buffered by fiber and harmless; but ISOLATED and consumed in bulk (sodas, juices, industrial syrups), it's metabolized by the liver and, in excess, favors fatty liver and insulin resistance. It's not the fructose in fruit that's the problem, it's industrial fructose stripped from its matrix.",
+      "sources": "To favor: whole fruit, vegetables, sweet potato, a bit of raw honey or dried fruit around exercise. To avoid: sodas, industrial fruit juices, glucose-fructose syrups, and any product where added sugar sits high on the ingredient list.",
+      "savaisTu": "A fruit pressed into juice loses its fiber: its fructose then becomes as fast-acting as a soda's. That's why eating an orange has nothing to do with drinking a glass of orange juice, even \"100% pure\" — the whole fruit wins every time."
+    },
+    "sel": {
+      "titre": "Salt (sodium)",
+      "emoji": "🧂",
+      "sousTitre": "To be adjusted to your physical activity",
+      "benefices": "Salt isn't an enemy: sodium is vital for fluid balance, nerve transmission and muscle contraction. When you're active and sweating (sport, heat, physical work), your needs genuinely rise, and a sufficient intake even becomes necessary to perform and recover well. The key is adjusting it to your lifestyle.",
+      "apports": "For a fairly sedentary person, the WHO advises not exceeding about 5 g of salt per day. For a physically active person who sweats heavily, needs are higher: the target rises with exertion and sweat losses.",
+      "limite": "Excess salt is mainly a problem for sedentary or sensitive people: it then weighs on blood pressure. The point to watch remains hidden salt from poor-quality processed products, more than unrefined salt added thoughtfully to home cooking.",
+      "sources": "To favor: an unrefined salt (grey sea salt, pink salt), rich in trace elements, added thoughtfully to home cooking and matched to your physical activity.",
+      "savaisTu": "An endurance athlete can lose several grams of sodium through sweat in a single session. For them, restricting salt the way a sedentary person is advised to would be counterproductive: the need is personal, based on activity."
+    },
+    "hydratation": {
+      "titre": "Hydration",
+      "emoji": "💧",
+      "sousTitre": "The nutrient we forget to count",
+      "benefices": "Water is the main component of your body (about 60%) and the medium for all your vital reactions: transporting nutrients, eliminating waste via the kidneys, regulating temperature, lubricating joints, physical and mental performance. Even mild dehydration (1-2%) already reduces concentration, energy and performance.",
+      "apports": "Aim for about 1.5 to 2 L of water per day, adjusted for activity, heat and sweating. Some also comes from water-rich foods (fruit, vegetables, soups), which count toward your hydration.",
+      "limite": "Drinking excessively and very fast can, in rare extreme cases (endurance efforts), dilute blood sodium. For the vast majority, the issue is the opposite: not drinking enough.",
+      "sources": "Plain water above all, but also herbal teas, and especially water-rich foods: cucumber, watermelon, zucchini, lettuce, citrus, soups. TOTUM even counts the water contained in your foods.",
+      "savaisTu": "Thirst kicks in once dehydration has already started: better to drink regularly without waiting to feel thirsty. A simple, reliable marker: the color of your urine, which should stay pale yellow. Dark urine signals it's time to drink."
+    },
+    "fibres": {
+      "titre": "Fiber",
+      "emoji": "🌾",
+      "sousTitre": "Fuel for your microbiome",
+      "benefices": "Fiber is the carbohydrate you don't digest — but your gut microbiome loves it. It feeds your good bacteria, which in turn produce protective compounds (short-chain fatty acids). It regulates blood sugar, transit and cholesterol, provides satiety, and is one of the most reliable markers of a quality diet. A well-fed microbiome is a pillar of immunity and longevity.",
+      "apports": "The reference is at least 25 to 30 g per day, a threshold most people don't reach. There are two complementary main families: soluble fiber (which gels, regulating blood sugar and cholesterol) and insoluble (which speeds up transit).",
+      "limite": "No upper limit, but too sharp an increase can cause bloating and discomfort: it's better to ramp up gradually and stay well hydrated while the microbiome adapts.",
+      "sources": "Legumes (champions), vegetables, whole fruit, whole grains, nuts, seeds. Soluble: oats, apple, legumes. Insoluble: bran, green vegetables, fruit skin.",
+      "savaisTu": "Fiber diversity matters as much as quantity: each type of fiber feeds different bacteria. Eating a variety — many different plants each week — enriches your microbiome far more than a single fiber-rich food. Research points to aiming for around thirty different plants a week for an optimal microbiome."
+    },
+    "proteines": {
+      "titre": "Protein",
+      "emoji": "🥩",
+      "sousTitre": "The most filling, structural nutrient",
+      "benefices": "Protein is the building material of living things: muscle, skin, hair, enzymes, hormones, antibodies, neurotransmitters. It breaks down into amino acids, nine of which are essential — the body can't make them. A sufficient intake preserves muscle mass (a key factor for longevity), supports immunity, and provides the strongest satiety of all macronutrients, which naturally helps regulate appetite and weight.",
+      "apports": "The official recommendation of 0.8 g/kg/day is a minimum to avoid deficiency, not an optimum. Recent data place the optimum much higher: 1.2 to 1.6 g/kg for an active person, and 1.6 to 2.2 g/kg for an athlete or during weight loss, to preserve muscle. After age 60, needs INCREASE (the body uses protein less efficiently): aiming for 1.2 to 1.5 g/kg is protective against muscle loss.",
+      "limite": "It needs to be said clearly: the idea that protein \"strains the kidneys\" is a myth for healthy people. It comes from studies on patients who ALREADY had kidney disease. A large review (28 studies, 1,300+ participants) confirmed that a high intake doesn't impair kidney function in healthy adults. Caution only applies to a very high (>2 g/kg), sustained intake in at-risk people (diabetes, hypertension). For everyone else, reaching the optimal intake is harder than exceeding it.",
+      "sources": "Animal sources — eggs, fish, meat, dairy — provide all essential amino acids at once. On the plant side, pair legumes and grains (lentils + rice, chickpeas + semolina) for a complete profile. Eggs, oily fish and legumes remain the most valuable staples for health and longevity. Quality (source, digestibility) matters as much as quantity.",
+      "savaisTu": "The body doesn't store protein in reserve the way it does fat. It's better to spread it through the day (20 to 40 g per meal) rather than loading it all in the evening: muscle synthesis is optimized by a regular distribution."
+    },
+    "polyols": {
+      "titre": "Polyols",
+      "emoji": "🍬",
+      "sousTitre": "Natural in fruit, or a sign of ultra-processing",
+      "benefices": "Polyols (sorbitol, xylitol, mannitol, erythritol, maltitol...) are a family of mildly sweet carbohydrates. Two very different realities need distinguishing. In NATURE, they're found as traces in many whole fruits and vegetables — sorbitol in apples, pears, plums, cherries; mannitol in mushrooms; xylitol in certain berries. At these natural doses, alongside fiber and water, they're perfectly harmless and simply part of the food's matrix.",
+      "apports": "There's no need for polyols: they're not essential nutrients. Their presence in small amounts in your report, if you eat whole fruit and vegetables, is entirely normal and of no consequence — it's simply the natural signature of these foods.",
+      "limite": "The problem isn't the natural polyol in fruit, but the polyol ADDED in large amounts to industrial \"sugar-free\" products (chewing gum, candy, low-sugar cookies, protein bars). At these concentrated doses (beyond ~20 g/day), they ferment in the colon and cause bloating, gas and a laxative effect — hence the \"may have a laxative effect\" note on these packages. A high polyol reading in your report is therefore mostly a good detector of processed products.",
+      "sources": "Natural and harmless: apples, pears, plums, cherries, mushrooms, some berries. To watch: any product labeled \"sugar-free\" or \"light\" (candy, gum, industrial pastries), where they're added in bulk.",
+      "savaisTu": "If you only eat whole foods and see a bit of polyols in your report, that's a good sign: it comes from your fruit, not a processed product. Natural xylitol is even good for teeth (it's used in dentistry). It's all a question of dose and origin — nature in small amounts, yes; industry in large amounts, no."
+    },
+    "alcool": {
+      "titre": "Alcohol",
+      "emoji": "🍷",
+      "sousTitre": "No dose is beneficial for health",
+      "benefices": "Let's be direct: alcohol provides no nutritional benefit. The old idea of a \"glass of wine good for the heart\" has been invalidated by large recent studies. Its 7 kcal per gram are empty calories, with no vitamin or mineral, that the body treats as a toxin first in line — pausing fat burning while it clears it.",
+      "apports": "There is no recommended intake: the risk-free level for health is zero. Lower-risk drinking guidelines cap it at 10 drinks a week and no more than 2 per day, with alcohol-free days — but these are risk-reduction thresholds, not recommendations.",
+      "limite": "Alcohol is classified as a definite carcinogen (Group 1) by the IARC, in the same category as tobacco. It raises the risk of several cancers even at low doses, tires the liver, disrupts deep sleep, favors fat storage and dehydrates. Its effects are cumulative over the long term.",
+      "sources": "Wine, beer, spirits, cider and cocktails. This line only appears in your report on days you've had some — letting you objectively see your frequency over the week or month.",
+      "savaisTu": "The body treats alcohol as a poison to clear urgently: until it's done, it pauses fat burning. A single evening drink can thus reduce deep sleep quality and slow recovery, a key point for both performance and longevity."
+    },
+    "glucides": {
+      "titre": "Carbohydrates",
+      "emoji": "🌾",
+      "sousTitre": "The fuel, to choose wisely",
+      "benefices": "Carbohydrates are the body's preferred energy source, especially for the brain and muscles during exercise. But not all are equal: complex carbs from whole foods (whole grains, legumes, tubers) release their energy slowly, while simple sugars from processed products cause blood sugar spikes followed by crashes that leave you tired and hungry.",
+      "apports": "They typically make up 40 to 55% of energy intake, but quality outweighs quantity. The goal is to shift the balance from fast sugars toward complex carbs paired with fiber.",
+      "limite": "Excess simple sugar is one of the great drivers of modern disease. The WHO benchmark puts added sugar under 10% of intake, ideally 5%. Whole complex carbs aren't subject to this limit: it's the refined form that's the problem.",
+      "sources": "Whole grains (oats, buckwheat, brown rice, quinoa), legumes, sweet potatoes, whole fruit. To avoid: white flour, added sugar, ultra-processed foods.",
+      "savaisTu": "A whole fruit and its juice contain the same sugar, but the fruit comes with fiber that slows absorption. Juicing a fruit turns it into fast sugar."
+    },
+    "lipides": {
+      "titre": "Fat",
+      "emoji": "🫒",
+      "sousTitre": "Long demonized, essential to life",
+      "benefices": "Fat is vital, not an enemy. It makes up the membrane of every one of your cells, enables absorption of the fat-soluble vitamins A, D, E and K, serves as the base for making hormones (including sex hormones and cortisol), and provides dense, lasting energy. The brain itself is made up of nearly 60% fat. The goal is never to eat little of it, but to choose good ones.",
+      "apports": "It typically makes up about 35 to 40% of energy intake. Quality completely outweighs quantity: favor unsaturated fats (virgin olive and rapeseed oils, nuts, avocado, oily fish) and especially omega-3s, which are often deficient.",
+      "limite": "The real danger is industrial trans fats (hydrogenated oils, industrial fried food, long-life pastries), harmful to the heart. In a whole-food diet, fats — even quality saturated ones — are allies, not a risk.",
+      "sources": "First cold-pressed virgin oils (olive, rapeseed, flax, walnut), nuts, avocado, small oily fish (sardine, mackerel), eggs, quality butter. To avoid: refined oils and fats from ultra-processed food.",
+      "savaisTu": "Not every oil belongs in a pan: those rich in omega-3 (flax, walnut, rapeseed) oxidize under heat and should be eaten raw, while olive oil and stable fats (ghee, coconut) handle cooking well. Choosing the right oil for the job — raw or cooked — makes all the difference to the real quality of your fats."
+    }
+  }
+}

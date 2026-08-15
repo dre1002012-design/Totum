@@ -1,0 +1,717 @@
+{
+  "mindsetPacks": [
+    {
+      "title": "🧠 Progress > perfection",
+      "body": "Every aligned meal is a vote for the identity you're building."
+    },
+    {
+      "title": "💪 Antifragile consistency",
+      "body": "It's the weekly average that counts, not a single meal."
+    },
+    {
+      "title": "🚀 Micro-habits",
+      "body": "1% better each day → massive cumulative effect."
+    },
+    {
+      "title": "🌱 Kindness",
+      "body": "Talk to yourself like a friend you want to help."
+    },
+    {
+      "title": "🌿 Nature & light",
+      "body": "10–15 min outside recharges your biological clock."
+    },
+    {
+      "title": "🧘 Slow breathing",
+      "body": "4s in, 6s out, 3 min: calms the system."
+    },
+    {
+      "title": "🔥 Zen digestion",
+      "body": "Really chew and take a real pause during the meal."
+    },
+    {
+      "title": "🛡️ Daily immunity",
+      "body": "Sleep, micronutrients, gentle movement: winning trio."
+    },
+    {
+      "title": "💤 Deep sleep",
+      "body": "45 min digital curfew + morning light."
+    },
+    {
+      "title": "🧩 Stable blood sugar",
+      "body": "Vegetables first → protein/fat → carbs."
+    },
+    {
+      "title": "🏃 Break up movement",
+      "body": "2 min of stretching/walking every 60–90 min."
+    },
+    {
+      "title": "🧴 Useful minerals",
+      "body": "Sweating a lot? A bit of quality salt on whole foods."
+    },
+    {
+      "title": "🧭 Intention of the day",
+      "body": "One simple, completed action > 10 unfulfilled intentions."
+    },
+    {
+      "title": "🍽️ Nutrient density",
+      "body": "Colorful plate = wider micronutrient spectrum."
+    },
+    {
+      "title": "🫀 Quality fats",
+      "body": "Omega-3 & olive oil: an anti-inflammatory base."
+    },
+    {
+      "title": "🧠 Morning focus",
+      "body": "Protein- and fiber-rich breakfast = clear thinking."
+    },
+    {
+      "title": "🧊 Active recovery",
+      "body": "The day after a hard session: 10–20 min easy cardio."
+    },
+    {
+      "title": "📓 Brief journal",
+      "body": "In the evening: 1 win, 1 area to improve, 1 gratitude."
+    },
+    {
+      "title": "💡 Energy rituals",
+      "body": "Light, water, breathing: quick switches."
+    },
+    {
+      "title": "🧩 Clarity at the supermarket",
+      "body": "A written list = 80% of nutrition decisions already made."
+    },
+    {
+      "title": "🥗 Simple prep",
+      "body": "Minimal batch cooking: grain + legume + 2 vegetables."
+    },
+    {
+      "title": "🧃 Sugary drinks",
+      "body": "Save them for chosen moments, not everyday."
+    },
+    {
+      "title": "🔁 Anti-stress routine",
+      "body": "Breathing + short walk after a meal = calmer nerves."
+    },
+    {
+      "title": "🧪 Test & feedback",
+      "body": "Test, observe, adjust: your body is your best lab."
+    },
+    {
+      "title": "🧯 Background inflammation",
+      "body": "Sleep, omega-3, fiber, stress → the main levers."
+    },
+    {
+      "title": "🎯 One target per week",
+      "body": "A single focused lever = much better adherence."
+    },
+    {
+      "title": "🧊 Cool water, clear ideas",
+      "body": "Mild dehydration = drop in cognitive performance."
+    },
+    {
+      "title": "🌈 Colors = micronutrients",
+      "body": "Aim for 3 colors per plate."
+    },
+    {
+      "title": "🧰 Useful tools",
+      "body": "Kitchen scale & water bottle = outsized impact."
+    },
+    {
+      "title": "🧭 Nutritional identity",
+      "body": "\"I'm someone who takes care of my energy.\""
+    },
+    {
+      "title": "🛒 Local sourcing",
+      "body": "Prioritize whole, local, seasonal foods: more nutrients and less processing."
+    },
+    {
+      "title": "🗄️ Environment management",
+      "body": "If it's in the cupboard, it'll get eaten. Stock visible 'good' foods."
+    },
+    {
+      "title": "⚖️ Mental weight of choice",
+      "body": "Eat the same thing for breakfast and/or lunch to lighten decision fatigue."
+    },
+    {
+      "title": "👂 Listening to your body",
+      "body": "Tell the difference between stomach hunger (physical) and eye/head hunger (emotional)."
+    },
+    {
+      "title": "🖥️ Evening digital detox",
+      "body": "Block screens (phone/PC) 1h before bed (blue light)."
+    },
+    {
+      "title": "📚 Deep Work (Focus)",
+      "body": "Block 90 min with no interruptions/notifications for your most important task."
+    },
+    {
+      "title": "🌅 Evening intention",
+      "body": "Before sleeping, note what will be tomorrow's first successful action."
+    },
+    {
+      "title": "🍃 Sensory grounding",
+      "body": "When stressed, name 5 things you see, 4 you touch, 3 you hear."
+    },
+    {
+      "title": "🙏 Brief gratitude",
+      "body": "Note 3 things you appreciated in your day to anchor the positive."
+    },
+    {
+      "title": "🌪️ Emotional clearing",
+      "body": "Identify and name the dominant emotion of the moment. This reduces its intensity (science-backed)."
+    },
+    {
+      "title": "🔇 Noise management",
+      "body": "Avoid noisy environments during meals. Sound stress affects digestion."
+    },
+    {
+      "title": "🍎 Mindful eating",
+      "body": "Take 3 deep breaths before the first bite to reconnect with your meal."
+    }
+  ],
+  "coach": {
+    "sedentaire": [
+      "2–3x/week 20–30 min: brisk walk, easy cycling or bodyweight strength.",
+      "Steps/day target 6–8k, split after meals (8–12 min).",
+      "5 min mobility in the morning + 5 min in the evening (hips/spine/shoulders).",
+      "Stairs + active breaks every 60–90 min.",
+      "10–15 min daylight walk: mood/sleep boosted.",
+      "1 skills session/week (core, balance).",
+      "2–3 min of slow stretching at the end of the day.",
+      "Hydration before/during/after activity.",
+      "**NEAT (non-exercise activity)**: stand while on the phone, tidy up, walk while thinking."
+    ],
+    "perte": [
+      "Light deficit (10–20%) + enough protein + fiber.",
+      "Strength 2–3x/week, easy cardio on top (RPE 6–7/10).",
+      "Prioritize recovery: sleep & stress management.",
+      "1–2 lighter days/week for neuromodulation.",
+      "8–12 min post-meal walk.",
+      "Spread protein over 3–4 servings/day.",
+      "Short, frequent sessions > long, rare ones.",
+      "Waist measurement 1x/week as a simple marker.",
+      "**NEAT focus**: increase non-exercise activity to burn calories without stressing recovery."
+    ],
+    "masse": [
+      "Surplus +10–15%, protein 1.6–2.2 g/kg, carbs around sessions.",
+      "Progress load or volume (not both at once).",
+      "Sleep >7 h, cut volume if <6.5 h.",
+      "Stay well hydrated: think electrolytes if sweating heavily.",
+      "Deload every 6–8 weeks.",
+      "Controlled eccentric emphasis (3 s) for hypertrophy.",
+      "Complex carbs pre/post session + easy proteins.",
+      "Evening magnesium through food (almonds, greens, cocoa).",
+      "**Power/Speed**: 1 light session a month focused on explosiveness (jumps/throws)."
+    ],
+    "maintien": [
+      "3–4 varied sessions/week, modulate intensity.",
+      "1 light skills session (mobility, core).",
+      "Active recovery the day after a hard session.",
+      "Speed/coordination work 1x/week (drills, short sprints).",
+      "Morning light exposure: better motivation.",
+      "Mix pull/press/hinge/squat + locomotion.",
+      "1 fun day (a sport you enjoy) for adherence.",
+      "Hydration + a bit of salt if sweating heavily.",
+      "**Max strength**: keep a strength cycle to preserve neuromuscular recruitment."
+    ]
+  },
+  "heroPool": {
+    "hydration": [
+      {
+        "title": "💧 Hydration: a silent boost",
+        "theme": "Mental clarity, stable energy",
+        "insight": "1 glass/meal + 2 glasses between meals. Regular sips."
+      },
+      {
+        "title": "🚰 Cellular water = clean energy",
+        "theme": "Fewer headaches",
+        "insight": "Continuous hydration > large one-off volumes."
+      },
+      {
+        "title": "🧠 A hydrated brain",
+        "theme": "Neurotransmission & mood",
+        "insight": "Mild dehydration = -5 to -10% cognitive performance."
+      },
+      {
+        "title": "⚖️ Water & blood sugar",
+        "theme": "Fewer sugar cravings",
+        "insight": "Thirst often mimics hunger. Drink before a snack."
+      }
+    ],
+    "omega3": [
+      {
+        "title": "🐟 Marine omega-3 = supple membranes",
+        "theme": "Inflammation, recovery",
+        "insight": "2x/week oily fish (sardines/mackerel/herring)."
+      },
+      {
+        "title": "🧠 EPA/DHA & brain",
+        "theme": "Clarity & mood",
+        "insight": "Membrane integration → better neural signaling."
+      },
+      {
+        "title": "💤 Omega-3 & sleep",
+        "theme": "Deep recovery",
+        "insight": "Omega-3 status correlates with better sleep quality."
+      },
+      {
+        "title": "🛡️ Omega-3 & immunity",
+        "theme": "Background anti-inflammation",
+        "insight": "EPA/DHA calibrate immune responses."
+      }
+    ],
+    "omega3_ALA": [
+      {
+        "title": "🌰 Plant ALA",
+        "theme": "EPA/DHA precursor",
+        "insight": "Ground flax/chia, walnuts: 1 tbsp/day = plant ALA base."
+      },
+      {
+        "title": "🥣 ALA breakfast",
+        "theme": "Optimized absorption",
+        "insight": "Grind right before eating."
+      }
+    ],
+    "omega6": [
+      {
+        "title": "🌻 Useful omega-6",
+        "theme": "Skin, membranes, hormones",
+        "insight": "Quality and gentle cooking to preserve the fats."
+      }
+    ],
+    "omega9": [
+      {
+        "title": "🫒 Omega-9 & longevity",
+        "theme": "Olive oil, avocado, almonds",
+        "insight": "A drizzle raw or at the end of gentle cooking."
+      }
+    ],
+    "vitA": [
+      {
+        "title": "👀 Vitamin A",
+        "theme": "Vision & barriers",
+        "insight": "Carrot/sweet potato + a bit of fat."
+      },
+      {
+        "title": "🥚 Retinol & co",
+        "theme": "Plant/animal mix",
+        "insight": "Offal/eggs (depending on choice) + orange vegetables."
+      }
+    ],
+    "vitD": [
+      {
+        "title": "☀️ Vitamin D, the conductor",
+        "theme": "Immunity, strength, mood",
+        "insight": "Morning light + food sources."
+      },
+      {
+        "title": "🦴 D & muscle strength",
+        "theme": "Preventing weakness/injury",
+        "insight": "Adequate D status ↔ improved strength."
+      }
+    ],
+    "vitE": [
+      {
+        "title": "🛡️ Vitamin E",
+        "theme": "Membrane antioxidant",
+        "insight": "Almonds/hazelnuts + virgin oils."
+      }
+    ],
+    "vitK": [
+      {
+        "title": "🦴 Vitamin K",
+        "theme": "Bone & clotting",
+        "insight": "Leafy greens + a bit of oil."
+      }
+    ],
+    "vitC": [
+      {
+        "title": "🍋 Vitamin C",
+        "theme": "Antioxidant & iron",
+        "insight": "Kiwi, citrus, raw pepper, parsley."
+      },
+      {
+        "title": "🌈 Colors & C",
+        "theme": "Vibrant plate",
+        "insight": "Vary your natural colors."
+      }
+    ],
+    "Bgroup": [
+      {
+        "title": "⚡ B complex",
+        "theme": "Energy & nerves",
+        "insight": "B1/B2/B3/B6 = the cogs of ATP production."
+      },
+      {
+        "title": "🧩 B9/B12",
+        "theme": "Cell renewal",
+        "insight": "Leafy greens + animal/fortified sources."
+      }
+    ],
+    "iron": [
+      {
+        "title": "🩸 Iron & oxygenation",
+        "theme": "Performance under exertion",
+        "insight": "Pair plant iron with vitamin C."
+      }
+    ],
+    "magnesium": [
+      {
+        "title": "😌 Magnesium",
+        "theme": "Relaxation & sleep",
+        "insight": "Almonds, cocoa, leafy greens, magnesium-rich water."
+      }
+    ],
+    "zinc": [
+      {
+        "title": "🛠️ Zinc",
+        "theme": "Skin, hormones, immunity",
+        "insight": "Seafood, beef, pumpkin seeds."
+      }
+    ],
+    "calcium": [
+      {
+        "title": "🧱 Calcium & D",
+        "theme": "Bone strength",
+        "insight": "Spread out intake + good D status."
+      }
+    ],
+    "potassium": [
+      {
+        "title": "⚡ Potassium",
+        "theme": "Blood pressure & muscles",
+        "insight": "Banana, avocado, greens, legumes."
+      }
+    ],
+    "fibers": [
+      {
+        "title": "🌱 Fiber",
+        "theme": "Microbiome & satiety",
+        "insight": "Legumes + vegetables + whole fruit."
+      },
+      {
+        "title": "🌀 Soluble fiber",
+        "theme": "Flatter blood sugar",
+        "insight": "Lentils, oats, pectins."
+      }
+    ],
+    "immunity": [
+      {
+        "title": "🛡️ Immunity pack",
+        "theme": "Sleep + omega-3 + vit D/C/zinc",
+        "insight": "A steady routine > one-off spikes."
+      },
+      {
+        "title": "🥣 Colorful soup",
+        "theme": "Polyphenols & gentle heat",
+        "insight": "Add garlic/ginger/turmeric for the aroma."
+      }
+    ],
+    "digestion": [
+      {
+        "title": "🔥 Calm digestion",
+        "theme": "Chewing & pausing",
+        "insight": "Step away from screens, breathe before eating."
+      },
+      {
+        "title": "🧪 Personal tolerances",
+        "theme": "Observe & adjust",
+        "insight": "Note what works well for you."
+      }
+    ],
+    "sleep": [
+      {
+        "title": "🌙 Bedtime ritual",
+        "theme": "Digital curfew",
+        "insight": "Dim light + a short read."
+      },
+      {
+        "title": "☀️ Morning light",
+        "theme": "Circadian sync",
+        "insight": "10–15 min outside as soon as possible."
+      }
+    ],
+    "proteines_veg": [
+      {
+        "title": "🌱 Complete plant proteins",
+        "theme": "Lasting satiety & fiber",
+        "insight": "Pair a legume + a grain (rice + lentils) for a complete amino acid profile."
+      },
+      {
+        "title": "🍲 Optimal absorption",
+        "theme": "Fermentation & soaking",
+        "insight": "Soak and rinse legumes to improve their digestibility."
+      }
+    ],
+    "sodium": [
+      {
+        "title": "🧂 Quality sodium",
+        "theme": "Hydration, nerve signaling, recovery",
+        "insight": "Use whole sea salt or Himalayan salt for the minerals (in moderation)."
+      },
+      {
+        "title": "🏃 Post-exercise electrolytes",
+        "theme": "Against dehydration",
+        "insight": "After an intense/long effort: water + a pinch of salt + lemon/fruit juice."
+      }
+    ],
+    "iode": [
+      {
+        "title": "🌊 Iodine & thyroid",
+        "theme": "Baseline metabolism, energy",
+        "insight": "Seaweed (nori, wakame) 1–2x/week, or iodized salt if you eat little seafood."
+      }
+    ],
+    "antistress_aigu": [
+      {
+        "title": "🛑 Stop & breathe (3 min)",
+        "theme": "Calm the nervous system",
+        "insight": "4-7-8 technique: inhale 4s, hold 7s, exhale 8s. 3 cycles."
+      },
+      {
+        "title": "🧊 Quick cold water",
+        "theme": "Vagal reset",
+        "insight": "A splash of cool water on your face or neck for a 'reset'."
+      }
+    ],
+    "sante_intestinale": [
+      {
+        "title": "🦠 Microbiome & mood",
+        "theme": "Gut-brain axis",
+        "insight": "Eat a variety (30 different plants/week) to feed bacterial diversity."
+      },
+      {
+        "title": "🍎 Prebiotics (food)",
+        "theme": "Chives, asparagus, garlic, onion, oats",
+        "insight": "Make these foods a daily base to feed the good bacteria."
+      },
+      {
+        "title": "🥛 Probiotics (bacteria)",
+        "theme": "Kefir, sauerkraut, fermented yogurt, kombucha",
+        "insight": "Introduce a small amount each day to enrich your flora."
+      }
+    ],
+    "lumiere_environnement": [
+      {
+        "title": "💡 Strong morning light",
+        "theme": "Cortisol/natural wakefulness",
+        "insight": "Throw open the windows/go outside 10 min within an hour of waking."
+      },
+      {
+        "title": "🕶️ Blue light filter",
+        "theme": "Melatonin & sleep quality",
+        "insight": "Use blue-light-blocking glasses or filters (Night Shift) after 7pm."
+      }
+    ],
+    "cognition_focus": [
+      {
+        "title": "✅ The rule of 3",
+        "theme": "Prioritizing your day",
+        "insight": "Write down the 3 NON-NEGOTIABLE tasks you must get done."
+      },
+      {
+        "title": "☕ Caffeine timing",
+        "theme": "Avoiding the cortisol peak",
+        "insight": "Wait 60–90 min after waking for your first coffee/tea."
+      }
+    ],
+    "sante_feminine": [
+      {
+        "title": "🩸 Cycle & nutrients",
+        "theme": "Natural hormonal balance",
+        "insight": "Follicular phase: protein + vitamin E. Luteal phase: fiber + magnesium."
+      },
+      {
+        "title": "🤰 Fertility & fats",
+        "theme": "Reproductive cells",
+        "insight": "Optimize omega-3 intake and avoid trans fats for egg/sperm quality."
+      }
+    ],
+    "detox_foie": [
+      {
+        "title": "🌿 Daily liver support",
+        "theme": "Phase I and II detoxification",
+        "insight": "Cruciferous vegetables (cabbage, broccoli) + sulfur-rich foods (garlic, onion) every day."
+      },
+      {
+        "title": "💦 Elimination organs & hydration",
+        "theme": "Cleansing the body",
+        "insight": "Drink warm lemon water in the morning to stimulate the liver and kidneys."
+      }
+    ],
+    "antioxydants_poly": [
+      {
+        "title": "🍇 Champion polyphenols",
+        "theme": "Cell protection (anti-aging)",
+        "insight": "Dark berries, green tea, raw cocoa, turmeric: eat raw and varied."
+      },
+      {
+        "title": "🌈 The ORAC spectrum",
+        "theme": "Antioxidant capacity",
+        "insight": "The more colorful and bitter the food, the higher its antioxidant potential. Don't overcook it!"
+      }
+    ]
+  },
+  "recipesByKey": {
+    "omega3": [
+      "Sardine-lemon-avocado bowl + olive oil • whole-grain bread",
+      "Mackerel, lentil, parsley, caper salad • rapeseed vinaigrette",
+      "Mackerel rillettes with yogurt on toast + raw vegetables"
+    ],
+    "omega3_ALA": [
+      "Oat porridge • ground flax/chia • walnuts + fruit",
+      "Quinoa, arugula, beet, walnut salad • rapeseed oil",
+      "Avocado toast + ground flaxseed • soft-boiled egg"
+    ],
+    "omega6": [
+      "Salad + sunflower seeds • sunflower vinaigrette",
+      "Chicken, brown rice, raw vegetables • drizzle of grapeseed oil",
+      "Hummus + raw vegetables • whole-grain pita"
+    ],
+    "omega9": [
+      "Tomato-mozzarella + olive oil • sourdough bread",
+      "Niçoise salad (tuna/eggs/green beans) • olive oil",
+      "Whole-grain pasta, homemade pesto (olive oil, basil, walnuts)"
+    ],
+    "vitD": [
+      "Whole-egg omelet + flaked sardines • green salad",
+      "Mackerel rillettes with yogurt + raw vegetables",
+      "Baked salmon + lemon + herbs • steamed vegetables"
+    ],
+    "vitA": [
+      "Carrot-sweet potato soup • pumpkin seeds",
+      "Lamb's lettuce, orange, grated carrot salad • olive oil",
+      "Pan-fried chicken liver + onions • green salad"
+    ],
+    "vitE": [
+      "Avocado, almond, spinach salad • rapeseed/olive oil",
+      "Greek yogurt + hazelnuts + raspberries",
+      "Baked fish + crushed almonds • steamed vegetables"
+    ],
+    "vitK": [
+      "Pan-fried kale with garlic • olive oil + egg",
+      "Spinach, avocado, parmesan salad • lemon",
+      "Crunchy cabbage salad • seeds + olive oil"
+    ],
+    "vitC": [
+      "Raw pepper, kiwi, parsley, chickpea salad",
+      "Citrus salad + mint • dark chocolate",
+      "Lebanese tabbouleh (parsley, lemon) + chickpeas"
+    ],
+    "B9": [
+      "Leafy green stir-fry (spinach/chard) • chickpeas",
+      "Green lentil salad, fresh herbs",
+      "Whole-grain wrap with hummus + raw green vegetables"
+    ],
+    "iron": [
+      "Red lentil dahl + lemon • cilantro",
+      "Quick-seared beef + pepper • whole-grain semolina",
+      "Spinach + chickpea + citrus salad"
+    ],
+    "calcium": [
+      "Parsley-tahini (sesame) tabbouleh • lemon",
+      "Greek yogurt + almonds + red berries",
+      "Sesame-fried tofu • steamed broccoli"
+    ],
+    "magnesium": [
+      "Unsweetened cocoa porridge + almonds",
+      "Chickpeas, avocado, arugula + pumpkin seeds",
+      "Banana + almond butter • 85% dark chocolate square"
+    ],
+    "zinc": [
+      "Spaghetti alle vongole (clams) + parsley",
+      "Warm beef salad, arugula, parmesan",
+      "Sardine-lemon toast + pickles"
+    ],
+    "selenium": [
+      "2 Brazil nuts + plain yogurt • fruit",
+      "Baked fish + lemon + herbs",
+      "Mushroom omelet + salad"
+    ],
+    "fibers": [
+      "Buddha bowl: legumes + 2 vegetables + whole grain",
+      "Vegetable soup + whole-grain bread + hummus",
+      "Oven-roasted vegetables + crispy chickpeas"
+    ],
+    "immunity": [
+      "Carrot-squash-ginger soup + sourdough toast",
+      "Red cabbage salad + citrus + walnuts",
+      "Chickpea curry with turmeric + basmati rice"
+    ],
+    "digestion": [
+      "Steamed fish + half whole-grain rice + steamed vegetables",
+      "Clear broth + vermicelli + fresh herbs",
+      "Stir-fried rice with mild vegetables (carrot, zucchini) + tofu"
+    ],
+    "sleep": [
+      "Light dinner: soup + lean protein + greens",
+      "Verbena/linden herbal tea + dark chocolate square",
+      "Herb omelet + green salad + whole-grain bread"
+    ],
+    "ig_bas": [
+      "Lentil/quinoa/avocado/soft-boiled egg salad",
+      "Greek yogurt + red berries + chia seeds",
+      "Pan-fried vegetables + chicken + olives • olive oil"
+    ],
+    "vegetarien": [
+      "Lentil dahl + basmati rice + cilantro",
+      "Quinoa, tofu, broccoli, carrot bowl, tahini-lemon",
+      "Whole-grain pasta + arugula/walnut pesto"
+    ],
+    "vegan": [
+      "Chili sin carne (kidney beans, corn, peppers)",
+      "Chickpea, cucumber, tomato salad, olive oil",
+      "Scrambled spiced tofu + sautéed vegetables"
+    ],
+    "saison_hiver": [
+      "Butternut squash soup + pumpkin seeds • whole-grain bread",
+      "Baked fish + roasted cabbage",
+      "Light chard gratin + orange salad"
+    ],
+    "saison_ete": [
+      "Niçoise salad • olive oil",
+      "Lebanese tabbouleh + chickpeas",
+      "Gazpacho + goat cheese/tomato toast"
+    ],
+    "snacks_sains": [
+      "Apple with peanut/almond butter + cinnamon",
+      "Plain skyr/Greek yogurt + berries and chia seeds",
+      "Hard-boiled eggs (prepped ahead) + quality salt"
+    ],
+    "abats": [
+      "Chicken liver terrine/rillettes + sourdough bread",
+      "Pan-fried veal (or chicken) liver + parsley-garlic",
+      "Country pâté or blood sausage (moderate amount)"
+    ],
+    "iode": [
+      "Miso soup + wakame seaweed",
+      "Cucumber salad + toasted nori seaweed",
+      "Steamed white fish + seaweed butter"
+    ],
+    "fermentation": [
+      "Raw sauerkraut (or kimchi) as a side to the main dish",
+      "Fruit/milk kefir drink (low sugar) in the morning or as a snack",
+      "Plain goat/sheep yogurt (long fermentation) + honey"
+    ],
+    "saison_automne": [
+      "Root vegetable soup (parsnip, celery, carrot) + hazelnuts",
+      "Kabocha squash curry + red lentils",
+      "Roasted beet salad + feta + walnuts"
+    ],
+    "anti_inflammation": [
+      "Golden milk (turmeric, ginger, black pepper, plant milk) in the evening.",
+      "Quinoa, avocado, green vegetable, hemp seed salad, lemon/olive oil vinaigrette.",
+      "Matcha green tea (rich in EGCG) instead of afternoon coffee."
+    ],
+    "soutien_foie": [
+      "Fresh vegetable juice: beet, carrot, lemon, ginger.",
+      "Raw or steamed artichoke salad + mustard vinaigrette.",
+      "Milk thistle or rosemary infusion after dinner."
+    ],
+    "boissons_therapeu": [
+      "Chamomile or valerian infusion for sleep.",
+      "Warm water + apple cider vinegar (unpasteurized) before meals (digestion).",
+      "Pure cranberry juice (no added sugar) for urinary tract support."
+    ]
+  }
+}
