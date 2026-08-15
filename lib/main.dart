@@ -3,6 +3,7 @@ import 'package:flutter/services.dart' show SystemChrome, SystemUiOverlayStyle;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'l10n/app_localizations.dart';
+import 'l10n/l10n_ext.dart';
 import 'screens/profile_screen.dart';
 import 'screens/journal_screen.dart';
 import 'screens/bilan_screen.dart';
@@ -371,11 +372,11 @@ class _RootShellState extends State<_RootShell> {
         padding: EdgeInsets.zero,
         child: Row(
           children: [
-            _navItem(0, Icons.dashboard_rounded, 'Tableau de bord'),
-            _navItem(1, Icons.restaurant, 'Journal'),
+            _navItem(0, Icons.dashboard_rounded, context.l10n.navDashboard),
+            _navItem(1, Icons.restaurant, context.l10n.navJournal),
             const SizedBox(width: 56), // espace pour le bouton central
-            _navItem(2, Icons.bar_chart, 'Bilan'),
-            _navItem(3, Icons.lightbulb, 'Conseils'),
+            _navItem(2, Icons.bar_chart, context.l10n.navBilan),
+            _navItem(3, Icons.lightbulb, context.l10n.navConseils),
           ],
         ),
       ),
