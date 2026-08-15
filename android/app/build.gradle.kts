@@ -37,10 +37,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-    }
-
     defaultConfig {
         applicationId = "com.totumapp.totum"
 
@@ -66,13 +62,25 @@ android {
             // jniLibs { useLegacyPackaging = true } }` ici (retiré), pensé à
             // tort comme une "tolérance 16 ko" — c'est l'inverse : la
             // compression legacy des .so empêche justement leur alignement
-            // 16 ko. Le défaut AGP (non compressés, alignés) est ce qu'il
-            // faut ; AGP 8.9.1 le fait déjà nativement.
+            // 16 ko. Le défaut AGP (non compressés, alignés) le fait
+            // nativement depuis longtemps.
             // R8 : réduction des ressources activée en plus du minify déjà en
             // place (recommandation du rapport de conformité).
             isShrinkResources = true
         }
         debug { }
+    }
+}
+
+// Priorité 60 (15/08/2026) : passage à AGP 9.1.0 (mise à jour Flutter
+// 3.38.4 → 3.47.0, voir settings.gradle.kts) — `android.kotlinOptions`
+// (utilisé jusqu'ici pour fixer jvmTarget) est déprécié au profit de ce
+// bloc `kotlin { compilerOptions { ... } }` dédié, syntaxe désormais
+// obligatoire (erreur de compilation du script Gradle sinon, pas un simple
+// avertissement).
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
     }
 }
 
