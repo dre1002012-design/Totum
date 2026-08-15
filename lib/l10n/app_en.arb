@@ -568,5 +568,22 @@
   "bilanAboveKcal": "\n+{value} kcal above",
   "bilanBelowKcal": "\n{value} kcal below",
   "bilanRightOnTarget": "\nRight on target",
-  "bilanHydrationOfTotal": "{total} ml of a {target} ml total water target"
+  "bilanHydrationOfTotal": "{total} ml of a {target} ml total water target",
+
+  "nutrientVitaminEFull": "Vitamin E",
+  "nutrientVitaminB1Full": "Vitamin B1",
+  "nutrientVitaminB2Full": "Vitamin B2",
+  "nutrientVitaminB3Full": "Vitamin B3",
+  "nutrientVitaminB5Full": "Vitamin B5",
+  "nutrientVitaminB6Full": "Vitamin B6",
+  "nutrientVitaminAFull": "Vitamin A",
+  "nutrientOmega3MarineFull": "Marine omega-3 (EPA/DHA)",
+
+  "consPriorityNutritionalTitle": "Nutritional priorities",
+  "consNoDeficitToday": "Great balance today!\nNo significant deficiency detected.",
+  "consPriorityIntro": "Ranked by priority, factoring in the importance of each nutrient. Tap a deficiency to see the foods that address it.",
+  "consCoveredToday": "{percent}% of today's target covered",
+  "consWhatYouAteToday": "What you ate today",
+  "consNoFoodContainedTodayAction": "No food you ate today contained it. This is where to focus: check the fact sheet below to find out where to get it.",
+  "consWhereToFindReadFiche": "Where to find it? Read the {label} fact sheet"
 }

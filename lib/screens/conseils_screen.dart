@@ -23,8 +23,11 @@ import 'bilan_screen.dart'
     show computeTodayTotumScore, BilanScreen, showNutrientFiche, NutrientFicheRepo;
 
 import '../services/foods_loader.dart' as foods_loader;
+import '../services/nutrient_labels.dart';
 import 'account_screen.dart';
 import '../theme/totum_style.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/l10n_ext.dart';
 
 // === THEME =========================================================
 const Color kTotumOrange = TotumColors.accent;
@@ -1045,7 +1048,7 @@ List<String> _buildRecipesFromAsset(
 }
 
 // === GENERATION PRINCIPALE ========================================
-Future<AdviceScript> _buildAdviceScript() async {
+Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
   final now = DateTime.now();
   final sp = await SharedPreferences.getInstance();
 
@@ -1670,7 +1673,7 @@ Future<AdviceScript> _buildAdviceScript() async {
           : 'Chaque repas aligné est un vote pour ton identité.') ??
       'Chaque repas aligné est un vote pour ton identité.';
 
-  final totumScore = await computeTodayTotumScore();
+  final totumScore = await computeTodayTotumScore(l10n);
   await _updateCoachScoreHistory(totumScore);
 
   // Contexte coach + sélection des conseils de la banque
@@ -2554,15 +2557,16 @@ class PrioritesNutritionnellesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: TotumColors.page,
-      appBar: AppBar(title: const Text('Priorités nutritionnelles')),
+      appBar: AppBar(title: Text(l10n.consPriorityNutritionalTitle)),
       body: deficits.isEmpty
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
                 child: Text(
-                  'Bel équilibre aujourd\'hui !\nAucune carence marquée détectée.',
+                  l10n.consNoDeficitToday,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 15, color: TotumColors.textSecondary),
                 ),
@@ -2572,7 +2576,7 @@ class PrioritesNutritionnellesScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(14, 14, 14, 28),
               children: [
                 Text(
-                  'Classées par priorité, en tenant compte de l\'importance de chaque nutriment. Touche une carence pour voir les aliments qui la comblent.',
+                  l10n.consPriorityIntro,
                   style: TextStyle(
                       fontSize: 13, color: TotumColors.textSecondary, height: 1.4),
                 ),
@@ -2613,7 +2617,9 @@ class _DeficitDetailCardState extends State<_DeficitDetailCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final d = widget.deficit;
+    final displayLabel = nutrientDisplayLabel(d.label, l10n);
     final c = _deficitColor(d.percent);
     final unit = _kRatioUnit[d.ratioKey] ?? '';
 
@@ -2645,7 +2651,7 @@ class _DeficitDetailCardState extends State<_DeficitDetailCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(d.label,
+                    Text(displayLabel,
                         style: const TextStyle(
                             fontSize: 16.5, fontWeight: FontWeight.w800)),
                     const SizedBox(height: 4),
@@ -2659,7 +2665,7 @@ class _DeficitDetailCardState extends State<_DeficitDetailCard> {
                       ),
                     ),
                     const SizedBox(height: 3),
-                    Text('${d.percent} % de ta cible couverte aujourd\'hui',
+                    Text(l10n.consCoveredToday(d.percent),
                         style: TextStyle(
                             fontSize: 11.5, color: TotumColors.textSecondary)),
                   ],
@@ -2674,7 +2680,7 @@ class _DeficitDetailCardState extends State<_DeficitDetailCard> {
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
-                    'Ce que tu as consommé aujourd\'hui',
+                    l10n.consWhatYouAteToday,
                     style: TextStyle(
                         fontSize: 13, fontWeight: FontWeight.w800, color: c)),
               ),
@@ -2699,7 +2705,7 @@ class _DeficitDetailCardState extends State<_DeficitDetailCard> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    'Aucun aliment consommé aujourd\'hui n\'en contenait. C\'est là qu\'il faut agir : consulte la fiche ci-dessous pour savoir où le trouver.',
+                    l10n.consNoFoodContainedTodayAction,
                     style: TextStyle(
                         fontSize: 12.5, height: 1.5, color: TotumColors.textPrimary),
                   ),
@@ -2761,7 +2767,7 @@ class _DeficitDetailCardState extends State<_DeficitDetailCard> {
                   Icon(Icons.menu_book, size: 17, color: c),
                   const SizedBox(width: 6),
                   Expanded(
-                    child: Text('Où en trouver ? Lire la fiche ${d.label.toLowerCase()}',
+                    child: Text(l10n.consWhereToFindReadFiche(displayLabel.toLowerCase()),
                         style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
@@ -4156,10 +4162,10 @@ class ConseilsScreenState extends State<ConseilsScreen>
   @override
   void initState() {
     super.initState();
-    _future = _initAndLoad();
+    _future = _initAndLoad(context.l10n);
   }
 
-  Future<AdviceScript> _initAndLoad() async {
+  Future<AdviceScript> _initAndLoad(AppLocalizations l10n) async {
     final sp = await SharedPreferences.getInstance();
     final now = DateTime.now();
     final hol = await _readHolisticLog(sp, now);
@@ -4169,7 +4175,7 @@ class ConseilsScreenState extends State<ConseilsScreen>
     if (hol.stress != null) {
       _stressCtrl.text = hol.stress!.toString();
     }
-    return _buildAdviceScript();
+    return _buildAdviceScript(l10n);
   }
 
   /// Recharge le contenu — appelé par main.dart à chaque retour sur cet
@@ -4180,9 +4186,10 @@ class ConseilsScreenState extends State<ConseilsScreen>
   /// [_saveHolisticAndRefresh].
   Future<void> refresh() async {
     if (!mounted) return;
+    final l10n = context.l10n;
     setState(() {
       _refreshing = true;
-      _future = _initAndLoad();
+      _future = _initAndLoad(l10n);
     });
     final result = await _future;
     if (mounted) {
@@ -4218,9 +4225,11 @@ class ConseilsScreenState extends State<ConseilsScreen>
     // On garde le contenu actuel affiché (curseurs, score, cartes) et on ne
     // montre qu'un indicateur discret le temps du recalcul — plus de page
     // blanche pendant le rafraîchissement.
+    if (!mounted) return;
+    final l10n = context.l10n;
     setState(() {
       _refreshing = true;
-      _future = _initAndLoad();
+      _future = _initAndLoad(l10n);
     });
     final result = await _future;
     if (mounted) {
@@ -4299,8 +4308,9 @@ class ConseilsScreenState extends State<ConseilsScreen>
           return RefreshIndicator(
             onRefresh: () async {
               setState(() => _refreshing = true);
+              final l10n = context.l10n;
               final result = await (() {
-                _future = _initAndLoad();
+                _future = _initAndLoad(l10n);
                 return _future;
               })();
               if (mounted) setState(() { _lastData = result; _refreshing = false; });
@@ -4536,11 +4546,11 @@ class _ScorePriorityRow extends StatelessWidget {
                                 color: s.color)),
                       ),
                       const SizedBox(height: 8),
-                      Text('Score TOTUM',
+                      Text(context.l10n.bilanScoreTitle,
                           style:
                               TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
                       const SizedBox(height: 2),
-                      Text(s.mood,
+                      Text(s.moodFor(context.l10n),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 12.5,

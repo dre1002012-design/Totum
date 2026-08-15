@@ -3179,6 +3179,96 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{total} ml sur un objectif de {target} ml d\'eau totale'**
   String bilanHydrationOfTotal(String total, String target);
+
+  /// No description provided for @nutrientVitaminEFull.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine E'**
+  String get nutrientVitaminEFull;
+
+  /// No description provided for @nutrientVitaminB1Full.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine B1'**
+  String get nutrientVitaminB1Full;
+
+  /// No description provided for @nutrientVitaminB2Full.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine B2'**
+  String get nutrientVitaminB2Full;
+
+  /// No description provided for @nutrientVitaminB3Full.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine B3'**
+  String get nutrientVitaminB3Full;
+
+  /// No description provided for @nutrientVitaminB5Full.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine B5'**
+  String get nutrientVitaminB5Full;
+
+  /// No description provided for @nutrientVitaminB6Full.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine B6'**
+  String get nutrientVitaminB6Full;
+
+  /// No description provided for @nutrientVitaminAFull.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine A'**
+  String get nutrientVitaminAFull;
+
+  /// No description provided for @nutrientOmega3MarineFull.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga 3 marins (EPA/DHA)'**
+  String get nutrientOmega3MarineFull;
+
+  /// No description provided for @consPriorityNutritionalTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Priorités nutritionnelles'**
+  String get consPriorityNutritionalTitle;
+
+  /// No description provided for @consNoDeficitToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bel équilibre aujourd\'hui !\nAucune carence marquée détectée.'**
+  String get consNoDeficitToday;
+
+  /// No description provided for @consPriorityIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Classées par priorité, en tenant compte de l\'importance de chaque nutriment. Touche une carence pour voir les aliments qui la comblent.'**
+  String get consPriorityIntro;
+
+  /// No description provided for @consCoveredToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'{percent} % de ta cible couverte aujourd\'hui'**
+  String consCoveredToday(int percent);
+
+  /// No description provided for @consWhatYouAteToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que tu as consommé aujourd\'hui'**
+  String get consWhatYouAteToday;
+
+  /// No description provided for @consNoFoodContainedTodayAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun aliment consommé aujourd\'hui n\'en contenait. C\'est là qu\'il faut agir : consulte la fiche ci-dessous pour savoir où le trouver.'**
+  String get consNoFoodContainedTodayAction;
+
+  /// No description provided for @consWhereToFindReadFiche.
+  ///
+  /// In fr, this message translates to:
+  /// **'Où en trouver ? Lire la fiche {label}'**
+  String consWhereToFindReadFiche(String label);
 }
 
 class _AppLocalizationsDelegate

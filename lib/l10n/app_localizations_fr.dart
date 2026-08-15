@@ -1794,4 +1794,56 @@ class AppLocalizationsFr extends AppLocalizations {
   String bilanHydrationOfTotal(String total, String target) {
     return '$total ml sur un objectif de $target ml d\'eau totale';
   }
+
+  @override
+  String get nutrientVitaminEFull => 'Vitamine E';
+
+  @override
+  String get nutrientVitaminB1Full => 'Vitamine B1';
+
+  @override
+  String get nutrientVitaminB2Full => 'Vitamine B2';
+
+  @override
+  String get nutrientVitaminB3Full => 'Vitamine B3';
+
+  @override
+  String get nutrientVitaminB5Full => 'Vitamine B5';
+
+  @override
+  String get nutrientVitaminB6Full => 'Vitamine B6';
+
+  @override
+  String get nutrientVitaminAFull => 'Vitamine A';
+
+  @override
+  String get nutrientOmega3MarineFull => 'Oméga 3 marins (EPA/DHA)';
+
+  @override
+  String get consPriorityNutritionalTitle => 'Priorités nutritionnelles';
+
+  @override
+  String get consNoDeficitToday =>
+      'Bel équilibre aujourd\'hui !\nAucune carence marquée détectée.';
+
+  @override
+  String get consPriorityIntro =>
+      'Classées par priorité, en tenant compte de l\'importance de chaque nutriment. Touche une carence pour voir les aliments qui la comblent.';
+
+  @override
+  String consCoveredToday(int percent) {
+    return '$percent % de ta cible couverte aujourd\'hui';
+  }
+
+  @override
+  String get consWhatYouAteToday => 'Ce que tu as consommé aujourd\'hui';
+
+  @override
+  String get consNoFoodContainedTodayAction =>
+      'Aucun aliment consommé aujourd\'hui n\'en contenait. C\'est là qu\'il faut agir : consulte la fiche ci-dessous pour savoir où le trouver.';
+
+  @override
+  String consWhereToFindReadFiche(String label) {
+    return 'Où en trouver ? Lire la fiche $label';
+  }
 }

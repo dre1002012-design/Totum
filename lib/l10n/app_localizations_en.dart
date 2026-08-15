@@ -1778,4 +1778,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String bilanHydrationOfTotal(String total, String target) {
     return '$total ml of a $target ml total water target';
   }
+
+  @override
+  String get nutrientVitaminEFull => 'Vitamin E';
+
+  @override
+  String get nutrientVitaminB1Full => 'Vitamin B1';
+
+  @override
+  String get nutrientVitaminB2Full => 'Vitamin B2';
+
+  @override
+  String get nutrientVitaminB3Full => 'Vitamin B3';
+
+  @override
+  String get nutrientVitaminB5Full => 'Vitamin B5';
+
+  @override
+  String get nutrientVitaminB6Full => 'Vitamin B6';
+
+  @override
+  String get nutrientVitaminAFull => 'Vitamin A';
+
+  @override
+  String get nutrientOmega3MarineFull => 'Marine omega-3 (EPA/DHA)';
+
+  @override
+  String get consPriorityNutritionalTitle => 'Nutritional priorities';
+
+  @override
+  String get consNoDeficitToday =>
+      'Great balance today!\nNo significant deficiency detected.';
+
+  @override
+  String get consPriorityIntro =>
+      'Ranked by priority, factoring in the importance of each nutrient. Tap a deficiency to see the foods that address it.';
+
+  @override
+  String consCoveredToday(int percent) {
+    return '$percent% of today\'s target covered';
+  }
+
+  @override
+  String get consWhatYouAteToday => 'What you ate today';
+
+  @override
+  String get consNoFoodContainedTodayAction =>
+      'No food you ate today contained it. This is where to focus: check the fact sheet below to find out where to get it.';
+
+  @override
+  String consWhereToFindReadFiche(String label) {
+    return 'Where to find it? Read the $label fact sheet';
+  }
 }

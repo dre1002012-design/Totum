@@ -38,7 +38,15 @@ String nutrientDisplayLabel(String label, AppLocalizations l10n) => switch (labe
       'Vitamine K' => l10n.nutrientVitaminKFull,
       'Vitamine B9' => l10n.nutrientVitaminB9Full,
       'Vitamine B12' => l10n.nutrientVitaminB12Full,
+      'Vitamine E' => l10n.nutrientVitaminEFull,
+      'Vitamine B1' => l10n.nutrientVitaminB1Full,
+      'Vitamine B2' => l10n.nutrientVitaminB2Full,
+      'Vitamine B3' => l10n.nutrientVitaminB3Full,
+      'Vitamine B5' => l10n.nutrientVitaminB5Full,
+      'Vitamine B6' => l10n.nutrientVitaminB6Full,
+      'Vitamine A' => l10n.nutrientVitaminAFull,
       'Oméga 3 marins' => l10n.nutrientOmega3Marine,
+      'Oméga 3 marins (EPA/DHA)' => l10n.nutrientOmega3MarineFull,
       // Déjà identiques en anglais (abréviations internationales ou noms
       // propres) : Vit D/E/K/C, B1-B12, EPA, DHA, Calcium, Potassium,
       // Sodium, Zinc, Polyols — passent tels quels.

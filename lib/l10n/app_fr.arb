@@ -634,5 +634,24 @@
   "@bilanBelowKcal": { "placeholders": { "value": {"type": "String"} } },
   "bilanRightOnTarget": "\nPile dans la cible",
   "bilanHydrationOfTotal": "{total} ml sur un objectif de {target} ml d'eau totale",
-  "@bilanHydrationOfTotal": { "placeholders": { "total": {"type": "String"}, "target": {"type": "String"} } }
+  "@bilanHydrationOfTotal": { "placeholders": { "total": {"type": "String"}, "target": {"type": "String"} } },
+
+  "nutrientVitaminEFull": "Vitamine E",
+  "nutrientVitaminB1Full": "Vitamine B1",
+  "nutrientVitaminB2Full": "Vitamine B2",
+  "nutrientVitaminB3Full": "Vitamine B3",
+  "nutrientVitaminB5Full": "Vitamine B5",
+  "nutrientVitaminB6Full": "Vitamine B6",
+  "nutrientVitaminAFull": "Vitamine A",
+  "nutrientOmega3MarineFull": "Oméga 3 marins (EPA/DHA)",
+
+  "consPriorityNutritionalTitle": "Priorités nutritionnelles",
+  "consNoDeficitToday": "Bel équilibre aujourd'hui !\nAucune carence marquée détectée.",
+  "consPriorityIntro": "Classées par priorité, en tenant compte de l'importance de chaque nutriment. Touche une carence pour voir les aliments qui la comblent.",
+  "consCoveredToday": "{percent} % de ta cible couverte aujourd'hui",
+  "@consCoveredToday": { "placeholders": { "percent": {"type": "int"} } },
+  "consWhatYouAteToday": "Ce que tu as consommé aujourd'hui",
+  "consNoFoodContainedTodayAction": "Aucun aliment consommé aujourd'hui n'en contenait. C'est là qu'il faut agir : consulte la fiche ci-dessous pour savoir où le trouver.",
+  "consWhereToFindReadFiche": "Où en trouver ? Lire la fiche {label}",
+  "@consWhereToFindReadFiche": { "placeholders": { "label": {"type": "String"} } }
 }
