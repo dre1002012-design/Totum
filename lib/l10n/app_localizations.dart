@@ -3479,6 +3479,162 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Lip'**
   String get consStatFat;
+
+  /// No description provided for @consAddedToRecipes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutée à tes recettes'**
+  String get consAddedToRecipes;
+
+  /// No description provided for @consAddToMyRecipes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter à mes recettes'**
+  String get consAddToMyRecipes;
+
+  /// No description provided for @consFindInJournalNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une fois ajoutée, retrouve cette recette dans ton onglet Journal pour l\'intégrer à tes repas.'**
+  String get consFindInJournalNote;
+
+  /// No description provided for @consCatAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes'**
+  String get consCatAll;
+
+  /// No description provided for @consCatBreakfast.
+  ///
+  /// In fr, this message translates to:
+  /// **'Petit-déjeuner'**
+  String get consCatBreakfast;
+
+  /// No description provided for @consCatLunch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjeuner'**
+  String get consCatLunch;
+
+  /// No description provided for @consCatDinner.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dîner'**
+  String get consCatDinner;
+
+  /// No description provided for @consCatSnack.
+  ///
+  /// In fr, this message translates to:
+  /// **'Collation'**
+  String get consCatSnack;
+
+  /// No description provided for @consCatPreworkout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pré-workout'**
+  String get consCatPreworkout;
+
+  /// No description provided for @consTagLight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Léger'**
+  String get consTagLight;
+
+  /// No description provided for @consTagHighProtein.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hyperprotéiné'**
+  String get consTagHighProtein;
+
+  /// No description provided for @consTagQuick.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rapide'**
+  String get consTagQuick;
+
+  /// No description provided for @consTagGlutenFree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans gluten'**
+  String get consTagGlutenFree;
+
+  /// No description provided for @consTagLactoseFree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans lactose'**
+  String get consTagLactoseFree;
+
+  /// No description provided for @consTagPostWorkout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Post-training'**
+  String get consTagPostWorkout;
+
+  /// No description provided for @consRecipesTotumTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recettes TOTUM'**
+  String get consRecipesTotumTitle;
+
+  /// No description provided for @consRecipesCountSorted.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} recettes triées par objectif'**
+  String consRecipesCountSorted(int count);
+
+  /// No description provided for @consForYouChip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour toi'**
+  String get consForYouChip;
+
+  /// No description provided for @consListView.
+  ///
+  /// In fr, this message translates to:
+  /// **'Affichage liste'**
+  String get consListView;
+
+  /// No description provided for @consGridView.
+  ///
+  /// In fr, this message translates to:
+  /// **'Affichage grille'**
+  String get consGridView;
+
+  /// No description provided for @consResetFilters.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réinitialiser les filtres'**
+  String get consResetFilters;
+
+  /// No description provided for @consSearchByIngredient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher par ingrédient (ex. poulet, riz...)'**
+  String get consSearchByIngredient;
+
+  /// No description provided for @consForYouToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour toi aujourd\'hui'**
+  String get consForYouToday;
+
+  /// No description provided for @consNoRecipe.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune recette'**
+  String get consNoRecipe;
+
+  /// No description provided for @consRecipesSelectedForYou.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 recette sélectionnée pour toi} other{{count} recettes sélectionnées pour toi}}'**
+  String consRecipesSelectedForYou(int count);
+
+  /// No description provided for @consRecipesCountPlural.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 recette} other{{count} recettes}}'**
+  String consRecipesCountPlural(int count);
 }
 
 class _AppLocalizationsDelegate

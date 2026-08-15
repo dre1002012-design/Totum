@@ -1955,4 +1955,102 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get consStatFat => 'Fat';
+
+  @override
+  String get consAddedToRecipes => 'Added to your recipes';
+
+  @override
+  String get consAddToMyRecipes => 'Add to my recipes';
+
+  @override
+  String get consFindInJournalNote =>
+      'Once added, find this recipe in your Journal tab to add it to your meals.';
+
+  @override
+  String get consCatAll => 'All';
+
+  @override
+  String get consCatBreakfast => 'Breakfast';
+
+  @override
+  String get consCatLunch => 'Lunch';
+
+  @override
+  String get consCatDinner => 'Dinner';
+
+  @override
+  String get consCatSnack => 'Snack';
+
+  @override
+  String get consCatPreworkout => 'Pre-workout';
+
+  @override
+  String get consTagLight => 'Light';
+
+  @override
+  String get consTagHighProtein => 'High-protein';
+
+  @override
+  String get consTagQuick => 'Quick';
+
+  @override
+  String get consTagGlutenFree => 'Gluten-free';
+
+  @override
+  String get consTagLactoseFree => 'Lactose-free';
+
+  @override
+  String get consTagPostWorkout => 'Post-workout';
+
+  @override
+  String get consRecipesTotumTitle => 'TOTUM Recipes';
+
+  @override
+  String consRecipesCountSorted(int count) {
+    return '$count recipes sorted by goal';
+  }
+
+  @override
+  String get consForYouChip => 'For you';
+
+  @override
+  String get consListView => 'List view';
+
+  @override
+  String get consGridView => 'Grid view';
+
+  @override
+  String get consResetFilters => 'Reset filters';
+
+  @override
+  String get consSearchByIngredient =>
+      'Search by ingredient (e.g. chicken, rice...)';
+
+  @override
+  String get consForYouToday => 'For you today';
+
+  @override
+  String get consNoRecipe => 'No recipe';
+
+  @override
+  String consRecipesSelectedForYou(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count recipes selected for you',
+      one: '1 recipe selected for you',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String consRecipesCountPlural(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count recipes',
+      one: '1 recipe',
+    );
+    return '$_temp0';
+  }
 }

@@ -623,5 +623,35 @@
   "consIngredientsTitle": "Ingredients",
   "consStatProt": "Prot",
   "consStatCarb": "Carb",
-  "consStatFat": "Fat"
+  "consStatFat": "Fat",
+
+  "consAddedToRecipes": "Added to your recipes",
+  "consAddToMyRecipes": "Add to my recipes",
+  "consFindInJournalNote": "Once added, find this recipe in your Journal tab to add it to your meals.",
+
+  "consCatAll": "All",
+  "consCatBreakfast": "Breakfast",
+  "consCatLunch": "Lunch",
+  "consCatDinner": "Dinner",
+  "consCatSnack": "Snack",
+  "consCatPreworkout": "Pre-workout",
+
+  "consTagLight": "Light",
+  "consTagHighProtein": "High-protein",
+  "consTagQuick": "Quick",
+  "consTagGlutenFree": "Gluten-free",
+  "consTagLactoseFree": "Lactose-free",
+  "consTagPostWorkout": "Post-workout",
+
+  "consRecipesTotumTitle": "TOTUM Recipes",
+  "consRecipesCountSorted": "{count} recipes sorted by goal",
+  "consForYouChip": "For you",
+  "consListView": "List view",
+  "consGridView": "Grid view",
+  "consResetFilters": "Reset filters",
+  "consSearchByIngredient": "Search by ingredient (e.g. chicken, rice...)",
+  "consForYouToday": "For you today",
+  "consNoRecipe": "No recipe",
+  "consRecipesSelectedForYou": "{count, plural, =1{1 recipe selected for you} other{{count} recipes selected for you}}",
+  "consRecipesCountPlural": "{count, plural, =1{1 recipe} other{{count} recipes}}"
 }

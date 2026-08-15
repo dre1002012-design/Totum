@@ -31,6 +31,37 @@ import '../l10n/l10n_ext.dart';
 
 // === THEME =========================================================
 const Color kTotumOrange = TotumColors.accent;
+
+/// Traduit une catégorie de recette (`TotumRecipe.category`, `_cats`) pour
+/// l'affichage — cette valeur sert aussi de CLÉ DE COMPARAISON directe avec
+/// les données JSON (`r.category == _filter`) : jamais modifiée à la
+/// source, uniquement traduite au moment du rendu (même principe que
+/// nutrientDisplayLabel, voir services/nutrient_labels.dart).
+String _recipeCategoryLabel(String cat, AppLocalizations l10n) => switch (cat) {
+      'Toutes' => l10n.consCatAll,
+      'Petit-déjeuner' => l10n.consCatBreakfast,
+      'Déjeuner' => l10n.consCatLunch,
+      'Dîner' => l10n.consCatDinner,
+      'Collation' => l10n.consCatSnack,
+      'Pré-workout' => l10n.consCatPreworkout,
+      _ => cat,
+    };
+
+/// Traduit un tag de filtre rapide (`_quickFilters`, `TotumRecipe.tags`/
+/// `.goalTags`) pour l'affichage — même principe : la clé stable (1er
+/// élément du tuple, ex. 'perte_poids') reste inchangée, seul le libellé
+/// affiché est traduit ici.
+String _quickFilterLabel(String tagKey, AppLocalizations l10n) => switch (tagKey) {
+      'perte_poids' => l10n.consTagLight,
+      'hyperproteine' => l10n.consTagHighProtein,
+      'rapide' => l10n.consTagQuick,
+      'sans_gluten' => l10n.consTagGlutenFree,
+      'sans_lactose' => l10n.consTagLactoseFree,
+      'vegetarien' => l10n.profileDietVegetarian,
+      'vegetalien' => l10n.profileDietVegan,
+      'post_workout' => l10n.consTagPostWorkout,
+      _ => tagKey,
+    };
 // === MODELES =======================================================
 class AdviceScript {
   final String cardTitle;
@@ -2859,7 +2890,7 @@ class _RecipesBanner extends StatelessWidget {
                             color: color.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(999),
                           ),
-                          child: Text(r.category,
+                          child: Text(_recipeCategoryLabel(r.category, context.l10n),
                               style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w700,
@@ -3182,7 +3213,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               color: TotumColors.accent.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(999),
             ),
-            child: Text(r.category,
+            child: Text(_recipeCategoryLabel(r.category, l10n),
                 style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
@@ -3443,13 +3474,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               onPressed: (_saving || _added) ? null : _addToMyRecipes,
               icon: Icon(_added ? Icons.check : Icons.add, size: 20),
               label: Text(_added
-                  ? 'Ajoutée à tes recettes'
-                  : 'Ajouter à mes recettes'),
+                  ? l10n.consAddedToRecipes
+                  : l10n.consAddToMyRecipes),
             ),
           ),
           const SizedBox(height: 12),
           Text(
-            'Une fois ajoutée, retrouve cette recette dans ton onglet Journal pour l\'intégrer à tes repas.',
+            l10n.consFindInJournalNote,
             style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
             textAlign: TextAlign.center,
           ),
@@ -3623,6 +3654,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final all = TotumRecipesRepo.instance.all;
     final byCategory =
         _filter == 'Toutes' ? all : all.where((r) => r.category == _filter).toList();
@@ -3663,11 +3695,11 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Recettes TOTUM',
-                              style: TextStyle(
+                          Text(l10n.consRecipesTotumTitle,
+                              style: const TextStyle(
                                   fontSize: 19, fontWeight: FontWeight.w900)),
                           const SizedBox(height: 2),
-                          Text('${all.length} recettes triées par objectif',
+                          Text(l10n.consRecipesCountSorted(all.length),
                               style: TextStyle(
                                   fontSize: 12.5, color: TotumColors.textSecondary)),
                         ],
@@ -3677,7 +3709,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                       avatar: Icon(Icons.auto_awesome,
                           size: 16,
                           color: _smartFitOn ? Colors.white : kTotumOrange),
-                      label: const Text('Pour toi'),
+                      label: Text(l10n.consForYouChip),
                       selected: _smartFitOn,
                       onSelected: (v) {
                         setState(() => _smartFitOn = v);
@@ -3699,7 +3731,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                         border: Border.all(color: TotumColors.outline),
                       ),
                       child: IconButton(
-                        tooltip: _gridView ? 'Affichage liste' : 'Affichage grille',
+                        tooltip: _gridView ? l10n.consListView : l10n.consGridView,
                         icon: Icon(
                           _gridView ? Icons.view_list : Icons.grid_view_rounded,
                           size: 20,
@@ -3720,7 +3752,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                           border: Border.all(color: TotumColors.outline),
                         ),
                         child: IconButton(
-                          tooltip: 'Réinitialiser les filtres',
+                          tooltip: l10n.consResetFilters,
                           icon: Icon(Icons.filter_alt_off_outlined,
                               size: 20, color: TotumColors.textSecondary),
                           onPressed: _resetFilters,
@@ -3736,7 +3768,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                   controller: _ingredientSearchCtrl,
                   onChanged: (v) => setState(() => _ingredientQuery = v),
                   decoration: InputDecoration(
-                    hintText: 'Chercher par ingrédient (ex. poulet, riz...)',
+                    hintText: l10n.consSearchByIngredient,
                     hintStyle: const TextStyle(fontSize: 13.5),
                     prefixIcon: const Icon(Icons.search, size: 20),
                     suffixIcon: _ingredientQuery.isEmpty
@@ -3775,7 +3807,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                             : Icon(_iconFor(cat),
                                 size: 16,
                                 color: selected ? Colors.white : _colorFor(cat)),
-                        label: Text(cat),
+                        label: Text(_recipeCategoryLabel(cat, l10n)),
                         selected: selected,
                         onSelected: (_) {
                           setState(() => _filter = cat);
@@ -3847,7 +3879,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                                   color: selected ? Colors.white : tileColor),
                               const SizedBox(height: 6),
                               Text(
-                                label,
+                                _quickFilterLabel(tagKey, l10n),
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
                                 style: TextStyle(
@@ -3866,18 +3898,18 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                 ),
                 if (showToday) ...[
                   const SizedBox(height: 8),
-                  const Text('Pour toi aujourd\'hui',
-                      style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800)),
+                  Text(l10n.consForYouToday,
+                      style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800)),
                   const SizedBox(height: 8),
                   _RecipesBanner(recipes: widget.todayRecipes),
                   const SizedBox(height: 18),
                 ],
                 Text(
                   filtered.isEmpty
-                      ? 'Aucune recette'
+                      ? l10n.consNoRecipe
                       : smartFitActive
-                          ? '${filtered.length} recette${filtered.length > 1 ? 's' : ''} sélectionnée${filtered.length > 1 ? 's' : ''} pour toi'
-                          : '${filtered.length} recette${filtered.length > 1 ? 's' : ''}',
+                          ? l10n.consRecipesSelectedForYou(filtered.length)
+                          : l10n.consRecipesCountPlural(filtered.length),
                   style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 10),

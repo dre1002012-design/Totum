@@ -694,5 +694,38 @@
   "consIngredientsTitle": "Ingrédients",
   "consStatProt": "Prot",
   "consStatCarb": "Gluc",
-  "consStatFat": "Lip"
+  "consStatFat": "Lip",
+
+  "consAddedToRecipes": "Ajoutée à tes recettes",
+  "consAddToMyRecipes": "Ajouter à mes recettes",
+  "consFindInJournalNote": "Une fois ajoutée, retrouve cette recette dans ton onglet Journal pour l'intégrer à tes repas.",
+
+  "consCatAll": "Toutes",
+  "consCatBreakfast": "Petit-déjeuner",
+  "consCatLunch": "Déjeuner",
+  "consCatDinner": "Dîner",
+  "consCatSnack": "Collation",
+  "consCatPreworkout": "Pré-workout",
+
+  "consTagLight": "Léger",
+  "consTagHighProtein": "Hyperprotéiné",
+  "consTagQuick": "Rapide",
+  "consTagGlutenFree": "Sans gluten",
+  "consTagLactoseFree": "Sans lactose",
+  "consTagPostWorkout": "Post-training",
+
+  "consRecipesTotumTitle": "Recettes TOTUM",
+  "consRecipesCountSorted": "{count} recettes triées par objectif",
+  "@consRecipesCountSorted": { "placeholders": { "count": {"type": "int"} } },
+  "consForYouChip": "Pour toi",
+  "consListView": "Affichage liste",
+  "consGridView": "Affichage grille",
+  "consResetFilters": "Réinitialiser les filtres",
+  "consSearchByIngredient": "Chercher par ingrédient (ex. poulet, riz...)",
+  "consForYouToday": "Pour toi aujourd'hui",
+  "consNoRecipe": "Aucune recette",
+  "consRecipesSelectedForYou": "{count, plural, =1{1 recette sélectionnée pour toi} other{{count} recettes sélectionnées pour toi}}",
+  "@consRecipesSelectedForYou": { "placeholders": { "count": {"type": "int"} } },
+  "consRecipesCountPlural": "{count, plural, =1{1 recette} other{{count} recettes}}",
+  "@consRecipesCountPlural": { "placeholders": { "count": {"type": "int"} } }
 }
