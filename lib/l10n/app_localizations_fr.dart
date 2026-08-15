@@ -282,4 +282,189 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get authTermsNotice =>
       'En continuant, tu acceptes les conditions d\'utilisation et la politique de confidentialité de TOTUM.';
+
+  @override
+  String get sunScreenTitle => 'Soleil & vitamine D';
+
+  @override
+  String get sunSkinType1Label => 'Type I — Très claire';
+
+  @override
+  String get sunSkinType1Desc =>
+      'Peau très pâle, brûle toujours, ne bronze jamais. Souvent cheveux roux, taches de rousseur.';
+
+  @override
+  String get sunSkinType2Label => 'Type II — Claire';
+
+  @override
+  String get sunSkinType2Desc =>
+      'Peau claire, brûle facilement, bronze peu et difficilement.';
+
+  @override
+  String get sunSkinType3Label => 'Type III — Intermédiaire';
+
+  @override
+  String get sunSkinType3Desc =>
+      'Peau moyenne, brûle modérément, bronze progressivement.';
+
+  @override
+  String get sunSkinType4Label => 'Type IV — Mate';
+
+  @override
+  String get sunSkinType4Desc =>
+      'Peau mate/olivâtre, brûle peu, bronze bien et facilement.';
+
+  @override
+  String get sunSkinType5Label => 'Type V — Foncée';
+
+  @override
+  String get sunSkinType5Desc =>
+      'Peau brun foncé, brûle rarement, bronze intensément.';
+
+  @override
+  String get sunSkinType6Label => 'Type VI — Très foncée';
+
+  @override
+  String get sunSkinType6Desc => 'Peau noire, ne brûle quasiment jamais.';
+
+  @override
+  String get sunExposureFaceHands => 'Visage & mains';
+
+  @override
+  String get sunExposureArmsFace => 'Bras & visage';
+
+  @override
+  String get sunExposureArmsLegs => 'Bras & jambes';
+
+  @override
+  String get sunExposureSwimwear => 'Maillot de bain';
+
+  @override
+  String get sunSkinPickerTitle => 'Quel est ton type de peau ?';
+
+  @override
+  String get sunSkinPickerSubtitle =>
+      'Ta peau détermine la vitesse à laquelle tu synthétises la vitamine D au soleil. On te le demande une seule fois.';
+
+  @override
+  String get sunLocationDisabled =>
+      'Localisation désactivée sur l\'appareil. Active-la, ou saisis l\'UV index à la main.';
+
+  @override
+  String get sunLocationDenied =>
+      'Localisation refusée. Tu peux saisir l\'UV index à la main.';
+
+  @override
+  String get sunUvFetchFailed =>
+      'Impossible de récupérer l\'UV index pour l\'instant.';
+
+  @override
+  String get sunLocationUnavailable =>
+      'Localisation indisponible. Saisis l\'UV index à la main.';
+
+  @override
+  String sunValidateSnackbar(String amount) {
+    return '☀️ +$amount µg de vitamine D ajoutés à ta journée !';
+  }
+
+  @override
+  String get sunTodayEstimateLabel => 'Vitamine D solaire estimée aujourd\'hui';
+
+  @override
+  String get sunResetTooltip => 'Réinitialiser';
+
+  @override
+  String get sunUvCurrentTitle => 'UV index actuel';
+
+  @override
+  String get sunRefreshLocationTooltip => 'Actualiser ma position';
+
+  @override
+  String get sunBelowUv3Info =>
+      'En dessous de UV 3, la synthèse de vitamine D est négligeable. Ce n\'est pas le bon moment — mais profite quand même du grand air.';
+
+  @override
+  String get sunUvUnknown => 'UV index inconnu.';
+
+  @override
+  String get sunManualUvLabel => 'Saisir manuellement : ';
+
+  @override
+  String get sunYourSkinTypeLabel => 'Ton type de peau : ';
+
+  @override
+  String get sunModifyButton => 'Modifier';
+
+  @override
+  String get sunExposedSkinSurface => 'Surface de peau exposée';
+
+  @override
+  String get sunSunDuration => 'Durée au soleil';
+
+  @override
+  String sunMinutesShort(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get sunSunscreenSwitchTitle => 'J\'avais de la crème solaire';
+
+  @override
+  String get sunSunscreenSwitchSubtitle =>
+      'La crème bloque 95 à 98 % de la synthèse de vitamine D.';
+
+  @override
+  String sunEstimatedAmount(String amount) {
+    return '≈ $amount µg estimés';
+  }
+
+  @override
+  String sunEstimateDetail(int minutes, String skinType, String exposure) {
+    return 'pour $minutes min, peau $skinType, $exposure';
+  }
+
+  @override
+  String get sunValidateButton => 'Valider mon exposition';
+
+  @override
+  String get sunGoodConditionsTitle => 'Les bonnes conditions';
+
+  @override
+  String get sunCondition1 =>
+      'Les UVB nécessaires à la vitamine D ne sont présents qu\'au milieu de journée. Vise plutôt les bords de ce créneau (fin de matinée, milieu d\'après-midi) : quelques minutes suffisent. Entre 12h et 16h, le rayonnement est à son pic — bref et prudent, jamais une exposition prolongée.';
+
+  @override
+  String get sunCondition2 =>
+      'Derrière une vitre (fenêtre, voiture), le verre bloque 100 % des UVB : aucune vitamine D produite.';
+
+  @override
+  String get sunCondition3 =>
+      'Les lunettes de soleil ne gênent PAS la synthèse : elle se fait par la peau, garde-les pour protéger tes yeux.';
+
+  @override
+  String get sunCondition4 =>
+      'Sous nos latitudes, la synthèse n\'est possible qu\'environ de mars à octobre. L\'hiver, mise sur l\'alimentation et éventuellement un complément.';
+
+  @override
+  String get sunCondition5 =>
+      'Ton corps ne produit qu\'une dose limitée de vitamine D, puis s\'arrête : rester plus longtemps n\'apporte rien de plus, mais accélère le vieillissement de la peau et augmente le risque de cancer cutané. L\'objectif est le strict nécessaire, pas le bronzage.';
+
+  @override
+  String get sunDisclaimer =>
+      'Estimation pédagogique fondée sur des modèles scientifiques. Ce n\'est pas une mesure médicale : seule une prise de sang évalue précisément ton taux de vitamine D.';
+
+  @override
+  String get sunUvLow => 'Faible — synthèse négligeable';
+
+  @override
+  String get sunUvModerate => 'Modéré — synthèse possible';
+
+  @override
+  String get sunUvHigh => 'Élevé — synthèse efficace, protège-toi';
+
+  @override
+  String get sunUvVeryHigh => 'Très élevé — quelques minutes suffisent';
+
+  @override
+  String get sunUvExtreme => 'Extrême — grande prudence';
 }

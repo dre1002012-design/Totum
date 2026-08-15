@@ -5,6 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../l10n/app_localizations.dart';
+import '../l10n/l10n_ext.dart';
+
 /// ═══════════════════════════════════════════════════════════════════════
 ///  SOLEIL & VITAMINE D — page dédiée, autonome.
 ///
@@ -78,20 +81,14 @@ class SkinType {
   const SkinType(this.index, this.label, this.desc, this.refMinutes);
 }
 
-const List<SkinType> kSkinTypes = [
-  SkinType(0, 'Type I — Très claire',
-      'Peau très pâle, brûle toujours, ne bronze jamais. Souvent cheveux roux, taches de rousseur.', 6),
-  SkinType(1, 'Type II — Claire',
-      'Peau claire, brûle facilement, bronze peu et difficilement.', 7),
-  SkinType(2, 'Type III — Intermédiaire',
-      'Peau moyenne, brûle modérément, bronze progressivement.', 9),
-  SkinType(3, 'Type IV — Mate',
-      'Peau mate/olivâtre, brûle peu, bronze bien et facilement.', 12),
-  SkinType(4, 'Type V — Foncée',
-      'Peau brun foncé, brûle rarement, bronze intensément.', 16),
-  SkinType(5, 'Type VI — Très foncée',
-      'Peau noire, ne brûle quasiment jamais.', 26),
-];
+List<SkinType> skinTypesFor(AppLocalizations l10n) => [
+      SkinType(0, l10n.sunSkinType1Label, l10n.sunSkinType1Desc, 6),
+      SkinType(1, l10n.sunSkinType2Label, l10n.sunSkinType2Desc, 7),
+      SkinType(2, l10n.sunSkinType3Label, l10n.sunSkinType3Desc, 9),
+      SkinType(3, l10n.sunSkinType4Label, l10n.sunSkinType4Desc, 12),
+      SkinType(4, l10n.sunSkinType5Label, l10n.sunSkinType5Desc, 16),
+      SkinType(5, l10n.sunSkinType6Label, l10n.sunSkinType6Desc, 26),
+    ];
 
 /// Fraction de la surface corporelle exposée selon la tenue.
 class ExposureLevel {
@@ -101,12 +98,12 @@ class ExposureLevel {
   const ExposureLevel(this.label, this.bodyFraction, this.icon);
 }
 
-const List<ExposureLevel> kExposureLevels = [
-  ExposureLevel('Visage & mains', 0.10, Icons.face),
-  ExposureLevel('Bras & visage', 0.25, Icons.front_hand),
-  ExposureLevel('Bras & jambes', 0.40, Icons.accessibility_new),
-  ExposureLevel('Maillot de bain', 0.70, Icons.pool),
-];
+List<ExposureLevel> exposureLevelsFor(AppLocalizations l10n) => [
+      ExposureLevel(l10n.sunExposureFaceHands, 0.10, Icons.face),
+      ExposureLevel(l10n.sunExposureArmsFace, 0.25, Icons.front_hand),
+      ExposureLevel(l10n.sunExposureArmsLegs, 0.40, Icons.accessibility_new),
+      ExposureLevel(l10n.sunExposureSwimwear, 0.70, Icons.pool),
+    ];
 
 class SunVitaminDScreen extends StatefulWidget {
   const SunVitaminDScreen({super.key});
@@ -153,6 +150,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
 
   // ── Récupération de l'UV index via Open-Meteo ──────────────────────────
   Future<void> _fetchUv() async {
+    final l10n = context.l10n;
     setState(() {
       _loadingUv = true;
       _uvError = null;
@@ -162,8 +160,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
       final serviceOn = await Geolocator.isLocationServiceEnabled();
       if (!serviceOn) {
         setState(() {
-          _uvError =
-              'Localisation désactivée sur l\'appareil. Active-la, ou saisis l\'UV index à la main.';
+          _uvError = l10n.sunLocationDisabled;
           _loadingUv = false;
         });
         return;
@@ -176,7 +173,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
       if (perm == LocationPermission.denied ||
           perm == LocationPermission.deniedForever) {
         setState(() {
-          _uvError = 'Localisation refusée. Tu peux saisir l\'UV index à la main.';
+          _uvError = l10n.sunLocationDenied;
           _loadingUv = false;
         });
         return;
@@ -200,13 +197,13 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
         });
       } else {
         setState(() {
-          _uvError = 'Impossible de récupérer l\'UV index pour l\'instant.';
+          _uvError = l10n.sunUvFetchFailed;
           _loadingUv = false;
         });
       }
     } catch (e) {
       setState(() {
-        _uvError = 'Localisation indisponible. Saisis l\'UV index à la main.';
+        _uvError = l10n.sunLocationUnavailable;
         _loadingUv = false;
       });
     }
@@ -219,8 +216,8 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
     final uv = _uvIndex!;
     if (uv < 3) return 0; // en dessous de UV 3, synthèse négligeable
 
-    final skin = kSkinTypes[_skinIndex!];
-    final exposure = kExposureLevels[_exposureIndex];
+    final skin = skinTypesFor(context.l10n)[_skinIndex!];
+    final exposure = exposureLevelsFor(context.l10n)[_exposureIndex];
 
     // Référence : refMinutes → 25 µg à UV 9, sur bras & jambes (0.40).
     // Vitesse de synthèse (µg/min) à UV 9 pour CETTE peau, surface pleine :
@@ -246,6 +243,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
   Future<void> _validateSession() async {
     final vitD = _estimateVitD();
     if (vitD <= 0) return;
+    final l10n = context.l10n;
     final sp = await SharedPreferences.getInstance();
     final key = sunVitDKey(DateTime.now());
     final current = sp.getDouble(key) ?? 0.0;
@@ -256,8 +254,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-              '☀️ +${vitD.toStringAsFixed(1)} µg de vitamine D ajoutés à ta journée !'),
+          content: Text(l10n.sunValidateSnackbar(vitD.toStringAsFixed(1))),
           backgroundColor: const Color(0xFF2E7D32),
           duration: const Duration(seconds: 3),
         ),
@@ -277,7 +274,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F6F2),
       appBar: AppBar(
-        title: const Text('Soleil & vitamine D'),
+        title: Text(context.l10n.sunScreenTitle),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black87,
         elevation: 0,
@@ -288,6 +285,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
 
   // ── Premier lancement : choix du type de peau ──────────────────────────
   Widget _buildSkinPicker() {
+    final l10n = context.l10n;
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
       children: [
@@ -299,21 +297,21 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
             ),
             borderRadius: BorderRadius.circular(16),
           ),
-          child: const Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Quel est ton type de peau ?',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900)),
-              SizedBox(height: 6),
+              Text(l10n.sunSkinPickerTitle,
+                  style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900)),
+              const SizedBox(height: 6),
               Text(
-                'Ta peau détermine la vitesse à laquelle tu synthétises la vitamine D au soleil. On te le demande une seule fois.',
-                style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+                l10n.sunSkinPickerSubtitle,
+                style: const TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
               ),
             ],
           ),
         ),
         const SizedBox(height: 14),
-        for (final s in kSkinTypes) ...[
+        for (final s in skinTypesFor(l10n)) ...[
           _skinCard(s),
           const SizedBox(height: 10),
         ],
@@ -378,7 +376,10 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
 
   // ── Écran principal ────────────────────────────────────────────────────
   Widget _buildMain() {
-    final skin = kSkinTypes[_skinIndex!];
+    final l10n = context.l10n;
+    final skinTypes = skinTypesFor(l10n);
+    final exposureLevels = exposureLevelsFor(l10n);
+    final skin = skinTypes[_skinIndex!];
     final vitD = _estimateVitD();
     final canSynth = (_uvIndex ?? 0) >= 3;
 
@@ -418,9 +419,9 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                           fontSize: 26,
                           fontWeight: FontWeight.w900),
                     ),
-                    const Text(
-                      'Vitamine D solaire estimée aujourd\'hui',
-                      style: TextStyle(color: Colors.white, fontSize: 12.5),
+                    Text(
+                      l10n.sunTodayEstimateLabel,
+                      style: const TextStyle(color: Colors.white, fontSize: 12.5),
                     ),
                   ],
                 ),
@@ -429,7 +430,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                 IconButton(
                   onPressed: _resetToday,
                   icon: const Icon(Icons.refresh, color: Colors.white),
-                  tooltip: 'Réinitialiser',
+                  tooltip: l10n.sunResetTooltip,
                 ),
             ],
           ),
@@ -445,8 +446,8 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                 children: [
                   const Icon(Icons.wb_twilight, color: _kSun, size: 20),
                   const SizedBox(width: 8),
-                  const Text('UV index actuel',
-                      style: TextStyle(
+                  Text(l10n.sunUvCurrentTitle,
+                      style: const TextStyle(
                           fontSize: 14, fontWeight: FontWeight.w800)),
                   const Spacer(),
                   if (_loadingUv)
@@ -456,7 +457,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                     IconButton(
                       onPressed: _fetchUv,
                       icon: const Icon(Icons.my_location, size: 20),
-                      tooltip: 'Actualiser ma position',
+                      tooltip: l10n.sunRefreshLocationTooltip,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
@@ -483,18 +484,17 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                 ),
                 if (!canSynth) ...[
                   const SizedBox(height: 8),
-                  _infoLine(Icons.info_outline,
-                      'En dessous de UV 3, la synthèse de vitamine D est négligeable. Ce n\'est pas le bon moment — mais profite quand même du grand air.'),
+                  _infoLine(Icons.info_outline, l10n.sunBelowUv3Info),
                 ],
               ] else ...[
-                Text(_uvError ?? 'UV index inconnu.',
+                Text(_uvError ?? l10n.sunUvUnknown,
                     style: const TextStyle(fontSize: 13, color: Colors.black54)),
                 const SizedBox(height: 10),
                 // Saisie manuelle de secours
                 Row(
                   children: [
-                    const Text('Saisir manuellement : ',
-                        style: TextStyle(fontSize: 13)),
+                    Text(l10n.sunManualUvLabel,
+                        style: const TextStyle(fontSize: 13)),
                     Expanded(
                       child: Slider(
                         value: (_uvIndex ?? 5).clamp(0, 11).toDouble(),
@@ -521,30 +521,30 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
             children: [
               Row(
                 children: [
-                  const Text('Ton type de peau : ',
-                      style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
+                  Text(l10n.sunYourSkinTypeLabel,
+                      style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
                   Expanded(
                     child: Text(skin.label,
                         style: const TextStyle(fontSize: 13, color: Colors.black54)),
                   ),
                   TextButton(
                     onPressed: () => setState(() => _skinIndex = null),
-                    child: const Text('Modifier'),
+                    child: Text(l10n.sunModifyButton),
                   ),
                 ],
               ),
               const Divider(),
               const SizedBox(height: 4),
-              const Text('Surface de peau exposée',
-                  style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
+              Text(l10n.sunExposedSkinSurface,
+                  style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  for (int i = 0; i < kExposureLevels.length; i++)
+                  for (int i = 0; i < exposureLevels.length; i++)
                     ChoiceChip(
-                      label: Text(kExposureLevels[i].label),
+                      label: Text(exposureLevels[i].label),
                       selected: _exposureIndex == i,
                       onSelected: (_) => setState(() => _exposureIndex = i),
                       selectedColor: _kSun,
@@ -562,10 +562,10 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                 children: [
                   const Icon(Icons.timer_outlined, size: 18, color: Colors.black54),
                   const SizedBox(width: 8),
-                  const Text('Durée au soleil',
-                      style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
+                  Text(l10n.sunSunDuration,
+                      style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
                   const Spacer(),
-                  Text('$_minutes min',
+                  Text(l10n.sunMinutesShort(_minutes),
                       style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.w900, color: _kSun)),
                 ],
@@ -576,7 +576,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                 max: 60,
                 divisions: 11,
                 activeColor: _kSun,
-                label: '$_minutes min',
+                label: l10n.sunMinutesShort(_minutes),
                 onChanged: (v) => setState(() => _minutes = v.round()),
               ),
               SwitchListTile(
@@ -584,11 +584,11 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                 onChanged: (v) => setState(() => _usedSunscreen = v),
                 activeThumbColor: _kSun,
                 contentPadding: EdgeInsets.zero,
-                title: const Text('J\'avais de la crème solaire',
-                    style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
-                subtitle: const Text(
-                    'La crème bloque 95 à 98 % de la synthèse de vitamine D.',
-                    style: TextStyle(fontSize: 11.5)),
+                title: Text(l10n.sunSunscreenSwitchTitle,
+                    style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
+                subtitle: Text(
+                    l10n.sunSunscreenSwitchSubtitle,
+                    style: const TextStyle(fontSize: 11.5)),
               ),
             ],
           ),
@@ -606,12 +606,14 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
             ),
             child: Column(
               children: [
-                Text('≈ ${vitD.toStringAsFixed(1)} µg estimés',
+                Text(l10n.sunEstimatedAmount(vitD.toStringAsFixed(1)),
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.w900, color: _kSun)),
                 const SizedBox(height: 4),
                 Text(
-                  'pour $_minutes min, peau ${skin.label.split('—').last.trim().toLowerCase()}, ${kExposureLevels[_exposureIndex].label.toLowerCase()}',
+                  l10n.sunEstimateDetail(_minutes,
+                      skin.label.split('—').last.trim().toLowerCase(),
+                      exposureLevels[_exposureIndex].label.toLowerCase()),
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 12, color: Colors.black54),
                 ),
@@ -631,7 +633,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
               ),
               onPressed: vitD > 0 ? _validateSession : null,
               icon: const Icon(Icons.check_circle_outline),
-              label: const Text('Valider mon exposition'),
+              label: Text(l10n.sunValidateButton),
             ),
           ),
         ],
@@ -642,26 +644,21 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Les bonnes conditions',
-                  style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800)),
+              Text(l10n.sunGoodConditionsTitle,
+                  style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800)),
               const SizedBox(height: 10),
-              _condition(Icons.schedule,
-                  'Les UVB nécessaires à la vitamine D ne sont présents qu\'au milieu de journée. Vise plutôt les bords de ce créneau (fin de matinée, milieu d\'après-midi) : quelques minutes suffisent. Entre 12h et 16h, le rayonnement est à son pic — bref et prudent, jamais une exposition prolongée.'),
-              _condition(Icons.no_photography,
-                  'Derrière une vitre (fenêtre, voiture), le verre bloque 100 % des UVB : aucune vitamine D produite.'),
-              _condition(Icons.remove_red_eye,
-                  'Les lunettes de soleil ne gênent PAS la synthèse : elle se fait par la peau, garde-les pour protéger tes yeux.'),
-              _condition(Icons.calendar_month,
-                  'Sous nos latitudes, la synthèse n\'est possible qu\'environ de mars à octobre. L\'hiver, mise sur l\'alimentation et éventuellement un complément.'),
-              _condition(Icons.warning_amber,
-                  'Ton corps ne produit qu\'une dose limitée de vitamine D, puis s\'arrête : rester plus longtemps n\'apporte rien de plus, mais accélère le vieillissement de la peau et augmente le risque de cancer cutané. L\'objectif est le strict nécessaire, pas le bronzage.'),
+              _condition(Icons.schedule, l10n.sunCondition1),
+              _condition(Icons.no_photography, l10n.sunCondition2),
+              _condition(Icons.remove_red_eye, l10n.sunCondition3),
+              _condition(Icons.calendar_month, l10n.sunCondition4),
+              _condition(Icons.warning_amber, l10n.sunCondition5),
             ],
           ),
         ),
         const SizedBox(height: 14),
-        const Text(
-          'Estimation pédagogique fondée sur des modèles scientifiques. Ce n\'est pas une mesure médicale : seule une prise de sang évalue précisément ton taux de vitamine D.',
-          style: TextStyle(fontSize: 11, color: Colors.black45),
+        Text(
+          l10n.sunDisclaimer,
+          style: const TextStyle(fontSize: 11, color: Colors.black45),
           textAlign: TextAlign.center,
         ),
       ],
@@ -720,10 +717,11 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
   }
 
   String _uvLabel(double uv) {
-    if (uv < 3) return 'Faible — synthèse négligeable';
-    if (uv < 6) return 'Modéré — synthèse possible';
-    if (uv < 8) return 'Élevé — synthèse efficace, protège-toi';
-    if (uv < 11) return 'Très élevé — quelques minutes suffisent';
-    return 'Extrême — grande prudence';
+    final l10n = context.l10n;
+    if (uv < 3) return l10n.sunUvLow;
+    if (uv < 6) return l10n.sunUvModerate;
+    if (uv < 8) return l10n.sunUvHigh;
+    if (uv < 11) return l10n.sunUvVeryHigh;
+    return l10n.sunUvExtreme;
   }
 }

@@ -281,4 +281,188 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get authTermsNotice =>
       'By continuing, you accept TOTUM\'s terms of use and privacy policy.';
+
+  @override
+  String get sunScreenTitle => 'Sun & vitamin D';
+
+  @override
+  String get sunSkinType1Label => 'Type I — Very fair';
+
+  @override
+  String get sunSkinType1Desc =>
+      'Very pale skin, always burns, never tans. Often red hair, freckles.';
+
+  @override
+  String get sunSkinType2Label => 'Type II — Fair';
+
+  @override
+  String get sunSkinType2Desc =>
+      'Fair skin, burns easily, tans little and with difficulty.';
+
+  @override
+  String get sunSkinType3Label => 'Type III — Medium';
+
+  @override
+  String get sunSkinType3Desc =>
+      'Medium skin, burns moderately, tans gradually.';
+
+  @override
+  String get sunSkinType4Label => 'Type IV — Olive';
+
+  @override
+  String get sunSkinType4Desc =>
+      'Olive/tan skin, rarely burns, tans well and easily.';
+
+  @override
+  String get sunSkinType5Label => 'Type V — Dark';
+
+  @override
+  String get sunSkinType5Desc =>
+      'Dark brown skin, rarely burns, tans intensely.';
+
+  @override
+  String get sunSkinType6Label => 'Type VI — Very dark';
+
+  @override
+  String get sunSkinType6Desc => 'Black skin, almost never burns.';
+
+  @override
+  String get sunExposureFaceHands => 'Face & hands';
+
+  @override
+  String get sunExposureArmsFace => 'Arms & face';
+
+  @override
+  String get sunExposureArmsLegs => 'Arms & legs';
+
+  @override
+  String get sunExposureSwimwear => 'Swimwear';
+
+  @override
+  String get sunSkinPickerTitle => 'What\'s your skin type?';
+
+  @override
+  String get sunSkinPickerSubtitle =>
+      'Your skin determines how fast you synthesize vitamin D in the sun. We only ask you this once.';
+
+  @override
+  String get sunLocationDisabled =>
+      'Location is disabled on this device. Turn it on, or enter the UV index manually.';
+
+  @override
+  String get sunLocationDenied =>
+      'Location access denied. You can enter the UV index manually.';
+
+  @override
+  String get sunUvFetchFailed => 'Couldn\'t retrieve the UV index right now.';
+
+  @override
+  String get sunLocationUnavailable =>
+      'Location unavailable. Enter the UV index manually.';
+
+  @override
+  String sunValidateSnackbar(String amount) {
+    return '☀️ +$amount µg of vitamin D added to your day!';
+  }
+
+  @override
+  String get sunTodayEstimateLabel => 'Estimated sun vitamin D today';
+
+  @override
+  String get sunResetTooltip => 'Reset';
+
+  @override
+  String get sunUvCurrentTitle => 'Current UV index';
+
+  @override
+  String get sunRefreshLocationTooltip => 'Refresh my location';
+
+  @override
+  String get sunBelowUv3Info =>
+      'Below UV 3, vitamin D synthesis is negligible. This isn\'t the right time — but enjoy the fresh air anyway.';
+
+  @override
+  String get sunUvUnknown => 'UV index unknown.';
+
+  @override
+  String get sunManualUvLabel => 'Enter manually: ';
+
+  @override
+  String get sunYourSkinTypeLabel => 'Your skin type: ';
+
+  @override
+  String get sunModifyButton => 'Change';
+
+  @override
+  String get sunExposedSkinSurface => 'Exposed skin surface';
+
+  @override
+  String get sunSunDuration => 'Time in the sun';
+
+  @override
+  String sunMinutesShort(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get sunSunscreenSwitchTitle => 'I was wearing sunscreen';
+
+  @override
+  String get sunSunscreenSwitchSubtitle =>
+      'Sunscreen blocks 95 to 98% of vitamin D synthesis.';
+
+  @override
+  String sunEstimatedAmount(String amount) {
+    return '≈ $amount µg estimated';
+  }
+
+  @override
+  String sunEstimateDetail(int minutes, String skinType, String exposure) {
+    return 'for $minutes min, $skinType skin, $exposure';
+  }
+
+  @override
+  String get sunValidateButton => 'Log my exposure';
+
+  @override
+  String get sunGoodConditionsTitle => 'The right conditions';
+
+  @override
+  String get sunCondition1 =>
+      'The UVB needed for vitamin D are only present around midday. Aim for the edges of that window (late morning, mid-afternoon): a few minutes is enough. Between 12pm and 4pm, radiation peaks — keep it brief and cautious, never a prolonged exposure.';
+
+  @override
+  String get sunCondition2 =>
+      'Behind glass (window, car), the glass blocks 100% of UVB: no vitamin D is produced.';
+
+  @override
+  String get sunCondition3 =>
+      'Sunglasses do NOT interfere with synthesis — it happens through the skin, so keep them on to protect your eyes.';
+
+  @override
+  String get sunCondition4 =>
+      'At our latitudes, synthesis is only possible roughly from March to October. In winter, rely on diet and possibly a supplement.';
+
+  @override
+  String get sunCondition5 =>
+      'Your body only produces a limited dose of vitamin D, then stops: staying longer adds nothing more, but speeds up skin aging and increases the risk of skin cancer. The goal is the strict minimum, not a tan.';
+
+  @override
+  String get sunDisclaimer =>
+      'Educational estimate based on scientific models. This is not a medical measurement: only a blood test can precisely assess your vitamin D level.';
+
+  @override
+  String get sunUvLow => 'Low — negligible synthesis';
+
+  @override
+  String get sunUvModerate => 'Moderate — synthesis possible';
+
+  @override
+  String get sunUvHigh => 'High — effective synthesis, protect yourself';
+
+  @override
+  String get sunUvVeryHigh => 'Very high — a few minutes is enough';
+
+  @override
+  String get sunUvExtreme => 'Extreme — use great caution';
 }

@@ -571,6 +571,324 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'En continuant, tu acceptes les conditions d\'utilisation et la politique de confidentialité de TOTUM.'**
   String get authTermsNotice;
+
+  /// No description provided for @sunScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Soleil & vitamine D'**
+  String get sunScreenTitle;
+
+  /// No description provided for @sunSkinType1Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type I — Très claire'**
+  String get sunSkinType1Label;
+
+  /// No description provided for @sunSkinType1Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Peau très pâle, brûle toujours, ne bronze jamais. Souvent cheveux roux, taches de rousseur.'**
+  String get sunSkinType1Desc;
+
+  /// No description provided for @sunSkinType2Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type II — Claire'**
+  String get sunSkinType2Label;
+
+  /// No description provided for @sunSkinType2Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Peau claire, brûle facilement, bronze peu et difficilement.'**
+  String get sunSkinType2Desc;
+
+  /// No description provided for @sunSkinType3Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type III — Intermédiaire'**
+  String get sunSkinType3Label;
+
+  /// No description provided for @sunSkinType3Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Peau moyenne, brûle modérément, bronze progressivement.'**
+  String get sunSkinType3Desc;
+
+  /// No description provided for @sunSkinType4Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type IV — Mate'**
+  String get sunSkinType4Label;
+
+  /// No description provided for @sunSkinType4Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Peau mate/olivâtre, brûle peu, bronze bien et facilement.'**
+  String get sunSkinType4Desc;
+
+  /// No description provided for @sunSkinType5Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type V — Foncée'**
+  String get sunSkinType5Label;
+
+  /// No description provided for @sunSkinType5Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Peau brun foncé, brûle rarement, bronze intensément.'**
+  String get sunSkinType5Desc;
+
+  /// No description provided for @sunSkinType6Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type VI — Très foncée'**
+  String get sunSkinType6Label;
+
+  /// No description provided for @sunSkinType6Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Peau noire, ne brûle quasiment jamais.'**
+  String get sunSkinType6Desc;
+
+  /// No description provided for @sunExposureFaceHands.
+  ///
+  /// In fr, this message translates to:
+  /// **'Visage & mains'**
+  String get sunExposureFaceHands;
+
+  /// No description provided for @sunExposureArmsFace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bras & visage'**
+  String get sunExposureArmsFace;
+
+  /// No description provided for @sunExposureArmsLegs.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bras & jambes'**
+  String get sunExposureArmsLegs;
+
+  /// No description provided for @sunExposureSwimwear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maillot de bain'**
+  String get sunExposureSwimwear;
+
+  /// No description provided for @sunSkinPickerTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel est ton type de peau ?'**
+  String get sunSkinPickerTitle;
+
+  /// No description provided for @sunSkinPickerSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta peau détermine la vitesse à laquelle tu synthétises la vitamine D au soleil. On te le demande une seule fois.'**
+  String get sunSkinPickerSubtitle;
+
+  /// No description provided for @sunLocationDisabled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Localisation désactivée sur l\'appareil. Active-la, ou saisis l\'UV index à la main.'**
+  String get sunLocationDisabled;
+
+  /// No description provided for @sunLocationDenied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Localisation refusée. Tu peux saisir l\'UV index à la main.'**
+  String get sunLocationDenied;
+
+  /// No description provided for @sunUvFetchFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible de récupérer l\'UV index pour l\'instant.'**
+  String get sunUvFetchFailed;
+
+  /// No description provided for @sunLocationUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Localisation indisponible. Saisis l\'UV index à la main.'**
+  String get sunLocationUnavailable;
+
+  /// No description provided for @sunValidateSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'☀️ +{amount} µg de vitamine D ajoutés à ta journée !'**
+  String sunValidateSnackbar(String amount);
+
+  /// No description provided for @sunTodayEstimateLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine D solaire estimée aujourd\'hui'**
+  String get sunTodayEstimateLabel;
+
+  /// No description provided for @sunResetTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réinitialiser'**
+  String get sunResetTooltip;
+
+  /// No description provided for @sunUvCurrentTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'UV index actuel'**
+  String get sunUvCurrentTitle;
+
+  /// No description provided for @sunRefreshLocationTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actualiser ma position'**
+  String get sunRefreshLocationTooltip;
+
+  /// No description provided for @sunBelowUv3Info.
+  ///
+  /// In fr, this message translates to:
+  /// **'En dessous de UV 3, la synthèse de vitamine D est négligeable. Ce n\'est pas le bon moment — mais profite quand même du grand air.'**
+  String get sunBelowUv3Info;
+
+  /// No description provided for @sunUvUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'UV index inconnu.'**
+  String get sunUvUnknown;
+
+  /// No description provided for @sunManualUvLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisir manuellement : '**
+  String get sunManualUvLabel;
+
+  /// No description provided for @sunYourSkinTypeLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton type de peau : '**
+  String get sunYourSkinTypeLabel;
+
+  /// No description provided for @sunModifyButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get sunModifyButton;
+
+  /// No description provided for @sunExposedSkinSurface.
+  ///
+  /// In fr, this message translates to:
+  /// **'Surface de peau exposée'**
+  String get sunExposedSkinSurface;
+
+  /// No description provided for @sunSunDuration.
+  ///
+  /// In fr, this message translates to:
+  /// **'Durée au soleil'**
+  String get sunSunDuration;
+
+  /// No description provided for @sunMinutesShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'{minutes} min'**
+  String sunMinutesShort(int minutes);
+
+  /// No description provided for @sunSunscreenSwitchTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'avais de la crème solaire'**
+  String get sunSunscreenSwitchTitle;
+
+  /// No description provided for @sunSunscreenSwitchSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'La crème bloque 95 à 98 % de la synthèse de vitamine D.'**
+  String get sunSunscreenSwitchSubtitle;
+
+  /// No description provided for @sunEstimatedAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'≈ {amount} µg estimés'**
+  String sunEstimatedAmount(String amount);
+
+  /// No description provided for @sunEstimateDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'pour {minutes} min, peau {skinType}, {exposure}'**
+  String sunEstimateDetail(int minutes, String skinType, String exposure);
+
+  /// No description provided for @sunValidateButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider mon exposition'**
+  String get sunValidateButton;
+
+  /// No description provided for @sunGoodConditionsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les bonnes conditions'**
+  String get sunGoodConditionsTitle;
+
+  /// No description provided for @sunCondition1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les UVB nécessaires à la vitamine D ne sont présents qu\'au milieu de journée. Vise plutôt les bords de ce créneau (fin de matinée, milieu d\'après-midi) : quelques minutes suffisent. Entre 12h et 16h, le rayonnement est à son pic — bref et prudent, jamais une exposition prolongée.'**
+  String get sunCondition1;
+
+  /// No description provided for @sunCondition2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Derrière une vitre (fenêtre, voiture), le verre bloque 100 % des UVB : aucune vitamine D produite.'**
+  String get sunCondition2;
+
+  /// No description provided for @sunCondition3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les lunettes de soleil ne gênent PAS la synthèse : elle se fait par la peau, garde-les pour protéger tes yeux.'**
+  String get sunCondition3;
+
+  /// No description provided for @sunCondition4.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sous nos latitudes, la synthèse n\'est possible qu\'environ de mars à octobre. L\'hiver, mise sur l\'alimentation et éventuellement un complément.'**
+  String get sunCondition4;
+
+  /// No description provided for @sunCondition5.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton corps ne produit qu\'une dose limitée de vitamine D, puis s\'arrête : rester plus longtemps n\'apporte rien de plus, mais accélère le vieillissement de la peau et augmente le risque de cancer cutané. L\'objectif est le strict nécessaire, pas le bronzage.'**
+  String get sunCondition5;
+
+  /// No description provided for @sunDisclaimer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Estimation pédagogique fondée sur des modèles scientifiques. Ce n\'est pas une mesure médicale : seule une prise de sang évalue précisément ton taux de vitamine D.'**
+  String get sunDisclaimer;
+
+  /// No description provided for @sunUvLow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Faible — synthèse négligeable'**
+  String get sunUvLow;
+
+  /// No description provided for @sunUvModerate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modéré — synthèse possible'**
+  String get sunUvModerate;
+
+  /// No description provided for @sunUvHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Élevé — synthèse efficace, protège-toi'**
+  String get sunUvHigh;
+
+  /// No description provided for @sunUvVeryHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Très élevé — quelques minutes suffisent'**
+  String get sunUvVeryHigh;
+
+  /// No description provided for @sunUvExtreme.
+  ///
+  /// In fr, this message translates to:
+  /// **'Extrême — grande prudence'**
+  String get sunUvExtreme;
 }
 
 class _AppLocalizationsDelegate
