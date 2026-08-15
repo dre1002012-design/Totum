@@ -2819,6 +2819,366 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Dépasse la limite de sécurité ({ul} {unit}/jour)'**
   String bilanExceedsSafetyLimit(String ul, String unit);
+
+  /// No description provided for @navDashboard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tableau de bord'**
+  String get navDashboard;
+
+  /// No description provided for @navJournal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Journal'**
+  String get navJournal;
+
+  /// No description provided for @navBilan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bilan'**
+  String get navBilan;
+
+  /// No description provided for @navConseils.
+  ///
+  /// In fr, this message translates to:
+  /// **'Conseils'**
+  String get navConseils;
+
+  /// No description provided for @bilanGeneratingReport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Génération du rapport…'**
+  String get bilanGeneratingReport;
+
+  /// No description provided for @bilanNoDataToDisplay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune donnée à afficher.'**
+  String get bilanNoDataToDisplay;
+
+  /// No description provided for @bilanSpanDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jour'**
+  String get bilanSpanDay;
+
+  /// No description provided for @bilanSpan7d.
+  ///
+  /// In fr, this message translates to:
+  /// **'7 j'**
+  String get bilanSpan7d;
+
+  /// No description provided for @bilanSpan30d.
+  ///
+  /// In fr, this message translates to:
+  /// **'30 j'**
+  String get bilanSpan30d;
+
+  /// No description provided for @bilanSpan90d.
+  ///
+  /// In fr, this message translates to:
+  /// **'90 j'**
+  String get bilanSpan90d;
+
+  /// No description provided for @bilanEnergyBalance7d.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton équilibre énergétique (7 jours)'**
+  String get bilanEnergyBalance7d;
+
+  /// No description provided for @bilanEnergyBalance30d.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton équilibre énergétique (30 jours)'**
+  String get bilanEnergyBalance30d;
+
+  /// No description provided for @bilanEnergyBalance90d.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton équilibre énergétique (90 jours)'**
+  String get bilanEnergyBalance90d;
+
+  /// No description provided for @bilanEnergyBalance1d.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton équilibre énergétique (1 jour)'**
+  String get bilanEnergyBalance1d;
+
+  /// No description provided for @bilanVeryConsistent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Très régulier : ton apport moyen colle à {label} sur cette période (écart de {delta} kcal/j).'**
+  String bilanVeryConsistent(String label, String delta);
+
+  /// No description provided for @bilanAverageDeltaSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'En moyenne, tu es à {delta} kcal/j {dir} de {label}.'**
+  String bilanAverageDeltaSummary(String delta, String dir, String label);
+
+  /// No description provided for @bilanAboveDir.
+  ///
+  /// In fr, this message translates to:
+  /// **'au-dessus'**
+  String get bilanAboveDir;
+
+  /// No description provided for @bilanBelowDir.
+  ///
+  /// In fr, this message translates to:
+  /// **'en dessous'**
+  String get bilanBelowDir;
+
+  /// No description provided for @bilanYourEstimatedExpenditure.
+  ///
+  /// In fr, this message translates to:
+  /// **'ta dépense estimée'**
+  String get bilanYourEstimatedExpenditure;
+
+  /// No description provided for @bilanYourGoal.
+  ///
+  /// In fr, this message translates to:
+  /// **'ton objectif'**
+  String get bilanYourGoal;
+
+  /// No description provided for @bilanMonthJan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jan'**
+  String get bilanMonthJan;
+
+  /// No description provided for @bilanMonthFeb.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fév'**
+  String get bilanMonthFeb;
+
+  /// No description provided for @bilanMonthMar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mar'**
+  String get bilanMonthMar;
+
+  /// No description provided for @bilanMonthApr.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avr'**
+  String get bilanMonthApr;
+
+  /// No description provided for @bilanMonthMay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mai'**
+  String get bilanMonthMay;
+
+  /// No description provided for @bilanMonthJun.
+  ///
+  /// In fr, this message translates to:
+  /// **'Juin'**
+  String get bilanMonthJun;
+
+  /// No description provided for @bilanMonthJul.
+  ///
+  /// In fr, this message translates to:
+  /// **'Juil'**
+  String get bilanMonthJul;
+
+  /// No description provided for @bilanMonthAug.
+  ///
+  /// In fr, this message translates to:
+  /// **'Août'**
+  String get bilanMonthAug;
+
+  /// No description provided for @bilanMonthSep.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sep'**
+  String get bilanMonthSep;
+
+  /// No description provided for @bilanMonthOct.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oct'**
+  String get bilanMonthOct;
+
+  /// No description provided for @bilanMonthNov.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nov'**
+  String get bilanMonthNov;
+
+  /// No description provided for @bilanMonthDec.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déc'**
+  String get bilanMonthDec;
+
+  /// No description provided for @bilanVsGoal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vs. Objectif'**
+  String get bilanVsGoal;
+
+  /// No description provided for @bilanVsExpenditure.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vs. Dépense estimée'**
+  String get bilanVsExpenditure;
+
+  /// No description provided for @bilanExpenditureThatDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense estimée ce jour-là'**
+  String get bilanExpenditureThatDay;
+
+  /// No description provided for @bilanGoalThatDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif ce jour-là'**
+  String get bilanGoalThatDay;
+
+  /// No description provided for @bilanAverageLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyenne'**
+  String get bilanAverageLabel;
+
+  /// No description provided for @bilanAverageDeltaLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écart moyen'**
+  String get bilanAverageDeltaLabel;
+
+  /// No description provided for @bilanInTargetLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans la cible'**
+  String get bilanInTargetLabel;
+
+  /// No description provided for @bilanInTargetLegend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans la cible (±10 %)'**
+  String get bilanInTargetLegend;
+
+  /// No description provided for @bilanModerateDeltaLegend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écart modéré (±10-25 %)'**
+  String get bilanModerateDeltaLegend;
+
+  /// No description provided for @bilanLargeDeltaLegend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écart important (>25 %)'**
+  String get bilanLargeDeltaLegend;
+
+  /// No description provided for @bilanGoalChangedHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton objectif a changé pendant cette période : chaque barre est comparée à l\'objectif qui était le tien ce jour-là (touche une barre pour le détail).'**
+  String get bilanGoalChangedHint;
+
+  /// No description provided for @bilanTapBarHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touche une barre pour voir le détail du jour.'**
+  String get bilanTapBarHint;
+
+  /// No description provided for @bilanHydrationTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hydratation'**
+  String get bilanHydrationTitle;
+
+  /// No description provided for @bilanDrinksLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Boissons'**
+  String get bilanDrinksLabel;
+
+  /// No description provided for @bilanFoodsWaterLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliments'**
+  String get bilanFoodsWaterLabel;
+
+  /// No description provided for @bilanHydrationGoalReached.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif d\'hydratation atteint, bravo !'**
+  String get bilanHydrationGoalReached;
+
+  /// No description provided for @bilanHydrationReminder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pense à boire : vise environ 1,5 L de boissons sur la journée'**
+  String get bilanHydrationReminder;
+
+  /// No description provided for @bilanHydrationAddGlasses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu peux ajouter des verres depuis l\'onglet Journal'**
+  String get bilanHydrationAddGlasses;
+
+  /// No description provided for @bilanTopHydratingFoods.
+  ///
+  /// In fr, this message translates to:
+  /// **'Principaux aliments hydratants :'**
+  String get bilanTopHydratingFoods;
+
+  /// No description provided for @bilanAverageSuffix.
+  ///
+  /// In fr, this message translates to:
+  /// **' (moyenne)'**
+  String get bilanAverageSuffix;
+
+  /// No description provided for @bilanPeriodOver7d.
+  ///
+  /// In fr, this message translates to:
+  /// **'sur 7 jours'**
+  String get bilanPeriodOver7d;
+
+  /// No description provided for @bilanPeriodOver30d.
+  ///
+  /// In fr, this message translates to:
+  /// **'sur 30 jours'**
+  String get bilanPeriodOver30d;
+
+  /// No description provided for @bilanPeriodOver90d.
+  ///
+  /// In fr, this message translates to:
+  /// **'sur 90 jours'**
+  String get bilanPeriodOver90d;
+
+  /// No description provided for @bilanRefLabelLine.
+  ///
+  /// In fr, this message translates to:
+  /// **'\n{label} : {value} kcal'**
+  String bilanRefLabelLine(String label, String value);
+
+  /// No description provided for @bilanAboveKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'\n+{value} kcal au-dessus'**
+  String bilanAboveKcal(String value);
+
+  /// No description provided for @bilanBelowKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'\n{value} kcal en dessous'**
+  String bilanBelowKcal(String value);
+
+  /// No description provided for @bilanRightOnTarget.
+  ///
+  /// In fr, this message translates to:
+  /// **'\nPile dans la cible'**
+  String get bilanRightOnTarget;
+
+  /// No description provided for @bilanHydrationOfTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'{total} ml sur un objectif de {target} ml d\'eau totale'**
+  String bilanHydrationOfTotal(String total, String target);
 }
 
 class _AppLocalizationsDelegate

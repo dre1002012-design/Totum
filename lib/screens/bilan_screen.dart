@@ -3364,6 +3364,7 @@ class BilanScreenState extends State<BilanScreen> {
   }
 
   Future<void> _openExportDialog() async {
+    final l10n = context.l10n;
     final now = DateTime.now();
     final range = await showDateRangePicker(
       context: context,
@@ -3373,25 +3374,25 @@ class BilanScreenState extends State<BilanScreen> {
         start: now.subtract(const Duration(days: 6)),
         end: now,
       ),
-      helpText: 'Période à exporter',
-      saveText: 'EXPORTER',
+      helpText: l10n.dataExportPeriodHelpText,
+      saveText: l10n.dataExportSaveText,
     );
     if (range == null || !mounted) return;
 
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => const Center(
+      builder: (_) => Center(
         child: Card(
-          margin: EdgeInsets.symmetric(horizontal: 40),
+          margin: const EdgeInsets.symmetric(horizontal: 40),
           child: Padding(
-            padding: EdgeInsets.all(24),
+            padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircularProgressIndicator(color: kTotumOrange),
-                SizedBox(height: 14),
-                Text('Génération du rapport…'),
+                const CircularProgressIndicator(color: kTotumOrange),
+                const SizedBox(height: 14),
+                Text(l10n.bilanGeneratingReport),
               ],
             ),
           ),
@@ -3403,15 +3404,15 @@ class BilanScreenState extends State<BilanScreen> {
       await JournalExporter.exportHtml(from: range.start, to: range.end);
       if (mounted && Navigator.canPop(context)) Navigator.pop(context);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Rapport exporté'),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(l10n.dataExportSuccessSnackbar),
         ));
       }
     } catch (e) {
       if (mounted && Navigator.canPop(context)) Navigator.pop(context);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Erreur export : $e'),
+          content: Text(l10n.dataExportErrorSnackbar(e.toString())),
         ));
       }
     }
@@ -3419,29 +3420,30 @@ class BilanScreenState extends State<BilanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final segmented = <ReportSpan, Widget>{
       ReportSpan.day:
-          const Padding(padding: EdgeInsets.all(8), child: Text('Jour')),
+          Padding(padding: const EdgeInsets.all(8), child: Text(l10n.bilanSpanDay)),
       ReportSpan.d7:
-          const Padding(padding: EdgeInsets.all(8), child: Text('7 j')),
+          Padding(padding: const EdgeInsets.all(8), child: Text(l10n.bilanSpan7d)),
       ReportSpan.d30:
-          const Padding(padding: EdgeInsets.all(8), child: Text('30 j')),
+          Padding(padding: const EdgeInsets.all(8), child: Text(l10n.bilanSpan30d)),
       ReportSpan.d90:
-          const Padding(padding: EdgeInsets.all(8), child: Text('90 j')),
+          Padding(padding: const EdgeInsets.all(8), child: Text(l10n.bilanSpan90d)),
     };
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bilan'),
+        title: Text(l10n.navBilan),
         actions: [
           IconButton(
             icon: const Icon(Icons.ios_share),
-            tooltip: 'Exporter mon journal',
+            tooltip: l10n.dataExportSectionTitle,
             onPressed: _openExportDialog,
           ),
           IconButton(
             icon: const Icon(Icons.account_circle),
-            tooltip: 'Mon compte',
+            tooltip: l10n.accountScreenTitle,
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -3473,17 +3475,17 @@ class BilanScreenState extends State<BilanScreen> {
             if (snap.connectionState != ConnectionState.done) {
               return const Center(child: CircularProgressIndicator());
             }
-            return const Center(child: Text('Aucune donnée à afficher.'));
+            return Center(child: Text(l10n.bilanNoDataToDisplay));
           }
 
           final fmt = MaterialLocalizations.of(context);
           final range =
-              '${fmt.formatShortDate(data.from)} → ${fmt.formatShortDate(data.to)}${data.isAverage ? " (moyenne)" : ""}';
+              '${fmt.formatShortDate(data.from)} → ${fmt.formatShortDate(data.to)}${data.isAverage ? l10n.bilanAverageSuffix : ""}';
           final periodeLabel = switch (_span) {
-            ReportSpan.day => 'aujourd\'hui',
-            ReportSpan.d7 => 'sur 7 jours',
-            ReportSpan.d30 => 'sur 30 jours',
-            ReportSpan.d90 => 'sur 90 jours',
+            ReportSpan.day => l10n.bilanPeriodToday,
+            ReportSpan.d7 => l10n.bilanPeriodOver7d,
+            ReportSpan.d30 => l10n.bilanPeriodOver30d,
+            ReportSpan.d90 => l10n.bilanPeriodOver90d,
           };
 
           return RefreshIndicator(
@@ -3504,7 +3506,7 @@ class BilanScreenState extends State<BilanScreen> {
 
                 // 🏆 Score TOTUM du jour
                 _CollapsibleCard(
-                  title: 'Score TOTUM',
+                  title: l10n.bilanScoreTitle,
                   icon: Icons.insights,
                   child: _TotumScoreCard(
                     score: _computeTotumScore(data, context.l10n,
@@ -3550,7 +3552,7 @@ class BilanScreenState extends State<BilanScreen> {
 
                 // Bloc macro premium : donut + 4 curseurs
                 _CollapsibleCard(
-                  title: 'Macros',
+                  title: l10n.bilanMacrosCardTitle,
                   icon: Icons.bolt,
                   child: _MacroOverview(
                     group: data.macrosGroup,
@@ -3649,37 +3651,37 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
   // documentation officielle), adaptée à notre propre moteur (Priorité 21).
   bool _vsExpenditure = false;
 
-  String _titleForSpan() {
+  String _titleForSpan(AppLocalizations l10n) {
     switch (widget.span) {
       case ReportSpan.d7:
-        return 'Ton équilibre énergétique (7 jours)';
+        return l10n.bilanEnergyBalance7d;
       case ReportSpan.d30:
-        return 'Ton équilibre énergétique (30 jours)';
+        return l10n.bilanEnergyBalance30d;
       case ReportSpan.d90:
-        return 'Ton équilibre énergétique (90 jours)';
+        return l10n.bilanEnergyBalance90d;
       case ReportSpan.day:
-        return 'Ton équilibre énergétique (1 jour)';
+        return l10n.bilanEnergyBalance1d;
     }
   }
 
   // Format simple type "4 Nov"
-  String _formatShortDate(DateTime d) {
-    const months = [
-      'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin',
-      'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc',
+  String _formatShortDate(DateTime d, AppLocalizations l10n) {
+    final months = [
+      l10n.bilanMonthJan, l10n.bilanMonthFeb, l10n.bilanMonthMar, l10n.bilanMonthApr,
+      l10n.bilanMonthMay, l10n.bilanMonthJun, l10n.bilanMonthJul, l10n.bilanMonthAug,
+      l10n.bilanMonthSep, l10n.bilanMonthOct, l10n.bilanMonthNov, l10n.bilanMonthDec,
     ];
     return '${d.day} ${months[d.month - 1]}';
   }
 
-  String _insightSentence(double avgDelta, bool vsExpenditure) {
-    final label = vsExpenditure ? 'ta dépense estimée' : 'ton objectif';
+  String _insightSentence(double avgDelta, bool vsExpenditure, AppLocalizations l10n) {
+    final label = vsExpenditure ? l10n.bilanYourEstimatedExpenditure : l10n.bilanYourGoal;
     final scale = widget.goalKcal > 0 ? widget.goalKcal : 2000.0;
     if (avgDelta.abs() <= scale * 0.05) {
-      return 'Très régulier : ton apport moyen colle à $label sur cette période '
-          '(écart de ${avgDelta.abs().toStringAsFixed(0)} kcal/j).';
+      return l10n.bilanVeryConsistent(label, avgDelta.abs().toStringAsFixed(0));
     }
-    final dir = avgDelta > 0 ? 'au-dessus' : 'en dessous';
-    return 'En moyenne, tu es à ${avgDelta.abs().toStringAsFixed(0)} kcal/j $dir de $label.';
+    final dir = avgDelta > 0 ? l10n.bilanAboveDir : l10n.bilanBelowDir;
+    return l10n.bilanAverageDeltaSummary(avgDelta.abs().toStringAsFixed(0), dir, label);
   }
 
   Color _insightColor(double avgDelta) {
@@ -3708,6 +3710,7 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final points = widget.points;
     final show = widget.show;
 
@@ -3718,7 +3721,7 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
         child: Row(
           children: [
             Expanded(
-              child: Text(_titleForSpan(),
+              child: Text(_titleForSpan(l10n),
                   style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
             ),
             Switch(value: show, onChanged: widget.onToggleShow),
@@ -3820,7 +3823,7 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
             children: [
               Expanded(
                 child: Text(
-                  _titleForSpan(),
+                  _titleForSpan(l10n),
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
@@ -3838,13 +3841,13 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
             Row(
               children: [
                 _ModeChip(
-                  label: 'Vs. Objectif',
+                  label: l10n.bilanVsGoal,
                   selected: !vsExpenditure,
                   onTap: () => setState(() => _vsExpenditure = false),
                 ),
                 const SizedBox(width: 8),
                 _ModeChip(
-                  label: 'Vs. Dépense estimée',
+                  label: l10n.bilanVsExpenditure,
                   selected: vsExpenditure,
                   onTap: () => setState(() => _vsExpenditure = true),
                 ),
@@ -3858,7 +3861,7 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
           // ("You exceeded your targets by an average of X Calories/day").
           if (avgDelta != null)
             Text(
-              _insightSentence(avgDelta, vsExpenditure),
+              _insightSentence(avgDelta, vsExpenditure, l10n),
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
@@ -3920,7 +3923,7 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
                         if (index % step != 0 && index != lastIndex) {
                           return const SizedBox.shrink();
                         }
-                        final label = _formatShortDate(points[index].date);
+                        final label = _formatShortDate(points[index].date, l10n);
                         return Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(label, style: const TextStyle(fontSize: 9)),
@@ -3965,17 +3968,17 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
                       final p = points[idx];
                       final ref = refs[idx];
                       final diff = ref != null ? p.kcal - ref : null;
-                      final dateStr = _formatShortDate(p.date);
-                      final refLabel = vsExpenditure ? 'Dépense estimée ce jour-là' : 'Objectif ce jour-là';
+                      final dateStr = _formatShortDate(p.date, l10n);
+                      final refLabel = vsExpenditure ? l10n.bilanExpenditureThatDay : l10n.bilanGoalThatDay;
                       String ecart = '';
                       if (ref != null && diff != null) {
-                        ecart = '\n$refLabel : ${ref.toStringAsFixed(0)} kcal';
+                        ecart = l10n.bilanRefLabelLine(refLabel, ref.toStringAsFixed(0));
                         if (diff > 0) {
-                          ecart += '\n+${diff.toStringAsFixed(0)} kcal au-dessus';
+                          ecart += l10n.bilanAboveKcal(diff.toStringAsFixed(0));
                         } else if (diff < 0) {
-                          ecart += '\n${diff.toStringAsFixed(0)} kcal en dessous';
+                          ecart += l10n.bilanBelowKcal(diff.toStringAsFixed(0));
                         } else {
-                          ecart += '\nPile dans la cible';
+                          ecart += l10n.bilanRightOnTarget;
                         }
                       }
                       return BarTooltipItem(
@@ -4015,12 +4018,12 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
           // Statistiques compactes : moyenne, écart moyen, adhérence.
           Row(
             children: [
-              Expanded(child: _StatChip(label: 'Moyenne', value: '${avgKcal.toStringAsFixed(0)} kcal/j')),
+              Expanded(child: _StatChip(label: l10n.bilanAverageLabel, value: '${avgKcal.toStringAsFixed(0)} kcal/j')),
               if (avgDelta != null) ...[
                 const SizedBox(width: 8),
                 Expanded(
                   child: _StatChip(
-                    label: 'Écart moyen',
+                    label: l10n.bilanAverageDeltaLabel,
                     value: '${avgDelta >= 0 ? '+' : ''}${avgDelta.toStringAsFixed(0)} kcal/j',
                     valueColor: _insightColor(avgDelta),
                   ),
@@ -4028,7 +4031,7 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
               ],
               if (pctInZone != null) ...[
                 const SizedBox(width: 8),
-                Expanded(child: _StatChip(label: 'Dans la cible', value: '$pctInZone %')),
+                Expanded(child: _StatChip(label: l10n.bilanInTargetLabel, value: '$pctInZone %')),
               ],
             ],
           ),
@@ -4041,16 +4044,16 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
               spacing: 12,
               runSpacing: 4,
               children: [
-                _LegendDot(color: TotumColors.positive, label: 'Dans la cible (±10 %)'),
-                const _LegendDot(color: TotumColors.accent, label: 'Écart modéré (±10-25 %)'),
-                _LegendDot(color: TotumColors.negative, label: 'Écart important (>25 %)'),
+                _LegendDot(color: TotumColors.positive, label: l10n.bilanInTargetLegend),
+                _LegendDot(color: TotumColors.accent, label: l10n.bilanModerateDeltaLegend),
+                _LegendDot(color: TotumColors.negative, label: l10n.bilanLargeDeltaLegend),
               ],
             ),
             const SizedBox(height: 6),
             Text(
               goalChangedDuringPeriod && !vsExpenditure
-                  ? 'Ton objectif a changé pendant cette période : chaque barre est comparée à l\'objectif qui était le tien ce jour-là (touche une barre pour le détail).'
-                  : 'Touche une barre pour voir le détail du jour.',
+                  ? l10n.bilanGoalChangedHint
+                  : l10n.bilanTapBarHint,
               style: TextStyle(fontSize: 10.5, color: TotumColors.textMuted, fontStyle: FontStyle.italic),
             ),
           ],
@@ -4719,6 +4722,7 @@ class _HydrationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final pct = data.ratio.clamp(0.0, double.infinity);
     final color = _barColor(pct);
     final reached = pct >= 1.0;
@@ -4731,9 +4735,9 @@ class _HydrationSection extends StatelessWidget {
             Row(children: [
               const Icon(Icons.water_drop, size: 17, color: TotumColors.accent),
               const SizedBox(width: 6),
-              const Text(
-                'Hydratation',
-                style: TextStyle(fontWeight: FontWeight.w800),
+              Text(
+                l10n.bilanHydrationTitle,
+                style: const TextStyle(fontWeight: FontWeight.w800),
               ),
               InkWell(
                 onTap: () => showNutrientFiche(context, 'hydratation'),
@@ -4774,25 +4778,25 @@ class _HydrationSection extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '${data.totalMl.toStringAsFixed(0)} ml sur un objectif de '
-              '${data.targetMl.toStringAsFixed(0)} ml d\'eau totale',
+              l10n.bilanHydrationOfTotal(
+                  data.totalMl.toStringAsFixed(0), data.targetMl.toStringAsFixed(0)),
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary),
             ),
             const SizedBox(height: 6),
             Row(
               children: [
-                _hydroPart('Boissons', data.manualMl, TotumColors.accent),
+                _hydroPart(l10n.bilanDrinksLabel, data.manualMl, TotumColors.accent),
                 const SizedBox(width: 8),
-                _hydroPart('Aliments', data.journalMl, TotumColors.accent),
+                _hydroPart(l10n.bilanFoodsWaterLabel, data.journalMl, TotumColors.accent),
               ],
             ),
             const SizedBox(height: 6),
             Text(
               reached
-                  ? 'Objectif d\'hydratation atteint, bravo !'
+                  ? l10n.bilanHydrationGoalReached
                   : data.manualMl < 1200
-                      ? 'Pense à boire : vise environ 1,5 L de boissons sur la journée'
-                      : 'Tu peux ajouter des verres depuis l\'onglet Journal',
+                      ? l10n.bilanHydrationReminder
+                      : l10n.bilanHydrationAddGlasses,
               style: TextStyle(
                 fontSize: 12.5,
                 color: reached ? TotumColors.positive : TotumColors.textSecondary,
@@ -4802,7 +4806,7 @@ class _HydrationSection extends StatelessWidget {
             if (data.sources.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
-                'Principaux aliments hydratants :',
+                l10n.bilanTopHydratingFoods,
                 style: Theme.of(context).textTheme.labelMedium,
               ),
               const SizedBox(height: 4),

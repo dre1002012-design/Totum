@@ -1583,4 +1583,199 @@ class AppLocalizationsEn extends AppLocalizations {
   String bilanExceedsSafetyLimit(String ul, String unit) {
     return 'Exceeds the safety limit ($ul $unit/day)';
   }
+
+  @override
+  String get navDashboard => 'Dashboard';
+
+  @override
+  String get navJournal => 'Journal';
+
+  @override
+  String get navBilan => 'Overview';
+
+  @override
+  String get navConseils => 'Advice';
+
+  @override
+  String get bilanGeneratingReport => 'Generating report…';
+
+  @override
+  String get bilanNoDataToDisplay => 'No data to display.';
+
+  @override
+  String get bilanSpanDay => 'Day';
+
+  @override
+  String get bilanSpan7d => '7 d';
+
+  @override
+  String get bilanSpan30d => '30 d';
+
+  @override
+  String get bilanSpan90d => '90 d';
+
+  @override
+  String get bilanEnergyBalance7d => 'Your energy balance (7 days)';
+
+  @override
+  String get bilanEnergyBalance30d => 'Your energy balance (30 days)';
+
+  @override
+  String get bilanEnergyBalance90d => 'Your energy balance (90 days)';
+
+  @override
+  String get bilanEnergyBalance1d => 'Your energy balance (1 day)';
+
+  @override
+  String bilanVeryConsistent(String label, String delta) {
+    return 'Very consistent: your average intake closely tracks $label over this period (gap of $delta kcal/day).';
+  }
+
+  @override
+  String bilanAverageDeltaSummary(String delta, String dir, String label) {
+    return 'On average, you\'re $delta kcal/day $dir $label.';
+  }
+
+  @override
+  String get bilanAboveDir => 'above';
+
+  @override
+  String get bilanBelowDir => 'below';
+
+  @override
+  String get bilanYourEstimatedExpenditure => 'your estimated expenditure';
+
+  @override
+  String get bilanYourGoal => 'your goal';
+
+  @override
+  String get bilanMonthJan => 'Jan';
+
+  @override
+  String get bilanMonthFeb => 'Feb';
+
+  @override
+  String get bilanMonthMar => 'Mar';
+
+  @override
+  String get bilanMonthApr => 'Apr';
+
+  @override
+  String get bilanMonthMay => 'May';
+
+  @override
+  String get bilanMonthJun => 'Jun';
+
+  @override
+  String get bilanMonthJul => 'Jul';
+
+  @override
+  String get bilanMonthAug => 'Aug';
+
+  @override
+  String get bilanMonthSep => 'Sep';
+
+  @override
+  String get bilanMonthOct => 'Oct';
+
+  @override
+  String get bilanMonthNov => 'Nov';
+
+  @override
+  String get bilanMonthDec => 'Dec';
+
+  @override
+  String get bilanVsGoal => 'Vs. Goal';
+
+  @override
+  String get bilanVsExpenditure => 'Vs. Estimated expenditure';
+
+  @override
+  String get bilanExpenditureThatDay => 'Estimated expenditure that day';
+
+  @override
+  String get bilanGoalThatDay => 'Goal that day';
+
+  @override
+  String get bilanAverageLabel => 'Average';
+
+  @override
+  String get bilanAverageDeltaLabel => 'Average gap';
+
+  @override
+  String get bilanInTargetLabel => 'In target';
+
+  @override
+  String get bilanInTargetLegend => 'In target (±10%)';
+
+  @override
+  String get bilanModerateDeltaLegend => 'Moderate gap (±10-25%)';
+
+  @override
+  String get bilanLargeDeltaLegend => 'Large gap (>25%)';
+
+  @override
+  String get bilanGoalChangedHint =>
+      'Your goal changed during this period: each bar is compared to the goal that was yours that day (tap a bar for details).';
+
+  @override
+  String get bilanTapBarHint => 'Tap a bar to see the day\'s detail.';
+
+  @override
+  String get bilanHydrationTitle => 'Hydration';
+
+  @override
+  String get bilanDrinksLabel => 'Drinks';
+
+  @override
+  String get bilanFoodsWaterLabel => 'Food';
+
+  @override
+  String get bilanHydrationGoalReached => 'Hydration goal reached, well done!';
+
+  @override
+  String get bilanHydrationReminder =>
+      'Remember to drink: aim for about 1.5 L of fluids over the day';
+
+  @override
+  String get bilanHydrationAddGlasses =>
+      'You can add glasses from the Journal tab';
+
+  @override
+  String get bilanTopHydratingFoods => 'Top hydrating foods:';
+
+  @override
+  String get bilanAverageSuffix => ' (average)';
+
+  @override
+  String get bilanPeriodOver7d => 'over 7 days';
+
+  @override
+  String get bilanPeriodOver30d => 'over 30 days';
+
+  @override
+  String get bilanPeriodOver90d => 'over 90 days';
+
+  @override
+  String bilanRefLabelLine(String label, String value) {
+    return '\n$label: $value kcal';
+  }
+
+  @override
+  String bilanAboveKcal(String value) {
+    return '\n+$value kcal above';
+  }
+
+  @override
+  String bilanBelowKcal(String value) {
+    return '\n$value kcal below';
+  }
+
+  @override
+  String get bilanRightOnTarget => '\nRight on target';
+
+  @override
+  String bilanHydrationOfTotal(String total, String target) {
+    return '$total ml of a $target ml total water target';
+  }
 }
