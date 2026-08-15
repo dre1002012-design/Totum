@@ -124,4 +124,63 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get barcodeManualEntry => 'Enter the code manually';
+
+  @override
+  String get paywallTitle => 'Your TOTUM trial has ended';
+
+  @override
+  String get paywallSubtitleWeb =>
+      'Your 7-day free trial has ended. 🎯\n\nYou\'ve been able to discover TOTUM in full: complete nutrition tracking, personalized wellness advice, and micronutrient analysis.\n\nTo keep taking care of yourself without interruption, switch to TOTUM Premium: a subscription of €14.99 per year — that\'s €1.25 per month — renewed automatically every year.';
+
+  @override
+  String get paywallSubtitleLoading => 'Loading price…';
+
+  @override
+  String paywallSubtitleNative(String price) {
+    return 'Your 7-day free trial has ended. 🎯\n\nTo keep enjoying TOTUM with no ads, switch to TOTUM Premium: a subscription of $price, renewed automatically every year and cancellable anytime.';
+  }
+
+  @override
+  String get paywallButtonSubscribe => 'Subscribe';
+
+  @override
+  String paywallButtonSubscribeWithPrice(String price) {
+    return 'Subscribe — $price';
+  }
+
+  @override
+  String get paywallBenefitsTitle => 'With TOTUM Premium, you keep:';
+
+  @override
+  String get paywallBenefit1 => 'Unlimited access to all features';
+
+  @override
+  String get paywallBenefit2 => 'No ads or distractions';
+
+  @override
+  String get paywallBenefit3 => 'Annual renewal — cancellable anytime';
+
+  @override
+  String get paywallStoreUnavailable =>
+      'The Store is currently unavailable.\nCheck your internet connection or try restarting the app.';
+
+  @override
+  String get paywallSubscriptionNotFound =>
+      'Subscription not found on the Store.';
+
+  @override
+  String get paywallFooterWeb =>
+      '🔒 100% secure payment via Stripe\nAnnual subscription of €14.99, renewed automatically every year. Cancellable anytime: access remains active until the end of the period already paid for.';
+
+  @override
+  String get paywallFooterNative =>
+      '🔒 Payment securely managed by Google Play.\nAnnual subscription renewed automatically. Cancellable anytime from the Play Store.';
+
+  @override
+  String get paywallChangeAccount => 'Change account';
+
+  @override
+  String paywallChangeAccountError(String error) {
+    return 'Problem changing account: $error';
+  }
 }

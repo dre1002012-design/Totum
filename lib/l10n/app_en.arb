@@ -38,5 +38,22 @@
   "barcodeCameraError": "Camera error: {error}",
   "barcodeAimInstruction": "Aim at the barcode",
   "barcodeAutoDetect": "Automatic detection",
-  "barcodeManualEntry": "Enter the code manually"
+  "barcodeManualEntry": "Enter the code manually",
+
+  "paywallTitle": "Your TOTUM trial has ended",
+  "paywallSubtitleWeb": "Your 7-day free trial has ended. 🎯\n\nYou've been able to discover TOTUM in full: complete nutrition tracking, personalized wellness advice, and micronutrient analysis.\n\nTo keep taking care of yourself without interruption, switch to TOTUM Premium: a subscription of €14.99 per year — that's €1.25 per month — renewed automatically every year.",
+  "paywallSubtitleLoading": "Loading price…",
+  "paywallSubtitleNative": "Your 7-day free trial has ended. 🎯\n\nTo keep enjoying TOTUM with no ads, switch to TOTUM Premium: a subscription of {price}, renewed automatically every year and cancellable anytime.",
+  "paywallButtonSubscribe": "Subscribe",
+  "paywallButtonSubscribeWithPrice": "Subscribe — {price}",
+  "paywallBenefitsTitle": "With TOTUM Premium, you keep:",
+  "paywallBenefit1": "Unlimited access to all features",
+  "paywallBenefit2": "No ads or distractions",
+  "paywallBenefit3": "Annual renewal — cancellable anytime",
+  "paywallStoreUnavailable": "The Store is currently unavailable.\nCheck your internet connection or try restarting the app.",
+  "paywallSubscriptionNotFound": "Subscription not found on the Store.",
+  "paywallFooterWeb": "🔒 100% secure payment via Stripe\nAnnual subscription of €14.99, renewed automatically every year. Cancellable anytime: access remains active until the end of the period already paid for.",
+  "paywallFooterNative": "🔒 Payment securely managed by Google Play.\nAnnual subscription renewed automatically. Cancellable anytime from the Play Store.",
+  "paywallChangeAccount": "Change account",
+  "paywallChangeAccountError": "Problem changing account: {error}"
 }

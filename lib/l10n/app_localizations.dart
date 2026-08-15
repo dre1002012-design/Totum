@@ -307,6 +307,102 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Saisir le code manuellement'**
   String get barcodeManualEntry;
+
+  /// No description provided for @paywallTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton essai TOTUM est terminé'**
+  String get paywallTitle;
+
+  /// No description provided for @paywallSubtitleWeb.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton essai gratuit de 7 jours est arrivé à son terme. 🎯\n\nTu as pu découvrir TOTUM dans son intégralité : suivi nutritionnel complet, conseils bien-être personnalisés et analyse de tes micronutriments.\n\nPour continuer à prendre soin de toi sans interruption, passe à TOTUM Premium : abonnement de 14,99 € par an — soit 1,25 € par mois — renouvelé automatiquement chaque année.'**
+  String get paywallSubtitleWeb;
+
+  /// No description provided for @paywallSubtitleLoading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement du prix en cours…'**
+  String get paywallSubtitleLoading;
+
+  /// No description provided for @paywallSubtitleNative.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton essai gratuit de 7 jours est arrivé à son terme. 🎯\n\nPour continuer à profiter de TOTUM sans aucune publicité, passe à TOTUM Premium : abonnement de {price}, renouvelé automatiquement chaque année et annulable à tout moment.'**
+  String paywallSubtitleNative(String price);
+
+  /// No description provided for @paywallButtonSubscribe.
+  ///
+  /// In fr, this message translates to:
+  /// **'S\'abonner'**
+  String get paywallButtonSubscribe;
+
+  /// No description provided for @paywallButtonSubscribeWithPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'S\'abonner — {price}'**
+  String paywallButtonSubscribeWithPrice(String price);
+
+  /// No description provided for @paywallBenefitsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avec TOTUM Premium, tu gardes :'**
+  String get paywallBenefitsTitle;
+
+  /// No description provided for @paywallBenefit1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accès illimité à toutes les fonctions'**
+  String get paywallBenefit1;
+
+  /// No description provided for @paywallBenefit2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune publicité ni distraction'**
+  String get paywallBenefit2;
+
+  /// No description provided for @paywallBenefit3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renouvellement annuel — annulable à tout moment'**
+  String get paywallBenefit3;
+
+  /// No description provided for @paywallStoreUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le Store n\'est pas disponible pour le moment.\nVérifie ta connexion internet ou essaie de relancer l\'application.'**
+  String get paywallStoreUnavailable;
+
+  /// No description provided for @paywallSubscriptionNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnement introuvable sur le Store.'**
+  String get paywallSubscriptionNotFound;
+
+  /// No description provided for @paywallFooterWeb.
+  ///
+  /// In fr, this message translates to:
+  /// **'🔒 Paiement 100 % sécurisé via Stripe\nAbonnement annuel de 14,99 €, renouvelé automatiquement chaque année. Annulable à tout moment : l\'accès reste actif jusqu\'à la fin de la période déjà payée.'**
+  String get paywallFooterWeb;
+
+  /// No description provided for @paywallFooterNative.
+  ///
+  /// In fr, this message translates to:
+  /// **'🔒 Paiement géré de manière sécurisée par Google Play.\nAbonnement annuel renouvelé automatiquement. Annulable à tout moment depuis le Play Store.'**
+  String get paywallFooterNative;
+
+  /// No description provided for @paywallChangeAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer de compte'**
+  String get paywallChangeAccount;
+
+  /// No description provided for @paywallChangeAccountError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Problème lors du changement de compte : {error}'**
+  String paywallChangeAccountError(String error);
 }
 
 class _AppLocalizationsDelegate

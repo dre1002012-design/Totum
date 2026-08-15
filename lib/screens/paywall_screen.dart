@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../l10n/l10n_ext.dart';
 import 'auth_screen.dart';
 import 'account_screen.dart';
 
@@ -61,9 +62,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
       }
 
       if (response.productDetails.isEmpty) {
+        if (!mounted) return;
         setState(() {
           _storeAvailable = false;
-          _priceError = 'Abonnement introuvable sur le Store.';
+          _priceError = context.l10n.paywallSubscriptionNotFound;
           _loadingPrice = false;
         });
         return;
@@ -96,7 +98,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Problème lors du changement de compte : $e')),
+        SnackBar(content: Text(context.l10n.paywallChangeAccountError(e.toString()))),
       );
     }
   }
@@ -129,6 +131,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     const Color primaryColor = Color(0xFFFF7A00);
 
     final String priceText = kIsWeb
@@ -136,34 +139,19 @@ class _PaywallScreenState extends State<PaywallScreen> {
         : (_subProduct?.price ?? '14,99 €/an');
 
     final String buttonText = kIsWeb
-        ? 'S\'abonner — 14,99 €/an'
+        ? l10n.paywallButtonSubscribeWithPrice(priceText)
         : (_loadingPrice
-            ? 'S\'abonner'
-            : 'S\'abonner — $priceText');
+            ? l10n.paywallButtonSubscribe
+            : l10n.paywallButtonSubscribeWithPrice(priceText));
 
     final String subtitleText = kIsWeb
-        ? "Ton essai gratuit de 7 jours est arrivé à son terme. 🎯\n\n"
-          "Tu as pu découvrir TOTUM dans son intégralité : suivi nutritionnel "
-          "complet, conseils bien-être personnalisés et analyse de tes "
-          "micronutriments.\n\n"
-          "Pour continuer à prendre soin de toi sans interruption, passe à "
-          "TOTUM Premium : abonnement de 14,99 € par an — soit 1,25 € par "
-          "mois — renouvelé automatiquement chaque année."
+        ? l10n.paywallSubtitleWeb
         : (_loadingPrice
-            ? 'Chargement du prix en cours…'
-            : "Ton essai gratuit de 7 jours est arrivé à son terme. 🎯\n\n"
-              "Pour continuer à profiter de TOTUM sans aucune publicité, passe "
-              "à TOTUM Premium : abonnement de $priceText, renouvelé "
-              "automatiquement chaque année et annulable à tout moment.");
+            ? l10n.paywallSubtitleLoading
+            : l10n.paywallSubtitleNative(priceText));
 
-    const String footerText = kIsWeb
-        ? "🔒 Paiement 100 % sécurisé via Stripe\n"
-          "Abonnement annuel de 14,99 €, renouvelé automatiquement chaque "
-          "année. Annulable à tout moment : l'accès reste actif jusqu'à la "
-          "fin de la période déjà payée."
-        : "🔒 Paiement géré de manière sécurisée par Google Play.\n"
-          "Abonnement annuel renouvelé automatiquement. Annulable à tout "
-          "moment depuis le Play Store.";
+    final String footerText =
+        kIsWeb ? l10n.paywallFooterWeb : l10n.paywallFooterNative;
 
     return Scaffold(
       body: SafeArea(
@@ -181,9 +169,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 const SizedBox(height: 24),
 
                 // ==== Titre ====
-                const Text(
-                  'Ton essai TOTUM est terminé',
-                  style: TextStyle(
+                Text(
+                  l10n.paywallTitle,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
@@ -206,26 +194,23 @@ class _PaywallScreenState extends State<PaywallScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Avec TOTUM Premium, tu gardes :',
-                          style: TextStyle(
+                          l10n.paywallBenefitsTitle,
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
                         ),
-                        SizedBox(height: 8),
-                        _BenefitRow(
-                            text: 'Accès illimité à toutes les fonctions'),
-                        _BenefitRow(
-                            text: 'Aucune publicité ni distraction'),
-                        _BenefitRow(
-                            text: 'Renouvellement annuel — annulable à tout moment'),
+                        const SizedBox(height: 8),
+                        _BenefitRow(text: l10n.paywallBenefit1),
+                        _BenefitRow(text: l10n.paywallBenefit2),
+                        _BenefitRow(text: l10n.paywallBenefit3),
                       ],
                     ),
                   ),
@@ -245,12 +230,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
                   ),
 
                 if (!kIsWeb && !_storeAvailable && !_loadingPrice)
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 8.0),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
                     child: Text(
-                      "Le Store n'est pas disponible pour le moment.\n"
-                      "Vérifie ta connexion internet ou essaie de relancer "
-                      "l'application.",
+                      l10n.paywallStoreUnavailable,
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -277,10 +260,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 const SizedBox(height: 12),
 
                 // ==== Texte explicatif ====
-                const Text(
+                Text(
                   footerText,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
 
                 const SizedBox(height: 24),
@@ -288,7 +271,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 // ==== Changer de compte ====
                 TextButton(
                   onPressed: _changeAccount,
-                  child: const Text('Changer de compte'),
+                  child: Text(l10n.paywallChangeAccount),
                 ),
               ],
             ),

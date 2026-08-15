@@ -56,5 +56,25 @@
   },
   "barcodeAimInstruction": "Visez le code-barre",
   "barcodeAutoDetect": "Détection automatique",
-  "barcodeManualEntry": "Saisir le code manuellement"
+  "barcodeManualEntry": "Saisir le code manuellement",
+
+  "paywallTitle": "Ton essai TOTUM est terminé",
+  "paywallSubtitleWeb": "Ton essai gratuit de 7 jours est arrivé à son terme. 🎯\n\nTu as pu découvrir TOTUM dans son intégralité : suivi nutritionnel complet, conseils bien-être personnalisés et analyse de tes micronutriments.\n\nPour continuer à prendre soin de toi sans interruption, passe à TOTUM Premium : abonnement de 14,99 € par an — soit 1,25 € par mois — renouvelé automatiquement chaque année.",
+  "paywallSubtitleLoading": "Chargement du prix en cours…",
+  "paywallSubtitleNative": "Ton essai gratuit de 7 jours est arrivé à son terme. 🎯\n\nPour continuer à profiter de TOTUM sans aucune publicité, passe à TOTUM Premium : abonnement de {price}, renouvelé automatiquement chaque année et annulable à tout moment.",
+  "@paywallSubtitleNative": { "placeholders": { "price": {"type": "String"} } },
+  "paywallButtonSubscribe": "S'abonner",
+  "paywallButtonSubscribeWithPrice": "S'abonner — {price}",
+  "@paywallButtonSubscribeWithPrice": { "placeholders": { "price": {"type": "String"} } },
+  "paywallBenefitsTitle": "Avec TOTUM Premium, tu gardes :",
+  "paywallBenefit1": "Accès illimité à toutes les fonctions",
+  "paywallBenefit2": "Aucune publicité ni distraction",
+  "paywallBenefit3": "Renouvellement annuel — annulable à tout moment",
+  "paywallStoreUnavailable": "Le Store n'est pas disponible pour le moment.\nVérifie ta connexion internet ou essaie de relancer l'application.",
+  "paywallSubscriptionNotFound": "Abonnement introuvable sur le Store.",
+  "paywallFooterWeb": "🔒 Paiement 100 % sécurisé via Stripe\nAbonnement annuel de 14,99 €, renouvelé automatiquement chaque année. Annulable à tout moment : l'accès reste actif jusqu'à la fin de la période déjà payée.",
+  "paywallFooterNative": "🔒 Paiement géré de manière sécurisée par Google Play.\nAbonnement annuel renouvelé automatiquement. Annulable à tout moment depuis le Play Store.",
+  "paywallChangeAccount": "Changer de compte",
+  "paywallChangeAccountError": "Problème lors du changement de compte : {error}",
+  "@paywallChangeAccountError": { "placeholders": { "error": {"type": "String"} } }
 }
