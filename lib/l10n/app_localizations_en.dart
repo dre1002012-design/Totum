@@ -2226,4 +2226,194 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get consUpdateMyAdviceButton => 'Update my advice';
+
+  @override
+  String get consSunVitDCardTitle => 'Sun & vitamin D';
+
+  @override
+  String get consSunVitDCardIntro =>
+      'A good part of your vitamin D comes from sun exposure, not just diet. Estimate today\'s synthesis to know where you stand.';
+
+  @override
+  String get consEstimateMySynthesis => 'Estimate my synthesis';
+
+  @override
+  String get breathPhaseInhale => 'Inhale';
+
+  @override
+  String get breathPhaseHold => 'Hold';
+
+  @override
+  String get breathPhaseExhale => 'Exhale';
+
+  @override
+  String get breathPhaseInhaleBelly => 'Inhale (belly)';
+
+  @override
+  String get breathPhaseInhaleTopUp => 'Inhale (top-up)';
+
+  @override
+  String get breathCoherenceName => 'Cardiac coherence';
+
+  @override
+  String get breathCoherenceDesc =>
+      'A steady rhythm where inhalation and exhalation last the same time. The classic \"365\": 3 times a day, 6 breaths per minute, for 5 minutes.';
+
+  @override
+  String get breathCoherenceBenefit =>
+      'The most studied anti-stress technique. It synchronizes the heart and breathing, balances the autonomic nervous system, lowers cortisol and improves heart rate variability — a key marker of health and longevity.';
+
+  @override
+  String get breathSquareName => 'Box breathing';
+
+  @override
+  String get breathSquareDesc =>
+      'Four equal counts: inhale, hold with full lungs, exhale, hold with empty lungs. You mentally trace a square. Used by special forces to stay calm under pressure.';
+
+  @override
+  String get breathSquareBenefit =>
+      'The two holds strengthen breath control and focus. Ideal for regaining composure before a stressful event, calming the mind and anchoring attention in the present moment.';
+
+  @override
+  String get breathWeil478Name => '4-7-8';
+
+  @override
+  String get breathWeil478Desc =>
+      'Inhale for 4 seconds, hold for 7 seconds, exhale slowly over 8 seconds. Popularized by Dr. Andrew Weil, sometimes nicknamed a \"natural tranquilizer\".';
+
+  @override
+  String get breathWeil478Benefit =>
+      'The long exhale combined with the hold strongly activates the parasympathetic nervous system — the one responsible for rest and recovery. Particularly effective for winding down before sleep or calming a surge of anxiety.';
+
+  @override
+  String get breathDiaphragmaticName => 'Belly breathing';
+
+  @override
+  String get breathDiaphragmaticDesc =>
+      'The foundation of any breathing practice: expand your belly on the inhale (not your chest), release it on the exhale. No holds, no complex rhythm to remember.';
+
+  @override
+  String get breathDiaphragmaticBenefit =>
+      'Relearns to fully use the diaphragm instead of short, shallow chest breathing — the foundation all other techniques build on. The most accessible starting point for discovering guided breathing.';
+
+  @override
+  String get breathPhysiologicalSighName => 'Physiological sigh';
+
+  @override
+  String get breathPhysiologicalSighDesc =>
+      'Two short inhales through the nose, one right after the other with no exhale in between, then one long exhale through the mouth. The move the body already does naturally to \"let off steam\".';
+
+  @override
+  String get breathPhysiologicalSighBenefit =>
+      'The double inhale reopens small collapsed air sacs (alveoli) in the lungs, and the long exhale that follows triggers near-immediate calm. In a comparative study, this technique outperformed box breathing, cyclic hyperventilation AND mindfulness meditation at improving mood.';
+
+  @override
+  String get consPhaseDuration => 'Duration of each phase';
+
+  @override
+  String get breathCyclicHyperventilationName => 'Cyclic hyperventilation';
+
+  @override
+  String get breathCyclicHyperventilationDesc =>
+      'A series of 30 deep, rapid breaths, followed by a hold with empty lungs, then a short recovery. The whole sequence is repeated over several \"rounds\", eyes closed from start to finish — no action required during the session.';
+
+  @override
+  String get breathCyclicHyperventilationBenefit =>
+      'A real energy boost: the rapid phase temporarily raises blood alkalinity, and the hold that follows builds CO2 tolerance and breath control. An intense practice, best reserved for moments when you want an energy boost or want to push your breath-control limits — not a relaxation technique.';
+
+  @override
+  String get breathCyclicHyperventilationSafetyWarning =>
+      'This technique temporarily lowers blood CO2 levels and can cause dizziness, tingling or, rarely, fainting.\n\nNever practice this:\n• while standing, driving, swimming, or in/near water (documented drowning risk in case of loss of consciousness)\n• during pregnancy\n• if you have epilepsy or a history of seizures\n• if you have cardiovascular conditions\n• if you have a history of fainting or blackouts\n\nAlways practice sitting or lying down, in a safe place. If in medical doubt, ask a healthcare professional before starting.';
+
+  @override
+  String get consNumberOfRounds => 'Number of rounds';
+
+  @override
+  String get consHoldDurationPerRound => 'Hold duration per round';
+
+  @override
+  String get consNoActionDuringSession =>
+      'No action needed during the session — set each round in advance based on your experience.';
+
+  @override
+  String consRoundLabel(int n) {
+    return 'Round $n';
+  }
+
+  @override
+  String consSessionDurationEstimate(String min) {
+    return '≈ $min min session';
+  }
+
+  @override
+  String get consStartButton => 'Start';
+
+  @override
+  String consRoundOf(int round, int total) {
+    return 'Round $round / $total';
+  }
+
+  @override
+  String get consAmpleRapidBreaths => 'Deep, rapid breaths';
+
+  @override
+  String get consHoldEmptyLungs => 'Hold, empty lungs';
+
+  @override
+  String get consCloseEyesFollowSound =>
+      'Close your eyes, let the sound guide you';
+
+  @override
+  String get consInhaleAndHoldRecovery => 'Inhale and hold — recovery';
+
+  @override
+  String get consSessionComplete => 'Session complete';
+
+  @override
+  String consRoundsCompletedNote(int rounds) {
+    String _temp0 = intl.Intl.pluralLogic(
+      rounds,
+      locale: localeName,
+      other: '$rounds rounds completed. Take a moment to feel it.',
+      one: '1 round completed. Take a moment to feel it.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get consFinishButton => 'Finish';
+
+  @override
+  String get consBeforeYouStart => 'Before you start';
+
+  @override
+  String get consReadAndUnderstand =>
+      'I have read and understand these precautions';
+
+  @override
+  String get consContinueButton => 'Continue';
+
+  @override
+  String get consAdvancedProtocol => 'Advanced protocol';
+
+  @override
+  String get consStopButton => 'Stop';
+
+  @override
+  String consCycleOf(int cycle, int total) {
+    return 'Cycle $cycle / $total';
+  }
+
+  @override
+  String get consNumberOfCycles => 'Number of cycles';
+
+  @override
+  String get consGuidanceSounds => 'Guidance sounds';
+
+  @override
+  String get consStartSessionButton => 'Start the session';
+
+  @override
+  String get consSessionCompleteSnackbar =>
+      'Session complete. Take a moment to feel it.';
 }

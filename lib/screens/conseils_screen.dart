@@ -5117,6 +5117,7 @@ class _WellbeingCardState extends State<_WellbeingCard> {
 
   /// Carte Soleil & vitamine D — même gabarit visuel que les cartes-piliers.
   Widget _sunCard(BuildContext context) {
+    final l10n = context.l10n;
     const color = TotumColors.accent;
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
@@ -5140,9 +5141,9 @@ class _WellbeingCardState extends State<_WellbeingCard> {
                   child: const Icon(Icons.wb_sunny, size: 20, color: color),
                 ),
                 const SizedBox(width: 10),
-                const Expanded(
-                  child: Text('Soleil & vitamine D',
-                      style: TextStyle(
+                Expanded(
+                  child: Text(l10n.consSunVitDCardTitle,
+                      style: const TextStyle(
                           fontSize: 15.5,
                           fontWeight: FontWeight.w800,
                           color: color)),
@@ -5151,9 +5152,7 @@ class _WellbeingCardState extends State<_WellbeingCard> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Une bonne partie de ta vitamine D vient de l\'exposition au '
-              'soleil, pas seulement de l\'alimentation. Estime ta synthèse '
-              'du jour pour savoir où tu en es.',
+              l10n.consSunVitDCardIntro,
               style: TextStyle(fontSize: 11.5, height: 1.4, color: TotumColors.textSecondary),
             ),
             const SizedBox(height: 10),
@@ -5163,15 +5162,15 @@ class _WellbeingCardState extends State<_WellbeingCard> {
                 color: color.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.wb_sunny, size: 17, color: color),
-                  SizedBox(width: 8),
-                  Text('Estimer ma synthèse',
-                      style: TextStyle(
+                  const Icon(Icons.wb_sunny, size: 17, color: color),
+                  const SizedBox(width: 8),
+                  Text(l10n.consEstimateMySynthesis,
+                      style: const TextStyle(
                           fontSize: 13, fontWeight: FontWeight.w700, color: color)),
-                  Spacer(),
-                  Icon(Icons.chevron_right, size: 17, color: color),
+                  const Spacer(),
+                  const Icon(Icons.chevron_right, size: 17, color: color),
                 ],
               ),
             ),
@@ -5252,6 +5251,47 @@ class BreathTech {
     this.maxSec = 10,
   });
 }
+
+/// Traduisent le contenu affiché d'une technique de respiration (nom,
+/// description, bénéfice, libellés de phase) à partir de sa `key` STABLE —
+/// jamais modifiée à la source (utilisée pour les comparaisons/tri/
+/// persistance dans tout ce fichier), uniquement au moment du rendu (même
+/// principe que nutrientDisplayLabel).
+String _breathTechName(String key, AppLocalizations l10n) => switch (key) {
+      'coherence' => l10n.breathCoherenceName,
+      'square' => l10n.breathSquareName,
+      'weil478' => l10n.breathWeil478Name,
+      'diaphragmatic' => l10n.breathDiaphragmaticName,
+      'physiologicalSigh' => l10n.breathPhysiologicalSighName,
+      _ => key,
+    };
+
+String _breathTechDesc(String key, AppLocalizations l10n) => switch (key) {
+      'coherence' => l10n.breathCoherenceDesc,
+      'square' => l10n.breathSquareDesc,
+      'weil478' => l10n.breathWeil478Desc,
+      'diaphragmatic' => l10n.breathDiaphragmaticDesc,
+      'physiologicalSigh' => l10n.breathPhysiologicalSighDesc,
+      _ => '',
+    };
+
+String _breathTechBenefit(String key, AppLocalizations l10n) => switch (key) {
+      'coherence' => l10n.breathCoherenceBenefit,
+      'square' => l10n.breathSquareBenefit,
+      'weil478' => l10n.breathWeil478Benefit,
+      'diaphragmatic' => l10n.breathDiaphragmaticBenefit,
+      'physiologicalSigh' => l10n.breathPhysiologicalSighBenefit,
+      _ => '',
+    };
+
+String _breathPhaseLabel(String raw, AppLocalizations l10n) => switch (raw) {
+      'Inspire' => l10n.breathPhaseInhale,
+      'Retiens' => l10n.breathPhaseHold,
+      'Expire' => l10n.breathPhaseExhale,
+      'Inspire (ventre)' => l10n.breathPhaseInhaleBelly,
+      'Inspire (complément)' => l10n.breathPhaseInhaleTopUp,
+      _ => raw,
+    };
 
 const List<BreathTech> kBreathTechs = [
   BreathTech(
@@ -5399,6 +5439,16 @@ class BreathRoundsTech {
     required this.safetyWarning,
   });
 }
+
+String _breathRoundsTechName(String key, AppLocalizations l10n) => switch (key) {
+      'cyclicHyperventilation' => l10n.breathCyclicHyperventilationName,
+      _ => key,
+    };
+
+String _breathRoundsTechSafetyWarning(String key, AppLocalizations l10n) => switch (key) {
+      'cyclicHyperventilation' => l10n.breathCyclicHyperventilationSafetyWarning,
+      _ => '',
+    };
 
 const List<BreathRoundsTech> kBreathRoundsTechs = [
   BreathRoundsTech(
@@ -5802,9 +5852,9 @@ class _RespirationScreenState extends State<RespirationScreen>
     recordBreathSessionCompleted();
     setState(() => _running = false);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Séance terminée. Prends un instant pour ressentir.'),
-        duration: Duration(seconds: 3),
+      SnackBar(
+        content: Text(context.l10n.consSessionCompleteSnackbar),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -5860,20 +5910,20 @@ class _RespirationScreenState extends State<RespirationScreen>
             ),
           ),
           const SizedBox(height: 28),
-          Text(_tech.phaseLabels[_phaseIndex],
+          Text(_breathPhaseLabel(_tech.phaseLabels[_phaseIndex], context.l10n),
               style: const TextStyle(
                   fontSize: 26, fontWeight: FontWeight.w900, color: _accent)),
           const SizedBox(height: 4),
           Text('$_remaining',
               style: TextStyle(fontSize: 18, color: TotumColors.textSecondary)),
           const SizedBox(height: 8),
-          Text('Cycle ${_cycle + 1} / $_cycles',
+          Text(context.l10n.consCycleOf(_cycle + 1, _cycles),
               style: TextStyle(fontSize: 13, color: TotumColors.textMuted)),
           const SizedBox(height: 40),
           OutlinedButton.icon(
             onPressed: _stop,
             icon: const Icon(Icons.stop, size: 18),
-            label: const Text('Arrêter'),
+            label: Text(context.l10n.consStopButton),
             style: OutlinedButton.styleFrom(
               foregroundColor: _accent,
               side: const BorderSide(color: _accent),
@@ -5927,11 +5977,11 @@ class _RespirationScreenState extends State<RespirationScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(rt.name,
+                          Text(_breathRoundsTechName(rt.key, context.l10n),
                               style: TextStyle(
                                   fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
-                          const Text('Protocole avancé',
-                              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: TotumColors.accent)),
+                          Text(context.l10n.consAdvancedProtocol,
+                              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: TotumColors.accent)),
                         ],
                       ),
                     ),
@@ -5950,7 +6000,7 @@ class _RespirationScreenState extends State<RespirationScreen>
                           color: i == _techIndex ? _accent : TotumColors.outline),
                     ),
                     child: Text(
-                      kBreathTechs[i].name,
+                      _breathTechName(kBreathTechs[i].key, context.l10n),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 12.5,
@@ -5975,7 +6025,7 @@ class _RespirationScreenState extends State<RespirationScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(_tech.desc,
+              Text(_breathTechDesc(_tech.key, context.l10n),
                   style: TextStyle(
                       fontSize: 13, height: 1.5, color: TotumColors.textPrimary)),
               const SizedBox(height: 10),
@@ -5992,7 +6042,7 @@ class _RespirationScreenState extends State<RespirationScreen>
                         size: 16, color: _accent),
                     const SizedBox(width: 7),
                     Expanded(
-                      child: Text(_tech.benefit,
+                      child: Text(_breathTechBenefit(_tech.key, context.l10n),
                           style: TextStyle(
                               fontSize: 12,
                               height: 1.45,
@@ -6006,8 +6056,8 @@ class _RespirationScreenState extends State<RespirationScreen>
         ),
         const SizedBox(height: 20),
         // Réglages des durées de phase
-        const Text('Durée de chaque phase',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+        Text(context.l10n.consPhaseDuration,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
         const SizedBox(height: 10),
         for (int i = 0; i < _tech.phaseLabels.length; i++)
           _buildPhaseSlider(i),
@@ -6017,8 +6067,8 @@ class _RespirationScreenState extends State<RespirationScreen>
           children: [
             Icon(Icons.repeat, size: 18, color: TotumColors.textSecondary),
             const SizedBox(width: 8),
-            const Text('Nombre de cycles',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+            Text(context.l10n.consNumberOfCycles,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
             const Spacer(),
             Text('$_cycles',
                 style: const TextStyle(
@@ -6036,7 +6086,7 @@ class _RespirationScreenState extends State<RespirationScreen>
         ),
         // Durée totale estimée
         Center(
-          child: Text('≈ $_totalMinutes min de séance',
+          child: Text(context.l10n.consSessionDurationEstimate(_totalMinutes.toString()),
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
         ),
         const SizedBox(height: 12),
@@ -6046,8 +6096,8 @@ class _RespirationScreenState extends State<RespirationScreen>
           onChanged: (v) => setState(() => _soundOn = v),
           activeThumbColor: _accent,
           contentPadding: EdgeInsets.zero,
-          title: const Text('Sons de guidage',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+          title: Text(context.l10n.consGuidanceSounds,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
           secondary: Icon(_soundOn ? Icons.volume_up : Icons.volume_off,
               color: _accent),
         ),
@@ -6056,7 +6106,7 @@ class _RespirationScreenState extends State<RespirationScreen>
         ElevatedButton.icon(
           onPressed: _start,
           icon: const Icon(Icons.play_arrow, size: 24),
-          label: const Text('Commencer la séance'),
+          label: Text(context.l10n.consStartSessionButton),
           style: ElevatedButton.styleFrom(
             backgroundColor: _accent,
             foregroundColor: Colors.white,
@@ -6077,7 +6127,7 @@ class _RespirationScreenState extends State<RespirationScreen>
         children: [
           SizedBox(
             width: 78,
-            child: Text(_tech.phaseLabels[i],
+            child: Text(_breathPhaseLabel(_tech.phaseLabels[i], context.l10n),
                 style: const TextStyle(
                     fontSize: 13, fontWeight: FontWeight.w600)),
           ),
@@ -6349,7 +6399,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
     return Scaffold(
       backgroundColor: TotumColors.page,
       appBar: AppBar(
-        title: Text(widget.tech.name),
+        title: Text(_breathTechName(widget.tech.key, context.l10n)),
         backgroundColor: TotumColors.surface,
         foregroundColor: TotumColors.textPrimary,
         elevation: 0,
@@ -6377,10 +6427,11 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
   }
 
   Widget _buildIntro() {
+    final l10n = context.l10n;
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
       children: [
-        Text(widget.tech.desc,
+        Text(_breathTechDesc(widget.tech.key, l10n),
             style: TextStyle(fontSize: 13.5, height: 1.5, color: TotumColors.textPrimary)),
         const SizedBox(height: 12),
         Container(
@@ -6395,14 +6446,14 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
               const Icon(Icons.favorite_outline, size: 16, color: _accent),
               const SizedBox(width: 7),
               Expanded(
-                child: Text(widget.tech.benefit,
+                child: Text(_breathTechBenefit(widget.tech.key, l10n),
                     style: TextStyle(fontSize: 12, height: 1.45, color: TotumColors.textPrimary)),
               ),
             ],
           ),
         ),
         const SizedBox(height: 20),
-        const Text('Nombre de rounds', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+        Text(l10n.consNumberOfRounds, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
         const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -6430,9 +6481,9 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
           ],
         ),
         const SizedBox(height: 20),
-        const Text('Durée de rétention par round', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+        Text(l10n.consHoldDurationPerRound, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
         const SizedBox(height: 2),
-        Text('Aucune action à faire pendant la séance — réglez chaque round à l\'avance selon votre expérience.',
+        Text(l10n.consNoActionDuringSession,
             style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
         const SizedBox(height: 10),
         // Priorité 45 (retour d'Alex) : une durée de rétention réglable PAR
@@ -6445,7 +6496,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
               children: [
                 SizedBox(
                   width: 64,
-                  child: Text('Round ${r + 1}',
+                  child: Text(l10n.consRoundLabel(r + 1),
                       style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
                 ),
                 const Spacer(),
@@ -6474,7 +6525,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
         // (Priorité 58, retour d'Alex : "précise le temps que cela prendra,
         // comme pour les autres respirations").
         Center(
-          child: Text('≈ $_totalMinutes min de séance',
+          child: Text(l10n.consSessionDurationEstimate(_totalMinutes.toString()),
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
         ),
         const SizedBox(height: 24),
@@ -6487,14 +6538,14 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
             onPressed: _start,
-            child: const Text('Commencer', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
+            child: Text(l10n.consStartButton, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
           ),
         ),
       ],
     );
   }
 
-  Widget _roundLabel() => Text('Round $_round / $_totalRounds',
+  Widget _roundLabel() => Text(context.l10n.consRoundOf(_round, _totalRounds),
       style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textSecondary));
 
   Widget _buildRapidBreathing() {
@@ -6522,7 +6573,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
           const SizedBox(height: 24),
           Text('$current / $total', style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900)),
           const SizedBox(height: 6),
-          Text('Respirations amples et rapides', style: TextStyle(color: TotumColors.textSecondary)),
+          Text(context.l10n.consAmpleRapidBreaths, style: TextStyle(color: TotumColors.textSecondary)),
         ],
       ),
     );
@@ -6546,11 +6597,11 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
                 style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w900)),
           ),
           const SizedBox(height: 14),
-          Text('Retenez, poumons vides',
+          Text(context.l10n.consHoldEmptyLungs,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
           const SizedBox(height: 4),
-          Text('Fermez les yeux, laissez-vous guider par le son',
+          Text(context.l10n.consCloseEyesFollowSound,
               textAlign: TextAlign.center,
               style: TextStyle(color: TotumColors.textSecondary)),
         ],
@@ -6577,7 +6628,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
             ),
           ),
           const SizedBox(height: 10),
-          Text('Inspirez et retenez — récupération',
+          Text(context.l10n.consInhaleAndHoldRecovery,
               style: TextStyle(color: TotumColors.textSecondary)),
         ],
       ),
@@ -6593,9 +6644,9 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
           children: [
             const Icon(Icons.check_circle_outline, size: 56, color: _accent),
             const SizedBox(height: 14),
-            const Text('Séance terminée', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+            Text(context.l10n.consSessionComplete, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
             const SizedBox(height: 6),
-            Text('$_totalRounds round${_totalRounds > 1 ? 's' : ''} complété${_totalRounds > 1 ? 's' : ''}. Prends un instant pour ressentir.',
+            Text(context.l10n.consRoundsCompletedNote(_totalRounds),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: TotumColors.textSecondary)),
             const SizedBox(height: 24),
@@ -6607,7 +6658,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Terminer', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
+                child: Text(context.l10n.consFinishButton, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
               ),
             ),
           ],
@@ -6633,13 +6684,13 @@ Future<void> _openRoundsTech(BuildContext context, BreathRoundsTech tech) async 
       barrierDismissible: false,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDlg) => AlertDialog(
-          title: const Text('Avant de commencer'),
+          title: Text(context.l10n.consBeforeYouStart),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tech.safetyWarning, style: const TextStyle(fontSize: 13, height: 1.5)),
+                Text(_breathRoundsTechSafetyWarning(tech.key, context.l10n), style: const TextStyle(fontSize: 13, height: 1.5)),
                 const SizedBox(height: 14),
                 Row(
                   children: [
@@ -6647,9 +6698,9 @@ Future<void> _openRoundsTech(BuildContext context, BreathRoundsTech tech) async 
                       value: checked,
                       onChanged: (v) => setDlg(() => checked = v ?? false),
                     ),
-                    const Expanded(
-                      child: Text('J\'ai lu et je comprends ces précautions',
-                          style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700)),
+                    Expanded(
+                      child: Text(context.l10n.consReadAndUnderstand,
+                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700)),
                     ),
                   ],
                 ),
@@ -6657,10 +6708,10 @@ Future<void> _openRoundsTech(BuildContext context, BreathRoundsTech tech) async 
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annuler')),
+            TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(context.l10n.commonCancel)),
             FilledButton(
               onPressed: checked ? () => Navigator.pop(ctx, true) : null,
-              child: const Text('Continuer'),
+              child: Text(context.l10n.consContinueButton),
             ),
           ],
         ),

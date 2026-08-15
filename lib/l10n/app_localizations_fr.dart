@@ -2241,4 +2241,194 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get consUpdateMyAdviceButton => 'Mettre à jour mes conseils';
+
+  @override
+  String get consSunVitDCardTitle => 'Soleil & vitamine D';
+
+  @override
+  String get consSunVitDCardIntro =>
+      'Une bonne partie de ta vitamine D vient de l\'exposition au soleil, pas seulement de l\'alimentation. Estime ta synthèse du jour pour savoir où tu en es.';
+
+  @override
+  String get consEstimateMySynthesis => 'Estimer ma synthèse';
+
+  @override
+  String get breathPhaseInhale => 'Inspire';
+
+  @override
+  String get breathPhaseHold => 'Retiens';
+
+  @override
+  String get breathPhaseExhale => 'Expire';
+
+  @override
+  String get breathPhaseInhaleBelly => 'Inspire (ventre)';
+
+  @override
+  String get breathPhaseInhaleTopUp => 'Inspire (complément)';
+
+  @override
+  String get breathCoherenceName => 'Cohérence cardiaque';
+
+  @override
+  String get breathCoherenceDesc =>
+      'Un rythme régulier où l\'inspiration et l\'expiration durent le même temps. Le classique « 365 » : 3 fois par jour, 6 respirations par minute, pendant 5 minutes.';
+
+  @override
+  String get breathCoherenceBenefit =>
+      'La technique anti-stress la plus étudiée. Elle synchronise le cœur et la respiration, équilibre le système nerveux autonome, fait baisser le cortisol et améliore la variabilité cardiaque — un marqueur clé de santé et de longévité.';
+
+  @override
+  String get breathSquareName => 'Respiration carrée';
+
+  @override
+  String get breathSquareDesc =>
+      'Quatre temps égaux : inspire, retiens poumons pleins, expire, retiens poumons vides. On dessine mentalement un carré. Utilisée par les forces spéciales pour rester calme sous pression.';
+
+  @override
+  String get breathSquareBenefit =>
+      'Les deux rétentions renforcent le contrôle du souffle et la concentration. Idéale pour retrouver son sang-froid avant un événement stressant, calmer le mental et ancrer l\'attention dans l\'instant.';
+
+  @override
+  String get breathWeil478Name => '4-7-8';
+
+  @override
+  String get breathWeil478Desc =>
+      'Inspire 4 secondes, retiens 7 secondes, expire lentement sur 8 secondes. Popularisée par le Dr Andrew Weil, parfois surnommée \"calmant naturel\".';
+
+  @override
+  String get breathWeil478Benefit =>
+      'L\'expiration longue associée à la rétention active fortement le système nerveux parasympathique — celui du repos et de la récupération. Particulièrement efficace pour redescendre avant le sommeil ou calmer une montée d\'anxiété.';
+
+  @override
+  String get breathDiaphragmaticName => 'Respiration ventrale';
+
+  @override
+  String get breathDiaphragmaticDesc =>
+      'La base de toute pratique respiratoire : on gonfle le ventre à l\'inspire (pas la poitrine), on le relâche à l\'expire. Aucune rétention, aucun rythme complexe à retenir.';
+
+  @override
+  String get breathDiaphragmaticBenefit =>
+      'Réapprend à utiliser pleinement le diaphragme plutôt qu\'une respiration thoracique courte et superficielle — la base sur laquelle s\'appuient toutes les autres techniques. Le point de départ le plus accessible pour découvrir la respiration guidée.';
+
+  @override
+  String get breathPhysiologicalSighName => 'Soupir physiologique';
+
+  @override
+  String get breathPhysiologicalSighDesc =>
+      'Deux inspirations courtes par le nez, l\'une après l\'autre sans expirer entre les deux, puis une longue expiration par la bouche. Le geste que le corps fait déjà naturellement pour \"souffler\".';
+
+  @override
+  String get breathPhysiologicalSighBenefit =>
+      'La double inspiration rouvre les petits sacs pulmonaires (alvéoles) affaissés, l\'expiration longue qui suit déclenche un apaisement quasi immédiat. Dans une étude comparative, cette technique a fait mieux que la respiration carrée, l\'hyperventilation cyclique ET la méditation de pleine conscience pour améliorer l\'humeur.';
+
+  @override
+  String get consPhaseDuration => 'Durée de chaque phase';
+
+  @override
+  String get breathCyclicHyperventilationName => 'Hyperventilation cyclique';
+
+  @override
+  String get breathCyclicHyperventilationDesc =>
+      'Une série de 30 respirations amples et rapides, suivie d\'une rétention poumons vides, puis d\'une courte récupération. On répète l\'ensemble sur plusieurs \"rounds\", les yeux fermés du début à la fin — aucune action requise pendant la séance.';
+
+  @override
+  String get breathCyclicHyperventilationBenefit =>
+      'Un vrai coup de fouet : la phase rapide augmente temporairement l\'alcalinité du sang, la rétention qui suit entraîne la tolérance au CO2 et le contrôle du souffle. Une pratique intense, à réserver aux moments où vous cherchez de l\'énergie ou à repousser vos limites de contrôle respiratoire — pas une technique de détente.';
+
+  @override
+  String get breathCyclicHyperventilationSafetyWarning =>
+      'Cette technique fait momentanément baisser le taux de CO2 dans le sang et peut provoquer des étourdissements, des picotements ou, rarement, un évanouissement.\n\nÀ ne jamais pratiquer :\n• en étant debout, en conduisant, en nageant ou dans/près de l\'eau (risque de noyade documenté en cas de perte de connaissance)\n• en cas de grossesse\n• en cas d\'épilepsie ou d\'antécédents de convulsions\n• en cas de troubles cardiovasculaires\n• en cas de malaises ou évanouissements déjà connus\n\nPratiquez toujours assis ou allongé, dans un endroit sûr. En cas de doute médical, demandez l\'avis d\'un professionnel de santé avant de commencer.';
+
+  @override
+  String get consNumberOfRounds => 'Nombre de rounds';
+
+  @override
+  String get consHoldDurationPerRound => 'Durée de rétention par round';
+
+  @override
+  String get consNoActionDuringSession =>
+      'Aucune action à faire pendant la séance — réglez chaque round à l\'avance selon votre expérience.';
+
+  @override
+  String consRoundLabel(int n) {
+    return 'Round $n';
+  }
+
+  @override
+  String consSessionDurationEstimate(String min) {
+    return '≈ $min min de séance';
+  }
+
+  @override
+  String get consStartButton => 'Commencer';
+
+  @override
+  String consRoundOf(int round, int total) {
+    return 'Round $round / $total';
+  }
+
+  @override
+  String get consAmpleRapidBreaths => 'Respirations amples et rapides';
+
+  @override
+  String get consHoldEmptyLungs => 'Retenez, poumons vides';
+
+  @override
+  String get consCloseEyesFollowSound =>
+      'Fermez les yeux, laissez-vous guider par le son';
+
+  @override
+  String get consInhaleAndHoldRecovery => 'Inspirez et retenez — récupération';
+
+  @override
+  String get consSessionComplete => 'Séance terminée';
+
+  @override
+  String consRoundsCompletedNote(int rounds) {
+    String _temp0 = intl.Intl.pluralLogic(
+      rounds,
+      locale: localeName,
+      other: '$rounds rounds complétés. Prends un instant pour ressentir.',
+      one: '1 round complété. Prends un instant pour ressentir.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get consFinishButton => 'Terminer';
+
+  @override
+  String get consBeforeYouStart => 'Avant de commencer';
+
+  @override
+  String get consReadAndUnderstand =>
+      'J\'ai lu et je comprends ces précautions';
+
+  @override
+  String get consContinueButton => 'Continuer';
+
+  @override
+  String get consAdvancedProtocol => 'Protocole avancé';
+
+  @override
+  String get consStopButton => 'Arrêter';
+
+  @override
+  String consCycleOf(int cycle, int total) {
+    return 'Cycle $cycle / $total';
+  }
+
+  @override
+  String get consNumberOfCycles => 'Nombre de cycles';
+
+  @override
+  String get consGuidanceSounds => 'Sons de guidage';
+
+  @override
+  String get consStartSessionButton => 'Commencer la séance';
+
+  @override
+  String get consSessionCompleteSnackbar =>
+      'Séance terminée. Prends un instant pour ressentir.';
 }

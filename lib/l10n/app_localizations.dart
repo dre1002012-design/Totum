@@ -3941,6 +3941,318 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Mettre à jour mes conseils'**
   String get consUpdateMyAdviceButton;
+
+  /// No description provided for @consSunVitDCardTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Soleil & vitamine D'**
+  String get consSunVitDCardTitle;
+
+  /// No description provided for @consSunVitDCardIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une bonne partie de ta vitamine D vient de l\'exposition au soleil, pas seulement de l\'alimentation. Estime ta synthèse du jour pour savoir où tu en es.'**
+  String get consSunVitDCardIntro;
+
+  /// No description provided for @consEstimateMySynthesis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Estimer ma synthèse'**
+  String get consEstimateMySynthesis;
+
+  /// No description provided for @breathPhaseInhale.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inspire'**
+  String get breathPhaseInhale;
+
+  /// No description provided for @breathPhaseHold.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retiens'**
+  String get breathPhaseHold;
+
+  /// No description provided for @breathPhaseExhale.
+  ///
+  /// In fr, this message translates to:
+  /// **'Expire'**
+  String get breathPhaseExhale;
+
+  /// No description provided for @breathPhaseInhaleBelly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inspire (ventre)'**
+  String get breathPhaseInhaleBelly;
+
+  /// No description provided for @breathPhaseInhaleTopUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inspire (complément)'**
+  String get breathPhaseInhaleTopUp;
+
+  /// No description provided for @breathCoherenceName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cohérence cardiaque'**
+  String get breathCoherenceName;
+
+  /// No description provided for @breathCoherenceDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un rythme régulier où l\'inspiration et l\'expiration durent le même temps. Le classique « 365 » : 3 fois par jour, 6 respirations par minute, pendant 5 minutes.'**
+  String get breathCoherenceDesc;
+
+  /// No description provided for @breathCoherenceBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'La technique anti-stress la plus étudiée. Elle synchronise le cœur et la respiration, équilibre le système nerveux autonome, fait baisser le cortisol et améliore la variabilité cardiaque — un marqueur clé de santé et de longévité.'**
+  String get breathCoherenceBenefit;
+
+  /// No description provided for @breathSquareName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Respiration carrée'**
+  String get breathSquareName;
+
+  /// No description provided for @breathSquareDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quatre temps égaux : inspire, retiens poumons pleins, expire, retiens poumons vides. On dessine mentalement un carré. Utilisée par les forces spéciales pour rester calme sous pression.'**
+  String get breathSquareDesc;
+
+  /// No description provided for @breathSquareBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les deux rétentions renforcent le contrôle du souffle et la concentration. Idéale pour retrouver son sang-froid avant un événement stressant, calmer le mental et ancrer l\'attention dans l\'instant.'**
+  String get breathSquareBenefit;
+
+  /// No description provided for @breathWeil478Name.
+  ///
+  /// In fr, this message translates to:
+  /// **'4-7-8'**
+  String get breathWeil478Name;
+
+  /// No description provided for @breathWeil478Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inspire 4 secondes, retiens 7 secondes, expire lentement sur 8 secondes. Popularisée par le Dr Andrew Weil, parfois surnommée \"calmant naturel\".'**
+  String get breathWeil478Desc;
+
+  /// No description provided for @breathWeil478Benefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'expiration longue associée à la rétention active fortement le système nerveux parasympathique — celui du repos et de la récupération. Particulièrement efficace pour redescendre avant le sommeil ou calmer une montée d\'anxiété.'**
+  String get breathWeil478Benefit;
+
+  /// No description provided for @breathDiaphragmaticName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Respiration ventrale'**
+  String get breathDiaphragmaticName;
+
+  /// No description provided for @breathDiaphragmaticDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'La base de toute pratique respiratoire : on gonfle le ventre à l\'inspire (pas la poitrine), on le relâche à l\'expire. Aucune rétention, aucun rythme complexe à retenir.'**
+  String get breathDiaphragmaticDesc;
+
+  /// No description provided for @breathDiaphragmaticBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réapprend à utiliser pleinement le diaphragme plutôt qu\'une respiration thoracique courte et superficielle — la base sur laquelle s\'appuient toutes les autres techniques. Le point de départ le plus accessible pour découvrir la respiration guidée.'**
+  String get breathDiaphragmaticBenefit;
+
+  /// No description provided for @breathPhysiologicalSighName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Soupir physiologique'**
+  String get breathPhysiologicalSighName;
+
+  /// No description provided for @breathPhysiologicalSighDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Deux inspirations courtes par le nez, l\'une après l\'autre sans expirer entre les deux, puis une longue expiration par la bouche. Le geste que le corps fait déjà naturellement pour \"souffler\".'**
+  String get breathPhysiologicalSighDesc;
+
+  /// No description provided for @breathPhysiologicalSighBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'La double inspiration rouvre les petits sacs pulmonaires (alvéoles) affaissés, l\'expiration longue qui suit déclenche un apaisement quasi immédiat. Dans une étude comparative, cette technique a fait mieux que la respiration carrée, l\'hyperventilation cyclique ET la méditation de pleine conscience pour améliorer l\'humeur.'**
+  String get breathPhysiologicalSighBenefit;
+
+  /// No description provided for @consPhaseDuration.
+  ///
+  /// In fr, this message translates to:
+  /// **'Durée de chaque phase'**
+  String get consPhaseDuration;
+
+  /// No description provided for @breathCyclicHyperventilationName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hyperventilation cyclique'**
+  String get breathCyclicHyperventilationName;
+
+  /// No description provided for @breathCyclicHyperventilationDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une série de 30 respirations amples et rapides, suivie d\'une rétention poumons vides, puis d\'une courte récupération. On répète l\'ensemble sur plusieurs \"rounds\", les yeux fermés du début à la fin — aucune action requise pendant la séance.'**
+  String get breathCyclicHyperventilationDesc;
+
+  /// No description provided for @breathCyclicHyperventilationBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un vrai coup de fouet : la phase rapide augmente temporairement l\'alcalinité du sang, la rétention qui suit entraîne la tolérance au CO2 et le contrôle du souffle. Une pratique intense, à réserver aux moments où vous cherchez de l\'énergie ou à repousser vos limites de contrôle respiratoire — pas une technique de détente.'**
+  String get breathCyclicHyperventilationBenefit;
+
+  /// No description provided for @breathCyclicHyperventilationSafetyWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette technique fait momentanément baisser le taux de CO2 dans le sang et peut provoquer des étourdissements, des picotements ou, rarement, un évanouissement.\n\nÀ ne jamais pratiquer :\n• en étant debout, en conduisant, en nageant ou dans/près de l\'eau (risque de noyade documenté en cas de perte de connaissance)\n• en cas de grossesse\n• en cas d\'épilepsie ou d\'antécédents de convulsions\n• en cas de troubles cardiovasculaires\n• en cas de malaises ou évanouissements déjà connus\n\nPratiquez toujours assis ou allongé, dans un endroit sûr. En cas de doute médical, demandez l\'avis d\'un professionnel de santé avant de commencer.'**
+  String get breathCyclicHyperventilationSafetyWarning;
+
+  /// No description provided for @consNumberOfRounds.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre de rounds'**
+  String get consNumberOfRounds;
+
+  /// No description provided for @consHoldDurationPerRound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Durée de rétention par round'**
+  String get consHoldDurationPerRound;
+
+  /// No description provided for @consNoActionDuringSession.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune action à faire pendant la séance — réglez chaque round à l\'avance selon votre expérience.'**
+  String get consNoActionDuringSession;
+
+  /// No description provided for @consRoundLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Round {n}'**
+  String consRoundLabel(int n);
+
+  /// No description provided for @consSessionDurationEstimate.
+  ///
+  /// In fr, this message translates to:
+  /// **'≈ {min} min de séance'**
+  String consSessionDurationEstimate(String min);
+
+  /// No description provided for @consStartButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commencer'**
+  String get consStartButton;
+
+  /// No description provided for @consRoundOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Round {round} / {total}'**
+  String consRoundOf(int round, int total);
+
+  /// No description provided for @consAmpleRapidBreaths.
+  ///
+  /// In fr, this message translates to:
+  /// **'Respirations amples et rapides'**
+  String get consAmpleRapidBreaths;
+
+  /// No description provided for @consHoldEmptyLungs.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retenez, poumons vides'**
+  String get consHoldEmptyLungs;
+
+  /// No description provided for @consCloseEyesFollowSound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermez les yeux, laissez-vous guider par le son'**
+  String get consCloseEyesFollowSound;
+
+  /// No description provided for @consInhaleAndHoldRecovery.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inspirez et retenez — récupération'**
+  String get consInhaleAndHoldRecovery;
+
+  /// No description provided for @consSessionComplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Séance terminée'**
+  String get consSessionComplete;
+
+  /// No description provided for @consRoundsCompletedNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'{rounds, plural, =1{1 round complété. Prends un instant pour ressentir.} other{{rounds} rounds complétés. Prends un instant pour ressentir.}}'**
+  String consRoundsCompletedNote(int rounds);
+
+  /// No description provided for @consFinishButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Terminer'**
+  String get consFinishButton;
+
+  /// No description provided for @consBeforeYouStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avant de commencer'**
+  String get consBeforeYouStart;
+
+  /// No description provided for @consReadAndUnderstand.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai lu et je comprends ces précautions'**
+  String get consReadAndUnderstand;
+
+  /// No description provided for @consContinueButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get consContinueButton;
+
+  /// No description provided for @consAdvancedProtocol.
+  ///
+  /// In fr, this message translates to:
+  /// **'Protocole avancé'**
+  String get consAdvancedProtocol;
+
+  /// No description provided for @consStopButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrêter'**
+  String get consStopButton;
+
+  /// No description provided for @consCycleOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cycle {cycle} / {total}'**
+  String consCycleOf(int cycle, int total);
+
+  /// No description provided for @consNumberOfCycles.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre de cycles'**
+  String get consNumberOfCycles;
+
+  /// No description provided for @consGuidanceSounds.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sons de guidage'**
+  String get consGuidanceSounds;
+
+  /// No description provided for @consStartSessionButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commencer la séance'**
+  String get consStartSessionButton;
+
+  /// No description provided for @consSessionCompleteSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Séance terminée. Prends un instant pour ressentir.'**
+  String get consSessionCompleteSnackbar;
 }
 
 class _AppLocalizationsDelegate
