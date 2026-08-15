@@ -3459,4 +3459,224 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get sleepActionEnvBeddingWhy =>
       'A suitable mattress and pillow prevent micro-awakenings caused by discomfort. You spend a third of your life in it: it\'s a health investment.';
+
+  @override
+  String hintOmega9(String pct) {
+    return 'Omega-9: $pct → olive oil, avocado, almonds/hazelnuts.';
+  }
+
+  @override
+  String hintOmega6(String pct) {
+    return 'Omega-6 (LA): $pct → virgin oils, walnuts, seeds.';
+  }
+
+  @override
+  String hintOmega3Ala(String pct) {
+    return 'Omega-3 ALA: $pct → ground flax/chia, walnuts, rapeseed oil.';
+  }
+
+  @override
+  String hintOmega3(String pct) {
+    return 'Omega-3 EPA/DHA: $pct → sardines, mackerel, herring.';
+  }
+
+  @override
+  String hintEpa(String pct) {
+    return 'EPA: $pct → 1–2 servings oily fish/week.';
+  }
+
+  @override
+  String hintDha(String pct) {
+    return 'DHA: $pct → sardines, mackerel, fortified eggs.';
+  }
+
+  @override
+  String hintVitA(String pct) {
+    return 'Vit A: $pct → carrot/sweet potato + eggs/offal.';
+  }
+
+  @override
+  String hintVitD(String pct) {
+    return 'Vit D: $pct → morning light + sardines/eggs.';
+  }
+
+  @override
+  String hintVitE(String pct) {
+    return 'Vit E: $pct → virgin oils, almonds/hazelnuts.';
+  }
+
+  @override
+  String hintVitK(String pct) {
+    return 'Vit K: $pct → greens + a bit of oil.';
+  }
+
+  @override
+  String hintVitC(String pct) {
+    return 'Vit C: $pct → kiwi, citrus, raw pepper, parsley.';
+  }
+
+  @override
+  String hintB1(String pct) {
+    return 'B1: $pct → whole grains, legumes, pork.';
+  }
+
+  @override
+  String hintB2(String pct) {
+    return 'B2: $pct → milk, eggs, almonds, mushrooms.';
+  }
+
+  @override
+  String hintB3(String pct) {
+    return 'B3: $pct → poultry, fish, peanuts.';
+  }
+
+  @override
+  String hintB5(String pct) {
+    return 'B5: $pct → offal, mushrooms, avocado.';
+  }
+
+  @override
+  String hintB6(String pct) {
+    return 'B6: $pct → banana, chickpeas, poultry.';
+  }
+
+  @override
+  String hintB9(String pct) {
+    return 'B9: $pct → leafy greens, legumes.';
+  }
+
+  @override
+  String hintB12(String pct) {
+    return 'B12: $pct → animal products / fortified foods.';
+  }
+
+  @override
+  String hintCalcium(String pct) {
+    return 'Calcium: $pct → dairy/alternatives, calcium-rich water, tahini.';
+  }
+
+  @override
+  String hintCopper(String pct) {
+    return 'Copper: $pct → seafood, cocoa, nuts/seeds.';
+  }
+
+  @override
+  String hintIron(String pct) {
+    return 'Iron: $pct → legumes/offal + vitamin C.';
+  }
+
+  @override
+  String hintIodine(String pct) {
+    return 'Iodine: $pct → fish, seafood, iodized salt.';
+  }
+
+  @override
+  String hintMagnesium(String pct) {
+    return 'Magnesium: $pct → almonds, dark chocolate, greens.';
+  }
+
+  @override
+  String hintManganese(String pct) {
+    return 'Manganese: $pct → whole grains, nuts, green tea.';
+  }
+
+  @override
+  String hintPhosphorus(String pct) {
+    return 'Phosphorus: $pct → fish, eggs, nuts.';
+  }
+
+  @override
+  String hintPotassium(String pct) {
+    return 'Potassium: $pct → banana, avocado, greens, sweet potato.';
+  }
+
+  @override
+  String hintSelenium(String pct) {
+    return 'Selenium: $pct → fish, seafood, eggs.';
+  }
+
+  @override
+  String hintSodium(String pct) {
+    return 'Sodium: $pct → quality salt if sweating a lot.';
+  }
+
+  @override
+  String hintZinc(String pct) {
+    return 'Zinc: $pct → seafood, beef, pumpkin seeds.';
+  }
+
+  @override
+  String hintFibers(String pct) {
+    return 'Fiber: $pct → +vegetables, legumes, whole fruit.';
+  }
+
+  @override
+  String hintDefault(String pct) {
+    return 'Micros: $pct → colorful, whole-food plate.';
+  }
+
+  @override
+  String get breathGoalApaiserLabel => 'Soothe';
+
+  @override
+  String get breathGoalApaiserSubtitle => 'Calm the mind, bring stress down';
+
+  @override
+  String get breathGoalRenforcerLabel => 'Strengthen';
+
+  @override
+  String get breathGoalRenforcerSubtitle =>
+      'Boost energy, build breath control';
+
+  @override
+  String get breathGoalEquilibrerLabel => 'Balance';
+
+  @override
+  String get breathGoalEquilibrerSubtitle =>
+      'Steady rhythm, balanced nervous system';
+
+  @override
+  String get breathGoalDebuterLabel => 'Start out';
+
+  @override
+  String get breathGoalDebuterSubtitle =>
+      'The basics, gently, to find your footing';
+
+  @override
+  String get breathScreenTitle => 'Breathing';
+
+  @override
+  String get breathGoalPickerTitle => 'What are you looking for today?';
+
+  @override
+  String breathWeekCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sessions this week',
+      one: '$count session this week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get breathSeeAllTechniques => 'See all techniques';
+
+  @override
+  String get consDuJourTitle => 'Your tips for today';
+
+  @override
+  String get consDuJourIntro =>
+      'Your personalized tips, chosen based on your day and your goals.';
+
+  @override
+  String get consDuJourDisclaimer =>
+      'These tips do not replace medical advice. If you have a condition or any doubt, consult your healthcare professional.';
+
+  @override
+  String get consChallengeOfTheDay => 'Your challenge of the day';
+
+  @override
+  String get consNoRecipeMatchesFilters =>
+      'No recipe matches these filters for now.';
 }

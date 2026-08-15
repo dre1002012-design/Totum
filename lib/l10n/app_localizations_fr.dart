@@ -3492,4 +3492,226 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get sleepActionEnvBeddingWhy =>
       'Un matelas et un oreiller adaptés évitent les micro-réveils liés à l\'inconfort. On y passe un tiers de sa vie : c\'est un investissement santé.';
+
+  @override
+  String hintOmega9(String pct) {
+    return 'Oméga-9 : $pct → huile d\'olive, avocat, amandes/noisettes.';
+  }
+
+  @override
+  String hintOmega6(String pct) {
+    return 'Oméga-6 (LA) : $pct → huiles vierges, noix, graines.';
+  }
+
+  @override
+  String hintOmega3Ala(String pct) {
+    return 'Oméga-3 ALA : $pct → lin/chia moulus, noix, huile de colza.';
+  }
+
+  @override
+  String hintOmega3(String pct) {
+    return 'Oméga-3 EPA/DHA : $pct → sardines, maquereau, hareng.';
+  }
+
+  @override
+  String hintEpa(String pct) {
+    return 'EPA : $pct → 1–2 portions poisson gras/sem.';
+  }
+
+  @override
+  String hintDha(String pct) {
+    return 'DHA : $pct → sardines, maquereau, œufs enrichis.';
+  }
+
+  @override
+  String hintVitA(String pct) {
+    return 'Vit A : $pct → carotte/patate douce + œufs/abats.';
+  }
+
+  @override
+  String hintVitD(String pct) {
+    return 'Vit D : $pct → lumière matin + sardines/œufs.';
+  }
+
+  @override
+  String hintVitE(String pct) {
+    return 'Vit E : $pct → huiles vierges, amandes/noisettes.';
+  }
+
+  @override
+  String hintVitK(String pct) {
+    return 'Vit K : $pct → verts + un peu d\'huile.';
+  }
+
+  @override
+  String hintVitC(String pct) {
+    return 'Vit C : $pct → kiwi, agrumes, poivron cru, persil.';
+  }
+
+  @override
+  String hintB1(String pct) {
+    return 'B1 : $pct → céréales complètes, légumineuses, porc.';
+  }
+
+  @override
+  String hintB2(String pct) {
+    return 'B2 : $pct → lait, œufs, amandes, champignons.';
+  }
+
+  @override
+  String hintB3(String pct) {
+    return 'B3 : $pct → volailles, poisson, arachides.';
+  }
+
+  @override
+  String hintB5(String pct) {
+    return 'B5 : $pct → abats, champignons, avocat.';
+  }
+
+  @override
+  String hintB6(String pct) {
+    return 'B6 : $pct → banane, pois chiches, volailles.';
+  }
+
+  @override
+  String hintB9(String pct) {
+    return 'B9 : $pct → verts feuillus, légumineuses.';
+  }
+
+  @override
+  String hintB12(String pct) {
+    return 'B12 : $pct → produits animaux / enrichis.';
+  }
+
+  @override
+  String hintCalcium(String pct) {
+    return 'Calcium : $pct → laitiers/alternatives, eaux calciques, tahini.';
+  }
+
+  @override
+  String hintCopper(String pct) {
+    return 'Cuivre : $pct → fruits de mer, cacao, noix/graines.';
+  }
+
+  @override
+  String hintIron(String pct) {
+    return 'Fer : $pct → légumineuses/abats + vitamine C.';
+  }
+
+  @override
+  String hintIodine(String pct) {
+    return 'Iode : $pct → poissons, fruits de mer, sel iodé.';
+  }
+
+  @override
+  String hintMagnesium(String pct) {
+    return 'Magnésium : $pct → amandes, chocolat noir, verts.';
+  }
+
+  @override
+  String hintManganese(String pct) {
+    return 'Manganèse : $pct → céréales complètes, noix, thé vert.';
+  }
+
+  @override
+  String hintPhosphorus(String pct) {
+    return 'Phosphore : $pct → poisson, œufs, oléagineux.';
+  }
+
+  @override
+  String hintPotassium(String pct) {
+    return 'Potassium : $pct → banane, avocat, verts, patate douce.';
+  }
+
+  @override
+  String hintSelenium(String pct) {
+    return 'Sélénium : $pct → poisson, fruits de mer, œufs.';
+  }
+
+  @override
+  String hintSodium(String pct) {
+    return 'Sodium : $pct → sel de qualité si transpiration.';
+  }
+
+  @override
+  String hintZinc(String pct) {
+    return 'Zinc : $pct → fruits de mer, bœuf, graines de courge.';
+  }
+
+  @override
+  String hintFibers(String pct) {
+    return 'Fibres : $pct → +légumes, légumineuses, fruits entiers.';
+  }
+
+  @override
+  String hintDefault(String pct) {
+    return 'Micros : $pct → assiette colorée & brute.';
+  }
+
+  @override
+  String get breathGoalApaiserLabel => 'Apaiser';
+
+  @override
+  String get breathGoalApaiserSubtitle =>
+      'Calmer le mental, faire retomber le stress';
+
+  @override
+  String get breathGoalRenforcerLabel => 'Renforcer';
+
+  @override
+  String get breathGoalRenforcerSubtitle =>
+      'Booster l\'énergie, muscler le contrôle du souffle';
+
+  @override
+  String get breathGoalEquilibrerLabel => 'Équilibrer';
+
+  @override
+  String get breathGoalEquilibrerSubtitle =>
+      'Rythme régulier, équilibre du système nerveux';
+
+  @override
+  String get breathGoalDebuterLabel => 'Débuter';
+
+  @override
+  String get breathGoalDebuterSubtitle =>
+      'La base, en douceur, pour prendre ses marques';
+
+  @override
+  String get breathScreenTitle => 'Respiration';
+
+  @override
+  String get breathGoalPickerTitle =>
+      'Qu\'est-ce que tu cherches aujourd\'hui ?';
+
+  @override
+  String breathWeekCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count séances cette semaine',
+      one: '$count séance cette semaine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get breathSeeAllTechniques => 'Voir toutes les techniques';
+
+  @override
+  String get consDuJourTitle => 'Tes conseils du jour';
+
+  @override
+  String get consDuJourIntro =>
+      'Tes conseils personnalisés, choisis selon ta journée et tes objectifs.';
+
+  @override
+  String get consDuJourDisclaimer =>
+      'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.';
+
+  @override
+  String get consChallengeOfTheDay => 'Ton défi du jour';
+
+  @override
+  String get consNoRecipeMatchesFilters =>
+      'Aucune recette ne correspond à ces filtres pour le moment.';
 }

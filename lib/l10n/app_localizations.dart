@@ -5981,6 +5981,294 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Un matelas et un oreiller adaptés évitent les micro-réveils liés à l\'inconfort. On y passe un tiers de sa vie : c\'est un investissement santé.'**
   String get sleepActionEnvBeddingWhy;
+
+  /// No description provided for @hintOmega9.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga-9 : {pct} → huile d\'olive, avocat, amandes/noisettes.'**
+  String hintOmega9(String pct);
+
+  /// No description provided for @hintOmega6.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga-6 (LA) : {pct} → huiles vierges, noix, graines.'**
+  String hintOmega6(String pct);
+
+  /// No description provided for @hintOmega3Ala.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga-3 ALA : {pct} → lin/chia moulus, noix, huile de colza.'**
+  String hintOmega3Ala(String pct);
+
+  /// No description provided for @hintOmega3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga-3 EPA/DHA : {pct} → sardines, maquereau, hareng.'**
+  String hintOmega3(String pct);
+
+  /// No description provided for @hintEpa.
+  ///
+  /// In fr, this message translates to:
+  /// **'EPA : {pct} → 1–2 portions poisson gras/sem.'**
+  String hintEpa(String pct);
+
+  /// No description provided for @hintDha.
+  ///
+  /// In fr, this message translates to:
+  /// **'DHA : {pct} → sardines, maquereau, œufs enrichis.'**
+  String hintDha(String pct);
+
+  /// No description provided for @hintVitA.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vit A : {pct} → carotte/patate douce + œufs/abats.'**
+  String hintVitA(String pct);
+
+  /// No description provided for @hintVitD.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vit D : {pct} → lumière matin + sardines/œufs.'**
+  String hintVitD(String pct);
+
+  /// No description provided for @hintVitE.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vit E : {pct} → huiles vierges, amandes/noisettes.'**
+  String hintVitE(String pct);
+
+  /// No description provided for @hintVitK.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vit K : {pct} → verts + un peu d\'huile.'**
+  String hintVitK(String pct);
+
+  /// No description provided for @hintVitC.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vit C : {pct} → kiwi, agrumes, poivron cru, persil.'**
+  String hintVitC(String pct);
+
+  /// No description provided for @hintB1.
+  ///
+  /// In fr, this message translates to:
+  /// **'B1 : {pct} → céréales complètes, légumineuses, porc.'**
+  String hintB1(String pct);
+
+  /// No description provided for @hintB2.
+  ///
+  /// In fr, this message translates to:
+  /// **'B2 : {pct} → lait, œufs, amandes, champignons.'**
+  String hintB2(String pct);
+
+  /// No description provided for @hintB3.
+  ///
+  /// In fr, this message translates to:
+  /// **'B3 : {pct} → volailles, poisson, arachides.'**
+  String hintB3(String pct);
+
+  /// No description provided for @hintB5.
+  ///
+  /// In fr, this message translates to:
+  /// **'B5 : {pct} → abats, champignons, avocat.'**
+  String hintB5(String pct);
+
+  /// No description provided for @hintB6.
+  ///
+  /// In fr, this message translates to:
+  /// **'B6 : {pct} → banane, pois chiches, volailles.'**
+  String hintB6(String pct);
+
+  /// No description provided for @hintB9.
+  ///
+  /// In fr, this message translates to:
+  /// **'B9 : {pct} → verts feuillus, légumineuses.'**
+  String hintB9(String pct);
+
+  /// No description provided for @hintB12.
+  ///
+  /// In fr, this message translates to:
+  /// **'B12 : {pct} → produits animaux / enrichis.'**
+  String hintB12(String pct);
+
+  /// No description provided for @hintCalcium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calcium : {pct} → laitiers/alternatives, eaux calciques, tahini.'**
+  String hintCalcium(String pct);
+
+  /// No description provided for @hintCopper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cuivre : {pct} → fruits de mer, cacao, noix/graines.'**
+  String hintCopper(String pct);
+
+  /// No description provided for @hintIron.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fer : {pct} → légumineuses/abats + vitamine C.'**
+  String hintIron(String pct);
+
+  /// No description provided for @hintIodine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Iode : {pct} → poissons, fruits de mer, sel iodé.'**
+  String hintIodine(String pct);
+
+  /// No description provided for @hintMagnesium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Magnésium : {pct} → amandes, chocolat noir, verts.'**
+  String hintMagnesium(String pct);
+
+  /// No description provided for @hintManganese.
+  ///
+  /// In fr, this message translates to:
+  /// **'Manganèse : {pct} → céréales complètes, noix, thé vert.'**
+  String hintManganese(String pct);
+
+  /// No description provided for @hintPhosphorus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Phosphore : {pct} → poisson, œufs, oléagineux.'**
+  String hintPhosphorus(String pct);
+
+  /// No description provided for @hintPotassium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Potassium : {pct} → banane, avocat, verts, patate douce.'**
+  String hintPotassium(String pct);
+
+  /// No description provided for @hintSelenium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sélénium : {pct} → poisson, fruits de mer, œufs.'**
+  String hintSelenium(String pct);
+
+  /// No description provided for @hintSodium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sodium : {pct} → sel de qualité si transpiration.'**
+  String hintSodium(String pct);
+
+  /// No description provided for @hintZinc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zinc : {pct} → fruits de mer, bœuf, graines de courge.'**
+  String hintZinc(String pct);
+
+  /// No description provided for @hintFibers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fibres : {pct} → +légumes, légumineuses, fruits entiers.'**
+  String hintFibers(String pct);
+
+  /// No description provided for @hintDefault.
+  ///
+  /// In fr, this message translates to:
+  /// **'Micros : {pct} → assiette colorée & brute.'**
+  String hintDefault(String pct);
+
+  /// No description provided for @breathGoalApaiserLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apaiser'**
+  String get breathGoalApaiserLabel;
+
+  /// No description provided for @breathGoalApaiserSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calmer le mental, faire retomber le stress'**
+  String get breathGoalApaiserSubtitle;
+
+  /// No description provided for @breathGoalRenforcerLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renforcer'**
+  String get breathGoalRenforcerLabel;
+
+  /// No description provided for @breathGoalRenforcerSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Booster l\'énergie, muscler le contrôle du souffle'**
+  String get breathGoalRenforcerSubtitle;
+
+  /// No description provided for @breathGoalEquilibrerLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équilibrer'**
+  String get breathGoalEquilibrerLabel;
+
+  /// No description provided for @breathGoalEquilibrerSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rythme régulier, équilibre du système nerveux'**
+  String get breathGoalEquilibrerSubtitle;
+
+  /// No description provided for @breathGoalDebuterLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Débuter'**
+  String get breathGoalDebuterLabel;
+
+  /// No description provided for @breathGoalDebuterSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'La base, en douceur, pour prendre ses marques'**
+  String get breathGoalDebuterSubtitle;
+
+  /// No description provided for @breathScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Respiration'**
+  String get breathScreenTitle;
+
+  /// No description provided for @breathGoalPickerTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Qu\'est-ce que tu cherches aujourd\'hui ?'**
+  String get breathGoalPickerTitle;
+
+  /// No description provided for @breathWeekCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{{count} séance cette semaine} other{{count} séances cette semaine}}'**
+  String breathWeekCount(int count);
+
+  /// No description provided for @breathSeeAllTechniques.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir toutes les techniques'**
+  String get breathSeeAllTechniques;
+
+  /// No description provided for @consDuJourTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes conseils du jour'**
+  String get consDuJourTitle;
+
+  /// No description provided for @consDuJourIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes conseils personnalisés, choisis selon ta journée et tes objectifs.'**
+  String get consDuJourIntro;
+
+  /// No description provided for @consDuJourDisclaimer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.'**
+  String get consDuJourDisclaimer;
+
+  /// No description provided for @consChallengeOfTheDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton défi du jour'**
+  String get consChallengeOfTheDay;
+
+  /// No description provided for @consNoRecipeMatchesFilters.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune recette ne correspond à ces filtres pour le moment.'**
+  String get consNoRecipeMatchesFilters;
 }
 
 class _AppLocalizationsDelegate

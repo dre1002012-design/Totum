@@ -920,72 +920,72 @@ _ThemeDecision _decideTheme({
   );
 }
 
-String _shortMicroHint(String key, double ratio) {
+String _shortMicroHint(String key, double ratio, AppLocalizations l10n) {
   final pct = (ratio * 100).round();
   final ptxt = pct <= 120 ? '$pct %' : '>120 %';
   switch (key) {
     case 'omega9':
-      return 'Oméga-9 : $ptxt → huile d’olive, avocat, amandes/noisettes.';
+      return l10n.hintOmega9(ptxt);
     case 'omega6':
-      return 'Oméga-6 (LA) : $ptxt → huiles vierges, noix, graines.';
+      return l10n.hintOmega6(ptxt);
     case 'omega3_ALA':
-      return 'Oméga-3 ALA : $ptxt → lin/chia moulus, noix, huile de colza.';
+      return l10n.hintOmega3Ala(ptxt);
     case 'omega3':
-      return 'Oméga-3 EPA/DHA : $ptxt → sardines, maquereau, hareng.';
+      return l10n.hintOmega3(ptxt);
     case 'EPA':
-      return 'EPA : $ptxt → 1–2 portions poisson gras/sem.';
+      return l10n.hintEpa(ptxt);
     case 'DHA':
-      return 'DHA : $ptxt → sardines, maquereau, œufs enrichis.';
+      return l10n.hintDha(ptxt);
     case 'vitA':
-      return 'Vit A : $ptxt → carotte/patate douce + œufs/abats.';
+      return l10n.hintVitA(ptxt);
     case 'vitD':
-      return 'Vit D : $ptxt → lumière matin + sardines/œufs.';
+      return l10n.hintVitD(ptxt);
     case 'vitE':
-      return 'Vit E : $ptxt → huiles vierges, amandes/noisettes.';
+      return l10n.hintVitE(ptxt);
     case 'vitK':
-      return 'Vit K : $ptxt → verts + un peu d’huile.';
+      return l10n.hintVitK(ptxt);
     case 'vitC':
-      return 'Vit C : $ptxt → kiwi, agrumes, poivron cru, persil.';
+      return l10n.hintVitC(ptxt);
     case 'B1':
-      return 'B1 : $ptxt → céréales complètes, légumineuses, porc.';
+      return l10n.hintB1(ptxt);
     case 'B2':
-      return 'B2 : $ptxt → lait, œufs, amandes, champignons.';
+      return l10n.hintB2(ptxt);
     case 'B3':
-      return 'B3 : $ptxt → volailles, poisson, arachides.';
+      return l10n.hintB3(ptxt);
     case 'B5':
-      return 'B5 : $ptxt → abats, champignons, avocat.';
+      return l10n.hintB5(ptxt);
     case 'B6':
-      return 'B6 : $ptxt → banane, pois chiches, volailles.';
+      return l10n.hintB6(ptxt);
     case 'B9':
-      return 'B9 : $ptxt → verts feuillus, légumineuses.';
+      return l10n.hintB9(ptxt);
     case 'B12':
-      return 'B12 : $ptxt → produits animaux / enrichis.';
+      return l10n.hintB12(ptxt);
     case 'calcium':
-      return 'Calcium : $ptxt → laitiers/alternatives, eaux calciques, tahini.';
+      return l10n.hintCalcium(ptxt);
     case 'copper':
-      return 'Cuivre : $ptxt → fruits de mer, cacao, noix/graines.';
+      return l10n.hintCopper(ptxt);
     case 'iron':
-      return 'Fer : $ptxt → légumineuses/abats + vitamine C.';
+      return l10n.hintIron(ptxt);
     case 'iodine':
-      return 'Iode : $ptxt → poissons, fruits de mer, sel iodé.';
+      return l10n.hintIodine(ptxt);
     case 'magnesium':
-      return 'Magnésium : $ptxt → amandes, chocolat noir, verts.';
+      return l10n.hintMagnesium(ptxt);
     case 'manganese':
-      return 'Manganèse : $ptxt → céréales complètes, noix, thé vert.';
+      return l10n.hintManganese(ptxt);
     case 'phosphorus':
-      return 'Phosphore : $ptxt → poisson, œufs, oléagineux.';
+      return l10n.hintPhosphorus(ptxt);
     case 'potassium':
-      return 'Potassium : $ptxt → banane, avocat, verts, patate douce.';
+      return l10n.hintPotassium(ptxt);
     case 'selenium':
-      return 'Sélénium : $ptxt → poisson, fruits de mer, œufs.';
+      return l10n.hintSelenium(ptxt);
     case 'sodium':
-      return 'Sodium : $ptxt → sel de qualité si transpiration.';
+      return l10n.hintSodium(ptxt);
     case 'zinc':
-      return 'Zinc : $ptxt → fruits de mer, bœuf, graines de courge.';
+      return l10n.hintZinc(ptxt);
     case 'fibers':
-      return 'Fibres : $ptxt → +légumes, légumineuses, fruits entiers.';
+      return l10n.hintFibers(ptxt);
     default:
-      return 'Micros : $ptxt → assiette colorée & brute.';
+      return l10n.hintDefault(ptxt);
   }
 }
 
@@ -1357,7 +1357,7 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
   for (final e in sorted) {
     if (e.key == decision.microTopic) continue;
     if (!e.value.isFinite || e.value >= 0.95) continue;
-    hints.add(_shortMicroHint(e.key, e.value));
+    hints.add(_shortMicroHint(e.key, e.value, l10n));
     if (hints.length >= 12) break;
   }
   final recipes =
@@ -3798,7 +3798,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
-                'Aucune recette ne correspond à ces filtres pour le moment.',
+                context.l10n.consNoRecipeMatchesFilters,
                 style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
                 textAlign: TextAlign.center,
               ),
@@ -5069,17 +5069,17 @@ class _WellbeingCardState extends State<_WellbeingCard> {
 enum BreathGoal { apaiser, renforcer, equilibrer, debuter }
 
 extension BreathGoalLabel on BreathGoal {
-  String get label => switch (this) {
-        BreathGoal.apaiser => 'Apaiser',
-        BreathGoal.renforcer => 'Renforcer',
-        BreathGoal.equilibrer => 'Équilibrer',
-        BreathGoal.debuter => 'Débuter',
+  String labelFor(AppLocalizations l10n) => switch (this) {
+        BreathGoal.apaiser => l10n.breathGoalApaiserLabel,
+        BreathGoal.renforcer => l10n.breathGoalRenforcerLabel,
+        BreathGoal.equilibrer => l10n.breathGoalEquilibrerLabel,
+        BreathGoal.debuter => l10n.breathGoalDebuterLabel,
       };
-  String get subtitle => switch (this) {
-        BreathGoal.apaiser => 'Calmer le mental, faire retomber le stress',
-        BreathGoal.renforcer => 'Booster l\'énergie, muscler le contrôle du souffle',
-        BreathGoal.equilibrer => 'Rythme régulier, équilibre du système nerveux',
-        BreathGoal.debuter => 'La base, en douceur, pour prendre ses marques',
+  String subtitleFor(AppLocalizations l10n) => switch (this) {
+        BreathGoal.apaiser => l10n.breathGoalApaiserSubtitle,
+        BreathGoal.renforcer => l10n.breathGoalRenforcerSubtitle,
+        BreathGoal.equilibrer => l10n.breathGoalEquilibrerSubtitle,
+        BreathGoal.debuter => l10n.breathGoalDebuterSubtitle,
       };
   IconData get icon => switch (this) {
         BreathGoal.apaiser => Icons.spa_outlined,
@@ -5383,10 +5383,11 @@ class _BreathGoalPickerScreenState extends State<BreathGoalPickerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: TotumColors.page,
       appBar: AppBar(
-        title: const Text('Respiration'),
+        title: Text(l10n.breathScreenTitle),
         backgroundColor: TotumColors.surface,
         foregroundColor: TotumColors.textPrimary,
         elevation: 0,
@@ -5394,14 +5395,14 @@ class _BreathGoalPickerScreenState extends State<BreathGoalPickerScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
         children: [
-          const Text('Qu\'est-ce que tu cherches aujourd\'hui ?',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+          Text(l10n.breathGoalPickerTitle,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
           if (_weekCount != null && _weekCount! > 0)
             Padding(
               padding: const EdgeInsets.only(top: 4, bottom: 8),
               child: Text(
-                '${_weekCount!} séance${_weekCount! > 1 ? 's' : ''} cette semaine',
+                l10n.breathWeekCount(_weekCount!),
                 style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary),
               ),
             ),
@@ -5429,7 +5430,7 @@ class _BreathGoalPickerScreenState extends State<BreathGoalPickerScreen> {
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const RespirationScreen()),
               ),
-              child: const Text('Voir toutes les techniques'),
+              child: Text(l10n.breathSeeAllTechniques),
             ),
           ),
         ],
@@ -5478,11 +5479,11 @@ class _GoalCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(goal.label,
+                Text(goal.labelFor(context.l10n),
                     style: TextStyle(
                         fontSize: 15.5, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
                 const SizedBox(height: 3),
-                Text(goal.subtitle,
+                Text(goal.subtitleFor(context.l10n),
                     style: TextStyle(fontSize: 11, height: 1.3, color: TotumColors.textSecondary)),
               ],
             ),
@@ -5745,7 +5746,7 @@ class _RespirationScreenState extends State<RespirationScreen>
     return Scaffold(
       backgroundColor: TotumColors.page,
       appBar: AppBar(
-        title: const Text('Respiration'),
+        title: Text(context.l10n.breathScreenTitle),
         backgroundColor: TotumColors.surface,
         foregroundColor: TotumColors.textPrimary,
         elevation: 0,
@@ -7024,7 +7025,7 @@ class ConseilsDuJourScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: TotumColors.page,
       appBar: AppBar(
-        title: const Text('Tes conseils du jour'),
+        title: Text(context.l10n.consDuJourTitle),
         backgroundColor: TotumColors.surface,
         foregroundColor: TotumColors.textPrimary,
         elevation: 0,
@@ -7042,14 +7043,14 @@ class ConseilsDuJourScreen extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.auto_stories, color: Colors.white, size: 26),
-                SizedBox(width: 12),
+                const Icon(Icons.auto_stories, color: Colors.white, size: 26),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Tes conseils personnalisés, choisis selon ta journée et tes objectifs.',
-                    style: TextStyle(
+                    context.l10n.consDuJourIntro,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 13,
                         height: 1.4,
@@ -7114,7 +7115,7 @@ class ConseilsDuJourScreen extends StatelessWidget {
           _ChallengeCard(data: data),
           const SizedBox(height: 18),
           Text(
-            'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.',
+            context.l10n.consDuJourDisclaimer,
             style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
             textAlign: TextAlign.center,
           ),
@@ -7232,8 +7233,8 @@ class _ChallengeCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Ton défi du jour',
-                    style: TextStyle(
+                Text(context.l10n.consChallengeOfTheDay,
+                    style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
                         color: TotumColors.accent)),
