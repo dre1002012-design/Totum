@@ -4424,4 +4424,62 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get jrnlLibraryBadge => 'Bibliothèque TOTUM';
+
+  @override
+  String get jrnlWaterTitle => 'Eau';
+
+  @override
+  String jrnlAddGlassTooltip(int ml) {
+    return 'Ajouter un verre ($ml ml)';
+  }
+
+  @override
+  String get jrnlOptionsTooltip => 'Options';
+
+  @override
+  String get jrnlEnterQuantityMenuItem => 'Saisir une quantité';
+
+  @override
+  String get jrnlEditTargetMenuItem => 'Modifier l\'objectif';
+
+  @override
+  String get jrnlGlassSizeMenuItem => 'Taille d\'un verre';
+
+  @override
+  String get jrnlResetToZeroMenuItem => 'Remettre à zéro';
+
+  @override
+  String get jrnlEnterDrankQuantityTitle => 'Saisir la quantité bue';
+
+  @override
+  String get jrnlTotalDailyQuantityMl => 'Quantité totale du jour (en ml) :';
+
+  @override
+  String get jrnlHydrationTargetTitle => 'Objectif d\'hydratation';
+
+  @override
+  String get jrnlWaterPerGlassMl => 'Quantité d\'eau par verre (en ml) :';
+
+  @override
+  String get jrnlValidateButton => 'Valider';
+
+  @override
+  String jrnlWaterBreakdown(int drinks, int food, int pct) {
+    return 'dont $drinks ml de boissons + $food ml des aliments · $pct % de l\'objectif total';
+  }
+
+  @override
+  String jrnlPercentOfTarget(int pct) {
+    return '$pct % de l\'objectif';
+  }
+
+  @override
+  String jrnlTargetReached(int pct) {
+    return 'Objectif atteint ! ($pct %)';
+  }
+
+  @override
+  String jrnlPercentGlassesLeft(int pct, int glasses) {
+    return '$pct % de ton objectif — encore $glasses verre(s) environ';
+  }
 }

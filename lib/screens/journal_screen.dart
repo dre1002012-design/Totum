@@ -8179,11 +8179,11 @@ class _WaterBannerState extends State<_WaterBanner> {
     final result = await showDialog<int>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Saisir la quantité bue'),
+        title: Text(ctx.l10n.jrnlEnterDrankQuantityTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Quantité totale du jour (en ml) :'),
+            Text(ctx.l10n.jrnlTotalDailyQuantityMl),
             const SizedBox(height: 12),
             TextField(
               controller: ctrl,
@@ -8199,13 +8199,13 @@ class _WaterBannerState extends State<_WaterBanner> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Annuler')),
+              child: Text(ctx.l10n.commonCancel)),
           FilledButton(
             onPressed: () {
               final v = int.tryParse(ctrl.text.trim()) ?? _totalMl;
               Navigator.pop(ctx, v.clamp(0, 999999));
             },
-            child: const Text('Valider'),
+            child: Text(ctx.l10n.jrnlValidateButton),
           ),
         ],
       ),
@@ -8221,7 +8221,7 @@ class _WaterBannerState extends State<_WaterBanner> {
     final result = await showDialog<int>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Objectif d\'hydratation'),
+        title: Text(ctx.l10n.jrnlHydrationTargetTitle),
         content: TextField(
           controller: ctrl,
           keyboardType: TextInputType.number,
@@ -8234,13 +8234,13 @@ class _WaterBannerState extends State<_WaterBanner> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Annuler')),
+              child: Text(ctx.l10n.commonCancel)),
           FilledButton(
             onPressed: () {
               final v = int.tryParse(ctrl.text.trim()) ?? _targetMl;
               Navigator.pop(ctx, v.clamp(500, 8000));
             },
-            child: const Text('Valider'),
+            child: Text(ctx.l10n.jrnlValidateButton),
           ),
         ],
       ),
@@ -8261,11 +8261,11 @@ class _WaterBannerState extends State<_WaterBanner> {
     final result = await showDialog<int>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Taille d\'un verre'),
+        title: Text(ctx.l10n.jrnlGlassSizeMenuItem),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Quantité d\'eau par verre (en ml) :'),
+            Text(ctx.l10n.jrnlWaterPerGlassMl),
             const SizedBox(height: 12),
             TextField(
               controller: ctrl,
@@ -8281,13 +8281,13 @@ class _WaterBannerState extends State<_WaterBanner> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Annuler')),
+              child: Text(ctx.l10n.commonCancel)),
           FilledButton(
             onPressed: () {
               final v = int.tryParse(ctrl.text.trim()) ?? _glassMl;
               Navigator.pop(ctx, v.clamp(50, 2000));
             },
-            child: const Text('Valider'),
+            child: Text(ctx.l10n.jrnlValidateButton),
           ),
         ],
       ),
@@ -8302,6 +8302,7 @@ class _WaterBannerState extends State<_WaterBanner> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     const waterColor = TotumColors.accent;
     final glassesFull = _totalMl ~/ _glassMl;
     final targetGlasses = (_targetMl / _glassMl).ceil();
@@ -8338,7 +8339,7 @@ class _WaterBannerState extends State<_WaterBanner> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () => setState(() => _expanded = !_expanded),
-                    child: Text('Eau',
+                    child: Text(l10n.jrnlWaterTitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -8358,7 +8359,7 @@ class _WaterBannerState extends State<_WaterBanner> {
                 IconButton(
                   onPressed: _addGlass,
                   icon: const Icon(Icons.add_circle, size: 24),
-                  tooltip: 'Ajouter un verre ($_glassMl ml)',
+                  tooltip: l10n.jrnlAddGlassTooltip(_glassMl),
                   color: waterColor,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 34),
@@ -8368,7 +8369,7 @@ class _WaterBannerState extends State<_WaterBanner> {
                   icon: Icon(Icons.more_vert, size: 20, color: TotumColors.textSecondary),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 34),
-                  tooltip: 'Options',
+                  tooltip: l10n.jrnlOptionsTooltip,
                   onSelected: (v) {
                     if (v == 'manual') _editManual();
                     if (v == 'target') _editTarget();
@@ -8384,7 +8385,7 @@ class _WaterBannerState extends State<_WaterBanner> {
                       child: Row(children: [
                         Icon(Icons.edit, size: 20, color: TotumColors.textSecondary),
                         const SizedBox(width: 10),
-                        const Text('Saisir une quantité'),
+                        Text(ctx.l10n.jrnlEnterQuantityMenuItem),
                       ]),
                     ),
                     PopupMenuItem(
@@ -8392,7 +8393,7 @@ class _WaterBannerState extends State<_WaterBanner> {
                       child: Row(children: [
                         Icon(Icons.flag, size: 20, color: TotumColors.textSecondary),
                         const SizedBox(width: 10),
-                        const Text('Modifier l\'objectif'),
+                        Text(ctx.l10n.jrnlEditTargetMenuItem),
                       ]),
                     ),
                     PopupMenuItem(
@@ -8400,7 +8401,7 @@ class _WaterBannerState extends State<_WaterBanner> {
                       child: Row(children: [
                         Icon(Icons.local_drink, size: 20, color: TotumColors.textSecondary),
                         const SizedBox(width: 10),
-                        const Text('Taille d\'un verre'),
+                        Text(ctx.l10n.jrnlGlassSizeMenuItem),
                       ]),
                     ),
                     PopupMenuItem(
@@ -8408,7 +8409,7 @@ class _WaterBannerState extends State<_WaterBanner> {
                       child: Row(children: [
                         Icon(Icons.refresh, size: 20, color: TotumColors.textSecondary),
                         const SizedBox(width: 10),
-                        const Text('Remettre à zéro'),
+                        Text(ctx.l10n.jrnlResetToZeroMenuItem),
                       ]),
                     ),
                   ],
@@ -8420,7 +8421,7 @@ class _WaterBannerState extends State<_WaterBanner> {
               Padding(
                 padding: const EdgeInsets.only(left: 30, top: 4),
                 child: Text(
-                  'dont $_totalMl ml de boissons + $_foodWaterMl ml des aliments · $pct % de l\'objectif total',
+                  l10n.jrnlWaterBreakdown(_totalMl, _foodWaterMl, pct),
                   style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary),
                 ),
               ),
@@ -8428,7 +8429,7 @@ class _WaterBannerState extends State<_WaterBanner> {
             if (!_expanded)
               Padding(
                 padding: const EdgeInsets.only(left: 30, top: 2),
-                child: Text('$pct % de l\'objectif',
+                child: Text(l10n.jrnlPercentOfTarget(pct),
                     style: TextStyle(
                         fontSize: 12, color: TotumColors.textSecondary)),
               ),
@@ -8489,8 +8490,9 @@ class _WaterBannerState extends State<_WaterBanner> {
                   Expanded(
                     child: Text(
                       pct >= 100
-                          ? 'Objectif atteint ! ($pct %)'
-                          : '$pct % de ton objectif — encore ${((_targetMl - totalWater) / _glassMl).ceil().clamp(0, 99)} verre(s) environ',
+                          ? l10n.jrnlTargetReached(pct)
+                          : l10n.jrnlPercentGlassesLeft(pct,
+                              ((_targetMl - totalWater) / _glassMl).ceil().clamp(0, 99)),
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: pct >= 100 ? FontWeight.w700 : FontWeight.normal,

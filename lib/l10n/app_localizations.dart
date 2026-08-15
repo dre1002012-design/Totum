@@ -7397,6 +7397,102 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Bibliothèque TOTUM'**
   String get jrnlLibraryBadge;
+
+  /// No description provided for @jrnlWaterTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Eau'**
+  String get jrnlWaterTitle;
+
+  /// No description provided for @jrnlAddGlassTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un verre ({ml} ml)'**
+  String jrnlAddGlassTooltip(int ml);
+
+  /// No description provided for @jrnlOptionsTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Options'**
+  String get jrnlOptionsTooltip;
+
+  /// No description provided for @jrnlEnterQuantityMenuItem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisir une quantité'**
+  String get jrnlEnterQuantityMenuItem;
+
+  /// No description provided for @jrnlEditTargetMenuItem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'objectif'**
+  String get jrnlEditTargetMenuItem;
+
+  /// No description provided for @jrnlGlassSizeMenuItem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taille d\'un verre'**
+  String get jrnlGlassSizeMenuItem;
+
+  /// No description provided for @jrnlResetToZeroMenuItem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remettre à zéro'**
+  String get jrnlResetToZeroMenuItem;
+
+  /// No description provided for @jrnlEnterDrankQuantityTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisir la quantité bue'**
+  String get jrnlEnterDrankQuantityTitle;
+
+  /// No description provided for @jrnlTotalDailyQuantityMl.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quantité totale du jour (en ml) :'**
+  String get jrnlTotalDailyQuantityMl;
+
+  /// No description provided for @jrnlHydrationTargetTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif d\'hydratation'**
+  String get jrnlHydrationTargetTitle;
+
+  /// No description provided for @jrnlWaterPerGlassMl.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quantité d\'eau par verre (en ml) :'**
+  String get jrnlWaterPerGlassMl;
+
+  /// No description provided for @jrnlValidateButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get jrnlValidateButton;
+
+  /// No description provided for @jrnlWaterBreakdown.
+  ///
+  /// In fr, this message translates to:
+  /// **'dont {drinks} ml de boissons + {food} ml des aliments · {pct} % de l\'objectif total'**
+  String jrnlWaterBreakdown(int drinks, int food, int pct);
+
+  /// No description provided for @jrnlPercentOfTarget.
+  ///
+  /// In fr, this message translates to:
+  /// **'{pct} % de l\'objectif'**
+  String jrnlPercentOfTarget(int pct);
+
+  /// No description provided for @jrnlTargetReached.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif atteint ! ({pct} %)'**
+  String jrnlTargetReached(int pct);
+
+  /// No description provided for @jrnlPercentGlassesLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'{pct} % de ton objectif — encore {glasses} verre(s) environ'**
+  String jrnlPercentGlassesLeft(int pct, int glasses);
 }
 
 class _AppLocalizationsDelegate

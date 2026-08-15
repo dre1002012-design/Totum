@@ -1357,5 +1357,21 @@
   "jrnlNoRecipeYet": "No recipe yet",
   "jrnlCreateFirstFoodHint": "Create your first food with the + button in the bottom right",
   "jrnlCreateFirstRecipeHint": "Create your first recipe with the + button in the bottom right",
-  "jrnlLibraryBadge": "TOTUM Library"
+  "jrnlLibraryBadge": "TOTUM Library",
+  "jrnlWaterTitle": "Water",
+  "jrnlAddGlassTooltip": "Add a glass ({ml} ml)",
+  "jrnlOptionsTooltip": "Options",
+  "jrnlEnterQuantityMenuItem": "Enter a quantity",
+  "jrnlEditTargetMenuItem": "Edit target",
+  "jrnlGlassSizeMenuItem": "Glass size",
+  "jrnlResetToZeroMenuItem": "Reset to zero",
+  "jrnlEnterDrankQuantityTitle": "Enter quantity drunk",
+  "jrnlTotalDailyQuantityMl": "Total daily quantity (in ml):",
+  "jrnlHydrationTargetTitle": "Hydration target",
+  "jrnlWaterPerGlassMl": "Water quantity per glass (in ml):",
+  "jrnlValidateButton": "Confirm",
+  "jrnlWaterBreakdown": "including {drinks} ml from drinks + {food} ml from food · {pct}% of the total target",
+  "jrnlPercentOfTarget": "{pct}% of target",
+  "jrnlTargetReached": "Target reached! ({pct}%)",
+  "jrnlPercentGlassesLeft": "{pct}% of your target — about {glasses} glass(es) left"
 }
