@@ -4228,4 +4228,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jrnlNextDayTooltip => 'Next day';
+
+  @override
+  String jrnlTargetKcal(String kcal) {
+    return 'Target $kcal kcal';
+  }
+
+  @override
+  String jrnlConsumedKcal(String kcal) {
+    return 'Consumed $kcal kcal';
+  }
+
+  @override
+  String jrnlRemainingKcal(String kcal) {
+    return 'Remaining $kcal kcal';
+  }
+
+  @override
+  String jrnlExceededByKcal(String kcal) {
+    return 'Exceeded by $kcal kcal';
+  }
 }

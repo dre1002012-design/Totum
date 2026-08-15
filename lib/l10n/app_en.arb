@@ -1318,5 +1318,9 @@
   "jrnlJournalTitle": "Journal",
   "jrnlAccountSettingsTooltip": "Account & Settings",
   "jrnlPreviousDayTooltip": "Previous day",
-  "jrnlNextDayTooltip": "Next day"
+  "jrnlNextDayTooltip": "Next day",
+  "jrnlTargetKcal": "Target {kcal} kcal",
+  "jrnlConsumedKcal": "Consumed {kcal} kcal",
+  "jrnlRemainingKcal": "Remaining {kcal} kcal",
+  "jrnlExceededByKcal": "Exceeded by {kcal} kcal"
 }

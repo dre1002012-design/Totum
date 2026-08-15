@@ -6090,6 +6090,7 @@ class _DayMacroOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final targetKcal = gKcal > 0 ? gKcal : 2000.0;
     final pctKcal = targetKcal == 0
         ? 0.0
@@ -6119,7 +6120,7 @@ class _DayMacroOverview extends StatelessWidget {
                   children: [
                     Icon(Icons.bolt, size: 15, color: TotumColors.textSecondary),
                     const SizedBox(width: 4),
-                    Text('Énergie',
+                    Text(nutrientDisplayLabel('Énergie', l10n),
                         style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: TotumColors.textPrimary)),
                   ],
                 ),
@@ -6144,11 +6145,11 @@ class _DayMacroOverview extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text('Objectif ${targetKcal.toStringAsFixed(0)} kcal',
+                Text(l10n.jrnlTargetKcal(targetKcal.toStringAsFixed(0)),
                     style: TextStyle(fontSize: 11, color: TotumColors.textSecondary), textAlign: TextAlign.center),
-                Text('Consommé ${totals.kcal.toStringAsFixed(0)} kcal',
+                Text(l10n.jrnlConsumedKcal(totals.kcal.toStringAsFixed(0)),
                     style: TextStyle(fontSize: 11, color: TotumColors.textSecondary), textAlign: TextAlign.center),
-                Text('Restant ${remainingKcal.toStringAsFixed(0)} kcal',
+                Text(l10n.jrnlRemainingKcal(remainingKcal.toStringAsFixed(0)),
                     style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: TotumColors.textPrimary),
                     textAlign: TextAlign.center),
                 Builder(builder: (_) {
@@ -6165,7 +6166,7 @@ class _DayMacroOverview extends StatelessWidget {
                         const SizedBox(width: 3),
                         Flexible(
                           child: Text(
-                            'Dépassé de ${excessKcal.toStringAsFixed(0)} kcal',
+                            l10n.jrnlExceededByKcal(excessKcal.toStringAsFixed(0)),
                             style: TextStyle(
                                 fontSize: 10.5, color: TotumColors.negative, fontWeight: FontWeight.w700),
                             textAlign: TextAlign.center,

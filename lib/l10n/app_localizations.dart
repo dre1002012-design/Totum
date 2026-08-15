@@ -7163,6 +7163,30 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Jour suivant'**
   String get jrnlNextDayTooltip;
+
+  /// No description provided for @jrnlTargetKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif {kcal} kcal'**
+  String jrnlTargetKcal(String kcal);
+
+  /// No description provided for @jrnlConsumedKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Consommé {kcal} kcal'**
+  String jrnlConsumedKcal(String kcal);
+
+  /// No description provided for @jrnlRemainingKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restant {kcal} kcal'**
+  String jrnlRemainingKcal(String kcal);
+
+  /// No description provided for @jrnlExceededByKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépassé de {kcal} kcal'**
+  String jrnlExceededByKcal(String kcal);
 }
 
 class _AppLocalizationsDelegate

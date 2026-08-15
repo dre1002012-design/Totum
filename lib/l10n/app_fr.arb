@@ -1486,5 +1486,13 @@
   "jrnlJournalTitle": "Journal",
   "jrnlAccountSettingsTooltip": "Compte & Paramètres",
   "jrnlPreviousDayTooltip": "Jour précédent",
-  "jrnlNextDayTooltip": "Jour suivant"
+  "jrnlNextDayTooltip": "Jour suivant",
+  "jrnlTargetKcal": "Objectif {kcal} kcal",
+  "@jrnlTargetKcal": { "placeholders": { "kcal": {"type": "String"} } },
+  "jrnlConsumedKcal": "Consommé {kcal} kcal",
+  "@jrnlConsumedKcal": { "placeholders": { "kcal": {"type": "String"} } },
+  "jrnlRemainingKcal": "Restant {kcal} kcal",
+  "@jrnlRemainingKcal": { "placeholders": { "kcal": {"type": "String"} } },
+  "jrnlExceededByKcal": "Dépassé de {kcal} kcal",
+  "@jrnlExceededByKcal": { "placeholders": { "kcal": {"type": "String"} } }
 }
