@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -10,10 +11,6 @@ import '../services/app_settings.dart';
 import '../services/units.dart';
 import '../services/export/journal_export.dart';
 import '../theme/totum_style.dart';
-
-/// Version affichée dans "À propos" — à garder alignée avec `version:` dans
-/// pubspec.yaml à chaque bump.
-const String kAppVersion = '1.1.29';
 
 /// URL du portail client Stripe (gestion/annulation d'abonnement).
 /// À remplir lorsque le portail client sera activé dans Stripe
@@ -1157,6 +1154,15 @@ class _DataExportScreenState extends State<DataExportScreen> {
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
+  // Priorité 61 (15/08/2026) : version lue directement depuis le build
+  // (package_info_plus) plutôt qu'une constante dupliquée à resynchroniser
+  // à la main à chaque bump de pubspec.yaml — source d'incohérence
+  // éliminée pour de bon, plutôt que juste corrigée une fois de plus.
+  Future<String> _loadVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    return '${info.version} (${info.buildNumber})';
+  }
+
   @override
   Widget build(BuildContext context) {
     return _settingsScaffold(title: 'À propos', children: [
@@ -1170,7 +1176,11 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Version', style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
-                Text(kAppVersion, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+                FutureBuilder<String>(
+                  future: _loadVersion(),
+                  builder: (context, snap) => Text(snap.data ?? '…',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+                ),
               ],
             ),
           ],
