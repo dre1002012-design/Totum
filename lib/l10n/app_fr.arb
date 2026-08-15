@@ -733,5 +733,13 @@
   "consTabCoaching": "Coaching",
   "consTabVitality": "Vitalité",
   "consTabRecipes": "Recettes",
-  "consMedicalDisclaimer": "Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé."
+  "consMedicalDisclaimer": "Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.",
+
+  "consGreetingNight": "Belle nuit",
+  "consGreetingMorning": "Bonjour",
+  "consGreetingAfternoon": "Bel après-midi",
+  "consGreetingEvening": "Bonne soirée",
+  "consGreetingLateNight": "Bonne nuit",
+  "consCoachTodayLabel": "Ton coach TOTUM du jour",
+  "consDefaultCoachQuote": "Chaque choix aligné aujourd'hui construit ta vitalité de demain."
 }

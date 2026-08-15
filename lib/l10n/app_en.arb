@@ -659,5 +659,13 @@
   "consTabCoaching": "Coaching",
   "consTabVitality": "Vitality",
   "consTabRecipes": "Recipes",
-  "consMedicalDisclaimer": "This advice doesn't replace medical advice. If you have a medical condition or any doubt, consult your healthcare professional."
+  "consMedicalDisclaimer": "This advice doesn't replace medical advice. If you have a medical condition or any doubt, consult your healthcare professional.",
+
+  "consGreetingNight": "Good night",
+  "consGreetingMorning": "Good morning",
+  "consGreetingAfternoon": "Good afternoon",
+  "consGreetingEvening": "Good evening",
+  "consGreetingLateNight": "Good night",
+  "consCoachTodayLabel": "Your TOTUM coach today",
+  "consDefaultCoachQuote": "Every aligned choice today builds tomorrow's vitality."
 }

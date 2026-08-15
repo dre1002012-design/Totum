@@ -2069,4 +2069,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get consMedicalDisclaimer =>
       'This advice doesn\'t replace medical advice. If you have a medical condition or any doubt, consult your healthcare professional.';
+
+  @override
+  String get consGreetingNight => 'Good night';
+
+  @override
+  String get consGreetingMorning => 'Good morning';
+
+  @override
+  String get consGreetingAfternoon => 'Good afternoon';
+
+  @override
+  String get consGreetingEvening => 'Good evening';
+
+  @override
+  String get consGreetingLateNight => 'Good night';
+
+  @override
+  String get consCoachTodayLabel => 'Your TOTUM coach today';
+
+  @override
+  String get consDefaultCoachQuote =>
+      'Every aligned choice today builds tomorrow\'s vitality.';
 }

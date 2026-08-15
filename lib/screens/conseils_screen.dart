@@ -4407,18 +4407,19 @@ class _CoachHeroCard extends StatelessWidget {
   final AdviceScript data;
   const _CoachHeroCard({required this.data});
 
-  ({String salut, IconData icon}) _timeContext() {
+  ({String salut, IconData icon}) _timeContext(AppLocalizations l10n) {
     final h = DateTime.now().hour;
-    if (h < 6) return (salut: 'Belle nuit', icon: Icons.bedtime);
-    if (h < 12) return (salut: 'Bonjour', icon: Icons.wb_sunny);
-    if (h < 18) return (salut: 'Bel après-midi', icon: Icons.wb_sunny_outlined);
-    if (h < 22) return (salut: 'Bonne soirée', icon: Icons.nights_stay);
-    return (salut: 'Bonne nuit', icon: Icons.bedtime);
+    if (h < 6) return (salut: l10n.consGreetingNight, icon: Icons.bedtime);
+    if (h < 12) return (salut: l10n.consGreetingMorning, icon: Icons.wb_sunny);
+    if (h < 18) return (salut: l10n.consGreetingAfternoon, icon: Icons.wb_sunny_outlined);
+    if (h < 22) return (salut: l10n.consGreetingEvening, icon: Icons.nights_stay);
+    return (salut: l10n.consGreetingLateNight, icon: Icons.bedtime);
   }
 
   @override
   Widget build(BuildContext context) {
-    final ctx = _timeContext();
+    final l10n = context.l10n;
+    final ctx = _timeContext(l10n);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -4482,8 +4483,8 @@ class _CoachHeroCard extends StatelessWidget {
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w900)),
-                        const Text('Ton coach TOTUM du jour',
-                            style: TextStyle(
+                        Text(l10n.consCoachTodayLabel,
+                            style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500)),
@@ -4504,7 +4505,7 @@ class _CoachHeroCard extends StatelessWidget {
                       ? data.coachMessage!
                       : (data.quotePremium.isNotEmpty
                           ? data.quotePremium
-                          : 'Chaque choix aligné aujourd\'hui construit ta vitalité de demain.'),
+                          : l10n.consDefaultCoachQuote),
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14.5,

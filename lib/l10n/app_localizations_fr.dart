@@ -2084,4 +2084,26 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get consMedicalDisclaimer =>
       'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.';
+
+  @override
+  String get consGreetingNight => 'Belle nuit';
+
+  @override
+  String get consGreetingMorning => 'Bonjour';
+
+  @override
+  String get consGreetingAfternoon => 'Bel après-midi';
+
+  @override
+  String get consGreetingEvening => 'Bonne soirée';
+
+  @override
+  String get consGreetingLateNight => 'Bonne nuit';
+
+  @override
+  String get consCoachTodayLabel => 'Ton coach TOTUM du jour';
+
+  @override
+  String get consDefaultCoachQuote =>
+      'Chaque choix aligné aujourd\'hui construit ta vitalité de demain.';
 }

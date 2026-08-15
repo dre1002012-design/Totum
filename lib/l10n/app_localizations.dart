@@ -3665,6 +3665,48 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.'**
   String get consMedicalDisclaimer;
+
+  /// No description provided for @consGreetingNight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Belle nuit'**
+  String get consGreetingNight;
+
+  /// No description provided for @consGreetingMorning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour'**
+  String get consGreetingMorning;
+
+  /// No description provided for @consGreetingAfternoon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bel après-midi'**
+  String get consGreetingAfternoon;
+
+  /// No description provided for @consGreetingEvening.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonne soirée'**
+  String get consGreetingEvening;
+
+  /// No description provided for @consGreetingLateNight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonne nuit'**
+  String get consGreetingLateNight;
+
+  /// No description provided for @consCoachTodayLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton coach TOTUM du jour'**
+  String get consCoachTodayLabel;
+
+  /// No description provided for @consDefaultCoachQuote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque choix aligné aujourd\'hui construit ta vitalité de demain.'**
+  String get consDefaultCoachQuote;
 }
 
 class _AppLocalizationsDelegate
