@@ -4300,4 +4300,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jrnlMealNutritionDetailsTooltip => 'Meal nutrition details';
+
+  @override
+  String get jrnlNova1Label => 'Unprocessed or minimally processed';
+
+  @override
+  String get jrnlNova2Label => 'Processed culinary ingredient';
+
+  @override
+  String get jrnlNova3Label => 'Processed food';
+
+  @override
+  String get jrnlNova4Label => 'Ultra-processed';
+
+  @override
+  String get jrnlNova1Desc =>
+      'Food in its natural state or only processed for preservation (fresh, frozen, dried, boiled...) — fruits, vegetables, meat, fish, eggs, plain milk.';
+
+  @override
+  String get jrnlNova2Desc =>
+      'Substance extracted from a whole food (pressing, refining), used in small amounts for cooking or seasoning — oils, butter, sugar, salt.';
+
+  @override
+  String get jrnlNova3Desc =>
+      'Whole food with added salt, sugar or oil to preserve or improve it (canning, smoking, fermenting...) — cheeses, bread, canned vegetables, artisanal cured meats.';
+
+  @override
+  String get jrnlNova4Desc =>
+      'Industrial formulation made from ingredients rarely used in home cooking (additives, flavorings, texturizers) — sodas, ready meals, industrial cookies, processed cured meats.';
+
+  @override
+  String get jrnlNovaScoreTitle => 'The NOVA score';
+
+  @override
+  String get jrnlNovaScoreIntro =>
+      'Classifies foods by their degree of processing — not their nutritional value. A low-calorie product can be ultra-processed, and vice versa.';
+
+  @override
+  String jrnlNovaEstimated(int score) {
+    return 'This food is estimated as NOVA $score by TOTUM, based on its CIQUAL food family — the CIQUAL database doesn\'t provide an official NOVA score. Take it as an indication, not a certified measurement.';
+  }
+
+  @override
+  String jrnlNovaOfficial(int score) {
+    return 'This food is classified as NOVA $score by Open Food Facts (official data for the scanned product).';
+  }
+
+  @override
+  String get jrnlNovaSource =>
+      'Source: NOVA classification (Monteiro et al.), as used by Open Food Facts.';
+
+  @override
+  String get jrnlConfirmDeleteTooltip => 'Confirm deletion';
 }

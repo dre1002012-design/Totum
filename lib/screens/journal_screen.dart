@@ -6887,13 +6887,13 @@ class _MealRowState extends State<_MealRow> {
               IconButton(
                 onPressed: widget.onRemove,
                 icon: Icon(Icons.delete_forever, color: TotumColors.negative),
-                tooltip: 'Confirmer la suppression',
+                tooltip: context.l10n.jrnlConfirmDeleteTooltip,
               ),
             ] else
               IconButton(
                 onPressed: () => setState(() => _pendingDelete = true),
                 icon: Icon(Icons.delete_outline, color: TotumColors.textSecondary),
-                tooltip: 'Supprimer',
+                tooltip: context.l10n.commonDelete,
               ),
           ],
         ],
@@ -6906,18 +6906,20 @@ class _MealRowState extends State<_MealRow> {
 /// transformé). `estime: true` = estimation TOTUM déduite de la famille
 /// CIQUAL (aucune donnée officielle disponible pour cette base) ; jamais
 /// présentée avec la même autorité qu'un NOVA officiel Open Food Facts.
-const Map<int, String> _kNovaLabels = {
-  1: 'Peu ou pas transformé',
-  2: 'Ingrédient culinaire transformé',
-  3: 'Aliment transformé',
-  4: 'Ultra-transformé',
-};
-const Map<int, String> _kNovaDesc = {
-  1: "Aliment dans son état naturel ou juste transformé pour la conservation (frais, surgelé, séché, bouilli...) — fruits, légumes, viandes, poissons, oeufs, lait nature.",
-  2: "Substance extraite d'un aliment brut (pressage, raffinage), utilisée en petite quantité pour cuisiner ou assaisonner — huiles, beurre, sucre, sel.",
-  3: "Aliment brut auquel on ajoute sel, sucre ou huile pour le conserver ou l'améliorer (mise en conserve, fumage, fermentation...) — fromages, pain, conserves de légumes, charcuterie artisanale.",
-  4: "Formulation industrielle à base d'ingrédients rarement utilisés en cuisine maison (additifs, arômes, texturants) — sodas, plats préparés, biscuits industriels, charcuterie transformée.",
-};
+String _novaLabel(int score, AppLocalizations l10n) => switch (score) {
+      1 => l10n.jrnlNova1Label,
+      2 => l10n.jrnlNova2Label,
+      3 => l10n.jrnlNova3Label,
+      4 => l10n.jrnlNova4Label,
+      _ => '',
+    };
+String _novaDesc(int score, AppLocalizations l10n) => switch (score) {
+      1 => l10n.jrnlNova1Desc,
+      2 => l10n.jrnlNova2Desc,
+      3 => l10n.jrnlNova3Desc,
+      4 => l10n.jrnlNova4Desc,
+      _ => '',
+    };
 // Priorité 60 (mode sombre) : getter plutôt que Map const — positive/
 // negative sont désormais adaptatifs au thème, un const figé au premier
 // accès resterait bloqué sur la valeur du thème actif à ce moment-là.
@@ -6957,7 +6959,7 @@ class _NovaBadge extends StatelessWidget {
           children: [
             Text('NOVA $score', style: TextStyle(fontWeight: FontWeight.w800, color: color, fontSize: 12)),
             const SizedBox(width: 6),
-            Text(_kNovaLabels[score] ?? '', style: TextStyle(color: color, fontSize: 12)),
+            Text(_novaLabel(score, context.l10n), style: TextStyle(color: color, fontSize: 12)),
             const SizedBox(width: 4),
             Icon(Icons.info_outline, size: 13, color: color.withValues(alpha: 0.8)),
           ],
@@ -6982,11 +6984,11 @@ void _showNovaInfoSheet(BuildContext context, {required int score, required bool
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Le score NOVA',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+              Text(ctx.l10n.jrnlNovaScoreTitle,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
               const SizedBox(height: 4),
               Text(
-                "Classe les aliments selon leur degré de transformation — pas leur valeur nutritionnelle. Un produit peu calorique peut être ultra-transformé, et inversement.",
+                ctx.l10n.jrnlNovaScoreIntro,
                 style: TextStyle(color: TotumColors.textSecondary, fontSize: 13),
               ),
               const SizedBox(height: 16),
@@ -7004,8 +7006,8 @@ void _showNovaInfoSheet(BuildContext context, {required int score, required bool
                     Expanded(
                       child: Text(
                         estime
-                            ? "Cet aliment est estimé NOVA $score par TOTUM, d'après sa famille alimentaire CIQUAL — la base CIQUAL ne fournit pas de score NOVA officiel. À prendre comme une indication, pas une mesure certifiée."
-                            : 'Cet aliment est classé NOVA $score par Open Food Facts (donnée officielle du produit scanné).',
+                            ? ctx.l10n.jrnlNovaEstimated(score)
+                            : ctx.l10n.jrnlNovaOfficial(score),
                         style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                       ),
                     ),
@@ -7034,10 +7036,10 @@ void _showNovaInfoSheet(BuildContext context, {required int score, required bool
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(_kNovaLabels[g] ?? '',
+                          Text(_novaLabel(g, ctx.l10n),
                               style: TextStyle(fontWeight: g == score ? FontWeight.w800 : FontWeight.w600, fontSize: 13)),
                           const SizedBox(height: 2),
-                          Text(_kNovaDesc[g] ?? '',
+                          Text(_novaDesc(g, ctx.l10n),
                               style: TextStyle(color: TotumColors.textSecondary, fontSize: 12)),
                         ],
                       ),
@@ -7048,7 +7050,7 @@ void _showNovaInfoSheet(BuildContext context, {required int score, required bool
               ],
               const SizedBox(height: 16),
               Text(
-                'Source : classification NOVA (Monteiro et al.), reprise par Open Food Facts.',
+                ctx.l10n.jrnlNovaSource,
                 style: TextStyle(color: TotumColors.textMuted, fontSize: 11),
               ),
             ],

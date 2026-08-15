@@ -4338,4 +4338,56 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get jrnlMealNutritionDetailsTooltip =>
       'Détails nutritionnels du repas';
+
+  @override
+  String get jrnlNova1Label => 'Peu ou pas transformé';
+
+  @override
+  String get jrnlNova2Label => 'Ingrédient culinaire transformé';
+
+  @override
+  String get jrnlNova3Label => 'Aliment transformé';
+
+  @override
+  String get jrnlNova4Label => 'Ultra-transformé';
+
+  @override
+  String get jrnlNova1Desc =>
+      'Aliment dans son état naturel ou juste transformé pour la conservation (frais, surgelé, séché, bouilli...) — fruits, légumes, viandes, poissons, oeufs, lait nature.';
+
+  @override
+  String get jrnlNova2Desc =>
+      'Substance extraite d\'un aliment brut (pressage, raffinage), utilisée en petite quantité pour cuisiner ou assaisonner — huiles, beurre, sucre, sel.';
+
+  @override
+  String get jrnlNova3Desc =>
+      'Aliment brut auquel on ajoute sel, sucre ou huile pour le conserver ou l\'améliorer (mise en conserve, fumage, fermentation...) — fromages, pain, conserves de légumes, charcuterie artisanale.';
+
+  @override
+  String get jrnlNova4Desc =>
+      'Formulation industrielle à base d\'ingrédients rarement utilisés en cuisine maison (additifs, arômes, texturants) — sodas, plats préparés, biscuits industriels, charcuterie transformée.';
+
+  @override
+  String get jrnlNovaScoreTitle => 'Le score NOVA';
+
+  @override
+  String get jrnlNovaScoreIntro =>
+      'Classe les aliments selon leur degré de transformation — pas leur valeur nutritionnelle. Un produit peu calorique peut être ultra-transformé, et inversement.';
+
+  @override
+  String jrnlNovaEstimated(int score) {
+    return 'Cet aliment est estimé NOVA $score par TOTUM, d\'après sa famille alimentaire CIQUAL — la base CIQUAL ne fournit pas de score NOVA officiel. À prendre comme une indication, pas une mesure certifiée.';
+  }
+
+  @override
+  String jrnlNovaOfficial(int score) {
+    return 'Cet aliment est classé NOVA $score par Open Food Facts (donnée officielle du produit scanné).';
+  }
+
+  @override
+  String get jrnlNovaSource =>
+      'Source : classification NOVA (Monteiro et al.), reprise par Open Food Facts.';
+
+  @override
+  String get jrnlConfirmDeleteTooltip => 'Confirmer la suppression';
 }

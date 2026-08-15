@@ -7259,6 +7259,90 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Détails nutritionnels du repas'**
   String get jrnlMealNutritionDetailsTooltip;
+
+  /// No description provided for @jrnlNova1Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Peu ou pas transformé'**
+  String get jrnlNova1Label;
+
+  /// No description provided for @jrnlNova2Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ingrédient culinaire transformé'**
+  String get jrnlNova2Label;
+
+  /// No description provided for @jrnlNova3Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliment transformé'**
+  String get jrnlNova3Label;
+
+  /// No description provided for @jrnlNova4Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ultra-transformé'**
+  String get jrnlNova4Label;
+
+  /// No description provided for @jrnlNova1Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliment dans son état naturel ou juste transformé pour la conservation (frais, surgelé, séché, bouilli...) — fruits, légumes, viandes, poissons, oeufs, lait nature.'**
+  String get jrnlNova1Desc;
+
+  /// No description provided for @jrnlNova2Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Substance extraite d\'un aliment brut (pressage, raffinage), utilisée en petite quantité pour cuisiner ou assaisonner — huiles, beurre, sucre, sel.'**
+  String get jrnlNova2Desc;
+
+  /// No description provided for @jrnlNova3Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliment brut auquel on ajoute sel, sucre ou huile pour le conserver ou l\'améliorer (mise en conserve, fumage, fermentation...) — fromages, pain, conserves de légumes, charcuterie artisanale.'**
+  String get jrnlNova3Desc;
+
+  /// No description provided for @jrnlNova4Desc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Formulation industrielle à base d\'ingrédients rarement utilisés en cuisine maison (additifs, arômes, texturants) — sodas, plats préparés, biscuits industriels, charcuterie transformée.'**
+  String get jrnlNova4Desc;
+
+  /// No description provided for @jrnlNovaScoreTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le score NOVA'**
+  String get jrnlNovaScoreTitle;
+
+  /// No description provided for @jrnlNovaScoreIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Classe les aliments selon leur degré de transformation — pas leur valeur nutritionnelle. Un produit peu calorique peut être ultra-transformé, et inversement.'**
+  String get jrnlNovaScoreIntro;
+
+  /// No description provided for @jrnlNovaEstimated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet aliment est estimé NOVA {score} par TOTUM, d\'après sa famille alimentaire CIQUAL — la base CIQUAL ne fournit pas de score NOVA officiel. À prendre comme une indication, pas une mesure certifiée.'**
+  String jrnlNovaEstimated(int score);
+
+  /// No description provided for @jrnlNovaOfficial.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet aliment est classé NOVA {score} par Open Food Facts (donnée officielle du produit scanné).'**
+  String jrnlNovaOfficial(int score);
+
+  /// No description provided for @jrnlNovaSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Source : classification NOVA (Monteiro et al.), reprise par Open Food Facts.'**
+  String get jrnlNovaSource;
+
+  /// No description provided for @jrnlConfirmDeleteTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer la suppression'**
+  String get jrnlConfirmDeleteTooltip;
 }
 
 class _AppLocalizationsDelegate

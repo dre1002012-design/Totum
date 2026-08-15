@@ -1508,5 +1508,21 @@
   "jrnlFoodsSelectedCount": "{count, plural, =1{1 aliment sélectionné} other{{count} aliments sélectionnés}}",
   "@jrnlFoodsSelectedCount": { "placeholders": { "count": {"type": "int"} } },
   "jrnlCopySelection": "Copier la sélection",
-  "jrnlMealNutritionDetailsTooltip": "Détails nutritionnels du repas"
+  "jrnlMealNutritionDetailsTooltip": "Détails nutritionnels du repas",
+  "jrnlNova1Label": "Peu ou pas transformé",
+  "jrnlNova2Label": "Ingrédient culinaire transformé",
+  "jrnlNova3Label": "Aliment transformé",
+  "jrnlNova4Label": "Ultra-transformé",
+  "jrnlNova1Desc": "Aliment dans son état naturel ou juste transformé pour la conservation (frais, surgelé, séché, bouilli...) — fruits, légumes, viandes, poissons, oeufs, lait nature.",
+  "jrnlNova2Desc": "Substance extraite d'un aliment brut (pressage, raffinage), utilisée en petite quantité pour cuisiner ou assaisonner — huiles, beurre, sucre, sel.",
+  "jrnlNova3Desc": "Aliment brut auquel on ajoute sel, sucre ou huile pour le conserver ou l'améliorer (mise en conserve, fumage, fermentation...) — fromages, pain, conserves de légumes, charcuterie artisanale.",
+  "jrnlNova4Desc": "Formulation industrielle à base d'ingrédients rarement utilisés en cuisine maison (additifs, arômes, texturants) — sodas, plats préparés, biscuits industriels, charcuterie transformée.",
+  "jrnlNovaScoreTitle": "Le score NOVA",
+  "jrnlNovaScoreIntro": "Classe les aliments selon leur degré de transformation — pas leur valeur nutritionnelle. Un produit peu calorique peut être ultra-transformé, et inversement.",
+  "jrnlNovaEstimated": "Cet aliment est estimé NOVA {score} par TOTUM, d'après sa famille alimentaire CIQUAL — la base CIQUAL ne fournit pas de score NOVA officiel. À prendre comme une indication, pas une mesure certifiée.",
+  "@jrnlNovaEstimated": { "placeholders": { "score": {"type": "int"} } },
+  "jrnlNovaOfficial": "Cet aliment est classé NOVA {score} par Open Food Facts (donnée officielle du produit scanné).",
+  "@jrnlNovaOfficial": { "placeholders": { "score": {"type": "int"} } },
+  "jrnlNovaSource": "Source : classification NOVA (Monteiro et al.), reprise par Open Food Facts.",
+  "jrnlConfirmDeleteTooltip": "Confirmer la suppression"
 }
