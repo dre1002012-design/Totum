@@ -2558,9 +2558,9 @@ class PrioritesNutritionnellesScreen extends StatelessWidget {
       backgroundColor: TotumColors.page,
       appBar: AppBar(title: const Text('Priorités nutritionnelles')),
       body: deficits.isEmpty
-          ? const Center(
+          ? Center(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Text(
                   'Bel équilibre aujourd\'hui !\nAucune carence marquée détectée.',
                   textAlign: TextAlign.center,
@@ -2571,7 +2571,7 @@ class PrioritesNutritionnellesScreen extends StatelessWidget {
           : ListView(
               padding: const EdgeInsets.fromLTRB(14, 14, 14, 28),
               children: [
-                const Text(
+                Text(
                   'Classées par priorité, en tenant compte de l\'importance de chaque nutriment. Touche une carence pour voir les aliments qui la comblent.',
                   style: TextStyle(
                       fontSize: 13, color: TotumColors.textSecondary, height: 1.4),
@@ -2660,7 +2660,7 @@ class _DeficitDetailCardState extends State<_DeficitDetailCard> {
                     ),
                     const SizedBox(height: 3),
                     Text('${d.percent} % de ta cible couverte aujourd\'hui',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 11.5, color: TotumColors.textSecondary)),
                   ],
                 ),
@@ -2698,7 +2698,7 @@ class _DeficitDetailCardState extends State<_DeficitDetailCard> {
                     color: c.withValues(alpha: 0.06),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Aucun aliment consommé aujourd\'hui n\'en contenait. C\'est là qu\'il faut agir : consulte la fiche ci-dessous pour savoir où le trouver.',
                     style: TextStyle(
                         fontSize: 12.5, height: 1.5, color: TotumColors.textPrimary),
@@ -2738,7 +2738,7 @@ class _DeficitDetailCardState extends State<_DeficitDetailCard> {
                             width: 62,
                             child: Text('${_fmt(f.amount)} $unit',
                                 textAlign: TextAlign.right,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w700,
                                     color: TotumColors.textPrimary)),
@@ -2752,7 +2752,7 @@ class _DeficitDetailCardState extends State<_DeficitDetailCard> {
           ),
           if (d.ficheKey != null) ...[
             const SizedBox(height: 6),
-            const Divider(height: 1, color: TotumColors.outline),
+            Divider(height: 1, color: TotumColors.outline),
             const SizedBox(height: 10),
             InkWell(
               onTap: () => showNutrientFiche(context, d.ficheKey!),
@@ -2872,7 +2872,7 @@ class _RecipesBanner extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           '${r.kcal100?.round() ?? 0} kcal/100g',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 11, color: TotumColors.textSecondary),
                         ),
                       ],
@@ -2905,7 +2905,7 @@ class _ScoreCriteriaRow extends StatelessWidget {
                 style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
             TextSpan(
                 text: detail,
-                style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
+                style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
           ],
         ),
       ),
@@ -3007,8 +3007,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           _added = true;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Recette ajoutée à tes recettes !'),
+          SnackBar(
+            content: const Text('Recette ajoutée à tes recettes !'),
             backgroundColor: TotumColors.positive,
           ),
         );
@@ -3075,12 +3075,12 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             const _ScoreCriteriaRow('Sucres', '7,5 pts — maîtrise des sucres'),
             const _ScoreCriteriaRow('Sodium', '7,5 pts — maîtrise du sel'),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               '70-100 : excellent  •  45-69 : correct  •  <45 : à limiter',
               style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary),
             ),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               'Les collations Pré-workout sont volontairement pauvres en '
               'fibres/protéines (digestion rapide avant l\'effort) : un score '
               'plus bas y est normal, pas un signal à éviter juste avant '
@@ -3143,7 +3143,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             const _ScoreCriteriaRow('Glucides', '15 % — cohérence avec tes glucides restants'),
             const _ScoreCriteriaRow('Lipides', '15 % — cohérence avec tes lipides restants'),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Proche de 100 % : une taille de portion cohérente pour ce '
               'repas, compte tenu de ce qu\'il te reste aujourd\'hui  •  '
               'Score plus bas : le plat est nettement trop copieux ou trop '
@@ -3151,7 +3151,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary),
             ),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               'Le calcul tient compte du type de repas (un petit-déjeuner ou '
               'une collation ne doivent pas peser aussi lourd qu\'un déjeuner) '
               'et évolue au fil de la journée selon ce que tu as déjà mangé. '
@@ -3268,11 +3268,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Icon(Icons.soup_kitchen_outlined, size: 17, color: TotumColors.textSecondary),
-                      SizedBox(width: 8),
-                      Text('Préparation',
+                      const SizedBox(width: 8),
+                      const Text('Préparation',
                           style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
                     ],
                   ),
@@ -3381,7 +3381,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                   style: const TextStyle(
                                       fontSize: 17, fontWeight: FontWeight.w900)),
                               Text('$unit $label',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 10.5, color: TotumColors.textSecondary)),
                             ],
                           ),
@@ -3423,7 +3423,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                 style: const TextStyle(fontSize: 13.5)),
                           ),
                           Text('${i.grams.round()} g',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
                                   color: TotumColors.textSecondary)),
@@ -3455,7 +3455,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'Une fois ajoutée, retrouve cette recette dans ton onglet Journal pour l\'intégrer à tes repas.',
             style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
             textAlign: TextAlign.center,
@@ -3675,7 +3675,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                                   fontSize: 19, fontWeight: FontWeight.w900)),
                           const SizedBox(height: 2),
                           Text('${all.length} recettes triées par objectif',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 12.5, color: TotumColors.textSecondary)),
                         ],
                       ),
@@ -3728,7 +3728,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                         ),
                         child: IconButton(
                           tooltip: 'Réinitialiser les filtres',
-                          icon: const Icon(Icons.filter_alt_off_outlined,
+                          icon: Icon(Icons.filter_alt_off_outlined,
                               size: 20, color: TotumColors.textSecondary),
                           onPressed: _resetFilters,
                         ),
@@ -3825,7 +3825,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
                             gradient: selected
-                                ? const LinearGradient(
+                                ? LinearGradient(
                                     colors: [tileColor, TotumProgress.stop75],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
@@ -3893,9 +3893,9 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
           ),
         ),
         if (filtered.isEmpty)
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 24),
+              padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
                 'Aucune recette ne correspond à ces filtres pour le moment.',
                 style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
@@ -3982,7 +3982,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                     children: [
                       Text(
                         '${r.category} · ${r.kcal100?.round() ?? 0} kcal/100g',
-                        style: const TextStyle(fontSize: 11.5, color: TotumColors.textSecondary),
+                        style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary),
                       ),
                       _miniBadge('$hs', _healthyScoreColor(hs), icon: Icons.favorite),
                       if (smartPct != null && smartPct >= 60)
@@ -3992,7 +3992,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: TotumColors.textMuted),
+            Icon(Icons.chevron_right, color: TotumColors.textMuted),
           ],
         ),
       ),
@@ -4051,7 +4051,7 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                                 height: 1.2)),
                         const SizedBox(height: 3),
                         Text('${r.kcal100?.round() ?? 0} kcal/100g',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 10.5, color: TotumColors.textSecondary)),
                       ],
                     ),
@@ -4249,7 +4249,7 @@ class ConseilsScreenState extends State<ConseilsScreen>
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         foregroundColor: TotumColors.textPrimary,
-        title: const Text('Conseils',
+        title: Text('Conseils',
             style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
         actions: [
           IconButton(
@@ -4320,7 +4320,7 @@ class ConseilsScreenState extends State<ConseilsScreen>
                         const SizedBox(height: 14),
                         _AnimatedAppear(index: 2, child: _DailyAdviceEntryCard(data: data)),
                         const SizedBox(height: 16),
-                        const Text(
+                        Text(
                           'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.',
                           style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
                           textAlign: TextAlign.center,
@@ -4392,7 +4392,7 @@ class _CoachHeroCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           colors: [TotumColors.accent, TotumProgress.stop75],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -4536,7 +4536,7 @@ class _ScorePriorityRow extends StatelessWidget {
                                 color: s.color)),
                       ),
                       const SizedBox(height: 8),
-                      const Text('Score TOTUM',
+                      Text('Score TOTUM',
                           style:
                               TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
                       const SizedBox(height: 2),
@@ -4550,7 +4550,7 @@ class _ScorePriorityRow extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text('Provisoire · ${s.dayPercent} % de ta journée',
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 10.5, color: TotumColors.textMuted)),
                       ],
                       const SizedBox(height: 8),
@@ -4613,7 +4613,7 @@ class _ScorePriorityRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     if (data.deficits.isEmpty)
-                      const Flexible(
+                      Flexible(
                         child: Text(
                           'Aucune carence marquée aujourd\'hui. Beau travail !',
                           style: TextStyle(
@@ -4651,7 +4651,7 @@ class _ScorePriorityRow extends StatelessWidget {
                                   const SizedBox(width: 4),
                                   Text(
                                     '${d.percent}%',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 10.5, color: TotumColors.textMuted),
                                   ),
                                 ],
@@ -4709,7 +4709,7 @@ class _DailyAdviceEntryCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             colors: [TotumColors.accent, TotumProgress.stop75],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -4847,7 +4847,7 @@ class _WellbeingCardState extends State<_WellbeingCard> {
         const Text('Bien-être holistique',
             style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
         const SizedBox(height: 4),
-        const Text(
+        Text(
           'Les trois piliers de ta vitalité au quotidien : sommeil, stress '
           'et exposition au soleil.',
           style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4),
@@ -4947,7 +4947,7 @@ class _WellbeingCardState extends State<_WellbeingCard> {
                 if (widget.data.actionLifestyle.isNotEmpty) ...[
                   const SizedBox(height: 6),
                   Text(widget.data.actionLifestyle,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 13, color: TotumColors.textPrimary, height: 1.45)),
                 ],
               ],
@@ -5023,7 +5023,7 @@ class _WellbeingCardState extends State<_WellbeingCard> {
                         color: color)),
               ),
               Text(valueLabel,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w700,
                       color: TotumColors.textPrimary)),
@@ -5069,7 +5069,7 @@ class _WellbeingCardState extends State<_WellbeingCard> {
                           color: color)),
                   const SizedBox(width: 6),
                   Text('· $toolSubtitle',
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 11.5, color: TotumColors.textMuted)),
                   const Spacer(),
                   Icon(Icons.chevron_right, size: 17, color: color),
@@ -5117,7 +5117,7 @@ class _WellbeingCardState extends State<_WellbeingCard> {
               ],
             ),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               'Une bonne partie de ta vitamine D vient de l\'exposition au '
               'soleil, pas seulement de l\'alimentation. Estime ta synthèse '
               'du jour pour savoir où tu en es.',
@@ -5443,7 +5443,7 @@ class _BreathGoalPickerScreenState extends State<BreathGoalPickerScreen> {
               padding: const EdgeInsets.only(top: 4, bottom: 8),
               child: Text(
                 '${_weekCount!} séance${_weekCount! > 1 ? 's' : ''} cette semaine',
-                style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary),
+                style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary),
               ),
             ),
           const SizedBox(height: 12),
@@ -5520,11 +5520,11 @@ class _GoalCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(goal.label,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 15.5, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
                 const SizedBox(height: 3),
                 Text(goal.subtitle,
-                    style: const TextStyle(fontSize: 11, height: 1.3, color: TotumColors.textSecondary)),
+                    style: TextStyle(fontSize: 11, height: 1.3, color: TotumColors.textSecondary)),
               ],
             ),
           ],
@@ -5832,10 +5832,10 @@ class _RespirationScreenState extends State<RespirationScreen>
                   fontSize: 26, fontWeight: FontWeight.w900, color: _accent)),
           const SizedBox(height: 4),
           Text('$_remaining',
-              style: const TextStyle(fontSize: 18, color: TotumColors.textSecondary)),
+              style: TextStyle(fontSize: 18, color: TotumColors.textSecondary)),
           const SizedBox(height: 8),
           Text('Cycle ${_cycle + 1} / $_cycles',
-              style: const TextStyle(fontSize: 13, color: TotumColors.textMuted)),
+              style: TextStyle(fontSize: 13, color: TotumColors.textMuted)),
           const SizedBox(height: 40),
           OutlinedButton.icon(
             onPressed: _stop,
@@ -5895,7 +5895,7 @@ class _RespirationScreenState extends State<RespirationScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(rt.name,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                           const Text('Protocole avancé',
                               style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: TotumColors.accent)),
@@ -5943,7 +5943,7 @@ class _RespirationScreenState extends State<RespirationScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(_tech.desc,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13, height: 1.5, color: TotumColors.textPrimary)),
               const SizedBox(height: 10),
               Container(
@@ -5960,7 +5960,7 @@ class _RespirationScreenState extends State<RespirationScreen>
                     const SizedBox(width: 7),
                     Expanded(
                       child: Text(_tech.benefit,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 12,
                               height: 1.45,
                               color: TotumColors.textPrimary)),
@@ -5982,7 +5982,7 @@ class _RespirationScreenState extends State<RespirationScreen>
         // Réglage du nombre de cycles
         Row(
           children: [
-            const Icon(Icons.repeat, size: 18, color: TotumColors.textSecondary),
+            Icon(Icons.repeat, size: 18, color: TotumColors.textSecondary),
             const SizedBox(width: 8),
             const Text('Nombre de cycles',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
@@ -6004,7 +6004,7 @@ class _RespirationScreenState extends State<RespirationScreen>
         // Durée totale estimée
         Center(
           child: Text('≈ $_totalMinutes min de séance',
-              style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
+              style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
         ),
         const SizedBox(height: 12),
         // Son on/off
@@ -6348,7 +6348,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
       children: [
         Text(widget.tech.desc,
-            style: const TextStyle(fontSize: 13.5, height: 1.5, color: TotumColors.textPrimary)),
+            style: TextStyle(fontSize: 13.5, height: 1.5, color: TotumColors.textPrimary)),
         const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(12),
@@ -6363,7 +6363,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
               const SizedBox(width: 7),
               Expanded(
                 child: Text(widget.tech.benefit,
-                    style: const TextStyle(fontSize: 12, height: 1.45, color: TotumColors.textPrimary)),
+                    style: TextStyle(fontSize: 12, height: 1.45, color: TotumColors.textPrimary)),
               ),
             ],
           ),
@@ -6399,7 +6399,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
         const SizedBox(height: 20),
         const Text('Durée de rétention par round', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
         const SizedBox(height: 2),
-        const Text('Aucune action à faire pendant la séance — réglez chaque round à l\'avance selon votre expérience.',
+        Text('Aucune action à faire pendant la séance — réglez chaque round à l\'avance selon votre expérience.',
             style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
         const SizedBox(height: 10),
         // Priorité 45 (retour d'Alex) : une durée de rétention réglable PAR
@@ -6413,7 +6413,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
                 SizedBox(
                   width: 64,
                   child: Text('Round ${r + 1}',
-                      style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
+                      style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
                 ),
                 const Spacer(),
                 IconButton(
@@ -6442,7 +6442,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
         // comme pour les autres respirations").
         Center(
           child: Text('≈ $_totalMinutes min de séance',
-              style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
+              style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
         ),
         const SizedBox(height: 24),
         SizedBox(
@@ -6462,7 +6462,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
   }
 
   Widget _roundLabel() => Text('Round $_round / $_totalRounds',
-      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textSecondary));
+      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textSecondary));
 
   Widget _buildRapidBreathing() {
     final total = widget.tech.rapidBreathsPerRound;
@@ -6489,7 +6489,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
           const SizedBox(height: 24),
           Text('$current / $total', style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900)),
           const SizedBox(height: 6),
-          const Text('Respirations amples et rapides', style: TextStyle(color: TotumColors.textSecondary)),
+          Text('Respirations amples et rapides', style: TextStyle(color: TotumColors.textSecondary)),
         ],
       ),
     );
@@ -6513,11 +6513,11 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
                 style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w900)),
           ),
           const SizedBox(height: 14),
-          const Text('Retenez, poumons vides',
+          Text('Retenez, poumons vides',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
           const SizedBox(height: 4),
-          const Text('Fermez les yeux, laissez-vous guider par le son',
+          Text('Fermez les yeux, laissez-vous guider par le son',
               textAlign: TextAlign.center,
               style: TextStyle(color: TotumColors.textSecondary)),
         ],
@@ -6544,7 +6544,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
             ),
           ),
           const SizedBox(height: 10),
-          const Text('Inspirez et retenez — récupération',
+          Text('Inspirez et retenez — récupération',
               style: TextStyle(color: TotumColors.textSecondary)),
         ],
       ),
@@ -6564,7 +6564,7 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
             const SizedBox(height: 6),
             Text('$_totalRounds round${_totalRounds > 1 ? 's' : ''} complété${_totalRounds > 1 ? 's' : ''}. Prends un instant pour ressentir.',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: TotumColors.textSecondary)),
+                style: TextStyle(color: TotumColors.textSecondary)),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity, height: 52,
@@ -6835,7 +6835,7 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Un sommeil de qualité n\'est pas une chance, c\'est le résultat de bonnes habitudes. Voici les leviers qui comptent vraiment — coche ceux que tu mets en place.',
                   style: TextStyle(
                       fontSize: 13, height: 1.5, color: TotumColors.textPrimary),
@@ -6869,7 +6869,7 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
           const Text('Les 6 leviers de ton sommeil',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
-          const Text('Appuie sur un levier pour voir les gestes et cocher ceux que tu mets en place.',
+          Text('Appuie sur un levier pour voir les gestes et cocher ceux que tu mets en place.',
               style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary, height: 1.4)),
           const SizedBox(height: 14),
           GridView.builder(
@@ -6934,7 +6934,7 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
                   const Icon(Icons.check_circle, size: 20, color: _accent)
                 else
                   Text('$done/$total',
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
                           color: TotumColors.textMuted)),
@@ -6949,7 +6949,7 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
               pillar.intro,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 11, height: 1.35, color: TotumColors.textSecondary),
             ),
           ],
@@ -7009,7 +7009,7 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
               ),
               const SizedBox(height: 10),
               Text(pillar.intro,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 13, height: 1.5, color: TotumColors.textSecondary)),
               const SizedBox(height: 16),
               for (int i = 0; i < pillar.actions.length; i++) ...[
@@ -7081,7 +7081,7 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
                           color: done ? TotumColors.textMuted : TotumColors.textPrimary)),
                   const SizedBox(height: 4),
                   Text(action.why,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 12.5, height: 1.45, color: TotumColors.textSecondary)),
                 ],
               ),
@@ -7116,7 +7116,7 @@ class ConseilsDuJourScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 colors: [TotumColors.accent, TotumProgress.stop75],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -7194,7 +7194,7 @@ class ConseilsDuJourScreen extends StatelessWidget {
           const SizedBox(height: 4),
           _ChallengeCard(data: data),
           const SizedBox(height: 18),
-          const Text(
+          Text(
             'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.',
             style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
             textAlign: TextAlign.center,
@@ -7265,7 +7265,7 @@ class _AdviceTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(body,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 13, color: TotumColors.textPrimary, height: 1.45)),
               ],
             ),
@@ -7320,7 +7320,7 @@ class _ChallengeCard extends StatelessWidget {
                         color: TotumColors.accent)),
                 const SizedBox(height: 4),
                 Text(data.defi24h,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 13, color: TotumColors.textPrimary, height: 1.45)),
               ],
             ),

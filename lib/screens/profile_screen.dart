@@ -799,7 +799,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               _manualGoalsCard(),
             ],
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Le détail complet (vitamines, minéraux, acides gras) se calcule automatiquement dans l\'onglet Bilan.',
               style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted),
             ),
@@ -838,7 +838,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// titre, contrairement aux cartes 3/4 : "Ton assiette aujourd'hui",
   /// "Micronutriments en vedette").
   Widget _todayEyebrow() {
-    return const Text('AUJOURD\'HUI',
+    return Text('AUJOURD\'HUI',
         textAlign: TextAlign.center,
         style: TextStyle(
             fontSize: 10.5,
@@ -854,8 +854,8 @@ class ProfileScreenState extends State<ProfileScreen> {
         children: [
           Icon(icon, size: 15, color: TotumColors.accent),
           const SizedBox(width: 7),
-          Expanded(child: Text(label, style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary))),
-          Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+          Expanded(child: Text(label, style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary))),
+          Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
         ],
       ),
     );
@@ -918,7 +918,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 fontWeight: FontWeight.w900,
                                 color: isOver ? TotumColors.negative : TotumColors.textPrimary)),
                         Text(isOver ? 'kcal dépassé' : 'kcal restant', textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 9.5, color: TotumColors.textSecondary, fontWeight: FontWeight.w700)),
+                            style: TextStyle(fontSize: 9.5, color: TotumColors.textSecondary, fontWeight: FontWeight.w700)),
                       ],
                     ),
                   ],
@@ -990,7 +990,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           children: [
             Icon(icon, size: 12, color: TotumColors.textSecondary),
             const SizedBox(width: 3),
-            Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+            Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
           ],
         ),
         Text(
@@ -1017,7 +1017,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         children: [
           _todayEyebrow(),
           const SizedBox(height: 4),
-          const Text('Macronutriments', textAlign: TextAlign.center,
+          Text('Macronutriments', textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           const SizedBox(height: 18),
           Row(
@@ -1074,7 +1074,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   )
-                : const Center(
+                : Center(
                     child: Icon(Icons.pie_chart_outline, color: TotumColors.textMuted, size: 32)),
           ),
           const SizedBox(width: 16),
@@ -1085,7 +1085,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Text(useToday ? 'Ton assiette aujourd\'hui' : 'Ton assiette (objectif)',
                     maxLines: 1, overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                 const SizedBox(height: 10),
                 for (final r in rows) ...[
                   Padding(
@@ -1094,9 +1094,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Container(width: 9, height: 9, decoration: BoxDecoration(color: r.$3, shape: BoxShape.circle)),
                         const SizedBox(width: 6),
-                        Expanded(child: Text(r.$1, style: const TextStyle(fontSize: 11.5, color: TotumColors.textSecondary))),
+                        Expanded(child: Text(r.$1, style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary))),
                         Text(total > 0 ? '${(r.$2 / total * 100).round()}%' : '—',
-                            style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                       ],
                     ),
                   ),
@@ -1118,7 +1118,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Micronutriments en vedette',
+          Text('Micronutriments en vedette',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           const SizedBox(height: 12),
           FutureBuilder<nutri.NutritionTargets>(
@@ -1181,7 +1181,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               Text('${(fraction * 100).round()}',
-                  style: const TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                  style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
             ],
           ),
         ),
@@ -1190,7 +1190,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 8.5, color: TotumColors.textSecondary, fontWeight: FontWeight.w600)),
+            style: TextStyle(fontSize: 8.5, color: TotumColors.textSecondary, fontWeight: FontWeight.w600)),
       ],
     );
   }
@@ -1303,7 +1303,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(color: TotumColors.outlineStrong, borderRadius: BorderRadius.circular(999)),
                         ),
                       ),
-                      Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+                      Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
                       const SizedBox(height: 12),
                       if (pinned != null) pinned(ctx, setSheetState),
                     ],
@@ -1375,9 +1375,9 @@ class ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                  Text(title, style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                   if (subtitle != null)
-                    Text(subtitle, style: const TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+                    Text(subtitle, style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
                 ],
               ),
             ),
@@ -1481,8 +1481,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(o.title, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
-                          Text(_technicalLabelFor(o.goal), style: const TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+                          Text(o.title, style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                          Text(_technicalLabelFor(o.goal), style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
                         ],
                       ),
                     ),
@@ -1494,8 +1494,8 @@ class ProfileScreenState extends State<ProfileScreen> {
             InkWell(
               onTap: () => _openGoalDetailSheet(sheetCtx, o),
               borderRadius: BorderRadius.circular(999),
-              child: const Padding(
-                padding: EdgeInsets.all(8),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
                 child: Icon(Icons.info_outline, size: 20, color: TotumColors.textMuted),
               ),
             ),
@@ -1520,9 +1520,9 @@ class ProfileScreenState extends State<ProfileScreen> {
             child: Text(_technicalLabelFor(o.goal), style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.accent)),
           ),
           const SizedBox(height: 12),
-          Text(o.description, style: const TextStyle(fontSize: 14.5, color: TotumColors.textPrimary, height: 1.4)),
+          Text(o.description, style: TextStyle(fontSize: 14.5, color: TotumColors.textPrimary, height: 1.4)),
           const SizedBox(height: 18),
-          const Text('À retenir', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+          Text('À retenir', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           const SizedBox(height: 8),
           ...o.tips.map((t) => Padding(
                 padding: const EdgeInsets.only(bottom: 8),
@@ -1531,7 +1531,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     const Icon(Icons.check_circle, size: 16, color: TotumColors.accent),
                     const SizedBox(width: 10),
-                    Expanded(child: Text(t, style: const TextStyle(fontSize: 13.5, color: TotumColors.textPrimary, height: 1.35))),
+                    Expanded(child: Text(t, style: TextStyle(fontSize: 13.5, color: TotumColors.textPrimary, height: 1.35))),
                   ],
                 ),
               )),
@@ -1541,15 +1541,15 @@ class ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.emoji_events_outlined, size: 18, color: TotumColors.accent),
-                    SizedBox(width: 8),
+                    const Icon(Icons.emoji_events_outlined, size: 18, color: TotumColors.accent),
+                    const SizedBox(width: 8),
                     Text('Conseil du coach', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text(o.coach, style: const TextStyle(fontSize: 13, color: TotumColors.textSecondary, height: 1.4)),
+                Text(o.coach, style: TextStyle(fontSize: 13, color: TotumColors.textSecondary, height: 1.4)),
               ],
             ),
           ),
@@ -1600,7 +1600,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           children: [
             Row(
               children: [
-                const Icon(Icons.wc, size: 18, color: TotumColors.textSecondary),
+                Icon(Icons.wc, size: 18, color: TotumColors.textSecondary),
                 const SizedBox(width: 8),
                 Expanded(
                   child: SegmentedButton<nutri.Sex>(
@@ -1654,7 +1654,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             // fiabilité de la tendance de poids (et donc de la calibration
             // adaptative) dépend directement de la régularité des conditions
             // de pesée.
-            const Text(
+            Text(
               'Pèse-toi si possible tous les jours, dans les mêmes conditions à chaque fois — idéalement le matin à jeun, au lever.',
               style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted, fontStyle: FontStyle.italic),
             ),
@@ -1667,16 +1667,16 @@ class ProfileScreenState extends State<ProfileScreen> {
                 metricController: _targetWeightCtrl,
                 onChanged: (_) { setSheetState((){}); _recomputePreview(); }),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               'Utilisé uniquement pour l\'objectif Maintien : une fois proche de ta cible, tes calories suivent ta dépense réelle ; si tu t\'en éloignes, un léger ajustement automatique t\'y ramène doucement.',
               style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
             ),
             const SizedBox(height: 14),
             Row(
               children: [
-                const Icon(Icons.pie_chart_outline, size: 18, color: TotumColors.textSecondary),
+                Icon(Icons.pie_chart_outline, size: 18, color: TotumColors.textSecondary),
                 const SizedBox(width: 8),
-                const Expanded(
+                Expanded(
                   child: Text('Masse grasse — optionnel', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
                 ),
                 Switch(
@@ -1692,7 +1692,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             ),
             if (_bodyFatEnabled) ...[
               const SizedBox(height: 10),
-              const Text('Choisis la plage la plus proche de ta silhouette actuelle.',
+              Text('Choisis la plage la plus proche de ta silhouette actuelle.',
                   style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
               const SizedBox(height: 8),
               // Retour d'Alex (11/08/2026) : une tranche déjà choisie reste
@@ -1742,7 +1742,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Choisis la description la plus proche de TA semaine type — quotidien '
               'ET sport confondus, l\'un ou l\'autre suffit à te situer dans un palier.',
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4),
@@ -1788,7 +1788,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Ne change ni tes calories ni tes protéines — seulement comment le reste '
               'se répartit entre lipides et glucides.',
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4),
@@ -1842,7 +1842,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Ton évolution', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+        Text('Ton évolution', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
         const SizedBox(height: 10),
         _evolutionTapCard(
           title: 'Poids',
@@ -1898,13 +1898,13 @@ class ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
-                      Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                      Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                       const SizedBox(width: 6),
-                      Text(subtitle, style: const TextStyle(fontSize: 11, color: TotumColors.textMuted)),
+                      Text(subtitle, style: TextStyle(fontSize: 11, color: TotumColors.textMuted)),
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right, size: 18, color: TotumColors.textMuted),
+                Icon(Icons.chevron_right, size: 18, color: TotumColors.textMuted),
               ],
             ),
             const SizedBox(height: 10),
@@ -1926,7 +1926,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           const Text('Mes objectifs personnalisés',
               style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: TotumColors.accent)),
           const SizedBox(height: 4),
-          const Text('Ces valeurs remplacent le calcul automatique.', style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
+          Text('Ces valeurs remplacent le calcul automatique.', style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
           const SizedBox(height: 14),
           Row(children: [
             Expanded(child: _numField(label: 'Énergie (kcal)', controller: _manualKcalCtrl, onChanged: (_) => setState(() {}))),

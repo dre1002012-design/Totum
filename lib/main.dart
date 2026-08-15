@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemChrome, SystemUiOverlayStyle;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'screens/profile_screen.dart';
@@ -8,6 +9,7 @@ import 'screens/conseils_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/paywall_screen.dart';
 import 'services/app_settings.dart';
+import 'theme/totum_style.dart';
 
 
 Future<void> main() async {
@@ -48,34 +50,52 @@ class TotumApp extends StatelessWidget {
   Widget build(BuildContext context) {
     const color = Color(0xFFFF7A00); // orange TOTUM
 
-    // Réglages → Apparence pilote themeMode ici. Note pour la suite : le
-    // thème Material par défaut (AppBars, boutons standards, etc.) répond
-    // déjà correctement au mode sombre — les écrans qui utilisent encore
-    // des couleurs codées en dur (Profil via TotumColors, et les futurs
-    // passages Journal/Bilan/Conseils) resteront visuellement clairs tant
-    // que ce système partagé n'a pas lui-même été rendu sensible au thème
-    // (prévu en une seule passe une fois les 4 onglets alignés visuellement).
+    // Priorité 60 (15/08/2026) : mode sombre réel. TotumColors (charte
+    // graphique custom de tout le reste de l'app) est désormais adaptative
+    // au thème — voir totum_style.dart. Ce widget écoute maintenant AUSSI
+    // AppSettings.effectiveBrightness (pas seulement themeMode) : en mode
+    // "Système", themeMode ne change jamais lui-même, seule la luminosité
+    // effective de l'OS bouge — c'est elle qui doit déclencher la
+    // reconstruction pour que TotumColors se réévalue partout.
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: AppSettings.themeMode,
-      builder: (context, mode, _) => ValueListenableBuilder<double>(
-        valueListenable: AppSettings.textScale,
-        builder: (context, scale, __) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Totum',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.light),
-            useMaterial3: true,
-          ),
-          darkTheme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.dark),
-            useMaterial3: true,
-          ),
-          themeMode: mode,
-          builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
-            child: child!,
-          ),
-          home: const AuthGate(),
+      builder: (context, mode, _) => ValueListenableBuilder<Brightness>(
+        valueListenable: AppSettings.effectiveBrightness,
+        builder: (context, brightness, __) => ValueListenableBuilder<double>(
+          valueListenable: AppSettings.textScale,
+          builder: (context, scale, ___) {
+            SystemChrome.setSystemUIOverlayStyle(
+              brightness == Brightness.dark
+                  ? SystemUiOverlayStyle.light.copyWith(
+                      statusBarColor: Colors.transparent,
+                      systemNavigationBarColor: TotumColors.surface,
+                      systemNavigationBarIconBrightness: Brightness.light,
+                    )
+                  : SystemUiOverlayStyle.dark.copyWith(
+                      statusBarColor: Colors.transparent,
+                      systemNavigationBarColor: TotumColors.surface,
+                      systemNavigationBarIconBrightness: Brightness.dark,
+                    ),
+            );
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Totum',
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.light),
+                useMaterial3: true,
+              ),
+              darkTheme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.dark),
+                useMaterial3: true,
+              ),
+              themeMode: mode,
+              builder: (context, child) => MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
+                child: child!,
+              ),
+              home: const AuthGate(),
+            );
+          },
         ),
       ),
     );
@@ -311,12 +331,11 @@ class _RootShellState extends State<_RootShell> {
 
   @override
   Widget build(BuildContext context) {
-    const accent = Color(0xFFFF7A00);
     return Scaffold(
       body: IndexedStack(index: _index, children: _pages),
       floatingActionButton: FloatingActionButton(
         onPressed: _onCentralAdd,
-        backgroundColor: accent,
+        backgroundColor: TotumColors.accent,
         foregroundColor: Colors.white,
         elevation: 4,
         shape: const CircleBorder(),
@@ -324,7 +343,15 @@ class _RootShellState extends State<_RootShell> {
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.centerDocked,
+      // Priorité 60 (15/08/2026, mode sombre) : bug historique confirmé —
+      // cette barre utilisait Colors.black45 en dur pour les icônes/
+      // libellés non sélectionnés, alors que son fond (implicite, non fixé
+      // ici) suivait déjà le thème Material. En mode sombre système, fond
+      // sombre + texte noir en dur = invisible. `color` fixé explicitement
+      // sur TotumColors.surface (cohérent avec le reste de la charte) et
+      // les couleurs de _navItem passent par TotumColors, adaptatif.
       bottomNavigationBar: BottomAppBar(
+        color: TotumColors.surface,
         shape: const CircularNotchedRectangle(),
         notchMargin: 6,
         height: 60,
@@ -343,7 +370,6 @@ class _RootShellState extends State<_RootShell> {
   }
 
   Widget _navItem(int i, IconData icon, String label) {
-    const accent = Color(0xFFFF7A00);
     final selected = _index == i;
     return Expanded(
       child: InkWell(
@@ -352,7 +378,7 @@ class _RootShellState extends State<_RootShell> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 22, color: selected ? accent : Colors.black45),
+            Icon(icon, size: 22, color: selected ? TotumColors.accent : TotumColors.textSecondary),
             const SizedBox(height: 2),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -364,7 +390,7 @@ class _RootShellState extends State<_RootShell> {
                     style: TextStyle(
                         fontSize: 10,
                         fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                        color: selected ? accent : Colors.black45)),
+                        color: selected ? TotumColors.accent : TotumColors.textSecondary)),
               ),
             ),
           ],

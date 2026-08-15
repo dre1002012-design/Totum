@@ -33,30 +33,58 @@
 //    Ne jamais les utiliser comme accent de section ou de catégorie.
 
 import 'package:flutter/material.dart';
+import '../services/app_settings.dart';
+
+/// Priorité 60 (15/08/2026) : mode sombre réel — remplace le badge "arrive
+/// bientôt" (voir account_screen.dart, AppearanceSettingsScreen). Chaque
+/// champ de [TotumColors] passe de `static const` à `static get`, lu
+/// dynamiquement selon [AppSettings.effectiveBrightness] (mis à jour par
+/// AppSettings.load(), voir ce fichier — résout "Système" vers la
+/// luminosité réelle de l'OS, pas une valeur figée).
+///
+/// Les 847 sites d'appel (`TotumColors.xxx`, dans tout `lib/`) restent
+/// TOUS identiques en syntaxe — seule l'implémentation change ici. Seule
+/// conséquence côté appelants : un getter n'est plus une expression
+/// constante, donc tout widget qui embarquait `TotumColors.xxx` dans un
+/// contexte `const` a dû perdre ce `const` (traité fichier par fichier,
+/// piloté par les erreurs précises de `flutter analyze`).
+bool get _isDark => AppSettings.effectiveBrightness.value == Brightness.dark;
 
 class TotumColors {
   TotumColors._();
 
   /// Seule couleur d'accent de toute l'app — jamais une 2e couleur "de
   /// marque" à côté. Utilisée avec parcimonie : CTA principal, état actif/
-  /// sélectionné, valeur la plus importante d'une carte.
+  /// sélectionné, valeur la plus importante d'une carte. Identique en clair
+  /// et en sombre (cohérence de marque — déjà un bon contraste sur les 2).
   static const accent = Color(0xFFFF7A00);
-  static const accentSoft = Color(0x1FFF7A00); // accent à ~12%, fonds discrets
-  static const accentBorder = Color(0x40FF7A00); // accent à ~25%, contours
 
-  static const page = Color(0xFFF6F6F4);
-  static const surface = Colors.white;
-  static const outline = Color(0x14000000); // noir ~8%
-  static const outlineStrong = Color(0x2E000000); // noir ~18%
+  // accent à ~12%/~25% en clair (fonds discrets/contours) — légèrement
+  // remonté en sombre (0x33/0x59, ~20%/~35%), sinon trop discret sur un
+  // fond sombre.
+  static Color get accentSoft => _isDark ? const Color(0x33FF7A00) : const Color(0x1FFF7A00);
+  static Color get accentBorder => _isDark ? const Color(0x59FF7A00) : const Color(0x40FF7A00);
 
-  static const textPrimary = Color(0xFF16171B);
-  static const textSecondary = Color(0xFF6E7076);
-  static const textMuted = Color(0xFFA7A9AE);
+  static Color get page => _isDark ? const Color(0xFF121214) : const Color(0xFFF6F6F4);
+  static Color get surface => _isDark ? const Color(0xFF1C1D21) : Colors.white;
+  // Contours : noir-transparent en clair, BLANC-transparent en sombre — du
+  // noir sur fond sombre serait invisible (c'est exactement le bug corrigé
+  // dans main.dart, _navItem, avec un Colors.black45 en dur).
+  static Color get outline => _isDark ? const Color(0x1AFFFFFF) : const Color(0x14000000);
+  static Color get outlineStrong => _isDark ? const Color(0x38FFFFFF) : const Color(0x2E000000);
+
+  // Blanc cassé (jamais blanc pur, évite l'éblouissement) → gris clairs
+  // dégressifs en sombre — même hiérarchie de lisibilité qu'en clair,
+  // inversée.
+  static Color get textPrimary => _isDark ? const Color(0xFFF2F2F0) : const Color(0xFF16171B);
+  static Color get textSecondary => _isDark ? const Color(0xFFB4B6BC) : const Color(0xFF6E7076);
+  static Color get textMuted => _isDark ? const Color(0xFF7C7E85) : const Color(0xFFA7A9AE);
 
   // Usage sobre uniquement (delta positif/négatif) — jamais comme accent de
-  // section ou de catégorie. Voir règle 5 ci-dessus.
-  static const positive = Color(0xFF1F9254);
-  static const negative = Color(0xFFD84C3E);
+  // section ou de catégorie. Voir règle 5 en tête de fichier. Légèrement
+  // éclaircis en sombre : un vert/rouge saturé devient terne sur fond noir.
+  static Color get positive => _isDark ? const Color(0xFF3DB673) : const Color(0xFF1F9254);
+  static Color get negative => _isDark ? const Color(0xFFF06B5C) : const Color(0xFFD84C3E);
 }
 
 /// Rampe de progression — LA seule logique de remplissage progressif de
@@ -69,17 +97,34 @@ class TotumColors {
 class TotumProgress {
   TotumProgress._();
 
-  static const _pale = Color(0xFFFFE7CC); // départ de rampe (~10% accent)
-  static const stop25 = Color(0xFFFFCA8E);
-  static const stop50 = Color(0xFFFFAD55);
-  static const stop75 = Color(0xFFFF9022);
-  static const stop100 = TotumColors.accent;
+  // Rampe claire : mélange accent → blanc, inchangée (Priorité 60).
+  static const _paleLight = Color(0xFFFFE7CC); // départ de rampe (~10% accent)
+  static const _stop25Light = Color(0xFFFFCA8E);
+  static const _stop50Light = Color(0xFFFFAD55);
+  static const _stop75Light = Color(0xFFFF9022);
+
+  // Rampe sombre : mélanger vers du BLANC comme en clair rendrait le "pas
+  // commencé" quasi-blanc sur fond sombre (illisible/à contretemps) —
+  // mélange vers la surface sombre à la place, paliers plus lumineux pour
+  // rester visibles. Calculée (lerp), pas des valeurs hex inventées à la
+  // main.
+  static const _darkBase = Color(0xFF1C1D21); // = TotumColors.surface (sombre)
+  static Color get _paleDark => Color.lerp(_darkBase, TotumColors.accent, 0.16)!;
+  static Color get _stop25Dark => Color.lerp(_darkBase, TotumColors.accent, 0.38)!;
+  static Color get _stop50Dark => Color.lerp(_darkBase, TotumColors.accent, 0.60)!;
+  static Color get _stop75Dark => Color.lerp(_darkBase, TotumColors.accent, 0.82)!;
+
+  static Color get stop25 => _isDark ? _stop25Dark : _stop25Light;
+  static Color get stop50 => _isDark ? _stop50Dark : _stop50Light;
+  static Color get stop75 => _isDark ? _stop75Dark : _stop75Light;
+  static Color get stop100 => TotumColors.accent;
 
   /// Couleur pour une fraction 0.0–1.0 d'avancement — interpole dans la
   /// même famille de teintes que les 4 arrêts nommés ci-dessus.
   static Color forFraction(double fraction) {
     final f = fraction.clamp(0.0, 1.0);
-    if (f <= 1 / 3) return Color.lerp(_pale, stop50, f / (1 / 3))!;
+    final pale = _isDark ? _paleDark : _paleLight;
+    if (f <= 1 / 3) return Color.lerp(pale, stop50, f / (1 / 3))!;
     if (f <= 2 / 3) return Color.lerp(stop50, stop75, (f - 1 / 3) / (1 / 3))!;
     return Color.lerp(stop75, stop100, (f - 2 / 3) / (1 / 3))!;
   }
@@ -216,7 +261,7 @@ class TotumInputTile extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(label,
-                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
+                style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
             const SizedBox(height: 3),
             Expanded(
               child: Text(
@@ -245,14 +290,14 @@ class TotumInputTile extends StatelessWidget {
 /// ce fichier : jamais d'emoji multicolore, une seule couleur d'icône).
 class ScannerIcon extends StatelessWidget {
   final double size;
-  final Color color;
-  const ScannerIcon({super.key, this.size = 24, this.color = TotumColors.textSecondary});
+  final Color? color;
+  const ScannerIcon({super.key, this.size = 24, this.color});
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       size: Size(size, size),
-      painter: _ScannerIconPainter(color: color),
+      painter: _ScannerIconPainter(color: color ?? TotumColors.textSecondary),
     );
   }
 }

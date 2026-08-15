@@ -1510,7 +1510,7 @@ class _TotumScoreCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Text('Score TOTUM',
+                        Text('Score TOTUM',
                             style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
@@ -1552,11 +1552,11 @@ class _TotumScoreCard extends StatelessWidget {
                           color: TotumColors.outline,
                           borderRadius: BorderRadius.circular(999),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.autorenew, size: 12, color: TotumColors.textSecondary),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text(
                               'Se met à jour à chaque repas ajouté',
                               style: TextStyle(fontSize: 11, color: TotumColors.textSecondary),
@@ -1601,12 +1601,12 @@ class _TotumScoreCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.report_problem_rounded, size: 20, color: TotumColors.negative),
+                  Icon(Icons.report_problem_rounded, size: 20, color: TotumColors.negative),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       s.capReason!,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 12.5, color: TotumColors.negative, fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -1668,13 +1668,13 @@ class _TotumScoreCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.warning_amber_rounded,
+                  Icon(Icons.warning_amber_rounded,
                       size: 20, color: TotumColors.negative),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Limite de sécurité dépassée : ${s.warnings.join(", ")}',
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 12.5,
                           color: TotumColors.negative,
                           fontWeight: FontWeight.w600),
@@ -1700,7 +1700,7 @@ class _TotumScoreCard extends StatelessWidget {
                       child: OutlinedButton.icon(
                         style: OutlinedButton.styleFrom(
                           foregroundColor: TotumColors.negative,
-                          side: const BorderSide(color: TotumColors.negative),
+                          side: BorderSide(color: TotumColors.negative),
                           padding:
                               const EdgeInsets.symmetric(vertical: 8),
                         ),
@@ -1991,7 +1991,7 @@ Widget _limBloc(String titre, String corps, Color couleur) {
                 fontSize: 13, fontWeight: FontWeight.w800, color: couleur)),
         const SizedBox(height: 6),
         Text(corps,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 13.5, height: 1.5, color: TotumColors.textPrimary)),
       ],
     ),
@@ -2039,7 +2039,7 @@ void showLimiteSheet(
           const SizedBox(height: 16),
           Row(
             children: [
-              const Icon(Icons.shield_outlined,
+              Icon(Icons.shield_outlined,
                   color: TotumColors.negative, size: 26),
               const SizedBox(width: 10),
               Expanded(
@@ -2054,7 +2054,7 @@ void showLimiteSheet(
           if (lim != null) ...[
             const SizedBox(height: 4),
             Text('Limite de sécurité : ${lim.limite}  ·  ${lim.reference}',
-                style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
+                style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
             const SizedBox(height: 16),
             _limBloc('Pourquoi cette limite existe', lim.pourquoi,
                 TotumColors.accent),
@@ -2075,12 +2075,12 @@ void showLimiteSheet(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.favorite_outline,
+                  Icon(Icons.favorite_outline,
                       size: 18, color: TotumColors.positive),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(lim.rassurance,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 13,
                             height: 1.45,
                             color: TotumColors.textPrimary)),
@@ -2090,7 +2090,7 @@ void showLimiteSheet(
             ),
           ] else
             const SizedBox(height: 16),
-          const Divider(height: 1, color: TotumColors.outline),
+          Divider(height: 1, color: TotumColors.outline),
           const SizedBox(height: 16),
           Text('Les aliments concernés $periodeLabel',
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
@@ -2106,7 +2106,7 @@ void showLimiteSheet(
               }
               final list = snap.data ?? const <_FoodContribution>[];
               if (list.isEmpty) {
-                return const Text(
+                return Text(
                   'Aucun aliment identifié sur cette période.',
                   style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
                 );
@@ -2177,7 +2177,7 @@ void showGlucidesBreakdown(BuildContext context, Map<String, double> micros,
           if (hint != null) ...[
             const SizedBox(height: 3),
             Text(hint,
-                style: const TextStyle(fontSize: 11, color: TotumColors.textSecondary)),
+                style: TextStyle(fontSize: 11, color: TotumColors.textSecondary)),
           ],
         ],
       ),
@@ -2222,13 +2222,13 @@ void showGlucidesBreakdown(BuildContext context, Map<String, double> micros,
                     color: TotumColors.accent)),
           ],
           const SizedBox(height: 4),
-          const Text(
+          Text(
             'Tous les glucides ne se valent pas. L\'amidon libère son énergie lentement ; les sucres simples, rapidement.',
             style: TextStyle(fontSize: 13, color: TotumColors.textSecondary, height: 1.4),
           ),
           const SizedBox(height: 20),
           if (total <= 0)
-            const Text(
+            Text(
               'Aucune donnée de glucides détaillée pour cette période.',
               style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
             )
@@ -2243,7 +2243,7 @@ void showGlucidesBreakdown(BuildContext context, Map<String, double> micros,
               bar('Polyols', polyols, TotumColors.accent,
                   hint: 'Édulcorants de masse — souvent signe d\'un produit transformé.'),
             const SizedBox(height: 8),
-            const Divider(color: TotumColors.outline),
+            Divider(color: TotumColors.outline),
             const SizedBox(height: 12),
             const Text('Détail des sucres simples',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
@@ -2270,7 +2270,7 @@ void showGlucidesBreakdown(BuildContext context, Map<String, double> micros,
                 color: TotumColors.accentSoft,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
+              child: Text(
                 'Un fruit entier et un soda peuvent contenir le même fructose, mais le fruit l\'accompagne de fibres, d\'eau et de vitamines qui en ralentissent l\'absorption. La matrice compte autant que le sucre.',
                 style: TextStyle(fontSize: 12.5, height: 1.5, color: TotumColors.textPrimary),
               ),
@@ -2392,7 +2392,7 @@ Future<void> showNutrientFiche(BuildContext context, String ficheKey) async {
                                 fontSize: 20, fontWeight: FontWeight.w800)),
                         if (fiche.sousTitre.isNotEmpty)
                           Text(fiche.sousTitre,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 13,
                                   color: TotumColors.textSecondary,
                                   fontWeight: FontWeight.w600)),
@@ -2434,7 +2434,7 @@ Future<void> showNutrientFiche(BuildContext context, String ficheKey) async {
                             diet == 2
                                 ? 'Adapté à ton régime végétalien'
                                 : 'Adapté à ton régime végétarien',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 13,
                                 color: TotumColors.positive),
@@ -2482,7 +2482,7 @@ Future<void> showNutrientFiche(BuildContext context, String ficheKey) async {
                   ),
                 ),
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 'Informations éducatives basées sur les références ANSES et EFSA. '
                 'Elles ne remplacent pas un avis médical personnalisé.',
                 style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
@@ -2508,7 +2508,7 @@ Widget _ficheBloc(String titre, String corps, Color color) {
                 color: color)),
         const SizedBox(height: 5),
         Text(corps,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 13.5, height: 1.45, color: TotumColors.textPrimary)),
       ],
     ),
@@ -2625,7 +2625,7 @@ void showTotumScoreExplainerSheet(BuildContext context) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(label, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
-                  Text(detail, style: const TextStyle(fontSize: 12, color: TotumColors.textSecondary, height: 1.35)),
+                  Text(detail, style: TextStyle(fontSize: 12, color: TotumColors.textSecondary, height: 1.35)),
                 ],
               ),
             ),
@@ -2668,7 +2668,7 @@ void showTotumScoreExplainerSheet(BuildContext context) {
             ],
           ),
           const SizedBox(height: 4),
-          const Text(
+          Text(
             'Le Score TOTUM combine 5 piliers de ta journée, pondérés selon leur '
             'importance pour ta santé, ta longévité et ta performance :',
             style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4),
@@ -2687,18 +2687,18 @@ void showTotumScoreExplainerSheet(BuildContext context) {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: TotumColors.negative.withValues(alpha: 0.25)),
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Icon(Icons.report_problem_rounded, size: 17, color: TotumColors.negative),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Text('Le plafond de sécurité',
                         style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.negative)),
                   ],
                 ),
-                SizedBox(height: 6),
+                const SizedBox(height: 6),
                 Text(
                   'Si un seul élément "à surveiller" dépasse fortement ta limite du jour '
                   '(par exemple bien au-delà du double), ta note est automatiquement '
@@ -2711,11 +2711,11 @@ void showTotumScoreExplainerSheet(BuildContext context) {
             ),
           ),
           const SizedBox(height: 12),
-          const Row(
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(Icons.autorenew, size: 16, color: TotumColors.textSecondary),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'Ta note évolue au fil de la journée, à mesure que tu ajoutes tes repas — '
@@ -2726,7 +2726,7 @@ void showTotumScoreExplainerSheet(BuildContext context) {
             ],
           ),
           const SizedBox(height: 14),
-          const Text(
+          Text(
             'Fondé sur les recommandations officielles (OMS, EFSA, ANSES) et les index de '
             'référence internationaux (Healthy Eating Index, Alternate Healthy Eating Index).',
             style: TextStyle(fontSize: 10.5, color: TotumColors.textMuted, fontStyle: FontStyle.italic),
@@ -2785,7 +2785,7 @@ void showSunVitDSheet(
             isAverage
                 ? 'Moyenne estimée $periodeLabel, synthétisée par ta peau au soleil'
                 : 'Estimée $periodeLabel, synthétisée par ta peau au soleil',
-            style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary),
+            style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary),
           ),
           const SizedBox(height: 16),
           Container(
@@ -2808,7 +2808,7 @@ void showSunVitDSheet(
                     sunVitDUg > 0
                         ? 'déjà comptés dans ta ligne "Vit D" ci-dessus, en plus de ce que t\'apporte l\'alimentation.'
                         : 'Aucune session au soleil enregistrée sur cette période — seule la part alimentaire est comptée pour l\'instant.',
-                    style: const TextStyle(fontSize: 12.5, color: TotumColors.textPrimary, height: 1.4),
+                    style: TextStyle(fontSize: 12.5, color: TotumColors.textPrimary, height: 1.4),
                   ),
                 ),
               ],
@@ -2891,7 +2891,7 @@ void showConsumedFoodsSheet(
           ),
           const SizedBox(height: 4),
           Text('Ce que tu as consommé $periodeLabel',
-              style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
+              style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
           const SizedBox(height: 16),
           FutureBuilder<List<_FoodContribution>>(
             future: _contributorsForRange(from, to, microKey),
@@ -2910,7 +2910,7 @@ void showConsumedFoodsSheet(
                     color: TotumColors.accentSoft,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Aucun aliment consommé ne contenait ce nutriment sur cette période. C\'est peut-être là qu\'il faut agir : consulte la fiche pour savoir où le trouver.',
                     style: TextStyle(
                         fontSize: 13, height: 1.5, color: TotumColors.textPrimary),
@@ -3031,7 +3031,7 @@ void showContributorsSheet(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
     builder: (ctx) {
-      const accent = TotumColors.negative;
+      final accent = TotumColors.negative;
       return DraggableScrollableSheet(
         initialChildSize: 0.6,
         minChildSize: 0.35,
@@ -3059,7 +3059,7 @@ void showContributorsSheet(
                   ),
                   Row(
                     children: [
-                      const Icon(Icons.warning_amber_rounded,
+                      Icon(Icons.warning_amber_rounded,
                           color: accent, size: 24),
                       const SizedBox(width: 10),
                       Expanded(
@@ -3075,7 +3075,7 @@ void showContributorsSheet(
                   Text(
                     'Voici les aliments qui ont le plus contribué à ton apport '
                     'en $label ce jour-là, du plus grand au plus petit.',
-                    style: const TextStyle(fontSize: 13, color: TotumColors.textSecondary),
+                    style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
                   ),
                   const SizedBox(height: 16),
                   if (snap.connectionState != ConnectionState.done)
@@ -3085,7 +3085,7 @@ void showContributorsSheet(
                       child: CircularProgressIndicator(),
                     ))
                   else if ((snap.data ?? []).isEmpty)
-                    const Text('Aucun aliment identifié pour ce nutriment.',
+                    Text('Aucun aliment identifié pour ce nutriment.',
                         style: TextStyle(color: TotumColors.textSecondary))
                   else ...[
                     for (int i = 0; i < snap.data!.length && i < 10; i++)
@@ -3103,7 +3103,7 @@ void showContributorsSheet(
                       color: accent.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Un dépassement ponctuel n\'est généralement pas '
                       'préoccupant. Si cela se répète souvent, tu peux espacer '
                       'les aliments les plus concentrés ou en réduire la portion.',
@@ -3122,9 +3122,9 @@ void showContributorsSheet(
 
 Widget _contributorRow(
     int rank, _FoodContribution c, String unit, double maxAmount,
-    {Color accent = TotumColors.negative}) {
+    {Color? accent}) {
   final ratio = maxAmount > 0 ? (c.amount / maxAmount).clamp(0.0, 1.0) : 0.0;
-  const accent = TotumColors.negative;
+  accent ??= TotumColors.negative;
   return Padding(
     padding: const EdgeInsets.only(bottom: 10),
     child: Column(
@@ -3141,7 +3141,7 @@ Widget _contributorRow(
                 shape: BoxShape.circle,
               ),
               child: Text('$rank',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: accent)),
@@ -3155,7 +3155,7 @@ Widget _contributorRow(
             ),
             Text(
               '${c.amount.toStringAsFixed(c.amount >= 10 ? 0 : 1)} $unit',
-              style: const TextStyle(
+              style: TextStyle(
                   fontWeight: FontWeight.w700, color: accent),
             ),
           ],
@@ -3167,7 +3167,7 @@ Widget _contributorRow(
             value: ratio.toDouble(),
             minHeight: 5,
             backgroundColor: accent.withValues(alpha: 0.08),
-            valueColor: const AlwaysStoppedAnimation(accent),
+            valueColor: AlwaysStoppedAnimation(accent),
           ),
         ),
       ],
@@ -3799,7 +3799,7 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
               Expanded(
                 child: Text(
                   _titleForSpan(),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
                     color: TotumColors.textPrimary,
@@ -3861,11 +3861,11 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
                 // Axes visibles (baseline gauche + bas)
                 borderData: FlBorderData(
                   show: true,
-                  border: const Border(
+                  border: Border(
                     left: BorderSide(color: TotumColors.outlineStrong, width: 1),
                     bottom: BorderSide(color: TotumColors.outlineStrong, width: 1),
-                    right: BorderSide(color: Colors.transparent),
-                    top: BorderSide(color: Colors.transparent),
+                    right: const BorderSide(color: Colors.transparent),
+                    top: const BorderSide(color: Colors.transparent),
                   ),
                 ),
                 titlesData: FlTitlesData(
@@ -4015,12 +4015,12 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
             const SizedBox(height: 10),
             // Légende — mêmes 3 couleurs que partout ailleurs dans l'app
             // (règle 5 de la charte), jamais une teinte propre à ce graphique.
-            const Wrap(
+            Wrap(
               spacing: 12,
               runSpacing: 4,
               children: [
                 _LegendDot(color: TotumColors.positive, label: 'Dans la cible (±10 %)'),
-                _LegendDot(color: TotumColors.accent, label: 'Écart modéré (±10-25 %)'),
+                const _LegendDot(color: TotumColors.accent, label: 'Écart modéré (±10-25 %)'),
                 _LegendDot(color: TotumColors.negative, label: 'Écart important (>25 %)'),
               ],
             ),
@@ -4029,7 +4029,7 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
               goalChangedDuringPeriod && !vsExpenditure
                   ? 'Ton objectif a changé pendant cette période : chaque barre est comparée à l\'objectif qui était le tien ce jour-là (touche une barre pour le détail).'
                   : 'Touche une barre pour voir le détail du jour.',
-              style: const TextStyle(fontSize: 10.5, color: TotumColors.textMuted, fontStyle: FontStyle.italic),
+              style: TextStyle(fontSize: 10.5, color: TotumColors.textMuted, fontStyle: FontStyle.italic),
             ),
           ],
         ],
@@ -4093,7 +4093,7 @@ class _StatChip extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label,
-              style: const TextStyle(fontSize: 10.5, color: TotumColors.textSecondary, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 10.5, color: TotumColors.textSecondary, fontWeight: FontWeight.w600)),
           const SizedBox(height: 2),
           Text(value,
               style: TextStyle(
@@ -4117,7 +4117,7 @@ class _LegendDot extends StatelessWidget {
       children: [
         Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
         const SizedBox(width: 5),
-        Text(label, style: const TextStyle(fontSize: 10.5, color: TotumColors.textSecondary)),
+        Text(label, style: TextStyle(fontSize: 10.5, color: TotumColors.textSecondary)),
       ],
     );
   }
@@ -4160,7 +4160,7 @@ class _CollapsibleCardState extends State<_CollapsibleCard> {
               const SizedBox(width: 6),
               Text(
                 widget.title,
-                style: const TextStyle(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                     color: TotumColors.textSecondary),
@@ -4230,12 +4230,12 @@ class _MacroOverview extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.bolt, size: 15, color: TotumColors.textSecondary),
-                    SizedBox(width: 4),
-                    Text(
+                    const SizedBox(width: 4),
+                    const Text(
                       'Énergie',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
@@ -4259,7 +4259,7 @@ class _MacroOverview extends StatelessWidget {
                       ),
                       Text(
                         '${(pct * 100).toStringAsFixed(0)}%',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 18,
                           color: TotumColors.textPrimary,
@@ -4291,7 +4291,7 @@ class _MacroOverview extends StatelessWidget {
                   }
                   return Text(
                     'Dépassé de ${excessKcal.toStringAsFixed(0)} kcal',
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 11,
                         color: TotumColors.negative,
                         fontWeight: FontWeight.w600),
@@ -4367,9 +4367,9 @@ class _MacroOverview extends StatelessWidget {
                             onTap: () =>
                                 showNutrientFiche(context, m.ficheKey!),
                             borderRadius: BorderRadius.circular(20),
-                            child: const Padding(
+                            child: Padding(
                               padding:
-                                  EdgeInsets.symmetric(horizontal: 4),
+                                  const EdgeInsets.symmetric(horizontal: 4),
                               child: Icon(Icons.info_outline,
                                   size: 16,
                                   color: TotumColors.textMuted),
@@ -4482,7 +4482,7 @@ class _Section extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontWeight: FontWeight.w800, color: TotumColors.textPrimary),
                   ),
                 ),
@@ -4560,8 +4560,8 @@ class _Section extends StatelessWidget {
                       InkWell(
                         onTap: () => showNutrientFiche(context, m.ficheKey!),
                         borderRadius: BorderRadius.circular(20),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 4),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: Icon(Icons.info_outline,
                               size: 16,
                               color: TotumColors.textMuted),
@@ -4602,7 +4602,7 @@ class _Section extends StatelessWidget {
                     Text(
                       '${m.value.toStringAsFixed(m.decimals)} ${m.unit} / '
                       '${m.target!.toStringAsFixed(m.decimals)} ${m.unit}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         color: TotumColors.textSecondary,
                       ),
@@ -4612,13 +4612,13 @@ class _Section extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 3),
                         child: Row(
                           children: [
-                            const Icon(Icons.error_outline, size: 13, color: TotumColors.negative),
+                            Icon(Icons.error_outline, size: 13, color: TotumColors.negative),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 'Dépasse la limite de sécurité '
                                 '(${m.ul!.toStringAsFixed(0)} ${m.unit}/jour)',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
                                   color: TotumColors.negative,
                                   fontWeight: FontWeight.w700,
@@ -4631,7 +4631,7 @@ class _Section extends StatelessWidget {
                   ] else
                     Text(
                       '${m.value.toStringAsFixed(m.decimals)} ${m.unit}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         color: TotumColors.textSecondary,
                       ),
@@ -4667,7 +4667,7 @@ Widget _hydroPart(String label, double ml, Color color) {
           const SizedBox(width: 6),
           Expanded(
             child: Text(label,
-                style: const TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+                style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
           ),
           Text('${ml.toStringAsFixed(0)} ml',
               style: TextStyle(
@@ -4703,8 +4703,8 @@ class _HydrationSection extends StatelessWidget {
               InkWell(
                 onTap: () => showNutrientFiche(context, 'hydratation'),
                 borderRadius: BorderRadius.circular(20),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
                   child: Icon(Icons.info_outline,
                       size: 17, color: TotumColors.textMuted),
                 ),
@@ -4741,7 +4741,7 @@ class _HydrationSection extends StatelessWidget {
             Text(
               '${data.totalMl.toStringAsFixed(0)} ml sur un objectif de '
               '${data.targetMl.toStringAsFixed(0)} ml d\'eau totale',
-              style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary),
+              style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary),
             ),
             const SizedBox(height: 6),
             Row(

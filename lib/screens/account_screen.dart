@@ -38,7 +38,7 @@ Widget _sectionHeader(IconData icon, String title) {
         child: Icon(icon, size: 18, color: TotumColors.accent),
       ),
       const SizedBox(width: 10),
-      Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+      Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
     ],
   );
 }
@@ -49,10 +49,10 @@ Widget _subLabel(String text, {String? hint}) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(text, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
+        Text(text, style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
         if (hint != null) ...[
           const SizedBox(height: 3),
-          Text(hint, style: const TextStyle(fontSize: 11, color: TotumColors.textMuted)),
+          Text(hint, style: TextStyle(fontSize: 11, color: TotumColors.textMuted)),
         ],
       ],
     ),
@@ -425,7 +425,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   const SizedBox(height: 14),
                   _subscriptionCard(),
                   const SizedBox(height: 26),
-                  const Align(
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Text('Réglages',
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
@@ -441,28 +441,28 @@ class _AccountScreenState extends State<AccountScreen> {
                           onTap: () => Navigator.of(context).push(MaterialPageRoute(
                               builder: (_) => AccountDetailsScreen(client: _client))),
                         ),
-                        const Divider(height: 1, color: TotumColors.outline),
+                        Divider(height: 1, color: TotumColors.outline),
                         _menuRow(
                           icon: Icons.palette_outlined,
                           label: 'Apparence',
                           onTap: () => Navigator.of(context)
                               .push(MaterialPageRoute(builder: (_) => const AppearanceSettingsScreen())),
                         ),
-                        const Divider(height: 1, color: TotumColors.outline),
+                        Divider(height: 1, color: TotumColors.outline),
                         _menuRow(
                           icon: Icons.translate,
                           label: 'Langue & unités',
                           onTap: () => Navigator.of(context)
                               .push(MaterialPageRoute(builder: (_) => const LanguageUnitsSettingsScreen())),
                         ),
-                        const Divider(height: 1, color: TotumColors.outline),
+                        Divider(height: 1, color: TotumColors.outline),
                         _menuRow(
                           icon: Icons.download_outlined,
                           label: 'Mes données',
                           onTap: () => Navigator.of(context)
                               .push(MaterialPageRoute(builder: (_) => const DataExportScreen())),
                         ),
-                        const Divider(height: 1, color: TotumColors.outline),
+                        Divider(height: 1, color: TotumColors.outline),
                         _menuRow(
                           icon: Icons.info_outline,
                           label: 'À propos',
@@ -509,7 +509,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 Text(email.isNotEmpty ? email : 'Compte TOTUM',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                    style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                 const SizedBox(height: 5),
                 _statusChip(),
               ],
@@ -564,12 +564,12 @@ class _AccountScreenState extends State<AccountScreen> {
               child: const Icon(Icons.workspace_premium_outlined, size: 20, color: TotumColors.accent),
             ),
             const SizedBox(width: 12),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Premium à vie', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text('Accès complet, sans publicité — merci pour ta confiance.',
                       style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
                 ],
@@ -599,11 +599,11 @@ class _AccountScreenState extends State<AccountScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Abonnement annuel actif',
+                      Text('Abonnement annuel actif',
                           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                       const SizedBox(height: 2),
                       Text('Jusqu\'au ${_frDate(_premiumUntil!)} · 14,99 €/an',
-                          style: const TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
+                          style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
                     ],
                   ),
                 ),
@@ -611,7 +611,7 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
             if (!kIsWeb || _kStripePortalUrl.isNotEmpty) ...[
               const SizedBox(height: 12),
-              const Divider(height: 1, color: TotumColors.outline),
+              Divider(height: 1, color: TotumColors.outline),
               const SizedBox(height: 10),
               SizedBox(
                 width: double.infinity,
@@ -624,7 +624,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
             ] else ...[
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 'Pour gérer ou annuler ton abonnement, utilise le lien « Gérer votre abonnement » présent dans tes reçus Stripe.',
                 style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted),
               ),
@@ -655,7 +655,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 width: 38, height: 38,
                 decoration: BoxDecoration(color: TotumColors.page, borderRadius: BorderRadius.circular(12)),
                 alignment: Alignment.center,
-                child: const Icon(Icons.hourglass_top_rounded, size: 19, color: TotumColors.textSecondary),
+                child: Icon(Icons.hourglass_top_rounded, size: 19, color: TotumColors.textSecondary),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -663,9 +663,9 @@ class _AccountScreenState extends State<AccountScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(inTrial ? 'Essai gratuit en cours' : 'Essai gratuit terminé',
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                     const SizedBox(height: 2),
-                    Text(subtitle, style: const TextStyle(fontSize: 12, color: TotumColors.textSecondary, height: 1.3)),
+                    Text(subtitle, style: TextStyle(fontSize: 12, color: TotumColors.textSecondary, height: 1.3)),
                   ],
                 ),
               ),
@@ -702,11 +702,11 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
             )
           else if (!_storeAvailable)
-            const Text('Le paiement in-app n\'est pas disponible sur cet appareil.',
+            Text('Le paiement in-app n\'est pas disponible sur cet appareil.',
                 style: TextStyle(fontSize: 12, color: TotumColors.textMuted)),
           if (kIsWeb)
-            const Padding(
-              padding: EdgeInsets.only(top: 8),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
                 'Paiement 100 % sécurisé via Stripe · renouvelé automatiquement chaque année, annulable à tout moment.',
                 style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
@@ -715,7 +715,7 @@ class _AccountScreenState extends State<AccountScreen> {
           if (_purchaseError.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Text(_purchaseError, style: const TextStyle(fontSize: 12, color: TotumColors.negative)),
+              child: Text(_purchaseError, style: TextStyle(fontSize: 12, color: TotumColors.negative)),
             ),
         ],
       ),
@@ -732,9 +732,9 @@ class _AccountScreenState extends State<AccountScreen> {
             Icon(icon, size: 20, color: TotumColors.textPrimary),
             const SizedBox(width: 14),
             Expanded(
-              child: Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+              child: Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
             ),
-            const Icon(Icons.chevron_right, size: 18, color: TotumColors.textMuted),
+            Icon(Icons.chevron_right, size: 18, color: TotumColors.textMuted),
           ],
         ),
       ),
@@ -832,7 +832,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
               child: Text(loading ? 'Suppression…' : label,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: color)),
             ),
-            if (!danger) const Icon(Icons.chevron_right, size: 18, color: TotumColors.textMuted),
+            if (!danger) Icon(Icons.chevron_right, size: 18, color: TotumColors.textMuted),
           ],
         ),
       ),
@@ -847,12 +847,12 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Adresse courriel', style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
+            Text('Adresse courriel', style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
             Flexible(
               child: Text(email,
                   textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
             ),
           ],
         ),
@@ -870,7 +870,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                 if (context.mounted) Navigator.of(context).pop();
               },
             ),
-            const Divider(height: 1, color: TotumColors.outline),
+            Divider(height: 1, color: TotumColors.outline),
             _actionRow(
               icon: Icons.delete_outline,
               label: 'Supprimer mon compte',
@@ -901,28 +901,52 @@ class AppearanceSettingsScreen extends StatelessWidget {
           children: [
             _sectionHeader(Icons.palette_outlined, 'Thème'),
             const SizedBox(height: 16),
-            // Verrouillé sur Clair pour l'instant — le mode sombre nécessite
-            // de rendre toute la charte graphique adaptative au thème, un
-            // chantier à part entière (voir AppSettings). Proposer
-            // Système/Sombre avant que ce soit fait rendait l'app illisible
-            // (bug confirmé par Alex : barre de navigation invisible).
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
-              decoration: BoxDecoration(
-                color: TotumColors.accentSoft,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: TotumColors.accentBorder, width: 1.6),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.light_mode_outlined, size: 20, color: TotumColors.accent),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text('Clair — le mode sombre arrive bientôt',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
-                  ),
-                ],
-              ),
+            // Priorité 60 (15/08/2026) : mode sombre réel — TotumColors est
+            // désormais adaptative (voir totum_style.dart), donc ce choix
+            // n'est plus verrouillé sur Clair.
+            ValueListenableBuilder<ThemeMode>(
+              valueListenable: AppSettings.themeMode,
+              builder: (context, mode, _) {
+                Widget option(ThemeMode value, IconData icon, String label) {
+                  final selected = mode == value;
+                  return Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: OutlinedButton(
+                        onPressed: () => AppSettings.themeMode.value = value,
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: selected ? TotumColors.accentSoft : null,
+                          side: BorderSide(
+                              color: selected ? TotumColors.accentBorder : TotumColors.outline,
+                              width: selected ? 1.6 : 1),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(icon, size: 20, color: selected ? TotumColors.accent : TotumColors.textSecondary),
+                            const SizedBox(height: 6),
+                            Text(label,
+                                style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w800,
+                                    color: selected ? TotumColors.accent : TotumColors.textPrimary)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                return Row(
+                  children: [
+                    option(ThemeMode.light, Icons.light_mode_outlined, 'Clair'),
+                    option(ThemeMode.dark, Icons.dark_mode_outlined, 'Sombre'),
+                    option(ThemeMode.system, Icons.brightness_auto_outlined, 'Système'),
+                  ],
+                );
+              },
             ),
           ],
         ),
@@ -1098,7 +1122,7 @@ class _DataExportScreenState extends State<DataExportScreen> {
           children: [
             _sectionHeader(Icons.download_outlined, 'Exporter mon journal'),
             const SizedBox(height: 14),
-            const Text(
+            Text(
               'Exporte ton journal alimentaire, tes objectifs et tes micronutriments sur une période, au format HTML (convertible en PDF, ex. pour un professionnel de santé).',
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4),
             ),
@@ -1114,7 +1138,7 @@ class _DataExportScreenState extends State<DataExportScreen> {
                 label: Text(_exporting ? 'Génération…' : 'Exporter mes données'),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 13),
-                  side: const BorderSide(color: TotumColors.accentBorder, width: 1.4),
+                  side: BorderSide(color: TotumColors.accentBorder, width: 1.4),
                   foregroundColor: TotumColors.accent,
                 ),
               ),
@@ -1142,7 +1166,7 @@ class AboutScreen extends StatelessWidget {
           children: [
             _sectionHeader(Icons.info_outline, 'TOTUM'),
             const SizedBox(height: 16),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Version', style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),

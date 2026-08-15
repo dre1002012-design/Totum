@@ -1670,7 +1670,7 @@ class JournalScreenState extends State<JournalScreen> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           recipeDesc,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             color: TotumColors.textSecondary,
                             height: 1.4,
@@ -1709,7 +1709,7 @@ class JournalScreenState extends State<JournalScreen> {
                                           style: const TextStyle(fontSize: 13)),
                                     ),
                                     Text('${ing.grams.toStringAsFixed(0)} g',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w700,
                                             color: TotumColors.textSecondary)),
@@ -2132,7 +2132,7 @@ class JournalScreenState extends State<JournalScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(title,
-            style: const TextStyle(color: TotumColors.negative, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: TotumColors.negative, fontWeight: FontWeight.bold)),
         content: Text(message),
         actions: [TextButton(
             onPressed: () => Navigator.pop(ctx), child: const Text('OK'))],
@@ -2571,9 +2571,9 @@ class JournalScreenState extends State<JournalScreen> {
             maxChildSize: 0.9,
             expand: false,
             builder: (ctx, scrollCtrl) => Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: TotumColors.page,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
               ),
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
               child: Column(
@@ -2591,7 +2591,7 @@ class JournalScreenState extends State<JournalScreen> {
                     children: [
                       Expanded(
                         child: Text(meal.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 19, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
                       ),
                       IconButton(
@@ -2609,7 +2609,7 @@ class JournalScreenState extends State<JournalScreen> {
                   if (meal.description.trim().isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(meal.description,
-                        style: const TextStyle(fontSize: 13, color: TotumColors.textSecondary, height: 1.4)),
+                        style: TextStyle(fontSize: 13, color: TotumColors.textSecondary, height: 1.4)),
                   ],
                   const SizedBox(height: 10),
                   Wrap(
@@ -2623,13 +2623,13 @@ class JournalScreenState extends State<JournalScreen> {
                   ),
                   const SizedBox(height: 14),
                   Text('${meal.items.length} aliment(s)',
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: TotumColors.textSecondary)),
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: TotumColors.textSecondary)),
                   const SizedBox(height: 6),
                   Expanded(
                     child: ListView.separated(
                       controller: scrollCtrl,
                       itemCount: meal.items.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1, color: TotumColors.outline),
+                      separatorBuilder: (_, __) => Divider(height: 1, color: TotumColors.outline),
                       itemBuilder: (_, i) {
                         final it = meal.items[i];
                         final g = (it['grams'] as num?)?.toDouble() ?? 0.0;
@@ -2638,11 +2638,11 @@ class JournalScreenState extends State<JournalScreen> {
                           dense: true,
                           contentPadding: EdgeInsets.zero,
                           title: Text((it['name'] ?? '').toString(),
-                              style: const TextStyle(color: TotumColors.textPrimary)),
+                              style: TextStyle(color: TotumColors.textPrimary)),
                           subtitle: Text('${g.toStringAsFixed(0)} g',
-                              style: const TextStyle(color: TotumColors.textSecondary)),
+                              style: TextStyle(color: TotumColors.textSecondary)),
                           trailing: Text('${kc.toStringAsFixed(0)} kcal',
-                              style: const TextStyle(color: TotumColors.textSecondary)),
+                              style: TextStyle(color: TotumColors.textSecondary)),
                         );
                       },
                     ),
@@ -2703,7 +2703,7 @@ class JournalScreenState extends State<JournalScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('${meal.items.length} aliment(s) · ${meal.totalKcal.toStringAsFixed(0)} kcal',
-                  style: const TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
+                  style: TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
               const SizedBox(height: 16),
               InkWell(
                 borderRadius: BorderRadius.circular(12),
@@ -3176,7 +3176,7 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
   void _showSourceInfoSheet() {
     Widget p(String text) => Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: Text(text, style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.45)),
+          child: Text(text, style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.45)),
         );
     showModalBottomSheet(
       context: context,
@@ -3313,12 +3313,12 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
     if (filtered.isEmpty) {
       return Center(
         child: Text(_ready ? 'Aucune enseigne trouvée' : 'Chargement...',
-            style: const TextStyle(color: TotumColors.textSecondary)),
+            style: TextStyle(color: TotumColors.textSecondary)),
       );
     }
     return ListView.separated(
       itemCount: filtered.length,
-      separatorBuilder: (_, __) => const Divider(height: 1, color: TotumColors.outline),
+      separatorBuilder: (_, __) => Divider(height: 1, color: TotumColors.outline),
       itemBuilder: (ctx, i) {
         final name = filtered[i];
         return ListTile(
@@ -3342,7 +3342,7 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
 
   Widget _buildFoodList(List<foods_loader.FoodItem> foods) {
     if (foods.isEmpty) {
-      return const Center(
+      return Center(
         child: Text('Aucun résultat', style: TextStyle(color: TotumColors.textSecondary)),
       );
     }
@@ -3367,7 +3367,7 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
           subtitle: Row(
             children: [
               Flexible(child: Text(_kcalLabel(food.kcal100),
-                  style: const TextStyle(fontSize: 12, color: TotumColors.textSecondary))),
+                  style: TextStyle(fontSize: 12, color: TotumColors.textSecondary))),
               if (food.novaScore != null) ...[
                 const SizedBox(width: 8),
                 _NovaBadge(score: food.novaScore!, estime: food.novaEstime),
@@ -3660,7 +3660,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
               const Spacer(),
               Text('${_ingredients.length} aliment(s)',
-                  style: const TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
+                  style: TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
             ],
           ),
           const SizedBox(height: 8),
@@ -3761,8 +3761,8 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
           const SizedBox(height: 12),
 
           if (_ingredients.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text('Aucun ingrédient ajouté.',
                   style: TextStyle(color: TotumColors.textSecondary)),
             )
@@ -3826,7 +3826,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete_outline, size: 18, color: TotumColors.textSecondary),
+                        icon: Icon(Icons.delete_outline, size: 18, color: TotumColors.textSecondary),
                         tooltip: 'Retirer',
                         onPressed: () => setState(() => _ingredients.removeAt(i)),
                       ),
@@ -4023,7 +4023,7 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
               const Spacer(),
               Text('${_items.length} aliment(s)',
-                  style: const TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
+                  style: TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
             ],
           ),
           const SizedBox(height: 8),
@@ -4125,8 +4125,8 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
           const SizedBox(height: 12),
 
           if (_items.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text('Aucun aliment ajouté.', style: TextStyle(color: TotumColors.textSecondary)),
             )
           else
@@ -4188,7 +4188,7 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete_outline, size: 18, color: TotumColors.textSecondary),
+                        icon: Icon(Icons.delete_outline, size: 18, color: TotumColors.textSecondary),
                         tooltip: 'Retirer',
                         onPressed: () => setState(() => _items.removeAt(i)),
                       ),
@@ -4211,8 +4211,8 @@ class _NutriBadge extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 11, color: TotumColors.textSecondary)),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: TotumColors.textPrimary)),
+        Text(label, style: TextStyle(fontSize: 11, color: TotumColors.textSecondary)),
+        Text(value, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: TotumColors.textPrimary)),
       ],
     );
   }
@@ -4461,7 +4461,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
             children: [
               Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5)),
               const SizedBox(height: 3),
-              Text(body, style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4)),
+              Text(body, style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4)),
             ],
           ),
         );
@@ -4546,7 +4546,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
                       contentPadding: EdgeInsets.zero,
                       title: const Text('Activer l\'ajout multiple',
                           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
-                      subtitle: const Text(
+                      subtitle: Text(
                         'Coche plusieurs aliments dans "Commun" et ajoute-les d\'un coup à un repas.',
                         style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
                       ),
@@ -4561,7 +4561,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
                       contentPadding: EdgeInsets.zero,
                       title: const Text('Onglets de catégorie',
                           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
-                      subtitle: const Text(
+                      subtitle: Text(
                         'Commun/Favoris/Perso/Marques/Restaurant — désactive pour gagner de la place.',
                         style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
                       ),
@@ -4573,7 +4573,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
                       },
                     ),
                     const Divider(height: 28),
-                    const Text('Trier par', style: TextStyle(
+                    Text('Trier par', style: TextStyle(
                         fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
                     const SizedBox(height: 8),
                     Wrap(
@@ -4604,8 +4604,8 @@ class _AddFoodPageState extends State<_AddFoodPage>
                     // toujours sur le tri choisi (déjà le cas avant cette
                     // refonte) — le tri s'applique surtout à la liste par
                     // défaut (sans recherche) et aux égalités de pertinence.
-                    const Padding(
-                      padding: EdgeInsets.only(top: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
                       child: Text(
                         'Pendant une recherche, la meilleure correspondance prime toujours sur ce tri.',
                         style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted),
@@ -4614,7 +4614,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
                     const Divider(height: 28),
                     Row(
                       children: [
-                        const Text('Base de données', style: TextStyle(
+                        Text('Base de données', style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
                         const SizedBox(width: 4),
                         // Retour d'Alex (11/08/2026, Priorité 39) : une
@@ -4623,8 +4623,8 @@ class _AddFoodPageState extends State<_AddFoodPage>
                         InkWell(
                           borderRadius: BorderRadius.circular(999),
                           onTap: _showUsdaInfoSheet,
-                          child: const Padding(
-                            padding: EdgeInsets.all(4),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
                             child: Icon(Icons.info_outline, size: 15, color: TotumColors.textMuted),
                           ),
                         ),
@@ -5021,7 +5021,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Repas perso', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: TotumColors.textSecondary)),
+          Text('Repas perso', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: TotumColors.textSecondary)),
           const SizedBox(height: 4),
           for (final meal in matches)
             Card(
@@ -5038,7 +5038,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
                 onTap: () => p._addMealTemplateDialog(meal),
               ),
             ),
-          const Divider(height: 16, color: TotumColors.outline),
+          Divider(height: 16, color: TotumColors.outline),
         ],
       ),
     );
@@ -5303,7 +5303,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                               query.trim().isEmpty
                                   ? 'Tape pour rechercher un aliment'
                                   : 'Aucun résultat',
-                              style: const TextStyle(color: TotumColors.textSecondary),
+                              style: TextStyle(color: TotumColors.textSecondary),
                             ),
                           )
                         : ListView.builder(
@@ -5327,7 +5327,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                                   subtitle: Text(
                                       'Repas perso · ${food.items.length} aliment${food.items.length > 1 ? 's' : ''} · '
                                       '${food.totalKcal.toStringAsFixed(0)} kcal',
-                                      style: const TextStyle(color: TotumColors.textSecondary, fontSize: 12)),
+                                      style: TextStyle(color: TotumColors.textSecondary, fontSize: 12)),
                                   onTap: () async {
                                     Navigator.pop(ctx);
                                     await widget.onAddCustomMeal?.call(food, meal, _currentDate);
@@ -5642,7 +5642,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('${items.length} aliment(s) de $sourceMeal',
-                  style: const TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
+                  style: TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
               const SizedBox(height: 14),
               SegmentedButton<bool>(
                 segments: const [
@@ -5793,7 +5793,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                 ),
                 const SizedBox(height: 12),
                 Text('Quantité : $grams g',
-                    style: const TextStyle(color: TotumColors.textSecondary)),
+                    style: TextStyle(color: TotumColors.textSecondary)),
                 const SizedBox(height: 8),
                 _simpleRow('Énergie',
                     '${((entry['kcal'] as num?)?.toDouble() ?? 0).toStringAsFixed(0)} kcal'),
@@ -5806,7 +5806,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                 _simpleRow('Fibres',
                     '${((entry['fiber'] as num?)?.toDouble() ?? 0).toStringAsFixed(1)} g'),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Détail complet non disponible pour cet aliment.',
                   style: TextStyle(fontSize: 12, color: TotumColors.textMuted,
                       fontStyle: FontStyle.italic),
@@ -5862,7 +5862,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                     ),
                   ),
                   Text('$grams g',
-                      style: const TextStyle(color: TotumColors.textSecondary, fontSize: 14)),
+                      style: TextStyle(color: TotumColors.textSecondary, fontSize: 14)),
                 ],
               ),
             ),
@@ -5977,7 +5977,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         foregroundColor: TotumColors.textPrimary,
-        title: const Text('Journal',
+        title: Text('Journal',
             style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
         // Priorité 50 (14/08/2026, retour d'Alex) : icône Compte &
         // Paramètres présente sur tous les autres onglets (Profil, écran
@@ -5998,7 +5998,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.chevron_left, color: TotumColors.textSecondary),
+                  icon: Icon(Icons.chevron_left, color: TotumColors.textSecondary),
                   tooltip: 'Jour précédent',
                   onPressed: _goToPreviousDay,
                 ),
@@ -6108,11 +6108,11 @@ class _DayMacroOverview extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.bolt, size: 15, color: TotumColors.textSecondary),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text('Énergie',
                         style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: TotumColors.textPrimary)),
                   ],
@@ -6131,7 +6131,7 @@ class _DayMacroOverview extends StatelessWidget {
                       ),
                       Text(
                         '${(pctKcal * 100).clamp(0, 200).toStringAsFixed(0)}%',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.w900, fontSize: 18, color: TotumColors.textPrimary),
                       ),
                     ],
@@ -6139,11 +6139,11 @@ class _DayMacroOverview extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text('Objectif ${targetKcal.toStringAsFixed(0)} kcal',
-                    style: const TextStyle(fontSize: 11, color: TotumColors.textSecondary), textAlign: TextAlign.center),
+                    style: TextStyle(fontSize: 11, color: TotumColors.textSecondary), textAlign: TextAlign.center),
                 Text('Consommé ${totals.kcal.toStringAsFixed(0)} kcal',
-                    style: const TextStyle(fontSize: 11, color: TotumColors.textSecondary), textAlign: TextAlign.center),
+                    style: TextStyle(fontSize: 11, color: TotumColors.textSecondary), textAlign: TextAlign.center),
                 Text('Restant ${remainingKcal.toStringAsFixed(0)} kcal',
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: TotumColors.textPrimary),
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: TotumColors.textPrimary),
                     textAlign: TextAlign.center),
                 Builder(builder: (_) {
                   final excessKcal = (totals.kcal - targetKcal).clamp(0.0, double.infinity);
@@ -6155,12 +6155,12 @@ class _DayMacroOverview extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, size: 12, color: TotumColors.negative),
+                        Icon(Icons.error_outline, size: 12, color: TotumColors.negative),
                         const SizedBox(width: 3),
                         Flexible(
                           child: Text(
                             'Dépassé de ${excessKcal.toStringAsFixed(0)} kcal',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 10.5, color: TotumColors.negative, fontWeight: FontWeight.w700),
                             textAlign: TextAlign.center,
                           ),
@@ -6216,7 +6216,7 @@ class _MacroBarRow extends StatelessWidget {
             const SizedBox(width: 6),
             Expanded(
               child: Text(item.label,
-                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5, color: TotumColors.textPrimary)),
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5, color: TotumColors.textPrimary)),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -6242,7 +6242,7 @@ class _MacroBarRow extends StatelessWidget {
         const SizedBox(height: 3),
         Text.rich(
           TextSpan(
-            style: const TextStyle(fontSize: 10.5, color: TotumColors.textMuted),
+            style: TextStyle(fontSize: 10.5, color: TotumColors.textMuted),
             children: [
               TextSpan(text: '${item.value.toStringAsFixed(0)} / ${item.target.toStringAsFixed(0)} ${item.unit} · '),
               TextSpan(
@@ -6360,7 +6360,7 @@ class _MealSectionState extends State<_MealSection> {
                   const SizedBox(width: 8),
                   Text(
                     '(${widget.items.length} aliment${widget.items.length > 1 ? 's' : ''})',
-                    style: const TextStyle(fontSize: 13, color: TotumColors.textSecondary),
+                    style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
                   ),
                 ],
               ),
@@ -6464,7 +6464,7 @@ class _MealSectionState extends State<_MealSection> {
                       widget.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontWeight: FontWeight.w800, fontSize: 15, color: TotumColors.textPrimary),
                     ),
                   ),
@@ -6511,7 +6511,7 @@ class _MealSectionState extends State<_MealSection> {
                   ),
                 // ⋮ Menu (sélection / copier / supprimer)
                 PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_vert, size: 20, color: TotumColors.textSecondary),
+                  icon: Icon(Icons.more_vert, size: 20, color: TotumColors.textSecondary),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 34),
                   tooltip: 'Plus d\'options',
@@ -6566,26 +6566,26 @@ class _MealSectionState extends State<_MealSection> {
                       ),
                     ),
                     if (widget.items.isNotEmpty)
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'copy',
                         child: Row(
                           children: [
                             Icon(Icons.copy_outlined,
                                 size: 20, color: TotumColors.textSecondary),
-                            SizedBox(width: 10),
-                            Text('Copier ce repas'),
+                            const SizedBox(width: 10),
+                            const Text('Copier ce repas'),
                           ],
                         ),
                       ),
                     if (widget.items.isNotEmpty)
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'clear',
                         child: Row(
                           children: [
                             Icon(Icons.delete_sweep_outlined,
                                 size: 20, color: TotumColors.negative),
-                            SizedBox(width: 10),
-                            Text('Tout supprimer'),
+                            const SizedBox(width: 10),
+                            const Text('Tout supprimer'),
                           ],
                         ),
                       ),
@@ -6696,7 +6696,7 @@ class _MealSectionState extends State<_MealSection> {
                               ? () => widget.onTapItem!(widget.items[i])
                               : null,
                         ),
-                        if (i != widget.items.length - 1) const Divider(height: 12, color: TotumColors.outline),
+                        if (i != widget.items.length - 1) Divider(height: 12, color: TotumColors.outline),
                       ],
                     ],
                   ),
@@ -6844,10 +6844,10 @@ class _MealRowState extends State<_MealRow> {
                     children: [
                       Expanded(
                         child: Text(name,
-                            style: const TextStyle(fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+                            style: TextStyle(fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
                       ),
                       if (widget.onTapItem != null && !widget.selectMode)
-                        const Icon(Icons.info_outline, size: 14, color: TotumColors.textMuted),
+                        Icon(Icons.info_outline, size: 14, color: TotumColors.textMuted),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -6855,7 +6855,7 @@ class _MealRowState extends State<_MealRow> {
                     '$grams g • ${kcal.toStringAsFixed(0)} kcal • '
                     'P ${prot.toStringAsFixed(1)}g • G ${carb.toStringAsFixed(1)}g • '
                     'L ${fat.toStringAsFixed(1)}g • F ${fiber.toStringAsFixed(1)}g',
-                    style: const TextStyle(fontSize: 12, color: TotumColors.textSecondary),
+                    style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
                   ),
                 ],
               ),
@@ -6872,18 +6872,18 @@ class _MealRowState extends State<_MealRow> {
             if (_pendingDelete) ...[
               TextButton(
                 onPressed: () => setState(() => _pendingDelete = false),
-                child: const Text('Annuler',
+                child: Text('Annuler',
                     style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
               ),
               IconButton(
                 onPressed: widget.onRemove,
-                icon: const Icon(Icons.delete_forever, color: TotumColors.negative),
+                icon: Icon(Icons.delete_forever, color: TotumColors.negative),
                 tooltip: 'Confirmer la suppression',
               ),
             ] else
               IconButton(
                 onPressed: () => setState(() => _pendingDelete = true),
-                icon: const Icon(Icons.delete_outline, color: TotumColors.textSecondary),
+                icon: Icon(Icons.delete_outline, color: TotumColors.textSecondary),
                 tooltip: 'Supprimer',
               ),
           ],
@@ -6909,12 +6909,15 @@ const Map<int, String> _kNovaDesc = {
   3: "Aliment brut auquel on ajoute sel, sucre ou huile pour le conserver ou l'améliorer (mise en conserve, fumage, fermentation...) — fromages, pain, conserves de légumes, charcuterie artisanale.",
   4: "Formulation industrielle à base d'ingrédients rarement utilisés en cuisine maison (additifs, arômes, texturants) — sodas, plats préparés, biscuits industriels, charcuterie transformée.",
 };
-const Map<int, Color> _kNovaColors = {
-  1: TotumColors.positive,
-  2: TotumColors.accent,
-  3: Color(0xFFE0932B),
-  4: TotumColors.negative,
-};
+// Priorité 60 (mode sombre) : getter plutôt que Map const — positive/
+// negative sont désormais adaptatifs au thème, un const figé au premier
+// accès resterait bloqué sur la valeur du thème actif à ce moment-là.
+Map<int, Color> get _kNovaColors => {
+      1: TotumColors.positive,
+      2: TotumColors.accent,
+      3: const Color(0xFFE0932B),
+      4: TotumColors.negative,
+    };
 
 /// Badge NOVA (indice de transformation des aliments, 1 = brut → 4 = ultra-
 /// transformé). `estime: true` = estimation TOTUM déduite de la famille
@@ -6973,7 +6976,7 @@ void _showNovaInfoSheet(BuildContext context, {required int score, required bool
               const Text('Le score NOVA',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
               const SizedBox(height: 4),
-              const Text(
+              Text(
                 "Classe les aliments selon leur degré de transformation — pas leur valeur nutritionnelle. Un produit peu calorique peut être ultra-transformé, et inversement.",
                 style: TextStyle(color: TotumColors.textSecondary, fontSize: 13),
               ),
@@ -7026,7 +7029,7 @@ void _showNovaInfoSheet(BuildContext context, {required int score, required bool
                               style: TextStyle(fontWeight: g == score ? FontWeight.w800 : FontWeight.w600, fontSize: 13)),
                           const SizedBox(height: 2),
                           Text(_kNovaDesc[g] ?? '',
-                              style: const TextStyle(color: TotumColors.textSecondary, fontSize: 12)),
+                              style: TextStyle(color: TotumColors.textSecondary, fontSize: 12)),
                         ],
                       ),
                     ),
@@ -7035,7 +7038,7 @@ void _showNovaInfoSheet(BuildContext context, {required int score, required bool
                 if (g != 4) const SizedBox(height: 12),
               ],
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 'Source : classification NOVA (Monteiro et al.), reprise par Open Food Facts.',
                 style: TextStyle(color: TotumColors.textMuted, fontSize: 11),
               ),
@@ -7080,13 +7083,13 @@ class _MultiSelectFoodListState extends State<_MultiSelectFoodList> {
       children: [
         Expanded(
           child: widget.items.isEmpty
-              ? const Center(
+              ? Center(
                   child: Text('Aucun résultat', style: TextStyle(color: TotumColors.textSecondary)),
                 )
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
                   itemCount: widget.items.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1, color: TotumColors.outline),
+                  separatorBuilder: (_, __) => Divider(height: 1, color: TotumColors.outline),
                   itemBuilder: (_, i) {
                     final it = widget.items[i];
                     final id = _idOf(it);
@@ -7115,7 +7118,7 @@ class _MultiSelectFoodListState extends State<_MultiSelectFoodList> {
                       title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                       subtitle: kcal != null
                           ? Text('${kcal.toStringAsFixed(0)} kcal / 100 g',
-                              style: const TextStyle(fontSize: 12, color: TotumColors.textSecondary))
+                              style: TextStyle(fontSize: 12, color: TotumColors.textSecondary))
                           : null,
                     );
                   },
@@ -7239,15 +7242,15 @@ class _FoodListView extends StatelessWidget {
   /// journal via l'icône dédiée.
   Widget _buildMealsSection(BuildContext context) {
     if (mealItems.isEmpty) {
-      return const Expanded(
+      return Expanded(
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.bookmark_outline, size: 42, color: TotumColors.textMuted),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text('Aucun repas perso pour le moment', style: TextStyle(color: TotumColors.textSecondary)),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 'Crée ton premier repas perso avec le bouton + en bas à droite,\n'
                 'ou depuis un repas du journal via "Copier ce repas" → "Repas perso".',
@@ -7263,7 +7266,7 @@ class _FoodListView extends StatelessWidget {
       child: ListView.separated(
         padding: showCreateButton ? const EdgeInsets.only(bottom: 88) : null,
         itemCount: mealItems.length,
-        separatorBuilder: (_, __) => const Divider(height: 8, color: TotumColors.outline),
+        separatorBuilder: (_, __) => Divider(height: 8, color: TotumColors.outline),
         itemBuilder: (_, i) {
           final meal = mealItems[i];
           final fav = isFav(meal.id);
@@ -7273,27 +7276,27 @@ class _FoodListView extends StatelessWidget {
               decoration: BoxDecoration(color: TotumColors.accentSoft, borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.bookmark, color: TotumColors.accent, size: 20),
             ),
-            title: Text(meal.name, style: const TextStyle(color: TotumColors.textPrimary)),
+            title: Text(meal.name, style: TextStyle(color: TotumColors.textPrimary)),
             subtitle: Text(
                 meal.description.trim().isNotEmpty
                     ? meal.description
                     : '${meal.items.length} aliment(s) · ${meal.totalKcal.toStringAsFixed(0)} kcal',
                 maxLines: meal.description.trim().isNotEmpty ? 1 : null,
                 overflow: meal.description.trim().isNotEmpty ? TextOverflow.ellipsis : null,
-                style: const TextStyle(color: TotumColors.textSecondary)),
+                style: TextStyle(color: TotumColors.textSecondary)),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (onEditMeal != null)
                   IconButton(
                     tooltip: 'Modifier',
-                    icon: const Icon(Icons.edit_outlined, color: TotumColors.textSecondary),
+                    icon: Icon(Icons.edit_outlined, color: TotumColors.textSecondary),
                     onPressed: () => onEditMeal!(meal),
                   ),
                 if (onDeleteMeal != null)
                   IconButton(
                     tooltip: 'Supprimer',
-                    icon: const Icon(Icons.delete_outline, color: TotumColors.textSecondary),
+                    icon: Icon(Icons.delete_outline, color: TotumColors.textSecondary),
                     onPressed: () => onDeleteMeal!(meal.id),
                   ),
                 IconButton(
@@ -7410,14 +7413,14 @@ class _FoodListView extends StatelessWidget {
                               persoFilter == 0
                                   ? 'Aucun aliment perso pour le moment'
                                   : 'Aucune recette pour le moment',
-                              style: const TextStyle(color: TotumColors.textSecondary),
+                              style: TextStyle(color: TotumColors.textSecondary),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               persoFilter == 0
                                   ? 'Crée ton premier aliment avec le bouton + en bas à droite'
                                   : 'Crée ta première recette avec le bouton + en bas à droite',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 12, color: TotumColors.textMuted),
                             ),
                           ],
@@ -7428,7 +7431,7 @@ class _FoodListView extends StatelessWidget {
                       ? const EdgeInsets.only(bottom: 88)
                       : null,
                   itemCount: items.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1, color: TotumColors.outline),
+                  separatorBuilder: (_, __) => Divider(height: 1, color: TotumColors.outline),
                   itemBuilder: (_, i) {
                     final it = items[i];
                     final name = (((it as dynamic).name) as String?) ?? 'Aliment';
@@ -7569,7 +7572,7 @@ class _FoodListView extends StatelessWidget {
                             child: Text(displayName,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 14, color: TotumColors.textPrimary, fontWeight: FontWeight.w600, height: 1.25)),
                           ),
                           if (isUsda) ...[
@@ -7588,7 +7591,7 @@ class _FoodListView extends StatelessWidget {
                           ].join(' · '),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
+                          style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
                       minVerticalPadding: 8,
                       trailing: Row(
@@ -7597,13 +7600,13 @@ class _FoodListView extends StatelessWidget {
                           if ((isCustom || isRec) && onEditCustom != null)
                             IconButton(
                               tooltip: 'Modifier',
-                              icon: const Icon(Icons.edit_outlined, color: TotumColors.textSecondary),
+                              icon: Icon(Icons.edit_outlined, color: TotumColors.textSecondary),
                               onPressed: () => onEditCustom!(it),
                             ),
                           if ((isCustom || isRec) && onDeleteCustom != null)
                             IconButton(
                               tooltip: 'Supprimer',
-                              icon: const Icon(Icons.delete_outline, color: TotumColors.textSecondary),
+                              icon: Icon(Icons.delete_outline, color: TotumColors.textSecondary),
                               onPressed: () => onDeleteCustom!(id),
                             ),
                           if (!isCustom && !isRec && onDuplicate != null)
@@ -7621,7 +7624,7 @@ class _FoodListView extends StatelessWidget {
                             ),
                             onPressed: id.isNotEmpty ? () => onFavToggle(id) : null,
                           ),
-                          const Icon(Icons.chevron_right, color: TotumColors.textMuted),
+                          Icon(Icons.chevron_right, color: TotumColors.textMuted),
                         ],
                       ),
                       onTap: () => onTap(it),
@@ -7705,7 +7708,7 @@ class _Section extends StatelessWidget {
                 Icon(icon, size: 19, color: TotumColors.textSecondary),
                 const SizedBox(width: 10),
                 Text(title,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
               ],
             ),
@@ -7723,7 +7726,7 @@ class _Section extends StatelessWidget {
                     Row(children: [
                       Expanded(
                         child: Text(m.label,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontWeight: FontWeight.w600, color: TotumColors.textPrimary)),
                       ),
                       if (pct != null)
@@ -7757,20 +7760,20 @@ class _Section extends StatelessWidget {
                       Text(
                         '${m.value.toStringAsFixed(m.decimals)} ${m.unit} / '
                         '${m.target!.toStringAsFixed(m.decimals)} ${m.unit}',
-                        style: const TextStyle(fontSize: 12, color: TotumColors.textSecondary),
+                        style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
                       ),
                       if (overUl)
                         Padding(
                           padding: const EdgeInsets.only(top: 3),
                           child: Row(
                             children: [
-                              const Icon(Icons.error_outline, size: 13, color: TotumColors.negative),
+                              Icon(Icons.error_outline, size: 13, color: TotumColors.negative),
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   'Dépasse la limite de sécurité '
                                   '(${m.ul!.toStringAsFixed(0)} ${m.unit}/jour)',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 12,
                                       color: TotumColors.negative,
                                       fontWeight: FontWeight.w700),
@@ -7782,7 +7785,7 @@ class _Section extends StatelessWidget {
                     ] else
                       Text(
                         '${m.value.toStringAsFixed(m.decimals)} ${m.unit}',
-                        style: const TextStyle(fontSize: 12, color: TotumColors.textSecondary),
+                        style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
                       ),
                   ],
                 ),
@@ -8314,7 +8317,7 @@ class _WaterBannerState extends State<_WaterBanner> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () => setState(() => _expanded = !_expanded),
-                    child: const Text('Eau',
+                    child: Text('Eau',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -8341,7 +8344,7 @@ class _WaterBannerState extends State<_WaterBanner> {
                   visualDensity: VisualDensity.compact,
                 ),
                 PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_vert, size: 20, color: TotumColors.textSecondary),
+                  icon: Icon(Icons.more_vert, size: 20, color: TotumColors.textSecondary),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 34),
                   tooltip: 'Options',
@@ -8355,36 +8358,36 @@ class _WaterBannerState extends State<_WaterBanner> {
                     }
                   },
                   itemBuilder: (ctx) => [
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'manual',
                       child: Row(children: [
                         Icon(Icons.edit, size: 20, color: TotumColors.textSecondary),
-                        SizedBox(width: 10),
-                        Text('Saisir une quantité'),
+                        const SizedBox(width: 10),
+                        const Text('Saisir une quantité'),
                       ]),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'target',
                       child: Row(children: [
                         Icon(Icons.flag, size: 20, color: TotumColors.textSecondary),
-                        SizedBox(width: 10),
-                        Text('Modifier l\'objectif'),
+                        const SizedBox(width: 10),
+                        const Text('Modifier l\'objectif'),
                       ]),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'glass',
                       child: Row(children: [
                         Icon(Icons.local_drink, size: 20, color: TotumColors.textSecondary),
-                        SizedBox(width: 10),
-                        Text('Taille d\'un verre'),
+                        const SizedBox(width: 10),
+                        const Text('Taille d\'un verre'),
                       ]),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'reset',
                       child: Row(children: [
                         Icon(Icons.refresh, size: 20, color: TotumColors.textSecondary),
-                        SizedBox(width: 10),
-                        Text('Remettre à zéro'),
+                        const SizedBox(width: 10),
+                        const Text('Remettre à zéro'),
                       ]),
                     ),
                   ],
@@ -8397,7 +8400,7 @@ class _WaterBannerState extends State<_WaterBanner> {
                 padding: const EdgeInsets.only(left: 30, top: 4),
                 child: Text(
                   'dont $_totalMl ml de boissons + $_foodWaterMl ml des aliments · $pct % de l\'objectif total',
-                  style: const TextStyle(fontSize: 11.5, color: TotumColors.textSecondary),
+                  style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary),
                 ),
               ),
             // Badge % quand replié
@@ -8405,7 +8408,7 @@ class _WaterBannerState extends State<_WaterBanner> {
               Padding(
                 padding: const EdgeInsets.only(left: 30, top: 2),
                 child: Text('$pct % de l\'objectif',
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 12, color: TotumColors.textSecondary)),
               ),
             // Contenu déplié : les verres

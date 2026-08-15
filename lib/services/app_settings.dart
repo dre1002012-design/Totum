@@ -2,15 +2,15 @@
 //
 // Réglages d'app persistés (écran Paramètres).
 //
-// Apparence verrouillée sur Clair pour l'instant : la charte graphique de
-// l'app (TotumColors, ~600 usages) est actuellement figée en couleurs
-// claires — un vrai mode sombre nécessite de la rendre adaptative au thème,
-// un chantier à part entière, pas un correctif ponctuel. Proposer
-// Système/Sombre avant que ce travail soit fait rendait l'app illisible
-// (bug confirmé par Alex : barre de navigation du bas invisible en mode
-// sombre système). `themeMode` reste un ValueNotifier (écouté par TotumApp
-// dans main.dart) pour que la réintroduction du choix, une fois la charte
-// réellement adaptative, n'ait qu'à changer sa valeur par défaut.
+// Priorité 60 (15/08/2026) : mode sombre réel. `TotumColors` (lib/theme/
+// totum_style.dart) est désormais adaptative au thème — `themeMode` n'est
+// plus verrouillé sur Clair, et `effectiveBrightness` résout "Système" vers
+// la luminosité RÉELLE de l'OS (pas juste light/dark statique). Root cause
+// du bug historique ("barre de navigation invisible en mode sombre
+// système") : la barre custom utilisait des couleurs noires en dur pendant
+// que le thème Material, lui, répondait déjà au mode sombre — corrigé dans
+// main.dart (_navItem) en même temps que ce chantier.
+import 'dart:ui' show PlatformDispatcher;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'units.dart';
@@ -19,6 +19,26 @@ class AppSettings {
   AppSettings._();
 
   static final ValueNotifier<ThemeMode> themeMode = ValueNotifier(ThemeMode.light);
+
+  /// Luminosité RÉELLEMENT appliquée en ce moment — résout `ThemeMode.system`
+  /// vers la luminosité actuelle de l'OS plutôt que de rester ambiguë.
+  /// Source unique de vérité pour `TotumColors` (qui n'a pas de BuildContext
+  /// disponible, étant une classe à champs statiques) et pour `TotumApp`
+  /// (qui écoute ce ValueNotifier pour se reconstruire).
+  static final ValueNotifier<Brightness> effectiveBrightness =
+      ValueNotifier(Brightness.light);
+
+  static void _recomputeEffectiveBrightness() {
+    final mode = themeMode.value;
+    final resolved = switch (mode) {
+      ThemeMode.light => Brightness.light,
+      ThemeMode.dark => Brightness.dark,
+      ThemeMode.system => PlatformDispatcher.instance.platformBrightness,
+    };
+    if (effectiveBrightness.value != resolved) {
+      effectiveBrightness.value = resolved;
+    }
+  }
 
   /// Multiplicateur de taille de police global (appliqué via
   /// MediaQuery.textScaler dans main.dart) — 0.85 / 1.0 / 1.15 / 1.3.
@@ -37,6 +57,7 @@ class AppSettings {
   static const _kTextScale = 'settings_text_scale';
   static const _kFoodNameLanguage = 'settings_food_name_language';
   static const _kUnitSystem = 'settings_unit_system';
+  static const _kThemeMode = 'settings_theme_mode';
 
   static Future<void> load() async {
     final sp = await SharedPreferences.getInstance();
@@ -50,6 +71,14 @@ class AppSettings {
     final units = sp.getString(_kUnitSystem);
     if (units == 'imperial') unitSystem.value = UnitSystem.imperial;
 
+    final theme = sp.getString(_kThemeMode);
+    themeMode.value = switch (theme) {
+      'dark' => ThemeMode.dark,
+      'system' => ThemeMode.system,
+      _ => ThemeMode.light,
+    };
+    _recomputeEffectiveBrightness();
+
     textScale.addListener(() async {
       final sp = await SharedPreferences.getInstance();
       await sp.setDouble(_kTextScale, textScale.value);
@@ -62,5 +91,21 @@ class AppSettings {
       final sp = await SharedPreferences.getInstance();
       await sp.setString(_kUnitSystem, unitSystem.value == UnitSystem.imperial ? 'imperial' : 'metric');
     });
+    themeMode.addListener(() async {
+      _recomputeEffectiveBrightness();
+      final sp = await SharedPreferences.getInstance();
+      final value = switch (themeMode.value) {
+        ThemeMode.dark => 'dark',
+        ThemeMode.system => 'system',
+        ThemeMode.light => 'light',
+      };
+      await sp.setString(_kThemeMode, value);
+    });
+    // Réagit si l'OS bascule clair/sombre pendant que l'app tourne, tant
+    // que themeMode == system (sinon _recomputeEffectiveBrightness()
+    // n'a aucun effet, le mode choisi n'en dépend pas).
+    PlatformDispatcher.instance.onPlatformBrightnessChanged = () {
+      _recomputeEffectiveBrightness();
+    };
   }
 }

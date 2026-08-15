@@ -50,7 +50,7 @@ class ExpenditureChart extends StatelessWidget {
             show: true,
             drawVerticalLine: false,
             horizontalInterval: ((maxY - minY) / 3).clamp(10, 1000),
-            getDrawingHorizontalLine: (_) => const FlLine(color: TotumColors.outline, strokeWidth: 1),
+            getDrawingHorizontalLine: (_) => FlLine(color: TotumColors.outline, strokeWidth: 1),
           ),
           titlesData: FlTitlesData(
             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -61,7 +61,7 @@ class ExpenditureChart extends StatelessWidget {
                 reservedSize: 36,
                 interval: ((maxY - minY) / 3).clamp(10, 1000),
                 getTitlesWidget: (v, meta) =>
-                    Text(v.toStringAsFixed(0), style: const TextStyle(fontSize: 9.5, color: TotumColors.textMuted)),
+                    Text(v.toStringAsFixed(0), style: TextStyle(fontSize: 9.5, color: TotumColors.textMuted)),
               ),
             ),
             bottomTitles: AxisTitles(
@@ -73,7 +73,7 @@ class ExpenditureChart extends StatelessWidget {
                   final d = firstDay.add(Duration(days: v.round()));
                   return Padding(
                       padding: const EdgeInsets.only(top: 4),
-                      child: Text(fmtDate(d), style: const TextStyle(fontSize: 9.5, color: TotumColors.textMuted)));
+                      child: Text(fmtDate(d), style: TextStyle(fontSize: 9.5, color: TotumColors.textMuted)));
                 },
               ),
             ),
@@ -171,8 +171,8 @@ class _ProgressBody extends StatelessWidget {
               children: [
                 Text(compact ? compactLabel : label,
                     maxLines: 1, overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
-                Text(count, style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                    style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+                Text(count, style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
               ],
             ),
             const SizedBox(height: 4),
@@ -199,13 +199,13 @@ class _ProgressBody extends StatelessWidget {
             r.weighInsCount < 2
                 ? 'Pas encore assez de pesées pour démarrer le calcul'
                 : 'Ta dépense énergétique estimée arrive bientôt',
-            style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary),
+            style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary),
           ),
           SizedBox(height: compact ? 6 : 10),
           if (r.weighInsCount < 2)
             Text(
               'Ajoute au moins une 2e pesée (tu en as ${r.weighInsCount}/2) pour que le calcul puisse démarrer.',
-              style: const TextStyle(fontSize: 11.5, color: TotumColors.textMuted, height: 1.4),
+              style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted, height: 1.4),
             )
           else ...[
             bar('Écart entre 2 pesées', 'Écart pesées', '${r.spanDays}/${r.minSpanDays} j', r.spanProgress),
@@ -213,7 +213,7 @@ class _ProgressBody extends StatelessWidget {
             bar('Repas renseignés (20 derniers jours)', 'Repas renseignés', '${r.daysWithFoodLogged}/${r.minFoodDays} j', r.foodProgress),
             if (!compact) ...[
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 'Continue à te peser et à noter tes repas régulièrement — ta dépense apparaîtra automatiquement dès ces deux seuils atteints.',
                 style: TextStyle(fontSize: 11, color: TotumColors.textMuted, height: 1.35),
               ),
@@ -253,7 +253,7 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         foregroundColor: TotumColors.textPrimary,
-        title: const Text('Dépense énergétique',
+        title: Text('Dépense énergétique',
             style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
       ),
       body: FutureBuilder<List<ExpenditurePoint>>(
@@ -279,11 +279,11 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
                       Row(children: [
                         Container(width: 9, height: 9, decoration: const BoxDecoration(color: TotumColors.accent, shape: BoxShape.circle)),
                         const SizedBox(width: 6),
-                        const Text('Dépense estimée', style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+                        Text('Dépense estimée', style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
                         const SizedBox(width: 16),
                         Container(width: 12, height: 9, color: TotumColors.accentSoft),
                         const SizedBox(width: 6),
-                        const Text('Marge d\'incertitude', style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+                        Text('Marge d\'incertitude', style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
                       ]),
                     ],
                   ),
@@ -293,7 +293,7 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
                   _insightsCard(data),
                 ],
                 const SizedBox(height: 14),
-                const Text(
+                Text(
                   'Cette estimation est calculée à partir de ton poids et de ton journal alimentaire (même principe que la '
                   'calibration adaptative de TOTUM) — ce n\'est pas une mesure directe, ni une reproduction de l\'algorithme '
                   'propriétaire d\'une autre application. Plus tu renseignes ton poids et tes repas régulièrement, plus la '
@@ -327,11 +327,11 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           children: [
-            Expanded(child: Text(label, style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary))),
+            Expanded(child: Text(label, style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary))),
             Icon(icon, size: 15, color: TotumColors.textMuted),
             const SizedBox(width: 6),
             Text('${delta >= 0 ? '+' : ''}${delta.round()} kcal',
-                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           ],
         ),
       );
@@ -342,7 +342,7 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Évolution récente',
+          Text('Évolution récente',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           row('3 derniers jours', 3),
           row('7 derniers jours', 7),
@@ -386,9 +386,9 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(current.round().toString(),
-            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
-        const Padding(
-            padding: EdgeInsets.only(left: 4, bottom: 5),
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+        Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 5),
             child: Text('kcal/j', style: TextStyle(fontSize: 13, color: TotumColors.textSecondary))),
         const SizedBox(width: 10),
         Padding(

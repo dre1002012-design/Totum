@@ -26,7 +26,7 @@ class WeightTrendChart extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(color: TotumColors.page, borderRadius: BorderRadius.circular(12)),
-        child: const Text(
+        child: Text(
           'Sauvegarde ton profil à quelques jours d\'écart pour voir ta courbe apparaître ici.',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted),
@@ -75,7 +75,7 @@ class WeightTrendChart extends StatelessWidget {
             show: true,
             drawVerticalLine: false,
             horizontalInterval: yInterval,
-            getDrawingHorizontalLine: (_) => const FlLine(color: TotumColors.outline, strokeWidth: 1),
+            getDrawingHorizontalLine: (_) => FlLine(color: TotumColors.outline, strokeWidth: 1),
           ),
           titlesData: FlTitlesData(
             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -86,7 +86,7 @@ class WeightTrendChart extends StatelessWidget {
                 reservedSize: 32,
                 interval: yInterval,
                 getTitlesWidget: (v, meta) => Text(v.toStringAsFixed(yLabelDecimals),
-                    style: const TextStyle(fontSize: 9.5, color: TotumColors.textMuted)),
+                    style: TextStyle(fontSize: 9.5, color: TotumColors.textMuted)),
               ),
             ),
             bottomTitles: AxisTitles(
@@ -98,7 +98,7 @@ class WeightTrendChart extends StatelessWidget {
                   final d = firstDay.add(Duration(days: v.round()));
                   return Padding(
                       padding: const EdgeInsets.only(top: 4),
-                      child: Text(fmtDate(d), style: const TextStyle(fontSize: 9.5, color: TotumColors.textMuted)));
+                      child: Text(fmtDate(d), style: TextStyle(fontSize: 9.5, color: TotumColors.textMuted)));
                 },
               ),
             ),
@@ -142,7 +142,7 @@ class WeightTrendChart extends StatelessWidget {
               dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                     colors: [TotumColors.accentSoft, Colors.transparent],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter),
@@ -183,7 +183,7 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         foregroundColor: TotumColors.textPrimary,
-        title: const Text('Poids', style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+        title: Text('Poids', style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
       ),
       body: FutureBuilder<List<WeighIn>>(
         future: _future,
@@ -220,7 +220,7 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
                   _insightsCard(data),
                 ],
                 const SizedBox(height: 14),
-                const Text(
+                Text(
                   'Pèse-toi si possible tous les jours, dans les mêmes conditions à chaque fois — idéalement le matin à jeun, au lever. '
                   'La fiabilité de la tendance — et de tes objectifs recalculés — dépend directement de cette régularité.',
                   style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted, height: 1.4),
@@ -255,11 +255,11 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           children: [
-            Expanded(child: Text(label, style: const TextStyle(fontSize: 12.5, color: TotumColors.textSecondary))),
+            Expanded(child: Text(label, style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary))),
             Icon(icon, size: 15, color: TotumColors.textMuted),
             const SizedBox(width: 6),
             Text('${delta >= 0 ? '+' : ''}${delta.toStringAsFixed(1)} $unitLabel',
-                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           ],
         ),
       );
@@ -270,7 +270,7 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Évolution récente (poids tendance)',
+          Text('Évolution récente (poids tendance)',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           row('3 derniers jours', 3),
           row('7 derniers jours', 7),
@@ -318,10 +318,10 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(current.toStringAsFixed(1),
-            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
         Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 5),
-            child: Text(unitLabel, style: const TextStyle(fontSize: 13, color: TotumColors.textSecondary))),
+            child: Text(unitLabel, style: TextStyle(fontSize: 13, color: TotumColors.textSecondary))),
         const SizedBox(width: 10),
         Padding(
           padding: const EdgeInsets.only(bottom: 6),
@@ -340,7 +340,7 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
     return Row(mainAxisSize: MainAxisSize.min, children: [
       Container(width: 9, height: 9, decoration: BoxDecoration(color: c, shape: BoxShape.circle)),
       const SizedBox(width: 6),
-      Text(label, style: const TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+      Text(label, style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
     ]);
   }
 }
