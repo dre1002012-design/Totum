@@ -2091,4 +2091,34 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get consDefaultCoachQuote =>
       'Every aligned choice today builds tomorrow\'s vitality.';
+
+  @override
+  String consScoreProvisional(int pct) {
+    return 'Provisional · $pct% of your day';
+  }
+
+  @override
+  String get consSeeDetail => 'See details';
+
+  @override
+  String get consPriorityOfTheDay => 'Priority of the day';
+
+  @override
+  String get consNoDeficitTodayShort =>
+      'No significant deficiency today. Well done!';
+
+  @override
+  String get consTapToSeeWhereToFind => 'Tap to see where to find it';
+
+  @override
+  String get consDailyAdviceTitle => 'Today\'s advice';
+
+  @override
+  String consPersonalizedAdviceCount(int count) {
+    return '$count personalized tips for today';
+  }
+
+  @override
+  String get consAdviceCategories =>
+      'Nutrition, movement, sleep, stress, mindset';
 }

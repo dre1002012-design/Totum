@@ -4528,6 +4528,7 @@ class _ScorePriorityRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final s = data.score;
     const accent = TotumColors.accent;
 
@@ -4567,11 +4568,11 @@ class _ScorePriorityRow extends StatelessWidget {
                                 color: s.color)),
                       ),
                       const SizedBox(height: 8),
-                      Text(context.l10n.bilanScoreTitle,
+                      Text(l10n.bilanScoreTitle,
                           style:
                               TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
                       const SizedBox(height: 2),
-                      Text(s.moodFor(context.l10n),
+                      Text(s.moodFor(l10n),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 12.5,
@@ -4579,21 +4580,21 @@ class _ScorePriorityRow extends StatelessWidget {
                               color: s.color)),
                       if (s.isProvisional) ...[
                         const SizedBox(height: 4),
-                        Text('Provisoire · ${s.dayPercent} % de ta journée',
+                        Text(l10n.consScoreProvisional(s.dayPercent),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 10.5, color: TotumColors.textMuted)),
                       ],
                       const SizedBox(height: 8),
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Voir le détail',
-                              style: TextStyle(
+                          Text(l10n.consSeeDetail,
+                              style: const TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w700,
                                   color: accent)),
-                          Icon(Icons.chevron_right, size: 15, color: accent),
+                          const Icon(Icons.chevron_right, size: 15, color: accent),
                         ],
                       ),
                     ] else
@@ -4635,9 +4636,9 @@ class _ScorePriorityRow extends StatelessWidget {
                               size: 18, color: accent),
                         ),
                         const SizedBox(width: 8),
-                        const Expanded(
-                          child: Text('Priorité du jour',
-                              style: TextStyle(
+                        Expanded(
+                          child: Text(l10n.consPriorityOfTheDay,
+                              style: const TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.w800)),
                         ),
                       ],
@@ -4646,7 +4647,7 @@ class _ScorePriorityRow extends StatelessWidget {
                     if (data.deficits.isEmpty)
                       Flexible(
                         child: Text(
-                          'Aucune carence marquée aujourd\'hui. Beau travail !',
+                          l10n.consNoDeficitTodayShort,
                           style: TextStyle(
                               fontSize: 12.5,
                               color: TotumColors.textPrimary,
@@ -4672,7 +4673,7 @@ class _ScorePriorityRow extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    d.label,
+                                    nutrientDisplayLabel(d.label, l10n),
                                     style: const TextStyle(
                                       fontSize: 11.5,
                                       fontWeight: FontWeight.w700,
@@ -4699,8 +4700,8 @@ class _ScorePriorityRow extends StatelessWidget {
                         Flexible(
                           child: Text(
                             data.deficits.isEmpty
-                                ? 'Voir le détail'
-                                : 'Appuie pour voir où en trouver',
+                                ? l10n.consSeeDetail
+                                : l10n.consTapToSeeWhereToFind,
                             style: const TextStyle(
                                 fontSize: 11.5,
                                 fontWeight: FontWeight.w700,
@@ -4729,6 +4730,7 @@ class _DailyAdviceEntryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final count = [
       data.advNutrition, data.advMouvement, data.advSommeil,
       data.advStress, data.advMindset,
@@ -4771,16 +4773,16 @@ class _DailyAdviceEntryCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Conseils du jour',
-                      style: TextStyle(
+                  Text(l10n.consDailyAdviceTitle,
+                      style: const TextStyle(
                           color: Colors.white,
                           fontSize: 17,
                           fontWeight: FontWeight.w900)),
                   const SizedBox(height: 3),
                   Text(
                     count > 0
-                        ? '$count conseils personnalisés pour aujourd\'hui'
-                        : 'Nutrition, mouvement, sommeil, stress, mindset',
+                        ? l10n.consPersonalizedAdviceCount(count)
+                        : l10n.consAdviceCategories,
                     style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 12.5,

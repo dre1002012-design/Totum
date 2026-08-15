@@ -3707,6 +3707,54 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Chaque choix aligné aujourd\'hui construit ta vitalité de demain.'**
   String get consDefaultCoachQuote;
+
+  /// No description provided for @consScoreProvisional.
+  ///
+  /// In fr, this message translates to:
+  /// **'Provisoire · {pct} % de ta journée'**
+  String consScoreProvisional(int pct);
+
+  /// No description provided for @consSeeDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le détail'**
+  String get consSeeDetail;
+
+  /// No description provided for @consPriorityOfTheDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Priorité du jour'**
+  String get consPriorityOfTheDay;
+
+  /// No description provided for @consNoDeficitTodayShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune carence marquée aujourd\'hui. Beau travail !'**
+  String get consNoDeficitTodayShort;
+
+  /// No description provided for @consTapToSeeWhereToFind.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appuie pour voir où en trouver'**
+  String get consTapToSeeWhereToFind;
+
+  /// No description provided for @consDailyAdviceTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Conseils du jour'**
+  String get consDailyAdviceTitle;
+
+  /// No description provided for @consPersonalizedAdviceCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} conseils personnalisés pour aujourd\'hui'**
+  String consPersonalizedAdviceCount(int count);
+
+  /// No description provided for @consAdviceCategories.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nutrition, mouvement, sommeil, stress, mindset'**
+  String get consAdviceCategories;
 }
 
 class _AppLocalizationsDelegate

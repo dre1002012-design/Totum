@@ -667,5 +667,14 @@
   "consGreetingEvening": "Good evening",
   "consGreetingLateNight": "Good night",
   "consCoachTodayLabel": "Your TOTUM coach today",
-  "consDefaultCoachQuote": "Every aligned choice today builds tomorrow's vitality."
+  "consDefaultCoachQuote": "Every aligned choice today builds tomorrow's vitality.",
+
+  "consScoreProvisional": "Provisional · {pct}% of your day",
+  "consSeeDetail": "See details",
+  "consPriorityOfTheDay": "Priority of the day",
+  "consNoDeficitTodayShort": "No significant deficiency today. Well done!",
+  "consTapToSeeWhereToFind": "Tap to see where to find it",
+  "consDailyAdviceTitle": "Today's advice",
+  "consPersonalizedAdviceCount": "{count} personalized tips for today",
+  "consAdviceCategories": "Nutrition, movement, sleep, stress, mindset"
 }

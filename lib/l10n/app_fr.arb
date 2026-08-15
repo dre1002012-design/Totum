@@ -741,5 +741,16 @@
   "consGreetingEvening": "Bonne soirée",
   "consGreetingLateNight": "Bonne nuit",
   "consCoachTodayLabel": "Ton coach TOTUM du jour",
-  "consDefaultCoachQuote": "Chaque choix aligné aujourd'hui construit ta vitalité de demain."
+  "consDefaultCoachQuote": "Chaque choix aligné aujourd'hui construit ta vitalité de demain.",
+
+  "consScoreProvisional": "Provisoire · {pct} % de ta journée",
+  "@consScoreProvisional": { "placeholders": { "pct": {"type": "int"} } },
+  "consSeeDetail": "Voir le détail",
+  "consPriorityOfTheDay": "Priorité du jour",
+  "consNoDeficitTodayShort": "Aucune carence marquée aujourd'hui. Beau travail !",
+  "consTapToSeeWhereToFind": "Appuie pour voir où en trouver",
+  "consDailyAdviceTitle": "Conseils du jour",
+  "consPersonalizedAdviceCount": "{count} conseils personnalisés pour aujourd'hui",
+  "@consPersonalizedAdviceCount": { "placeholders": { "count": {"type": "int"} } },
+  "consAdviceCategories": "Nutrition, mouvement, sommeil, stress, mindset"
 }

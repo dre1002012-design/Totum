@@ -2106,4 +2106,34 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get consDefaultCoachQuote =>
       'Chaque choix aligné aujourd\'hui construit ta vitalité de demain.';
+
+  @override
+  String consScoreProvisional(int pct) {
+    return 'Provisoire · $pct % de ta journée';
+  }
+
+  @override
+  String get consSeeDetail => 'Voir le détail';
+
+  @override
+  String get consPriorityOfTheDay => 'Priorité du jour';
+
+  @override
+  String get consNoDeficitTodayShort =>
+      'Aucune carence marquée aujourd\'hui. Beau travail !';
+
+  @override
+  String get consTapToSeeWhereToFind => 'Appuie pour voir où en trouver';
+
+  @override
+  String get consDailyAdviceTitle => 'Conseils du jour';
+
+  @override
+  String consPersonalizedAdviceCount(int count) {
+    return '$count conseils personnalisés pour aujourd\'hui';
+  }
+
+  @override
+  String get consAdviceCategories =>
+      'Nutrition, mouvement, sommeil, stress, mindset';
 }
