@@ -490,5 +490,19 @@
   "bilanIntakeMainFoods": "{label} intake: main foods",
   "bilanTopContributorsIntro": "Here are the foods that contributed most to your {label} intake that day, from largest to smallest.",
   "bilanNoFoodIdentifiedNutrient": "No food identified for this nutrient.",
-  "bilanOccasionalExcessNote": "An occasional excess usually isn't a concern. If it happens often, you can space out the most concentrated foods or reduce their portion."
+  "bilanOccasionalExcessNote": "An occasional excess usually isn't a concern. If it happens often, you can space out the most concentrated foods or reduce their portion.",
+
+  "bilanDayTitle": "Report for {date}",
+  "bilanNoDataForDay": "No data for this day.",
+  "bilanMacrosCardTitle": "Macros",
+  "bilanGroupMacroTargets": "Macro targets",
+  "bilanGroupIndicative": "Indicative intakes",
+
+  "bilanTargetKcal": "Target = {target} kcal",
+  "bilanConsumedKcal": "Consumed = {value} kcal",
+  "bilanRemainingKcal": "Remaining = {value} kcal",
+  "bilanExceededByKcal": "Exceeded by {value} kcal",
+  "bilanMacroProgressOvershot": "{value} / {target} {unit} • exceeded by {excess} {unit}",
+  "bilanMacroProgressRemaining": "{value} / {target} {unit} • {remaining} {unit} left",
+  "bilanExceedsSafetyLimit": "Exceeds the safety limit ({ul} {unit}/day)"
 }

@@ -1529,4 +1529,58 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get bilanOccasionalExcessNote =>
       'An occasional excess usually isn\'t a concern. If it happens often, you can space out the most concentrated foods or reduce their portion.';
+
+  @override
+  String bilanDayTitle(String date) {
+    return 'Report for $date';
+  }
+
+  @override
+  String get bilanNoDataForDay => 'No data for this day.';
+
+  @override
+  String get bilanMacrosCardTitle => 'Macros';
+
+  @override
+  String get bilanGroupMacroTargets => 'Macro targets';
+
+  @override
+  String get bilanGroupIndicative => 'Indicative intakes';
+
+  @override
+  String bilanTargetKcal(String target) {
+    return 'Target = $target kcal';
+  }
+
+  @override
+  String bilanConsumedKcal(String value) {
+    return 'Consumed = $value kcal';
+  }
+
+  @override
+  String bilanRemainingKcal(String value) {
+    return 'Remaining = $value kcal';
+  }
+
+  @override
+  String bilanExceededByKcal(String value) {
+    return 'Exceeded by $value kcal';
+  }
+
+  @override
+  String bilanMacroProgressOvershot(
+      String value, String target, String unit, String excess) {
+    return '$value / $target $unit • exceeded by $excess $unit';
+  }
+
+  @override
+  String bilanMacroProgressRemaining(
+      String value, String target, String unit, String remaining) {
+    return '$value / $target $unit • $remaining $unit left';
+  }
+
+  @override
+  String bilanExceedsSafetyLimit(String ul, String unit) {
+    return 'Exceeds the safety limit ($ul $unit/day)';
+  }
 }

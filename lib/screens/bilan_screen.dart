@@ -41,6 +41,20 @@ Color _watchColor(double pct) {
   return TotumColors.negative;                 // >120 % = dépassement net
 }
 
+/// Traduit un titre de groupe (MetricGroup.title) pour l'affichage — ce
+/// titre n'est jamais comparé/utilisé comme clé ailleurs dans le code
+/// (contrairement à Metric.label, voir nutrient_labels.dart), donc aucun
+/// risque à le traduire directement ici.
+String _groupTitle(String title, AppLocalizations l10n) => switch (title) {
+      'Macro-cibles' => l10n.bilanGroupMacroTargets,
+      'Acides gras essentiels' => l10n.bilanPillarFattyAcidsFull,
+      'À surveiller' => l10n.scorePillarWatch,
+      'Vitamines' => l10n.scorePillarVitamins,
+      'Minéraux' => l10n.scorePillarMinerals,
+      'Apports indicatifs' => l10n.bilanGroupIndicative,
+      _ => title,
+    };
+
 /// ───────────────────────────── Périodes ─────────────────────────────
 
 enum ReportSpan { day, d7, d30, d90 }
@@ -3189,9 +3203,11 @@ class DayBilanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fmt = MaterialLocalizations.of(context);
+    final l10n = context.l10n;
+    final onDateLabel = l10n.bilanPeriodOnDate(fmt.formatMediumDate(day));
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bilan du ${fmt.formatMediumDate(day)}'),
+        title: Text(l10n.bilanDayTitle(fmt.formatMediumDate(day))),
       ),
       body: FutureBuilder<BilanData>(
         future: _computeBilanForSpan(ReportSpan.day, specificDay: day),
@@ -3200,14 +3216,14 @@ class DayBilanScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snap.hasData) {
-            return const Center(child: Text('Aucune donnée pour ce jour.'));
+            return Center(child: Text(l10n.bilanNoDataForDay));
           }
           final data = snap.data!;
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
             children: [
               _CollapsibleCard(
-                title: 'Score TOTUM',
+                title: l10n.bilanScoreTitle,
                 icon: Icons.insights,
                 child: _TotumScoreCard(
                   score: _computeTotumScore(data, context.l10n,
@@ -3222,7 +3238,7 @@ class DayBilanScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               _CollapsibleCard(
-                title: 'Macros',
+                title: l10n.bilanMacrosCardTitle,
                 icon: Icons.bolt,
                 child: _MacroOverview(
                     group: data.macrosGroup, micros: data.micros),
@@ -3235,7 +3251,7 @@ class DayBilanScreen extends StatelessWidget {
                 isWatch: false,
                 spanFrom: day,
                 spanTo: day,
-                periodeLabel: 'le ${fmt.formatMediumDate(day)}',
+                periodeLabel: onDateLabel,
               ),
               _Section(
                 title: data.watchGroup.title,
@@ -3244,7 +3260,7 @@ class DayBilanScreen extends StatelessWidget {
                 isWatch: true,
                 spanFrom: day,
                 spanTo: day,
-                periodeLabel: 'le ${fmt.formatMediumDate(day)}',
+                periodeLabel: onDateLabel,
               ),
               _Section(
                 title: data.vitaminsGroup.title,
@@ -3253,7 +3269,7 @@ class DayBilanScreen extends StatelessWidget {
                 isWatch: false,
                 spanFrom: day,
                 spanTo: day,
-                periodeLabel: 'le ${fmt.formatMediumDate(day)}',
+                periodeLabel: onDateLabel,
                 sunVitDUg: data.sunVitDUg,
               ),
               _Section(
@@ -3263,7 +3279,7 @@ class DayBilanScreen extends StatelessWidget {
                 isWatch: false,
                 spanFrom: day,
                 spanTo: day,
-                periodeLabel: 'le ${fmt.formatMediumDate(day)}',
+                periodeLabel: onDateLabel,
               ),
               _Section(
                 title: data.indicGroup.title,
@@ -3272,7 +3288,7 @@ class DayBilanScreen extends StatelessWidget {
                 isWatch: false,
                 spanFrom: day,
                 spanTo: day,
-                periodeLabel: 'le ${fmt.formatMediumDate(day)}',
+                periodeLabel: onDateLabel,
               ),
               const SizedBox(height: 12),
               _HydrationSection(data: data.hydration),
@@ -4200,13 +4216,13 @@ class _MacroOverview extends StatelessWidget {
   final Map<String, double>? micros; // pour le panneau de répartition des glucides
   final DateTime? spanFrom;
   final DateTime? spanTo;
-  final String periodeLabel;
+  final String? periodeLabel;
   const _MacroOverview({
     required this.group,
     this.micros,
     this.spanFrom,
     this.spanTo,
-    this.periodeLabel = 'aujourd\'hui',
+    this.periodeLabel,
   });
 
   @override
@@ -4214,6 +4230,8 @@ class _MacroOverview extends StatelessWidget {
     if (group.metrics.isEmpty) {
       return const SizedBox.shrink();
     }
+    final l10n = context.l10n;
+    final effectivePeriodeLabel = periodeLabel ?? l10n.bilanPeriodToday;
     // On suppose : [Énergie, Protéines, Glucides, Lipides, Fibres]
     final energy = group.metrics[0];
     final others = group.metrics.skip(1).toList();
@@ -4241,9 +4259,9 @@ class _MacroOverview extends StatelessWidget {
                   children: [
                     Icon(Icons.bolt, size: 15, color: TotumColors.textSecondary),
                     const SizedBox(width: 4),
-                    const Text(
-                      'Énergie',
-                      style: TextStyle(
+                    Text(
+                      l10n.nutrientEnergy,
+                      style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
                       ),
@@ -4276,17 +4294,17 @@ class _MacroOverview extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Objectif = ${target.toStringAsFixed(0)} kcal',
+                  l10n.bilanTargetKcal(target.toStringAsFixed(0)),
                   style: const TextStyle(fontSize: 11),
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  'Consommé = ${energy.value.toStringAsFixed(0)} kcal',
+                  l10n.bilanConsumedKcal(energy.value.toStringAsFixed(0)),
                   style: const TextStyle(fontSize: 11),
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  'Restant = ${remaining.toStringAsFixed(0)} kcal',
+                  l10n.bilanRemainingKcal(remaining.toStringAsFixed(0)),
                   style: const TextStyle(fontSize: 11),
                   textAlign: TextAlign.center,
                 ),
@@ -4296,7 +4314,7 @@ class _MacroOverview extends StatelessWidget {
                     return const SizedBox.shrink();
                   }
                   return Text(
-                    'Dépassé de ${excessKcal.toStringAsFixed(0)} kcal',
+                    l10n.bilanExceededByKcal(excessKcal.toStringAsFixed(0)),
                     style: TextStyle(
                         fontSize: 11,
                         color: TotumColors.negative,
@@ -4324,7 +4342,7 @@ class _MacroOverview extends StatelessWidget {
                       Row(children: [
                          Expanded(
                            child: Text(
-                             m.label,
+                             nutrientDisplayLabel(m.label, l10n),
                              style: const TextStyle(
                                fontWeight: FontWeight.w600,
                                fontSize: 13,
@@ -4343,7 +4361,7 @@ class _MacroOverview extends StatelessWidget {
                                   unit: m.unit,
                                   from: from,
                                   to: to,
-                                  periodeLabel: periodeLabel,
+                                  periodeLabel: effectivePeriodeLabel,
                                 );
                               },
                               borderRadius: BorderRadius.circular(20),
@@ -4417,8 +4435,17 @@ class _MacroOverview extends StatelessWidget {
                         final excess    = (m.value - t).clamp(0.0, double.infinity);
                         final overshot  = t > 0 && m.value > t;
                         return Text(
-                          '${m.value.toStringAsFixed(m.decimals)} / ${t.toStringAsFixed(m.decimals)} ${m.unit}'
-                          ' • ${overshot ? "dépassé de ${excess.toStringAsFixed(m.decimals)} ${m.unit}" : "reste ${remaining.toStringAsFixed(m.decimals)} ${m.unit}"}',
+                          overshot
+                              ? l10n.bilanMacroProgressOvershot(
+                                  m.value.toStringAsFixed(m.decimals),
+                                  t.toStringAsFixed(m.decimals),
+                                  m.unit,
+                                  excess.toStringAsFixed(m.decimals))
+                              : l10n.bilanMacroProgressRemaining(
+                                  m.value.toStringAsFixed(m.decimals),
+                                  t.toStringAsFixed(m.decimals),
+                                  m.unit,
+                                  remaining.toStringAsFixed(m.decimals)),
                           style: TextStyle(
                             fontSize: 11,
                             color: overshot ? TotumColors.negative : TotumColors.textSecondary,
@@ -4446,7 +4473,7 @@ class _Section extends StatelessWidget {
   final bool isWatch;
   final DateTime? spanFrom;
   final DateTime? spanTo;
-  final String periodeLabel;
+  final String? periodeLabel;
   final bool isAverage;
   // Apport solaire déjà inclus dans la valeur "Vit D" (voir _buildMetricGroups)
   // — permet d'afficher un détail séparé alimentation/soleil sur cette seule
@@ -4459,7 +4486,7 @@ class _Section extends StatelessWidget {
     required this.isWatch,
     this.spanFrom,
     this.spanTo,
-    this.periodeLabel = 'aujourd\'hui',
+    this.periodeLabel,
     this.isAverage = false,
     this.sunVitDUg = 0.0,
   });
@@ -4467,6 +4494,8 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (metrics.isEmpty) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    final effectivePeriodeLabel = periodeLabel ?? l10n.bilanPeriodToday;
     final colorOf = isWatch ? _watchColor : _barColor;
 
     return Container(
@@ -4487,7 +4516,7 @@ class _Section extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    title,
+                    _groupTitle(title, l10n),
                     style: TextStyle(
                         fontWeight: FontWeight.w800, color: TotumColors.textPrimary),
                   ),
@@ -4508,7 +4537,7 @@ class _Section extends StatelessWidget {
                   Row(children: [
                     Expanded(
                       child: Text(
-                        m.label,
+                        nutrientDisplayLabel(m.label, l10n),
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ),
@@ -4524,7 +4553,7 @@ class _Section extends StatelessWidget {
                             unit: m.unit,
                             from: from,
                             to: to,
-                            periodeLabel: periodeLabel,
+                            periodeLabel: effectivePeriodeLabel,
                           );
                         },
                         borderRadius: BorderRadius.circular(20),
@@ -4551,7 +4580,7 @@ class _Section extends StatelessWidget {
                             from: from,
                             to: to,
                             isAverage: isAverage,
-                            periodeLabel: periodeLabel,
+                            periodeLabel: effectivePeriodeLabel,
                           );
                         },
                         borderRadius: BorderRadius.circular(20),
@@ -4622,8 +4651,8 @@ class _Section extends StatelessWidget {
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
-                                'Dépasse la limite de sécurité '
-                                '(${m.ul!.toStringAsFixed(0)} ${m.unit}/jour)',
+                                l10n.bilanExceedsSafetyLimit(
+                                    m.ul!.toStringAsFixed(0), m.unit),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: TotumColors.negative,

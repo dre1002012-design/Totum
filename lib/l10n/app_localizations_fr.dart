@@ -1544,4 +1544,58 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get bilanOccasionalExcessNote =>
       'Un dépassement ponctuel n\'est généralement pas préoccupant. Si cela se répète souvent, tu peux espacer les aliments les plus concentrés ou en réduire la portion.';
+
+  @override
+  String bilanDayTitle(String date) {
+    return 'Bilan du $date';
+  }
+
+  @override
+  String get bilanNoDataForDay => 'Aucune donnée pour ce jour.';
+
+  @override
+  String get bilanMacrosCardTitle => 'Macros';
+
+  @override
+  String get bilanGroupMacroTargets => 'Macro-cibles';
+
+  @override
+  String get bilanGroupIndicative => 'Apports indicatifs';
+
+  @override
+  String bilanTargetKcal(String target) {
+    return 'Objectif = $target kcal';
+  }
+
+  @override
+  String bilanConsumedKcal(String value) {
+    return 'Consommé = $value kcal';
+  }
+
+  @override
+  String bilanRemainingKcal(String value) {
+    return 'Restant = $value kcal';
+  }
+
+  @override
+  String bilanExceededByKcal(String value) {
+    return 'Dépassé de $value kcal';
+  }
+
+  @override
+  String bilanMacroProgressOvershot(
+      String value, String target, String unit, String excess) {
+    return '$value / $target $unit • dépassé de $excess $unit';
+  }
+
+  @override
+  String bilanMacroProgressRemaining(
+      String value, String target, String unit, String remaining) {
+    return '$value / $target $unit • reste $remaining $unit';
+  }
+
+  @override
+  String bilanExceedsSafetyLimit(String ul, String unit) {
+    return 'Dépasse la limite de sécurité ($ul $unit/jour)';
+  }
 }

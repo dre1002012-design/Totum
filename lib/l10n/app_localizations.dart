@@ -2745,6 +2745,80 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Un dépassement ponctuel n\'est généralement pas préoccupant. Si cela se répète souvent, tu peux espacer les aliments les plus concentrés ou en réduire la portion.'**
   String get bilanOccasionalExcessNote;
+
+  /// No description provided for @bilanDayTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bilan du {date}'**
+  String bilanDayTitle(String date);
+
+  /// No description provided for @bilanNoDataForDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune donnée pour ce jour.'**
+  String get bilanNoDataForDay;
+
+  /// No description provided for @bilanMacrosCardTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Macros'**
+  String get bilanMacrosCardTitle;
+
+  /// No description provided for @bilanGroupMacroTargets.
+  ///
+  /// In fr, this message translates to:
+  /// **'Macro-cibles'**
+  String get bilanGroupMacroTargets;
+
+  /// No description provided for @bilanGroupIndicative.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apports indicatifs'**
+  String get bilanGroupIndicative;
+
+  /// No description provided for @bilanTargetKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif = {target} kcal'**
+  String bilanTargetKcal(String target);
+
+  /// No description provided for @bilanConsumedKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Consommé = {value} kcal'**
+  String bilanConsumedKcal(String value);
+
+  /// No description provided for @bilanRemainingKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restant = {value} kcal'**
+  String bilanRemainingKcal(String value);
+
+  /// No description provided for @bilanExceededByKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépassé de {value} kcal'**
+  String bilanExceededByKcal(String value);
+
+  /// No description provided for @bilanMacroProgressOvershot.
+  ///
+  /// In fr, this message translates to:
+  /// **'{value} / {target} {unit} • dépassé de {excess} {unit}'**
+  String bilanMacroProgressOvershot(
+      String value, String target, String unit, String excess);
+
+  /// No description provided for @bilanMacroProgressRemaining.
+  ///
+  /// In fr, this message translates to:
+  /// **'{value} / {target} {unit} • reste {remaining} {unit}'**
+  String bilanMacroProgressRemaining(
+      String value, String target, String unit, String remaining);
+
+  /// No description provided for @bilanExceedsSafetyLimit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépasse la limite de sécurité ({ul} {unit}/jour)'**
+  String bilanExceedsSafetyLimit(String ul, String unit);
 }
 
 class _AppLocalizationsDelegate

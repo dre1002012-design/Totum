@@ -542,5 +542,27 @@
   "bilanTopContributorsIntro": "Voici les aliments qui ont le plus contribué à ton apport en {label} ce jour-là, du plus grand au plus petit.",
   "@bilanTopContributorsIntro": { "placeholders": { "label": {"type": "String"} } },
   "bilanNoFoodIdentifiedNutrient": "Aucun aliment identifié pour ce nutriment.",
-  "bilanOccasionalExcessNote": "Un dépassement ponctuel n'est généralement pas préoccupant. Si cela se répète souvent, tu peux espacer les aliments les plus concentrés ou en réduire la portion."
+  "bilanOccasionalExcessNote": "Un dépassement ponctuel n'est généralement pas préoccupant. Si cela se répète souvent, tu peux espacer les aliments les plus concentrés ou en réduire la portion.",
+
+  "bilanDayTitle": "Bilan du {date}",
+  "@bilanDayTitle": { "placeholders": { "date": {"type": "String"} } },
+  "bilanNoDataForDay": "Aucune donnée pour ce jour.",
+  "bilanMacrosCardTitle": "Macros",
+  "bilanGroupMacroTargets": "Macro-cibles",
+  "bilanGroupIndicative": "Apports indicatifs",
+
+  "bilanTargetKcal": "Objectif = {target} kcal",
+  "@bilanTargetKcal": { "placeholders": { "target": {"type": "String"} } },
+  "bilanConsumedKcal": "Consommé = {value} kcal",
+  "@bilanConsumedKcal": { "placeholders": { "value": {"type": "String"} } },
+  "bilanRemainingKcal": "Restant = {value} kcal",
+  "@bilanRemainingKcal": { "placeholders": { "value": {"type": "String"} } },
+  "bilanExceededByKcal": "Dépassé de {value} kcal",
+  "@bilanExceededByKcal": { "placeholders": { "value": {"type": "String"} } },
+  "bilanMacroProgressOvershot": "{value} / {target} {unit} • dépassé de {excess} {unit}",
+  "@bilanMacroProgressOvershot": { "placeholders": { "value": {"type": "String"}, "target": {"type": "String"}, "unit": {"type": "String"}, "excess": {"type": "String"} } },
+  "bilanMacroProgressRemaining": "{value} / {target} {unit} • reste {remaining} {unit}",
+  "@bilanMacroProgressRemaining": { "placeholders": { "value": {"type": "String"}, "target": {"type": "String"}, "unit": {"type": "String"}, "remaining": {"type": "String"} } },
+  "bilanExceedsSafetyLimit": "Dépasse la limite de sécurité ({ul} {unit}/jour)",
+  "@bilanExceedsSafetyLimit": { "placeholders": { "ul": {"type": "String"}, "unit": {"type": "String"} } }
 }
