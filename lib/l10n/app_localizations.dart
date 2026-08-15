@@ -6719,6 +6719,150 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Micronutriments (optionnel)'**
   String get jrnlMicronutrientsOptional;
+
+  /// No description provided for @jrnlEditRecipeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la recette'**
+  String get jrnlEditRecipeTitle;
+
+  /// No description provided for @jrnlNewRecipeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle recette'**
+  String get jrnlNewRecipeTitle;
+
+  /// No description provided for @jrnlRecipeNameField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la recette *'**
+  String get jrnlRecipeNameField;
+
+  /// No description provided for @jrnlDescOptionalField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description (optionnel)'**
+  String get jrnlDescOptionalField;
+
+  /// No description provided for @jrnlRecipeTotalWeightField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids total de la recette finie (g)'**
+  String get jrnlRecipeTotalWeightField;
+
+  /// No description provided for @jrnlMacrosCalculatedFor100g.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les macros seront calculées pour 100g de recette'**
+  String get jrnlMacrosCalculatedFor100g;
+
+  /// No description provided for @jrnlValuesPer100gRecipe.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valeurs pour 100g de recette'**
+  String get jrnlValuesPer100gRecipe;
+
+  /// No description provided for @jrnlIngredientsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ingrédients'**
+  String get jrnlIngredientsTitle;
+
+  /// No description provided for @jrnlSearchFoodToAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher un aliment à ajouter'**
+  String get jrnlSearchFoodToAdd;
+
+  /// No description provided for @jrnlNoIngredientAdded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun ingrédient ajouté.'**
+  String get jrnlNoIngredientAdded;
+
+  /// No description provided for @jrnlEditQuantityTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la quantité'**
+  String get jrnlEditQuantityTooltip;
+
+  /// No description provided for @jrnlRemoveTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer'**
+  String get jrnlRemoveTooltip;
+
+  /// No description provided for @jrnlKcalSlash100g.
+  ///
+  /// In fr, this message translates to:
+  /// **'{kcal} kcal/100g'**
+  String jrnlKcalSlash100g(String kcal);
+
+  /// No description provided for @jrnlRecipeNameRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom à ta recette !'**
+  String get jrnlRecipeNameRequired;
+
+  /// No description provided for @jrnlIngredientRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute au moins un ingrédient.'**
+  String get jrnlIngredientRequired;
+
+  /// No description provided for @jrnlEditMealTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier le repas perso'**
+  String get jrnlEditMealTitle;
+
+  /// No description provided for @jrnlNewMealTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau repas perso'**
+  String get jrnlNewMealTitle;
+
+  /// No description provided for @jrnlMealNameField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du repas *'**
+  String get jrnlMealNameField;
+
+  /// No description provided for @jrnlMealTotalTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Total du repas'**
+  String get jrnlMealTotalTitle;
+
+  /// No description provided for @jrnlFoodsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliments'**
+  String get jrnlFoodsTitle;
+
+  /// No description provided for @jrnlMealNameRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom à ce repas !'**
+  String get jrnlMealNameRequired;
+
+  /// No description provided for @jrnlFoodRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute au moins un aliment.'**
+  String get jrnlFoodRequired;
+
+  /// No description provided for @jrnlGramsAndKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'{grams} g · {kcal} kcal'**
+  String jrnlGramsAndKcal(String grams, String kcal);
+
+  /// No description provided for @jrnlNoFoodAdded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun aliment ajouté.'**
+  String get jrnlNoFoodAdded;
 }
 
 class _AppLocalizationsDelegate

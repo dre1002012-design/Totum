@@ -3971,4 +3971,82 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jrnlMicronutrientsOptional => 'Micronutrients (optional)';
+
+  @override
+  String get jrnlEditRecipeTitle => 'Edit recipe';
+
+  @override
+  String get jrnlNewRecipeTitle => 'New recipe';
+
+  @override
+  String get jrnlRecipeNameField => 'Recipe name *';
+
+  @override
+  String get jrnlDescOptionalField => 'Description (optional)';
+
+  @override
+  String get jrnlRecipeTotalWeightField =>
+      'Total weight of the finished recipe (g)';
+
+  @override
+  String get jrnlMacrosCalculatedFor100g =>
+      'Macros will be calculated per 100g of recipe';
+
+  @override
+  String get jrnlValuesPer100gRecipe => 'Values per 100g of recipe';
+
+  @override
+  String get jrnlIngredientsTitle => 'Ingredients';
+
+  @override
+  String get jrnlSearchFoodToAdd => 'Search a food to add';
+
+  @override
+  String get jrnlNoIngredientAdded => 'No ingredient added.';
+
+  @override
+  String get jrnlEditQuantityTooltip => 'Edit quantity';
+
+  @override
+  String get jrnlRemoveTooltip => 'Remove';
+
+  @override
+  String jrnlKcalSlash100g(String kcal) {
+    return '$kcal kcal/100g';
+  }
+
+  @override
+  String get jrnlRecipeNameRequired => 'Give your recipe a name!';
+
+  @override
+  String get jrnlIngredientRequired => 'Add at least one ingredient.';
+
+  @override
+  String get jrnlEditMealTitle => 'Edit personal meal';
+
+  @override
+  String get jrnlNewMealTitle => 'New personal meal';
+
+  @override
+  String get jrnlMealNameField => 'Meal name *';
+
+  @override
+  String get jrnlMealTotalTitle => 'Meal total';
+
+  @override
+  String get jrnlFoodsTitle => 'Foods';
+
+  @override
+  String get jrnlMealNameRequired => 'Give this meal a name!';
+
+  @override
+  String get jrnlFoodRequired => 'Add at least one food.';
+
+  @override
+  String jrnlGramsAndKcal(String grams, String kcal) {
+    return '$grams g · $kcal kcal';
+  }
+
+  @override
+  String get jrnlNoFoodAdded => 'No food added.';
 }

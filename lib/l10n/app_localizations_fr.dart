@@ -4008,4 +4008,82 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get jrnlMicronutrientsOptional => 'Micronutriments (optionnel)';
+
+  @override
+  String get jrnlEditRecipeTitle => 'Modifier la recette';
+
+  @override
+  String get jrnlNewRecipeTitle => 'Nouvelle recette';
+
+  @override
+  String get jrnlRecipeNameField => 'Nom de la recette *';
+
+  @override
+  String get jrnlDescOptionalField => 'Description (optionnel)';
+
+  @override
+  String get jrnlRecipeTotalWeightField =>
+      'Poids total de la recette finie (g)';
+
+  @override
+  String get jrnlMacrosCalculatedFor100g =>
+      'Les macros seront calculées pour 100g de recette';
+
+  @override
+  String get jrnlValuesPer100gRecipe => 'Valeurs pour 100g de recette';
+
+  @override
+  String get jrnlIngredientsTitle => 'Ingrédients';
+
+  @override
+  String get jrnlSearchFoodToAdd => 'Rechercher un aliment à ajouter';
+
+  @override
+  String get jrnlNoIngredientAdded => 'Aucun ingrédient ajouté.';
+
+  @override
+  String get jrnlEditQuantityTooltip => 'Modifier la quantité';
+
+  @override
+  String get jrnlRemoveTooltip => 'Retirer';
+
+  @override
+  String jrnlKcalSlash100g(String kcal) {
+    return '$kcal kcal/100g';
+  }
+
+  @override
+  String get jrnlRecipeNameRequired => 'Donne un nom à ta recette !';
+
+  @override
+  String get jrnlIngredientRequired => 'Ajoute au moins un ingrédient.';
+
+  @override
+  String get jrnlEditMealTitle => 'Modifier le repas perso';
+
+  @override
+  String get jrnlNewMealTitle => 'Nouveau repas perso';
+
+  @override
+  String get jrnlMealNameField => 'Nom du repas *';
+
+  @override
+  String get jrnlMealTotalTitle => 'Total du repas';
+
+  @override
+  String get jrnlFoodsTitle => 'Aliments';
+
+  @override
+  String get jrnlMealNameRequired => 'Donne un nom à ce repas !';
+
+  @override
+  String get jrnlFoodRequired => 'Ajoute au moins un aliment.';
+
+  @override
+  String jrnlGramsAndKcal(String grams, String kcal) {
+    return '$grams g · $kcal kcal';
+  }
+
+  @override
+  String get jrnlNoFoodAdded => 'Aucun aliment ajouté.';
 }

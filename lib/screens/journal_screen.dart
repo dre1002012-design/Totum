@@ -3545,12 +3545,12 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
     final name = widget.nameCtl.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Donne un nom à ta recette !')));
+          SnackBar(content: Text(context.l10n.jrnlRecipeNameRequired)));
       return;
     }
     if (_ingredients.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ajoute au moins un ingrédient.')));
+          SnackBar(content: Text(context.l10n.jrnlIngredientRequired)));
       return;
     }
     setState(() => _saving = true);
@@ -3577,12 +3577,13 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final nutrition = _computeNutrition();
     final suggestions = _filteredFoods();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isEdit ? 'Modifier la recette' : 'Nouvelle recette'),
+        title: Text(widget.isEdit ? l10n.jrnlEditRecipeTitle : l10n.jrnlNewRecipeTitle),
         actions: [
           if (_saving)
             const Padding(
@@ -3593,8 +3594,8 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
           else
             TextButton(
               onPressed: _saveRecipe,
-              child: const Text('Enregistrer',
-                  style: TextStyle(color: kTotumOrange, fontWeight: FontWeight.w700)),
+              child: Text(l10n.commonSave,
+                  style: const TextStyle(color: kTotumOrange, fontWeight: FontWeight.w700)),
             ),
         ],
       ),
@@ -3604,7 +3605,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
           TextField(
             controller: widget.nameCtl,
             decoration: InputDecoration(
-              labelText: 'Nom de la recette *',
+              labelText: l10n.jrnlRecipeNameField,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
@@ -3612,7 +3613,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
           TextField(
             controller: widget.descCtl,
             decoration: InputDecoration(
-              labelText: 'Description (optionnel)',
+              labelText: l10n.jrnlDescOptionalField,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
             maxLines: 2,
@@ -3622,8 +3623,8 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
             controller: widget.weightCtl,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              labelText: 'Poids total de la recette finie (g)',
-              helperText: 'Les macros seront calculées pour 100g de recette',
+              labelText: l10n.jrnlRecipeTotalWeightField,
+              helperText: l10n.jrnlMacrosCalculatedFor100g,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
             onChanged: (_) => setState(() {}),
@@ -3641,8 +3642,8 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Valeurs pour 100g de recette',
-                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                  Text(l10n.jrnlValuesPer100gRecipe,
+                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                   const SizedBox(height: 6),
                   Wrap(
                     spacing: 12, runSpacing: 4,
@@ -3661,10 +3662,10 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
           const SizedBox(height: 16),
           Row(
             children: [
-              const Text('Ingrédients',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+              Text(l10n.jrnlIngredientsTitle,
+                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
               const Spacer(),
-              Text('${_ingredients.length} aliment(s)',
+              Text(l10n.jrnlItemCountPlain(_ingredients.length),
                   style: TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
             ],
           ),
@@ -3673,7 +3674,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
           TextField(
             controller: _ingSearchCtrl,
             decoration: InputDecoration(
-              labelText: 'Rechercher un aliment à ajouter',
+              labelText: l10n.jrnlSearchFoodToAdd,
               prefixIcon: const Icon(Icons.search),
               suffixIcon: _ingSearchCtrl.text.isEmpty
                   ? null
@@ -3699,7 +3700,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
               ),
               child: Column(
                 children: suggestions.map((food) {
-                  final fname = displayNameOf(food, ((food as dynamic).name as String?) ?? 'Aliment');
+                  final fname = displayNameOf(food, ((food as dynamic).name as String?) ?? l10n.jrnlGenericFoodFallback);
                   final fid = ((food).id as String?) ?? '';
                   final fkcal = ((food).kcal100 as num?)?.toDouble() ?? 0.0;
                   final isFavFood =
@@ -3714,7 +3715,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                       color: isFavFood ? TotumColors.accent : TotumColors.textMuted,
                     ),
                     title: Text(fname, style: const TextStyle(fontSize: 13)),
-                    subtitle: Text('${fkcal.toStringAsFixed(0)} kcal/100g',
+                    subtitle: Text(l10n.jrnlKcalSlash100g(fkcal.toStringAsFixed(0)),
                         style: const TextStyle(fontSize: 11)),
                     trailing: const Icon(Icons.add_circle_outline, color: TotumColors.accent),
                     onTap: () {
@@ -3728,7 +3729,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                             keyboardType: TextInputType.number,
                             autofocus: true,
                             decoration: InputDecoration(
-                              labelText: 'Quantité (g)',
+                              labelText: ctx.l10n.jrnlQtyLabel,
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12)),
                             ),
@@ -3736,7 +3737,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                           actions: [
                             TextButton(
                                 onPressed: () => Navigator.pop(ctx),
-                                child: const Text('Annuler')),
+                                child: Text(ctx.l10n.commonCancel)),
                             FilledButton(
                               style: FilledButton.styleFrom(
                                   backgroundColor: TotumColors.accent,
@@ -3752,7 +3753,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                                 });
                                 Navigator.pop(ctx);
                               },
-                              child: const Text('Ajouter'),
+                              child: Text(ctx.l10n.commonAdd),
                             ),
                           ],
                         ),
@@ -3768,7 +3769,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
           if (_ingredients.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Text('Aucun ingrédient ajouté.',
+              child: Text(l10n.jrnlNoIngredientAdded,
                   style: TextStyle(color: TotumColors.textSecondary)),
             )
           else
@@ -3785,7 +3786,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.edit_outlined, size: 18, color: TotumColors.accent),
-                        tooltip: 'Modifier la quantité',
+                        tooltip: l10n.jrnlEditQuantityTooltip,
                         onPressed: () {
                           final gCtrl = TextEditingController(
                               text: ing.grams.toStringAsFixed(0));
@@ -3799,7 +3800,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                                 keyboardType: TextInputType.number,
                                 autofocus: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Quantité (g)',
+                                  labelText: ctx.l10n.jrnlQtyLabel,
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12)),
                                 ),
@@ -3807,7 +3808,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                               actions: [
                                 TextButton(
                                     onPressed: () => Navigator.pop(ctx),
-                                    child: const Text('Annuler')),
+                                    child: Text(ctx.l10n.commonCancel)),
                                 FilledButton(
                                   style: FilledButton.styleFrom(
                                       backgroundColor: kTotumOrange,
@@ -3832,7 +3833,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                       ),
                       IconButton(
                         icon: Icon(Icons.delete_outline, size: 18, color: TotumColors.textSecondary),
-                        tooltip: 'Retirer',
+                        tooltip: l10n.jrnlRemoveTooltip,
                         onPressed: () => setState(() => _ingredients.removeAt(i)),
                       ),
                     ],
@@ -3931,12 +3932,12 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
     final name = widget.nameCtl.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Donne un nom à ce repas !')));
+          SnackBar(content: Text(context.l10n.jrnlMealNameRequired)));
       return;
     }
     if (_items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ajoute au moins un aliment.')));
+          SnackBar(content: Text(context.l10n.jrnlFoodRequired)));
       return;
     }
     setState(() => _saving = true);
@@ -3952,11 +3953,12 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final suggestions = _filteredFoods();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isEdit ? 'Modifier le repas perso' : 'Nouveau repas perso'),
+        title: Text(widget.isEdit ? l10n.jrnlEditMealTitle : l10n.jrnlNewMealTitle),
         actions: [
           if (_saving)
             const Padding(
@@ -3967,8 +3969,8 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
           else
             TextButton(
               onPressed: _saveMeal,
-              child: const Text('Enregistrer',
-                  style: TextStyle(color: kTotumOrange, fontWeight: FontWeight.w700)),
+              child: Text(l10n.commonSave,
+                  style: const TextStyle(color: kTotumOrange, fontWeight: FontWeight.w700)),
             ),
         ],
       ),
@@ -3978,7 +3980,7 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
           TextField(
             controller: widget.nameCtl,
             decoration: InputDecoration(
-              labelText: 'Nom du repas *',
+              labelText: l10n.jrnlMealNameField,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
@@ -3986,7 +3988,7 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
           TextField(
             controller: widget.descCtl,
             decoration: InputDecoration(
-              labelText: 'Description (optionnel)',
+              labelText: l10n.jrnlDescOptionalField,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
             maxLines: 2,
@@ -4004,8 +4006,8 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Total du repas',
-                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                  Text(l10n.jrnlMealTotalTitle,
+                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                   const SizedBox(height: 6),
                   Wrap(
                     spacing: 12, runSpacing: 4,
@@ -4024,10 +4026,10 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
           const SizedBox(height: 16),
           Row(
             children: [
-              const Text('Aliments',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+              Text(l10n.jrnlFoodsTitle,
+                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
               const Spacer(),
-              Text('${_items.length} aliment(s)',
+              Text(l10n.jrnlItemCountPlain(_items.length),
                   style: TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
             ],
           ),
@@ -4036,7 +4038,7 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
           TextField(
             controller: _ingSearchCtrl,
             decoration: InputDecoration(
-              labelText: 'Rechercher un aliment à ajouter',
+              labelText: l10n.jrnlSearchFoodToAdd,
               prefixIcon: const Icon(Icons.search),
               suffixIcon: _ingSearchCtrl.text.isEmpty
                   ? null
@@ -4062,7 +4064,7 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
               ),
               child: Column(
                 children: suggestions.map((food) {
-                  final fname = displayNameOf(food, ((food as dynamic).name as String?) ?? 'Aliment');
+                  final fname = displayNameOf(food, ((food as dynamic).name as String?) ?? l10n.jrnlGenericFoodFallback);
                   final fid = ((food).id as String?) ?? '';
                   final fkcal = ((food).kcal100 as num?)?.toDouble() ?? 0.0;
                   final isFavFood =
@@ -4075,7 +4077,7 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
                       color: isFavFood ? TotumColors.accent : TotumColors.textMuted,
                     ),
                     title: Text(fname, style: const TextStyle(fontSize: 13)),
-                    subtitle: Text('${fkcal.toStringAsFixed(0)} kcal/100g',
+                    subtitle: Text(l10n.jrnlKcalSlash100g(fkcal.toStringAsFixed(0)),
                         style: const TextStyle(fontSize: 11)),
                     trailing: const Icon(Icons.add_circle_outline, color: TotumColors.accent),
                     onTap: () {
@@ -4089,12 +4091,12 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
                             keyboardType: TextInputType.number,
                             autofocus: true,
                             decoration: InputDecoration(
-                              labelText: 'Quantité (g)',
+                              labelText: ctx.l10n.jrnlQtyLabel,
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                           ),
                           actions: [
-                            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annuler')),
+                            TextButton(onPressed: () => Navigator.pop(ctx), child: Text(ctx.l10n.commonCancel)),
                             FilledButton(
                               style: FilledButton.styleFrom(
                                   backgroundColor: TotumColors.accent, foregroundColor: Colors.white),
@@ -4116,7 +4118,7 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
                                 });
                                 Navigator.pop(ctx);
                               },
-                              child: const Text('Ajouter'),
+                              child: Text(ctx.l10n.commonAdd),
                             ),
                           ],
                         ),
@@ -4132,7 +4134,7 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
           if (_items.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Text('Aucun aliment ajouté.', style: TextStyle(color: TotumColors.textSecondary)),
+              child: Text(l10n.jrnlNoFoodAdded, style: TextStyle(color: TotumColors.textSecondary)),
             )
           else
             ...List.generate(_items.length, (i) {
@@ -4144,13 +4146,13 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
                 child: ListTile(
                   dense: true,
                   title: Text((it['name'] ?? '').toString()),
-                  subtitle: Text('${grams.toStringAsFixed(0)} g · ${kcal.toStringAsFixed(0)} kcal'),
+                  subtitle: Text(l10n.jrnlGramsAndKcal(grams.toStringAsFixed(0), kcal.toStringAsFixed(0))),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.edit_outlined, size: 18, color: TotumColors.accent),
-                        tooltip: 'Modifier la quantité',
+                        tooltip: l10n.jrnlEditQuantityTooltip,
                         onPressed: () {
                           final gCtrl = TextEditingController(text: grams.toStringAsFixed(0));
                           showDialog(
@@ -4162,12 +4164,12 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
                                 keyboardType: TextInputType.number,
                                 autofocus: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Quantité (g)',
+                                  labelText: ctx.l10n.jrnlQtyLabel,
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                                 ),
                               ),
                               actions: [
-                                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annuler')),
+                                TextButton(onPressed: () => Navigator.pop(ctx), child: Text(ctx.l10n.commonCancel)),
                                 FilledButton(
                                   style: FilledButton.styleFrom(
                                       backgroundColor: kTotumOrange, foregroundColor: Colors.white),
@@ -4194,7 +4196,7 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
                       ),
                       IconButton(
                         icon: Icon(Icons.delete_outline, size: 18, color: TotumColors.textSecondary),
-                        tooltip: 'Retirer',
+                        tooltip: l10n.jrnlRemoveTooltip,
                         onPressed: () => setState(() => _items.removeAt(i)),
                       ),
                     ],
