@@ -10,5 +10,21 @@
   "weightTrendSmoothedLegend": "Weight trend",
   "weightTrendAdviceText": "Weigh yourself every day if possible, under the same conditions each time — ideally in the morning, fasted, right after waking up. The reliability of the trend — and your recalculated targets — depends directly on this consistency.",
   "weightTrendRecentEvolution": "Recent evolution (weight trend)",
-  "lastNDays": "Last {days} days"
+  "lastNDays": "Last {days} days",
+
+  "expenditureScreenTitle": "Energy expenditure",
+  "expenditureNotEnoughWeighIns": "Not enough weigh-ins yet to start the calculation",
+  "expenditureComingSoon": "Your estimated energy expenditure is coming soon",
+  "expenditureAddSecondWeighIn": "Add at least a 2nd weigh-in (you have {count}/2) for the calculation to start.",
+  "expenditureSpanBetweenWeighIns": "Span between 2 weigh-ins",
+  "expenditureSpanBetweenWeighInsCompact": "Weigh-in span",
+  "expenditureMealsLogged": "Meals logged (last 20 days)",
+  "expenditureMealsLoggedCompact": "Meals logged",
+  "expenditureContinueHint": "Keep weighing yourself and logging your meals regularly — your expenditure will appear automatically once both thresholds are reached.",
+  "expenditureEstimatedLegend": "Estimated expenditure",
+  "expenditureUncertaintyLegend": "Uncertainty margin",
+  "expenditureDisclaimer": "This estimate is calculated from your weight and food journal (same principle as TOTUM's adaptive calibration) — it is not a direct measurement, nor a reproduction of another app's proprietary algorithm. The more regularly you log your weight and meals, the tighter the uncertainty margin becomes.",
+  "expenditureRecentEvolution": "Recent evolution",
+  "kcalPerDay": "kcal/day",
+  "dayAbbrev": "d"
 }

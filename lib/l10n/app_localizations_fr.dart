@@ -41,4 +41,55 @@ class AppLocalizationsFr extends AppLocalizations {
   String lastNDays(int days) {
     return '$days derniers jours';
   }
+
+  @override
+  String get expenditureScreenTitle => 'Dépense énergétique';
+
+  @override
+  String get expenditureNotEnoughWeighIns =>
+      'Pas encore assez de pesées pour démarrer le calcul';
+
+  @override
+  String get expenditureComingSoon =>
+      'Ta dépense énergétique estimée arrive bientôt';
+
+  @override
+  String expenditureAddSecondWeighIn(int count) {
+    return 'Ajoute au moins une 2e pesée (tu en as $count/2) pour que le calcul puisse démarrer.';
+  }
+
+  @override
+  String get expenditureSpanBetweenWeighIns => 'Écart entre 2 pesées';
+
+  @override
+  String get expenditureSpanBetweenWeighInsCompact => 'Écart pesées';
+
+  @override
+  String get expenditureMealsLogged => 'Repas renseignés (20 derniers jours)';
+
+  @override
+  String get expenditureMealsLoggedCompact => 'Repas renseignés';
+
+  @override
+  String get expenditureContinueHint =>
+      'Continue à te peser et à noter tes repas régulièrement — ta dépense apparaîtra automatiquement dès ces deux seuils atteints.';
+
+  @override
+  String get expenditureEstimatedLegend => 'Dépense estimée';
+
+  @override
+  String get expenditureUncertaintyLegend => 'Marge d\'incertitude';
+
+  @override
+  String get expenditureDisclaimer =>
+      'Cette estimation est calculée à partir de ton poids et de ton journal alimentaire (même principe que la calibration adaptative de TOTUM) — ce n\'est pas une mesure directe, ni une reproduction de l\'algorithme propriétaire d\'une autre application. Plus tu renseignes ton poids et tes repas régulièrement, plus la marge d\'incertitude se resserre.';
+
+  @override
+  String get expenditureRecentEvolution => 'Évolution récente';
+
+  @override
+  String get kcalPerDay => 'kcal/j';
+
+  @override
+  String get dayAbbrev => 'j';
 }

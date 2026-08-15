@@ -18,5 +18,26 @@
     "placeholders": {
       "days": {"type": "int"}
     }
-  }
+  },
+
+  "expenditureScreenTitle": "Dépense énergétique",
+  "expenditureNotEnoughWeighIns": "Pas encore assez de pesées pour démarrer le calcul",
+  "expenditureComingSoon": "Ta dépense énergétique estimée arrive bientôt",
+  "expenditureAddSecondWeighIn": "Ajoute au moins une 2e pesée (tu en as {count}/2) pour que le calcul puisse démarrer.",
+  "@expenditureAddSecondWeighIn": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "expenditureSpanBetweenWeighIns": "Écart entre 2 pesées",
+  "expenditureSpanBetweenWeighInsCompact": "Écart pesées",
+  "expenditureMealsLogged": "Repas renseignés (20 derniers jours)",
+  "expenditureMealsLoggedCompact": "Repas renseignés",
+  "expenditureContinueHint": "Continue à te peser et à noter tes repas régulièrement — ta dépense apparaîtra automatiquement dès ces deux seuils atteints.",
+  "expenditureEstimatedLegend": "Dépense estimée",
+  "expenditureUncertaintyLegend": "Marge d'incertitude",
+  "expenditureDisclaimer": "Cette estimation est calculée à partir de ton poids et de ton journal alimentaire (même principe que la calibration adaptative de TOTUM) — ce n'est pas une mesure directe, ni une reproduction de l'algorithme propriétaire d'une autre application. Plus tu renseignes ton poids et tes repas régulièrement, plus la marge d'incertitude se resserre.",
+  "expenditureRecentEvolution": "Évolution récente",
+  "kcalPerDay": "kcal/j",
+  "dayAbbrev": "j"
 }

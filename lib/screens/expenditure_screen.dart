@@ -8,6 +8,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n_ext.dart';
 import '../services/calibration_service.dart';
 import '../theme/totum_style.dart';
 
@@ -197,24 +198,26 @@ class _ProgressBody extends StatelessWidget {
         children: [
           Text(
             r.weighInsCount < 2
-                ? 'Pas encore assez de pesées pour démarrer le calcul'
-                : 'Ta dépense énergétique estimée arrive bientôt',
+                ? context.l10n.expenditureNotEnoughWeighIns
+                : context.l10n.expenditureComingSoon,
             style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary),
           ),
           SizedBox(height: compact ? 6 : 10),
           if (r.weighInsCount < 2)
             Text(
-              'Ajoute au moins une 2e pesée (tu en as ${r.weighInsCount}/2) pour que le calcul puisse démarrer.',
+              context.l10n.expenditureAddSecondWeighIn(r.weighInsCount),
               style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted, height: 1.4),
             )
           else ...[
-            bar('Écart entre 2 pesées', 'Écart pesées', '${r.spanDays}/${r.minSpanDays} j', r.spanProgress),
+            bar(context.l10n.expenditureSpanBetweenWeighIns, context.l10n.expenditureSpanBetweenWeighInsCompact,
+                '${r.spanDays}/${r.minSpanDays} ${context.l10n.dayAbbrev}', r.spanProgress),
             SizedBox(height: compact ? 6 : 10),
-            bar('Repas renseignés (20 derniers jours)', 'Repas renseignés', '${r.daysWithFoodLogged}/${r.minFoodDays} j', r.foodProgress),
+            bar(context.l10n.expenditureMealsLogged, context.l10n.expenditureMealsLoggedCompact,
+                '${r.daysWithFoodLogged}/${r.minFoodDays} ${context.l10n.dayAbbrev}', r.foodProgress),
             if (!compact) ...[
               const SizedBox(height: 10),
               Text(
-                'Continue à te peser et à noter tes repas régulièrement — ta dépense apparaîtra automatiquement dès ces deux seuils atteints.',
+                context.l10n.expenditureContinueHint,
                 style: TextStyle(fontSize: 11, color: TotumColors.textMuted, height: 1.35),
               ),
             ],
@@ -253,7 +256,7 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         foregroundColor: TotumColors.textPrimary,
-        title: Text('Dépense énergétique',
+        title: Text(context.l10n.expenditureScreenTitle,
             style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
       ),
       body: FutureBuilder<List<ExpenditurePoint>>(
@@ -279,11 +282,11 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
                       Row(children: [
                         Container(width: 9, height: 9, decoration: const BoxDecoration(color: TotumColors.accent, shape: BoxShape.circle)),
                         const SizedBox(width: 6),
-                        Text('Dépense estimée', style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+                        Text(context.l10n.expenditureEstimatedLegend, style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
                         const SizedBox(width: 16),
                         Container(width: 12, height: 9, color: TotumColors.accentSoft),
                         const SizedBox(width: 6),
-                        Text('Marge d\'incertitude', style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+                        Text(context.l10n.expenditureUncertaintyLegend, style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
                       ]),
                     ],
                   ),
@@ -294,10 +297,7 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
                 ],
                 const SizedBox(height: 14),
                 Text(
-                  'Cette estimation est calculée à partir de ton poids et de ton journal alimentaire (même principe que la '
-                  'calibration adaptative de TOTUM) — ce n\'est pas une mesure directe, ni une reproduction de l\'algorithme '
-                  'propriétaire d\'une autre application. Plus tu renseignes ton poids et tes repas régulièrement, plus la '
-                  'marge d\'incertitude se resserre.',
+                  context.l10n.expenditureDisclaimer,
                   style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted, height: 1.4),
                 ),
               ],
@@ -342,10 +342,10 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Évolution récente',
+          Text(context.l10n.expenditureRecentEvolution,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
-          row('3 derniers jours', 3),
-          row('7 derniers jours', 7),
+          row(context.l10n.lastNDays(3), 3),
+          row(context.l10n.lastNDays(7), 7),
         ],
       ),
     );
@@ -389,7 +389,7 @@ class _ExpenditureScreenState extends State<ExpenditureScreen> {
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
         Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 5),
-            child: Text('kcal/j', style: TextStyle(fontSize: 13, color: TotumColors.textSecondary))),
+            child: Text(context.l10n.kcalPerDay, style: TextStyle(fontSize: 13, color: TotumColors.textSecondary))),
         const SizedBox(width: 10),
         Padding(
           padding: const EdgeInsets.only(bottom: 6),

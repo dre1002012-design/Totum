@@ -157,6 +157,96 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{days} derniers jours'**
   String lastNDays(int days);
+
+  /// No description provided for @expenditureScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense énergétique'**
+  String get expenditureScreenTitle;
+
+  /// No description provided for @expenditureNotEnoughWeighIns.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore assez de pesées pour démarrer le calcul'**
+  String get expenditureNotEnoughWeighIns;
+
+  /// No description provided for @expenditureComingSoon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta dépense énergétique estimée arrive bientôt'**
+  String get expenditureComingSoon;
+
+  /// No description provided for @expenditureAddSecondWeighIn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute au moins une 2e pesée (tu en as {count}/2) pour que le calcul puisse démarrer.'**
+  String expenditureAddSecondWeighIn(int count);
+
+  /// No description provided for @expenditureSpanBetweenWeighIns.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écart entre 2 pesées'**
+  String get expenditureSpanBetweenWeighIns;
+
+  /// No description provided for @expenditureSpanBetweenWeighInsCompact.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écart pesées'**
+  String get expenditureSpanBetweenWeighInsCompact;
+
+  /// No description provided for @expenditureMealsLogged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repas renseignés (20 derniers jours)'**
+  String get expenditureMealsLogged;
+
+  /// No description provided for @expenditureMealsLoggedCompact.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repas renseignés'**
+  String get expenditureMealsLoggedCompact;
+
+  /// No description provided for @expenditureContinueHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continue à te peser et à noter tes repas régulièrement — ta dépense apparaîtra automatiquement dès ces deux seuils atteints.'**
+  String get expenditureContinueHint;
+
+  /// No description provided for @expenditureEstimatedLegend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense estimée'**
+  String get expenditureEstimatedLegend;
+
+  /// No description provided for @expenditureUncertaintyLegend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marge d\'incertitude'**
+  String get expenditureUncertaintyLegend;
+
+  /// No description provided for @expenditureDisclaimer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette estimation est calculée à partir de ton poids et de ton journal alimentaire (même principe que la calibration adaptative de TOTUM) — ce n\'est pas une mesure directe, ni une reproduction de l\'algorithme propriétaire d\'une autre application. Plus tu renseignes ton poids et tes repas régulièrement, plus la marge d\'incertitude se resserre.'**
+  String get expenditureDisclaimer;
+
+  /// No description provided for @expenditureRecentEvolution.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évolution récente'**
+  String get expenditureRecentEvolution;
+
+  /// No description provided for @kcalPerDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'kcal/j'**
+  String get kcalPerDay;
+
+  /// No description provided for @dayAbbrev.
+  ///
+  /// In fr, this message translates to:
+  /// **'j'**
+  String get dayAbbrev;
 }
 
 class _AppLocalizationsDelegate
