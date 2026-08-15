@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../l10n/l10n_ext.dart';
+
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -41,31 +43,32 @@ class _AuthScreenState extends State<AuthScreen> {
   /// Traduit une erreur technique Supabase en message clair en français.
   String _friendlyError(Object e) {
     final s = e.toString().toLowerCase();
+    final l10n = context.l10n;
     if (s.contains('invalid login credentials')) {
-      return 'Email ou mot de passe incorrect. Vérifie et réessaie.';
+      return l10n.authWrongCredentials;
     }
     if (s.contains('email not confirmed')) {
-      return '📧 Ton email n\'est pas encore confirmé. Ouvre le lien reçu par mail, puis reconnecte-toi.';
+      return l10n.authEmailNotConfirmed;
     }
     if (s.contains('user already registered') ||
         s.contains('already been registered')) {
-      return 'Un compte existe déjà avec cet email. Essaie de te connecter.';
+      return l10n.authUserAlreadyRegistered;
     }
     if (s.contains('password should be at least')) {
-      return 'Le mot de passe doit contenir au moins 6 caractères.';
+      return l10n.authPasswordTooShort;
     }
     if (s.contains('unable to validate email') ||
         s.contains('invalid email')) {
-      return 'Cette adresse email ne semble pas valide.';
+      return l10n.authInvalidEmail;
     }
     if (s.contains('network') || s.contains('socket') ||
         s.contains('failed host')) {
-      return 'Connexion internet indisponible. Vérifie ta connexion et réessaie.';
+      return l10n.authNetworkError;
     }
     if (s.contains('rate limit') || s.contains('too many')) {
-      return 'Trop de tentatives. Patiente une minute avant de réessayer.';
+      return l10n.authRateLimit;
     }
-    return 'Une erreur est survenue. Réessaie dans un instant.';
+    return l10n.authGenericError;
   }
 
   Future<void> _signUp() async {
@@ -77,9 +80,7 @@ class _AuthScreenState extends State<AuthScreen> {
       await _client.auth.signUp(email: email, password: password);
       if (!mounted) return;
       _showMessage(
-        '🎉 Bienvenue ! Ton compte est créé.\n'
-        '📧 Ouvre ta boîte mail et clique sur le lien de confirmation, '
-        'puis reviens te connecter ici.',
+        context.l10n.authSignUpWelcome,
         color: const Color(0xFFEF6C00), // orange : action requise
         seconds: 8,
       );
@@ -109,7 +110,7 @@ class _AuthScreenState extends State<AuthScreen> {
           onConflict: 'id',
         );
         if (!mounted) return;
-        _showMessage('Connexion réussie ✅ Bon retour parmi nous !');
+        _showMessage(context.l10n.authSignInSuccess);
       }
     } catch (e) {
       if (!mounted) return;
@@ -123,7 +124,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final email = _emailController.text.trim();
     if (email.isEmpty || !email.contains('@')) {
       _showMessage(
-        'Entre d\'abord ton email ci-dessus, puis appuie sur « Mot de passe oublié ».',
+        context.l10n.authEnterEmailFirst,
         color: const Color(0xFFEF6C00),
       );
       return;
@@ -133,8 +134,7 @@ class _AuthScreenState extends State<AuthScreen> {
       await _client.auth.resetPasswordForEmail(email);
       if (!mounted) return;
       _showMessage(
-        '📧 Si un compte existe pour cet email, tu vas recevoir un lien '
-        'pour réinitialiser ton mot de passe. Pense à vérifier tes spams.',
+        context.l10n.authResetPasswordSent,
         color: const Color(0xFFEF6C00),
         seconds: 7,
       );
@@ -156,8 +156,9 @@ class _AuthScreenState extends State<AuthScreen> {
       );
     } catch (error) {
       debugPrint('Erreur Google sign-in: $error');
+      if (!mounted) return;
       _showMessage(
-        'La connexion avec Google n\'a pas abouti. Réessaie ou utilise ton email.',
+        context.l10n.authGoogleSignInFailed,
         color: const Color(0xFFC62828),
       );
     }
@@ -166,11 +167,8 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     const color = Color(0xFFFF7A00);
-
-    // Message de prix selon la plateforme
-    const String pricingText = kIsWeb
-        ? 'Essai gratuit 7 jours, puis abonnement 14,99 €/an renouvelé automatiquement. Annulable à tout moment.'
-        : 'Essai gratuit 7 jours, puis abonnement 14,99 €/an renouvelé automatiquement. Annulable à tout moment.';
+    final l10n = context.l10n;
+    final String pricingText = l10n.authPricingText;
 
     return Scaffold(
       body: SafeArea(
@@ -186,25 +184,25 @@ class _AuthScreenState extends State<AuthScreen> {
                   Image.asset('assets/logo.png', height: 120),
                   const SizedBox(height: 24),
 
-                  const Text(
-                    'Bienvenue sur TOTUM',
-                    style: TextStyle(
+                  Text(
+                    l10n.authWelcomeTitle,
+                    style: const TextStyle(
                         fontSize: 22, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
 
-                  const Text(
-                    'Ton compagnon de suivi complet, pour une vitalité totale.',
+                  Text(
+                    l10n.authTagline,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 6),
 
                   // Message prix adapté selon la plateforme
-                  const Text(
+                  Text(
                     pricingText,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                     ),
@@ -215,15 +213,15 @@ class _AuthScreenState extends State<AuthScreen> {
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.authEmailLabel,
+                      border: const OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Entre un email';
+                        return l10n.authEmailRequired;
                       }
-                      if (!value.contains('@')) return 'Email invalide';
+                      if (!value.contains('@')) return l10n.authEmailInvalid;
                       return null;
                     },
                   ),
@@ -233,7 +231,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     controller: _passwordController,
                     obscureText: !_passwordVisible,
                     decoration: InputDecoration(
-                      labelText: 'Mot de passe',
+                      labelText: l10n.authPasswordLabel,
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(_passwordVisible
@@ -245,9 +243,9 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Entre un mot de passe';
+                        return l10n.authPasswordRequired;
                       }
-                      if (value.length < 6) return 'Au moins 6 caractères';
+                      if (value.length < 6) return l10n.authPasswordMinLength;
                       return null;
                     },
                   ),
@@ -256,7 +254,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: _resetPassword,
-                      child: const Text('Mot de passe oublié ?'),
+                      child: Text(l10n.authForgotPassword),
                     ),
                   ),
 
@@ -280,7 +278,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               backgroundColor: color,
                               foregroundColor: Colors.black,
                             ),
-                            child: const Text('Se connecter'),
+                            child: Text(l10n.authSignInButton),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -292,12 +290,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               padding: const EdgeInsets.symmetric(
                                   vertical: 14),
                             ),
-                            child: const Text('Créer un compte'),
+                            child: Text(l10n.authSignUpButton),
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text('ou',
-                            style: TextStyle(fontSize: 13)),
+                        Text(l10n.authOr,
+                            style: const TextStyle(fontSize: 13)),
                         const SizedBox(height: 8),
                         SizedBox(
                           width: double.infinity,
@@ -313,8 +311,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                 Image.asset('assets/icons/google.png',
                                     height: 20, width: 20),
                                 const SizedBox(width: 8),
-                                const Text('Continuer avec Google',
-                                    style: TextStyle(fontSize: 15)),
+                                Text(l10n.authContinueWithGoogle,
+                                    style: const TextStyle(fontSize: 15)),
                               ],
                             ),
                           ),
@@ -323,10 +321,10 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
 
                   const SizedBox(height: 16),
-                  const Text(
-                    'En continuant, tu acceptes les conditions d\'utilisation et la politique de confidentialité de TOTUM.',
+                  Text(
+                    l10n.authTermsNotice,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 11, color: Colors.grey),
+                    style: const TextStyle(fontSize: 11, color: Colors.grey),
                   ),
                 ],
               ),

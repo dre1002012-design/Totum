@@ -183,4 +183,102 @@ class AppLocalizationsEn extends AppLocalizations {
   String paywallChangeAccountError(String error) {
     return 'Problem changing account: $error';
   }
+
+  @override
+  String get authWrongCredentials =>
+      'Incorrect email or password. Check and try again.';
+
+  @override
+  String get authEmailNotConfirmed =>
+      '📧 Your email hasn\'t been confirmed yet. Open the link you received by email, then log back in.';
+
+  @override
+  String get authUserAlreadyRegistered =>
+      'An account already exists with this email. Try logging in instead.';
+
+  @override
+  String get authPasswordTooShort =>
+      'The password must be at least 6 characters long.';
+
+  @override
+  String get authInvalidEmail => 'This email address doesn\'t look valid.';
+
+  @override
+  String get authNetworkError =>
+      'No internet connection available. Check your connection and try again.';
+
+  @override
+  String get authRateLimit =>
+      'Too many attempts. Wait a minute before trying again.';
+
+  @override
+  String get authGenericError =>
+      'Something went wrong. Please try again in a moment.';
+
+  @override
+  String get authSignUpWelcome =>
+      '🎉 Welcome! Your account has been created.\n📧 Open your inbox and click the confirmation link, then come back to log in.';
+
+  @override
+  String get authSignInSuccess => 'Signed in successfully ✅ Welcome back!';
+
+  @override
+  String get authEnterEmailFirst =>
+      'First enter your email above, then tap \"Forgot password?\".';
+
+  @override
+  String get authResetPasswordSent =>
+      '📧 If an account exists for this email, you\'ll receive a link to reset your password. Don\'t forget to check your spam folder.';
+
+  @override
+  String get authGoogleSignInFailed =>
+      'Google sign-in didn\'t go through. Try again or use your email.';
+
+  @override
+  String get authWelcomeTitle => 'Welcome to TOTUM';
+
+  @override
+  String get authTagline =>
+      'Your complete tracking companion, for total vitality.';
+
+  @override
+  String get authPricingText =>
+      '7-day free trial, then a €14.99/year subscription renewed automatically. Cancellable anytime.';
+
+  @override
+  String get authEmailLabel => 'Email';
+
+  @override
+  String get authEmailRequired => 'Enter an email';
+
+  @override
+  String get authEmailInvalid => 'Invalid email';
+
+  @override
+  String get authPasswordLabel => 'Password';
+
+  @override
+  String get authPasswordRequired => 'Enter a password';
+
+  @override
+  String get authPasswordMinLength => 'At least 6 characters';
+
+  @override
+  String get authForgotPassword => 'Forgot password?';
+
+  @override
+  String get authSignInButton => 'Sign in';
+
+  @override
+  String get authSignUpButton => 'Create an account';
+
+  @override
+  String get authOr => 'or';
+
+  @override
+  String get authContinueWithGoogle => 'Continue with Google';
+
+  @override
+  String get authTermsNotice =>
+      'By continuing, you accept TOTUM\'s terms of use and privacy policy.';
 }

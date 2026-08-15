@@ -403,6 +403,174 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Problème lors du changement de compte : {error}'**
   String paywallChangeAccountError(String error);
+
+  /// No description provided for @authWrongCredentials.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email ou mot de passe incorrect. Vérifie et réessaie.'**
+  String get authWrongCredentials;
+
+  /// No description provided for @authEmailNotConfirmed.
+  ///
+  /// In fr, this message translates to:
+  /// **'📧 Ton email n\'est pas encore confirmé. Ouvre le lien reçu par mail, puis reconnecte-toi.'**
+  String get authEmailNotConfirmed;
+
+  /// No description provided for @authUserAlreadyRegistered.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un compte existe déjà avec cet email. Essaie de te connecter.'**
+  String get authUserAlreadyRegistered;
+
+  /// No description provided for @authPasswordTooShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le mot de passe doit contenir au moins 6 caractères.'**
+  String get authPasswordTooShort;
+
+  /// No description provided for @authInvalidEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette adresse email ne semble pas valide.'**
+  String get authInvalidEmail;
+
+  /// No description provided for @authNetworkError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connexion internet indisponible. Vérifie ta connexion et réessaie.'**
+  String get authNetworkError;
+
+  /// No description provided for @authRateLimit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trop de tentatives. Patiente une minute avant de réessayer.'**
+  String get authRateLimit;
+
+  /// No description provided for @authGenericError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une erreur est survenue. Réessaie dans un instant.'**
+  String get authGenericError;
+
+  /// No description provided for @authSignUpWelcome.
+  ///
+  /// In fr, this message translates to:
+  /// **'🎉 Bienvenue ! Ton compte est créé.\n📧 Ouvre ta boîte mail et clique sur le lien de confirmation, puis reviens te connecter ici.'**
+  String get authSignUpWelcome;
+
+  /// No description provided for @authSignInSuccess.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connexion réussie ✅ Bon retour parmi nous !'**
+  String get authSignInSuccess;
+
+  /// No description provided for @authEnterEmailFirst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre d\'abord ton email ci-dessus, puis appuie sur « Mot de passe oublié ».'**
+  String get authEnterEmailFirst;
+
+  /// No description provided for @authResetPasswordSent.
+  ///
+  /// In fr, this message translates to:
+  /// **'📧 Si un compte existe pour cet email, tu vas recevoir un lien pour réinitialiser ton mot de passe. Pense à vérifier tes spams.'**
+  String get authResetPasswordSent;
+
+  /// No description provided for @authGoogleSignInFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'La connexion avec Google n\'a pas abouti. Réessaie ou utilise ton email.'**
+  String get authGoogleSignInFailed;
+
+  /// No description provided for @authWelcomeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bienvenue sur TOTUM'**
+  String get authWelcomeTitle;
+
+  /// No description provided for @authTagline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton compagnon de suivi complet, pour une vitalité totale.'**
+  String get authTagline;
+
+  /// No description provided for @authPricingText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Essai gratuit 7 jours, puis abonnement 14,99 €/an renouvelé automatiquement. Annulable à tout moment.'**
+  String get authPricingText;
+
+  /// No description provided for @authEmailLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email'**
+  String get authEmailLabel;
+
+  /// No description provided for @authEmailRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre un email'**
+  String get authEmailRequired;
+
+  /// No description provided for @authEmailInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email invalide'**
+  String get authEmailInvalid;
+
+  /// No description provided for @authPasswordLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
+  String get authPasswordLabel;
+
+  /// No description provided for @authPasswordRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre un mot de passe'**
+  String get authPasswordRequired;
+
+  /// No description provided for @authPasswordMinLength.
+  ///
+  /// In fr, this message translates to:
+  /// **'Au moins 6 caractères'**
+  String get authPasswordMinLength;
+
+  /// No description provided for @authForgotPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe oublié ?'**
+  String get authForgotPassword;
+
+  /// No description provided for @authSignInButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter'**
+  String get authSignInButton;
+
+  /// No description provided for @authSignUpButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un compte'**
+  String get authSignUpButton;
+
+  /// No description provided for @authOr.
+  ///
+  /// In fr, this message translates to:
+  /// **'ou'**
+  String get authOr;
+
+  /// No description provided for @authContinueWithGoogle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer avec Google'**
+  String get authContinueWithGoogle;
+
+  /// No description provided for @authTermsNotice.
+  ///
+  /// In fr, this message translates to:
+  /// **'En continuant, tu acceptes les conditions d\'utilisation et la politique de confidentialité de TOTUM.'**
+  String get authTermsNotice;
 }
 
 class _AppLocalizationsDelegate

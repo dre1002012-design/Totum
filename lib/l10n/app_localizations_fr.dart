@@ -184,4 +184,102 @@ class AppLocalizationsFr extends AppLocalizations {
   String paywallChangeAccountError(String error) {
     return 'Problème lors du changement de compte : $error';
   }
+
+  @override
+  String get authWrongCredentials =>
+      'Email ou mot de passe incorrect. Vérifie et réessaie.';
+
+  @override
+  String get authEmailNotConfirmed =>
+      '📧 Ton email n\'est pas encore confirmé. Ouvre le lien reçu par mail, puis reconnecte-toi.';
+
+  @override
+  String get authUserAlreadyRegistered =>
+      'Un compte existe déjà avec cet email. Essaie de te connecter.';
+
+  @override
+  String get authPasswordTooShort =>
+      'Le mot de passe doit contenir au moins 6 caractères.';
+
+  @override
+  String get authInvalidEmail => 'Cette adresse email ne semble pas valide.';
+
+  @override
+  String get authNetworkError =>
+      'Connexion internet indisponible. Vérifie ta connexion et réessaie.';
+
+  @override
+  String get authRateLimit =>
+      'Trop de tentatives. Patiente une minute avant de réessayer.';
+
+  @override
+  String get authGenericError =>
+      'Une erreur est survenue. Réessaie dans un instant.';
+
+  @override
+  String get authSignUpWelcome =>
+      '🎉 Bienvenue ! Ton compte est créé.\n📧 Ouvre ta boîte mail et clique sur le lien de confirmation, puis reviens te connecter ici.';
+
+  @override
+  String get authSignInSuccess => 'Connexion réussie ✅ Bon retour parmi nous !';
+
+  @override
+  String get authEnterEmailFirst =>
+      'Entre d\'abord ton email ci-dessus, puis appuie sur « Mot de passe oublié ».';
+
+  @override
+  String get authResetPasswordSent =>
+      '📧 Si un compte existe pour cet email, tu vas recevoir un lien pour réinitialiser ton mot de passe. Pense à vérifier tes spams.';
+
+  @override
+  String get authGoogleSignInFailed =>
+      'La connexion avec Google n\'a pas abouti. Réessaie ou utilise ton email.';
+
+  @override
+  String get authWelcomeTitle => 'Bienvenue sur TOTUM';
+
+  @override
+  String get authTagline =>
+      'Ton compagnon de suivi complet, pour une vitalité totale.';
+
+  @override
+  String get authPricingText =>
+      'Essai gratuit 7 jours, puis abonnement 14,99 €/an renouvelé automatiquement. Annulable à tout moment.';
+
+  @override
+  String get authEmailLabel => 'Email';
+
+  @override
+  String get authEmailRequired => 'Entre un email';
+
+  @override
+  String get authEmailInvalid => 'Email invalide';
+
+  @override
+  String get authPasswordLabel => 'Mot de passe';
+
+  @override
+  String get authPasswordRequired => 'Entre un mot de passe';
+
+  @override
+  String get authPasswordMinLength => 'Au moins 6 caractères';
+
+  @override
+  String get authForgotPassword => 'Mot de passe oublié ?';
+
+  @override
+  String get authSignInButton => 'Se connecter';
+
+  @override
+  String get authSignUpButton => 'Créer un compte';
+
+  @override
+  String get authOr => 'ou';
+
+  @override
+  String get authContinueWithGoogle => 'Continuer avec Google';
+
+  @override
+  String get authTermsNotice =>
+      'En continuant, tu acceptes les conditions d\'utilisation et la politique de confidentialité de TOTUM.';
 }
