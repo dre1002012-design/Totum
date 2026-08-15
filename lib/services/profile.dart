@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../l10n/app_localizations.dart';
 import 'calibration_service.dart';
 
 /// ====== ENUMS / MODÈLES =====================================================
@@ -37,30 +38,24 @@ enum Sex { male, female }
 enum ActivityLevel { sedentary, light, moderate, active, veryActive, extreme }
 
 extension ActivityLevelX on ActivityLevel {
-  String get title => switch (this) {
-        ActivityLevel.sedentary => 'Sédentaire',
-        ActivityLevel.light => 'Légèrement actif',
-        ActivityLevel.moderate => 'Modérément actif',
-        ActivityLevel.active => 'Actif',
-        ActivityLevel.veryActive => 'Très actif',
-        ActivityLevel.extreme => 'Extrêmement actif',
+  String titleFor(AppLocalizations l10n) => switch (this) {
+        ActivityLevel.sedentary => l10n.activityLevelSedentaryTitle,
+        ActivityLevel.light => l10n.activityLevelLightTitle,
+        ActivityLevel.moderate => l10n.activityLevelModerateTitle,
+        ActivityLevel.active => l10n.activityLevelActiveTitle,
+        ActivityLevel.veryActive => l10n.activityLevelVeryActiveTitle,
+        ActivityLevel.extreme => l10n.activityLevelExtremeTitle,
       };
 
   /// Décrit TOUJOURS quotidien et sport ensemble (jamais l'un sans l'autre)
   /// — l'un OU l'autre peut suffire à se situer dans ce palier.
-  String get description => switch (this) {
-        ActivityLevel.sedentary =>
-          'Vie plutôt sédentaire (bureau, peu de marche), pas ou très peu de sport.',
-        ActivityLevel.light =>
-          'Un peu de marche au quotidien, et/ou 1 à 3 séances de sport par semaine.',
-        ActivityLevel.moderate =>
-          'Bonne marche au quotidien (~8 000-10 000 pas), et/ou 3 à 5 séances de sport par semaine.',
-        ActivityLevel.active =>
-          'Beaucoup de mouvement au quotidien (métier debout), et/ou sport quasi quotidien (5-6 séances/semaine).',
-        ActivityLevel.veryActive =>
-          'Métier physique, et/ou plusieurs séances intenses certains jours (ex. course + muscu le même jour).',
-        ActivityLevel.extreme =>
-          'Métier physique intense ET entraînement quasi quotidien à haute intensité (ex. sportif semi-pro).',
+  String descriptionFor(AppLocalizations l10n) => switch (this) {
+        ActivityLevel.sedentary => l10n.activityLevelSedentaryDesc,
+        ActivityLevel.light => l10n.activityLevelLightDesc,
+        ActivityLevel.moderate => l10n.activityLevelModerateDesc,
+        ActivityLevel.active => l10n.activityLevelActiveDesc,
+        ActivityLevel.veryActive => l10n.activityLevelVeryActiveDesc,
+        ActivityLevel.extreme => l10n.activityLevelExtremeDesc,
       };
 }
 
@@ -137,12 +132,12 @@ extension BodyFatRangeX on BodyFatRange {
 
   /// Repère qualitatif ACE affiché à côté de la plage — aide à se situer
   /// sans avoir à connaître son % exact.
-  String tierFor(Sex sex) => switch (this) {
-        BodyFatRange.r1 => 'Essentiel',
-        BodyFatRange.r2 || BodyFatRange.r3 => 'Athlète',
-        BodyFatRange.r4 => 'Fitness',
-        BodyFatRange.r5 || BodyFatRange.r6 => 'Moyen',
-        BodyFatRange.r7 || BodyFatRange.r8 => 'Élevé',
+  String tierFor(Sex sex, AppLocalizations l10n) => switch (this) {
+        BodyFatRange.r1 => l10n.bodyFatTierEssential,
+        BodyFatRange.r2 || BodyFatRange.r3 => l10n.bodyFatTierAthlete,
+        BodyFatRange.r4 => l10n.bodyFatTierFitness,
+        BodyFatRange.r5 || BodyFatRange.r6 => l10n.bodyFatTierAverage,
+        BodyFatRange.r7 || BodyFatRange.r8 => l10n.bodyFatTierHigh,
       };
 }
 
@@ -175,22 +170,18 @@ ActivityLevel nearestActivityLevel(double pal) {
 enum DietStyle { balanced, highCarb, highFat, keto }
 
 extension DietStyleX on DietStyle {
-  String get title => switch (this) {
-        DietStyle.balanced => 'Équilibré',
-        DietStyle.highCarb => 'Riche en glucides',
-        DietStyle.highFat => 'Riche en lipides',
-        DietStyle.keto => 'Cétogène (Keto)',
+  String titleFor(AppLocalizations l10n) => switch (this) {
+        DietStyle.balanced => l10n.dietStyleBalancedTitle,
+        DietStyle.highCarb => l10n.dietStyleHighCarbTitle,
+        DietStyle.highFat => l10n.dietStyleHighFatTitle,
+        DietStyle.keto => l10n.dietStyleKetoTitle,
       };
 
-  String get description => switch (this) {
-        DietStyle.balanced =>
-          'Répartition de référence (~30 % lipides / ~45 % glucides des calories totales) : la zone associée à la mortalité totale la plus basse dans les grandes études de cohorte, dans les bornes officielles (AMDR).',
-        DietStyle.highCarb =>
-          'Lipides ramenés vers le bas de la fourchette recommandée, glucides plus généreux — utile pour les sports d\'endurance à fort volume, sans jamais sortir des bornes officielles.',
-        DietStyle.highFat =>
-          'Lipides plus présents pour qui les préfère (satiété, appétence) — plafonnés à la limite haute recommandée (35 % des calories), jamais au-delà.',
-        DietStyle.keto =>
-          'Glucides maintenus très bas, lipides très élevés — approche validée pour certains usages thérapeutiques encadrés (ex. épilepsie), mais dont les effets cardiovasculaires à long terme en population générale restent peu documentés (études majoritairement sur quelques semaines). À utiliser ponctuellement et avec discernement, pas comme réglage par défaut.',
+  String descriptionFor(AppLocalizations l10n) => switch (this) {
+        DietStyle.balanced => l10n.dietStyleBalancedDesc,
+        DietStyle.highCarb => l10n.dietStyleHighCarbDesc,
+        DietStyle.highFat => l10n.dietStyleHighFatDesc,
+        DietStyle.keto => l10n.dietStyleKetoDesc,
       };
 }
 

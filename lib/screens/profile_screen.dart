@@ -15,6 +15,8 @@ import '../theme/totum_style.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'weight_trend_screen.dart';
 import 'expenditure_screen.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/l10n_ext.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -27,10 +29,10 @@ class ProfileScreen extends StatefulWidget {
 /// source de certains nutriments ailleurs dans l'app (onglet Bilan).
 enum Diet { omnivore, vegetarien, vegetalien }
 
-String _dietLabel(Diet d) => switch (d) {
-      Diet.omnivore => 'Omnivore',
-      Diet.vegetarien => 'Végétarien',
-      Diet.vegetalien => 'Végétalien',
+String _dietLabel(Diet d, AppLocalizations l10n) => switch (d) {
+      Diet.omnivore => l10n.profileDietOmnivore,
+      Diet.vegetarien => l10n.profileDietVegetarian,
+      Diet.vegetalien => l10n.profileDietVegan,
     };
 
 /// 5 objectifs — la vignette/liste reste compacte (emoji/titre/indication
@@ -55,85 +57,51 @@ class _GoalOption {
   });
 }
 
-const List<_GoalOption> _kGoalOptions = [
-  _GoalOption(
-    goal: nutri.GoalType.lose,
-    icon: Icons.local_fire_department,
-    title: 'Perte de gras',
-    description: 'Perdre de la masse grasse à un bon rythme, tout en préservant tes muscles et ton énergie.',
-    tips: [
-      'Garde un bon apport en protéines pour protéger tes muscles',
-      'Bouge régulièrement — même une marche quotidienne compte',
-      'Dors suffisamment : la récupération fait partie du résultat',
-      'Après 8 à 10 semaines, prévois une pause en Maintien',
-    ],
-    coach: 'La priorité est de préserver ta masse musculaire pendant que tu perds du gras. '
-        'TOTUM relève automatiquement ta cible en protéines. Un rythme modéré est plus '
-        'efficace et bien plus durable qu\'un régime extrême.',
-  ),
-  _GoalOption(
-    goal: nutri.GoalType.loseMild,
-    icon: Icons.trending_down,
-    title: 'Perte en douceur',
-    description: 'Perdre du poids progressivement, sans frustration ni coup de fatigue. Idéal pour tenir dans le temps.',
-    tips: [
-      'Un déficit léger, plus facile à tenir au quotidien',
-      'Prends soin de ta récupération et de ton sommeil',
-      'Garde de l\'énergie pour tes activités et ta forme',
-      'La régularité compte plus que la vitesse',
-    ],
-    coach: 'Cette approche tout en douceur est parfaite pour perdre du poids sans y penser '
-        'en permanence. La progression est plus lente, mais c\'est justement ce qui la rend '
-        'durable : patience et constance sont tes meilleures alliées.',
-  ),
-  _GoalOption(
-    goal: nutri.GoalType.maintain,
-    icon: Icons.balance,
-    title: 'Maintien',
-    description: 'Stabiliser ton poids et te sentir bien, sur la durée.',
-    tips: [
-      'Mange à hauteur de tes besoins, ni plus ni moins',
-      'Garde une activité physique régulière',
-      'Conserve un bon apport en protéines',
-      'Observe ton poids moyen sur la semaine, pas au jour le jour',
-    ],
-    coach: 'Ton objectif n\'est plus de perdre ou de prendre, mais de conserver tes résultats '
-        'et de te sentir bien. C\'est la régularité qui ancre les bonnes habitudes sur le '
-        'long terme — tu es dans la zone de la sérénité.',
-  ),
-  _GoalOption(
-    goal: nutri.GoalType.gainMild,
-    icon: Icons.fitness_center,
-    title: 'Prise de muscle',
-    description: 'Développer tes muscles progressivement, avec une prise de gras maîtrisée.',
-    tips: [
-      'Un léger surplus, juste ce qu\'il faut pour construire',
-      'Associe à une activité de renforcement si tu le peux',
-      'Un bon apport en protéines soutient tes muscles',
-      'Un sommeil de qualité accélère les progrès',
-    ],
-    coach: 'Une progression lente et maîtrisée donne un bien meilleur ratio muscle/graisse '
-        'qu\'une prise rapide. Inutile de forcer : la qualité prime sur la quantité, et ton '
-        'corps te remerciera.',
-  ),
-  _GoalOption(
-    goal: nutri.GoalType.gain,
-    icon: Icons.rocket_launch,
-    title: 'Prise de masse',
-    description: 'Maximiser ta prise de muscle et de force, pour les objectifs les plus ambitieux.',
-    tips: [
-      'Un surplus plus marqué pour soutenir la construction',
-      'Idéal si tu t\'entraînes intensément et régulièrement',
-      'Une bonne récupération est essentielle',
-      'Surveille ton évolution pour rester sur la bonne voie',
-    ],
-    coach: 'Ce mode est fait pour les objectifs ambitieux. Contrôle régulièrement ton évolution '
-        'pour éviter une prise de graisse superflue : un surplus maîtrisé donne toujours de '
-        'meilleurs résultats qu\'un excès non suivi.',
-  ),
-];
+List<_GoalOption> _goalOptionsFor(AppLocalizations l10n) => [
+      _GoalOption(
+        goal: nutri.GoalType.lose,
+        icon: Icons.local_fire_department,
+        title: l10n.goalLoseTitle,
+        description: l10n.goalLoseDesc,
+        tips: [l10n.goalLoseTip1, l10n.goalLoseTip2, l10n.goalLoseTip3, l10n.goalLoseTip4],
+        coach: l10n.goalLoseCoach,
+      ),
+      _GoalOption(
+        goal: nutri.GoalType.loseMild,
+        icon: Icons.trending_down,
+        title: l10n.goalLoseMildTitle,
+        description: l10n.goalLoseMildDesc,
+        tips: [l10n.goalLoseMildTip1, l10n.goalLoseMildTip2, l10n.goalLoseMildTip3, l10n.goalLoseMildTip4],
+        coach: l10n.goalLoseMildCoach,
+      ),
+      _GoalOption(
+        goal: nutri.GoalType.maintain,
+        icon: Icons.balance,
+        title: l10n.goalMaintainTitle,
+        description: l10n.goalMaintainDesc,
+        tips: [l10n.goalMaintainTip1, l10n.goalMaintainTip2, l10n.goalMaintainTip3, l10n.goalMaintainTip4],
+        coach: l10n.goalMaintainCoach,
+      ),
+      _GoalOption(
+        goal: nutri.GoalType.gainMild,
+        icon: Icons.fitness_center,
+        title: l10n.goalGainMildTitle,
+        description: l10n.goalGainMildDesc,
+        tips: [l10n.goalGainMildTip1, l10n.goalGainMildTip2, l10n.goalGainMildTip3, l10n.goalGainMildTip4],
+        coach: l10n.goalGainMildCoach,
+      ),
+      _GoalOption(
+        goal: nutri.GoalType.gain,
+        icon: Icons.rocket_launch,
+        title: l10n.goalGainTitle,
+        description: l10n.goalGainDesc,
+        tips: [l10n.goalGainTip1, l10n.goalGainTip2, l10n.goalGainTip3, l10n.goalGainTip4],
+        coach: l10n.goalGainCoach,
+      ),
+    ];
 
-_GoalOption _goalOption(nutri.GoalType g) => _kGoalOptions.firstWhere((o) => o.goal == g);
+_GoalOption _goalOption(nutri.GoalType g, AppLocalizations l10n) =>
+    _goalOptionsFor(l10n).firstWhere((o) => o.goal == g);
 
 class ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
@@ -245,10 +213,6 @@ class ProfileScreenState extends State<ProfileScreen> {
     return nutri.computeCalibratedTargets(profile);
   }
 
-  /// Résumé affiché sur la vignette "Niveau d'activité" — null tant que
-  /// l'utilisateur n'a pas encore choisi.
-  String? get _activitySummary => _activityLevel?.title;
-
   String get _measuresSummary {
     final age = _num(_ageCtrl).round();
     final h = _num(_heightCtrl);
@@ -346,14 +310,15 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// 09/08/2026) : le même objectif correspond à un déficit/surplus qui
   /// s'adapte automatiquement à mesure que le poids change.
   String _technicalLabelFor(nutri.GoalType goal) {
+    final l10n = context.l10n;
     if (goal == nutri.GoalType.maintain) {
-      return _targetWeightCtrl.text.trim().isNotEmpty ? 'Maintien dynamique' : 'Équilibre';
+      return _targetWeightCtrl.text.trim().isNotEmpty ? l10n.profileMaintainDynamic : l10n.profileEquilibrium;
     }
     final age = _num(_ageCtrl).round();
     final rate = nutri.goalRateBwPerWeekFor(goal, age, sex: _sex, bodyFatPercent: _currentBodyFat());
     final pct = (rate.abs() * 100);
     final pctStr = pct == pct.roundToDouble() ? pct.toStringAsFixed(0) : pct.toStringAsFixed(2);
-    return rate < 0 ? 'Rythme visé : −$pctStr %/sem' : 'Rythme visé : +$pctStr %/sem';
+    return rate < 0 ? l10n.profileTargetedRateNeg(pctStr) : l10n.profileTargetedRatePos(pctStr);
   }
 
   /// Écart entre les calories saisies et la somme réelle des macros (mode
@@ -371,13 +336,12 @@ class ProfileScreenState extends State<ProfileScreen> {
     if (pct > 0.05) {
       final tooHigh = diff > 0;
       final pctTxt = (pct * 100).toStringAsFixed(0);
+      final l10n = context.l10n;
       final text = tooHigh
-          ? 'Tes macros représentent ${computedKcal.toStringAsFixed(0)} kcal — '
-              '${diff.toStringAsFixed(0)} kcal ($pctTxt %) DE PLUS que les '
-              '${kcal.toStringAsFixed(0)} kcal indiquées.'
-          : 'Tes macros représentent ${computedKcal.toStringAsFixed(0)} kcal — '
-              '${diff.abs().toStringAsFixed(0)} kcal ($pctTxt %) DE MOINS que les '
-              '${kcal.toStringAsFixed(0)} kcal indiquées.';
+          ? l10n.profileMacroCoherenceOver(
+              computedKcal.toStringAsFixed(0), diff.toStringAsFixed(0), pctTxt, kcal.toStringAsFixed(0))
+          : l10n.profileMacroCoherenceUnder(
+              computedKcal.toStringAsFixed(0), diff.abs().toStringAsFixed(0), pctTxt, kcal.toStringAsFixed(0));
       return (text: text, diff: diff, tooHigh: tooHigh);
     }
     return null;
@@ -526,7 +490,7 @@ class ProfileScreenState extends State<ProfileScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Objectifs mis à jour · ${finalKcal.round()} kcal par jour'),
+        content: Text(context.l10n.profileGoalsUpdatedSnackbar(finalKcal.round())),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
       ),
@@ -728,6 +692,7 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: TotumColors.page,
       appBar: AppBar(
@@ -740,7 +705,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.account_circle_outlined),
-            tooltip: 'Compte & Paramètres',
+            tooltip: l10n.accountScreenTitle,
             onPressed: () =>
                 Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AccountScreen())),
           ),
@@ -770,7 +735,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 ),
                 onPressed: () => _computeAndSave(),
                 icon: const Icon(Icons.check_rounded),
-                label: Text(_dirty ? 'Confirmer mes objectifs' : 'Objectifs enregistrés',
+                label: Text(_dirty ? l10n.profileConfirmGoals : l10n.profileGoalsSaved,
                     style: const TextStyle(fontWeight: FontWeight.w800)),
               ),
             ),
@@ -791,7 +756,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     }
                   });
                 },
-                label: Text(_manualMode ? 'Revenir au calcul automatique' : 'Personnaliser mes objectifs'),
+                label: Text(_manualMode ? l10n.profileBackToAuto : l10n.profileCustomizeGoals),
               ),
             ),
             if (_manualMode) ...[
@@ -800,7 +765,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             ],
             const SizedBox(height: 20),
             Text(
-              'Le détail complet (vitamines, minéraux, acides gras) se calcule automatiquement dans l\'onglet Bilan.',
+              l10n.profileFullDetailFooter,
               style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted),
             ),
           ],
@@ -838,7 +803,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// titre, contrairement aux cartes 3/4 : "Ton assiette aujourd'hui",
   /// "Micronutriments en vedette").
   Widget _todayEyebrow() {
-    return Text('AUJOURD\'HUI',
+    return Text(context.l10n.profileTodayEyebrow,
         textAlign: TextAlign.center,
         style: TextStyle(
             fontSize: 10.5,
@@ -869,6 +834,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// cran au-dessus des autres cartes (contour accentué, ring plus grand,
   /// pictogrammes) puisque c'est la vignette la plus vue de tout l'onglet.
   Widget _kpiRemainingCard(DayTotals today) {
+    final l10n = context.l10n;
     final remaining = _kcal - today.kcal;
     final isOver = _kcal > 0 && today.kcal > _kcal;
     final fraction = _kcal > 0 ? (today.kcal / _kcal).clamp(0.0, 1.0) : 0.0;
@@ -917,7 +883,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 fontSize: 22,
                                 fontWeight: FontWeight.w900,
                                 color: isOver ? TotumColors.negative : TotumColors.textPrimary)),
-                        Text(isOver ? 'kcal dépassé' : 'kcal restant', textAlign: TextAlign.center,
+                        Text(isOver ? l10n.profileKcalOver : l10n.profileKcalRemaining, textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 9.5, color: TotumColors.textSecondary, fontWeight: FontWeight.w700)),
                       ],
                     ),
@@ -930,12 +896,12 @@ class ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _legendIconRow(Icons.flag_rounded, 'Objectif de base', '${_kcal.round()}'),
-                    _legendIconRow(Icons.restaurant_rounded, 'Aliments', '${today.kcal.round()}'),
+                    _legendIconRow(Icons.flag_rounded, l10n.profileBaseGoal, '${_kcal.round()}'),
+                    _legendIconRow(Icons.restaurant_rounded, l10n.profileFoodsLabel, '${today.kcal.round()}'),
                     if (_calibration.hasEnoughData) ...[
                       const SizedBox(height: 6),
-                      const Text('Affiné selon tes résultats réels',
-                          style: TextStyle(fontSize: 10, color: TotumColors.accent, fontWeight: FontWeight.w700)),
+                      Text(l10n.profileRefinedByResults,
+                          style: const TextStyle(fontSize: 10, color: TotumColors.accent, fontWeight: FontWeight.w700)),
                     ],
                   ],
                 ),
@@ -994,7 +960,9 @@ class ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         Text(
-          isOver ? '+${(-diff).round()} g dépassé' : '${diff.clamp(0.0, double.infinity).round()} g restants',
+          isOver
+              ? context.l10n.profileMacroGramsOver((-diff).round())
+              : context.l10n.profileMacroGramsRemaining(diff.clamp(0.0, double.infinity).round()),
           style: TextStyle(
               fontSize: 10,
               color: isOver ? TotumColors.negative : TotumColors.textMuted,
@@ -1009,6 +977,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// (contour accentué) — les deux premières cartes du carrousel sont les
   /// plus consultées, elles doivent avoir la même cohérence graphique.
   Widget _kpiMacroRingsCard(DayTotals today) {
+    final l10n = context.l10n;
     return TotumCard(
       accentBorder: true,
       child: Column(
@@ -1017,15 +986,15 @@ class ProfileScreenState extends State<ProfileScreen> {
         children: [
           _todayEyebrow(),
           const SizedBox(height: 4),
-          Text('Macronutriments', textAlign: TextAlign.center,
+          Text(l10n.profileMacronutrients, textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           const SizedBox(height: 18),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _macroRing('Glucides', Icons.grain, today.carb, _carb),
-              _macroRing('Lipides', Icons.opacity, today.fat, _fat),
-              _macroRing('Protéines', Icons.fitness_center, today.prot, _prot),
+              _macroRing(l10n.profileCarbs, Icons.grain, today.carb, _carb),
+              _macroRing(l10n.profileFats, Icons.opacity, today.fat, _fat),
+              _macroRing(l10n.profileProteins, Icons.fitness_center, today.prot, _prot),
             ],
           ),
         ],
@@ -1038,15 +1007,16 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// a déjà loggé un aliment, sinon la répartition cible (libellé explicite
   /// pour ne jamais laisser d'ambiguïté sur ce qui est affiché).
   Widget _kpiMacroPlateCard(DayTotals today) {
+    final l10n = context.l10n;
     final useToday = today.hasData;
     final carbKcal = (useToday ? today.carb : _carb) * 4.0;
     final fatKcal = (useToday ? today.fat : _fat) * 9.0;
     final protKcal = (useToday ? today.prot : _prot) * 4.0;
     final total = carbKcal + fatKcal + protKcal;
     final rows = [
-      ('Glucides', carbKcal, TotumProgress.stop100),
-      ('Lipides', fatKcal, TotumProgress.stop75),
-      ('Protéines', protKcal, TotumProgress.stop50),
+      (l10n.profileCarbs, carbKcal, TotumProgress.stop100),
+      (l10n.profileFats, fatKcal, TotumProgress.stop75),
+      (l10n.profileProteins, protKcal, TotumProgress.stop50),
     ];
     return TotumCard(
       accentBorder: true,
@@ -1083,7 +1053,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(useToday ? 'Ton assiette aujourd\'hui' : 'Ton assiette (objectif)',
+                Text(useToday ? l10n.profilePlateToday : l10n.profilePlateGoal,
                     maxLines: 1, overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                 const SizedBox(height: 10),
@@ -1118,7 +1088,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Micronutriments en vedette',
+          Text(context.l10n.profileMicronutrientsFeatured,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           const SizedBox(height: 12),
           FutureBuilder<nutri.NutritionTargets>(
@@ -1198,6 +1168,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   // ─── Grille de vignettes « + » ────────────────────────────────────────
 
   Widget _tileGrid(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       children: [
         Row(
@@ -1205,8 +1176,8 @@ class ProfileScreenState extends State<ProfileScreen> {
             Expanded(
               child: TotumInputTile(
                 icon: Icons.flag_rounded,
-                label: 'Objectif',
-                value: _goalChosen ? _goalOption(_goal).title : null,
+                label: l10n.profileGoalTileLabel,
+                value: _goalChosen ? _goalOption(_goal, l10n).title : null,
                 onTap: () => _openGoalSheet(context),
               ),
             ),
@@ -1216,7 +1187,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 valueListenable: AppSettings.unitSystem,
                 builder: (context, _, __) => TotumInputTile(
                   icon: Icons.straighten,
-                  label: 'Mesures',
+                  label: l10n.profileMeasuresTileLabel,
                   value: _measuresSummary,
                   onTap: () => _openMeasuresSheet(context),
                 ),
@@ -1230,8 +1201,8 @@ class ProfileScreenState extends State<ProfileScreen> {
             Expanded(
               child: TotumInputTile(
                 icon: Icons.directions_run,
-                label: 'Niveau d\'activité',
-                value: _activitySummary,
+                label: l10n.profileActivityLevelTileLabel,
+                value: _activityLevel?.titleFor(l10n),
                 onTap: () => _openActivitySheet(context),
               ),
             ),
@@ -1239,8 +1210,8 @@ class ProfileScreenState extends State<ProfileScreen> {
             Expanded(
               child: TotumInputTile(
                 icon: Icons.restaurant,
-                label: 'Régime alimentaire',
-                value: _dietLabel(_diet),
+                label: l10n.profileDietTileLabel,
+                value: _dietLabel(_diet, l10n),
                 onTap: () => _openDietSheet(context),
               ),
             ),
@@ -1252,8 +1223,8 @@ class ProfileScreenState extends State<ProfileScreen> {
             Expanded(
               child: TotumInputTile(
                 icon: Icons.pie_chart_outline,
-                label: 'Répartition des macros',
-                value: _dietStyle.title,
+                label: l10n.profileMacroSplitTileLabel,
+                value: _dietStyle.titleFor(l10n),
                 onTap: () => _openDietStyleSheet(context),
               ),
             ),
@@ -1334,7 +1305,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
         onPressed: () => Navigator.of(ctx).pop(),
-        child: const Text('Terminé', style: TextStyle(fontWeight: FontWeight.w800)),
+        child: Text(ctx.l10n.profileDone, style: const TextStyle(fontWeight: FontWeight.w800)),
       ),
     );
   }
@@ -1396,6 +1367,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// activité ?") sans attendre qu'elle soit réellement commise — sinon
   /// _kcal (déjà appliqué) est utilisé par défaut.
   Widget _impactBanner(double beforeKcal, {double? afterKcal}) {
+    final l10n = context.l10n;
     final after = afterKcal ?? _kcal;
     final diff = after - beforeKcal;
     final changed = diff.abs() >= 1;
@@ -1416,9 +1388,9 @@ class ProfileScreenState extends State<ProfileScreen> {
           Expanded(
             child: Text(
               changed
-                  ? 'Impact sur ton objectif : ${beforeKcal.round()} → ${after.round()} kcal '
-                      '(${diff >= 0 ? '+' : ''}${diff.round()})'
-                  : 'Objectif actuel : ${after.round()} kcal',
+                  ? l10n.profileImpactChanged(
+                      beforeKcal.round(), after.round(), '${diff >= 0 ? '+' : ''}${diff.round()}')
+                  : l10n.profileImpactUnchanged(after.round()),
               style: TextStyle(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w800,
@@ -1435,14 +1407,14 @@ class ProfileScreenState extends State<ProfileScreen> {
     final kcalAtOpen = _kcal;
     _openSheet(
       context,
-      title: 'Ton objectif',
+      title: context.l10n.profileYourGoalTitle,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
       builder: (ctx, setSheetState) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final o in _kGoalOptions) _goalPickRow(ctx, o, setSheetState),
+            for (final o in _goalOptionsFor(context.l10n)) _goalPickRow(ctx, o, setSheetState),
             const SizedBox(height: 4),
             _sheetDoneButton(ctx),
           ],
@@ -1522,7 +1494,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 12),
           Text(o.description, style: TextStyle(fontSize: 14.5, color: TotumColors.textPrimary, height: 1.4)),
           const SizedBox(height: 18),
-          Text('À retenir', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+          Text(context.l10n.profileToRemember, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           const SizedBox(height: 8),
           ...o.tips.map((t) => Padding(
                 padding: const EdgeInsets.only(bottom: 8),
@@ -1545,7 +1517,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     const Icon(Icons.emoji_events_outlined, size: 18, color: TotumColors.accent),
                     const SizedBox(width: 8),
-                    Text('Conseil du coach', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                    Text(context.l10n.profileCoachAdvice, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -1559,14 +1531,15 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _openDietSheet(BuildContext context) {
+    final l10n = context.l10n;
     // Icônes Material (charte graphique) — même langage visuel que la
     // banque d'exercices, plus d'emoji multicolore.
-    const options = [
-      (Diet.omnivore, Icons.set_meal_outlined, 'Omnivore'),
-      (Diet.vegetarien, Icons.eco_outlined, 'Végétarien'),
-      (Diet.vegetalien, Icons.grass_outlined, 'Végétalien'),
+    final options = [
+      (Diet.omnivore, Icons.set_meal_outlined, l10n.profileDietOmnivore),
+      (Diet.vegetarien, Icons.eco_outlined, l10n.profileDietVegetarian),
+      (Diet.vegetalien, Icons.grass_outlined, l10n.profileDietVegan),
     ];
-    _openSheet(context, title: 'Régime alimentaire', builder: (ctx, setSheetState) {
+    _openSheet(context, title: l10n.profileDietTileLabel, builder: (ctx, setSheetState) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -1589,9 +1562,10 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   void _openMeasuresSheet(BuildContext context) {
     final kcalAtOpen = _kcal;
+    final l10n = context.l10n;
     _openSheet(
       context,
-      title: 'Tes mesures',
+      title: l10n.profileMeasuresSheetTitle,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
       builder: (ctx, setSheetState) {
         return Column(
@@ -1604,9 +1578,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: SegmentedButton<nutri.Sex>(
-                    segments: const [
-                      ButtonSegment(value: nutri.Sex.male, label: Text('Homme')),
-                      ButtonSegment(value: nutri.Sex.female, label: Text('Femme')),
+                    segments: [
+                      ButtonSegment(value: nutri.Sex.male, label: Text(l10n.profileMale)),
+                      ButtonSegment(value: nutri.Sex.female, label: Text(l10n.profileFemale)),
                     ],
                     selected: {_sex},
                     style: SegmentedButton.styleFrom(
@@ -1626,15 +1600,15 @@ class ProfileScreenState extends State<ProfileScreen> {
             Row(children: [
               Expanded(
                   child: _numField(
-                      label: 'Âge (ans)',
+                      label: l10n.profileAgeYears,
                       icon: Icons.cake_outlined,
                       controller: _ageCtrl,
                       onChanged: (_) { setSheetState((){}); _recomputePreview(); })),
               const SizedBox(width: 12),
               Expanded(
                   child: _UnitAwareNumField(
-                      labelMetric: 'Taille (cm)',
-                      labelImperial: 'Taille (in)',
+                      labelMetric: l10n.profileHeightCm,
+                      labelImperial: l10n.profileHeightIn,
                       icon: Icons.height,
                       isWeight: false,
                       metricController: _heightCtrl,
@@ -1642,8 +1616,8 @@ class ProfileScreenState extends State<ProfileScreen> {
             ]),
             const SizedBox(height: 12),
             _UnitAwareNumField(
-                labelMetric: 'Poids (kg)',
-                labelImperial: 'Poids (lb)',
+                labelMetric: l10n.profileWeightKg,
+                labelImperial: l10n.profileWeightLb,
                 icon: Icons.monitor_weight_outlined,
                 isWeight: true,
                 metricController: _weightCtrl,
@@ -1655,20 +1629,20 @@ class ProfileScreenState extends State<ProfileScreen> {
             // adaptative) dépend directement de la régularité des conditions
             // de pesée.
             Text(
-              'Pèse-toi si possible tous les jours, dans les mêmes conditions à chaque fois — idéalement le matin à jeun, au lever.',
+              l10n.profileWeighInAdvice,
               style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted, fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 14),
             _UnitAwareNumField(
-                labelMetric: 'Poids cible (kg) — optionnel',
-                labelImperial: 'Poids cible (lb) — optionnel',
+                labelMetric: l10n.profileTargetWeightKg,
+                labelImperial: l10n.profileTargetWeightLb,
                 icon: Icons.flag_outlined,
                 isWeight: true,
                 metricController: _targetWeightCtrl,
                 onChanged: (_) { setSheetState((){}); _recomputePreview(); }),
             const SizedBox(height: 4),
             Text(
-              'Utilisé uniquement pour l\'objectif Maintien : une fois proche de ta cible, tes calories suivent ta dépense réelle ; si tu t\'en éloignes, un léger ajustement automatique t\'y ramène doucement.',
+              l10n.profileTargetWeightHint,
               style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
             ),
             const SizedBox(height: 14),
@@ -1677,7 +1651,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 Icon(Icons.pie_chart_outline, size: 18, color: TotumColors.textSecondary),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text('Masse grasse — optionnel', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+                  child: Text(l10n.profileBodyFatOptional, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
                 ),
                 Switch(
                   value: _bodyFatEnabled,
@@ -1692,7 +1666,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             ),
             if (_bodyFatEnabled) ...[
               const SizedBox(height: 10),
-              Text('Choisis la plage la plus proche de ta silhouette actuelle.',
+              Text(l10n.profileBodyFatHint,
                   style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
               const SizedBox(height: 8),
               // Retour d'Alex (11/08/2026) : une tranche déjà choisie reste
@@ -1703,7 +1677,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 _pickRow(
                   icon: Icons.pie_chart_outline,
                   title: r.labelFor(_sex),
-                  subtitle: r.tierFor(_sex),
+                  subtitle: r.tierFor(_sex, l10n),
                   selected: _bodyFatRange == r,
                   onTap: () {
                     setState(() => _bodyFatRange = r);
@@ -1733,9 +1707,10 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// reste vers la réalité de l'utilisateur en 2-3 semaines.
   void _openActivitySheet(BuildContext context) {
     final kcalAtOpen = _kcal;
+    final l10n = context.l10n;
     _openSheet(
       context,
-      title: 'Ton niveau d\'activité',
+      title: l10n.profileActivitySheetTitle,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
       builder: (ctx, setSheetState) {
         return Column(
@@ -1743,16 +1718,15 @@ class ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Choisis la description la plus proche de TA semaine type — quotidien '
-              'ET sport confondus, l\'un ou l\'autre suffit à te situer dans un palier.',
+              l10n.profileActivitySheetDesc,
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4),
             ),
             const SizedBox(height: 12),
             for (final level in nutri.ActivityLevel.values)
               _pickRow(
                 icon: Icons.directions_run,
-                title: level.title,
-                subtitle: level.description,
+                title: level.titleFor(l10n),
+                subtitle: level.descriptionFor(l10n),
                 selected: _activityLevel == level,
                 onTap: () {
                   // Retour d'Alex (11/08/2026) : un niveau déjà choisi reste
@@ -1779,9 +1753,10 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// protéines restent identiques.
   void _openDietStyleSheet(BuildContext context) {
     final kcalAtOpen = _kcal;
+    final l10n = context.l10n;
     _openSheet(
       context,
-      title: 'Répartition des macros',
+      title: l10n.profileMacroSplitTileLabel,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
       builder: (ctx, setSheetState) {
         return Column(
@@ -1789,16 +1764,15 @@ class ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Ne change ni tes calories ni tes protéines — seulement comment le reste '
-              'se répartit entre lipides et glucides.',
+              l10n.profileMacroSplitSheetDesc,
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4),
             ),
             const SizedBox(height: 12),
             for (final style in nutri.DietStyle.values)
               _pickRow(
                 icon: Icons.pie_chart_outline,
-                title: style.title,
-                subtitle: style.description,
+                title: style.titleFor(l10n),
+                subtitle: style.descriptionFor(l10n),
                 selected: _dietStyle == style,
                 onTap: () {
                   setState(() => _dietStyle = style);
@@ -1832,21 +1806,22 @@ class ProfileScreenState extends State<ProfileScreen> {
       ),
       onChanged: onChanged,
       onTapOutside: (_) => FocusScope.of(context).unfocus(),
-      validator: (v) => (double.tryParse((v ?? '').replaceAll(',', '.')) == null) ? 'Nombre invalide' : null,
+      validator: (v) => (double.tryParse((v ?? '').replaceAll(',', '.')) == null) ? context.l10n.profileInvalidNumber : null,
     );
   }
 
   // ─── Ton évolution — carrousel horizontal avec points ─────────────────
 
   Widget _evolutionCarousel() {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Ton évolution', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+        Text(l10n.profileYourEvolution, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
         const SizedBox(height: 10),
         _evolutionTapCard(
-          title: 'Poids',
-          subtitle: '60 derniers jours',
+          title: l10n.weightScreenTitle,
+          subtitle: l10n.profileLast60Days,
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const WeightTrendScreen())),
           chart: FutureBuilder<List<WeighIn>>(
             future: _weightHistoryFuture,
@@ -1860,8 +1835,8 @@ class ProfileScreenState extends State<ProfileScreen> {
         ),
         const SizedBox(height: 14),
         _evolutionTapCard(
-          title: 'Dépense énergétique',
-          subtitle: 'estimation adaptative',
+          title: l10n.expenditureScreenTitle,
+          subtitle: l10n.profileAdaptiveEstimate,
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ExpenditureScreen())),
           chart: FutureBuilder<List<ExpenditurePoint>>(
             future: _expenditureHistoryFuture,
@@ -1918,29 +1893,30 @@ class ProfileScreenState extends State<ProfileScreen> {
   // ─── Mode manuel ────────────────────────────────────────────────────
 
   Widget _manualGoalsCard() {
+    final l10n = context.l10n;
     return TotumCard(
       accentBorder: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Mes objectifs personnalisés',
-              style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: TotumColors.accent)),
+          Text(l10n.profileCustomGoalsTitle,
+              style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: TotumColors.accent)),
           const SizedBox(height: 4),
-          Text('Ces valeurs remplacent le calcul automatique.', style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
+          Text(l10n.profileCustomGoalsSubtitle, style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
           const SizedBox(height: 14),
           Row(children: [
-            Expanded(child: _numField(label: 'Énergie (kcal)', controller: _manualKcalCtrl, onChanged: (_) => setState(() {}))),
+            Expanded(child: _numField(label: l10n.profileEnergyKcal, controller: _manualKcalCtrl, onChanged: (_) => setState(() {}))),
             const SizedBox(width: 12),
-            Expanded(child: _numField(label: 'Protéines (g)', controller: _manualProtCtrl, onChanged: (_) => setState(() {}))),
+            Expanded(child: _numField(label: l10n.profileProteinG, controller: _manualProtCtrl, onChanged: (_) => setState(() {}))),
           ]),
           const SizedBox(height: 10),
           Row(children: [
-            Expanded(child: _numField(label: 'Glucides (g)', controller: _manualCarbCtrl, onChanged: (_) => setState(() {}))),
+            Expanded(child: _numField(label: l10n.profileCarbG, controller: _manualCarbCtrl, onChanged: (_) => setState(() {}))),
             const SizedBox(width: 12),
-            Expanded(child: _numField(label: 'Lipides (g)', controller: _manualFatCtrl, onChanged: (_) => setState(() {}))),
+            Expanded(child: _numField(label: l10n.profileFatG, controller: _manualFatCtrl, onChanged: (_) => setState(() {}))),
           ]),
           const SizedBox(height: 10),
-          _numField(label: 'Fibres (g)', controller: _manualFibCtrl, onChanged: (_) => setState(() {})),
+          _numField(label: l10n.profileFiberG, controller: _manualFibCtrl, onChanged: (_) => setState(() {})),
           Builder(builder: (context) {
             final warning = _checkManualCoherence();
             if (warning == null) return const SizedBox.shrink();
@@ -1967,7 +1943,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             child: FilledButton.icon(
               style: FilledButton.styleFrom(backgroundColor: TotumColors.accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               icon: const Icon(Icons.check, size: 18),
-              label: const Text('Appliquer mes objectifs'),
+              label: Text(l10n.profileApplyGoals),
               onPressed: () => _computeAndSave(),
             ),
           ),
@@ -2062,7 +2038,7 @@ class _UnitAwareNumFieldState extends State<_UnitAwareNumField> {
       ),
       onChanged: _onDisplayChanged,
       onTapOutside: (_) => FocusScope.of(context).unfocus(),
-      validator: (v) => (double.tryParse((v ?? '').replaceAll(',', '.')) == null) ? 'Nombre invalide' : null,
+      validator: (v) => (double.tryParse((v ?? '').replaceAll(',', '.')) == null) ? context.l10n.profileInvalidNumber : null,
     );
   }
 }

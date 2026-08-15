@@ -1291,6 +1291,788 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Version'**
   String get aboutVersionLabel;
+
+  /// No description provided for @activityLevelSedentaryTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sédentaire'**
+  String get activityLevelSedentaryTitle;
+
+  /// No description provided for @activityLevelLightTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Légèrement actif'**
+  String get activityLevelLightTitle;
+
+  /// No description provided for @activityLevelModerateTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modérément actif'**
+  String get activityLevelModerateTitle;
+
+  /// No description provided for @activityLevelActiveTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actif'**
+  String get activityLevelActiveTitle;
+
+  /// No description provided for @activityLevelVeryActiveTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Très actif'**
+  String get activityLevelVeryActiveTitle;
+
+  /// No description provided for @activityLevelExtremeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Extrêmement actif'**
+  String get activityLevelExtremeTitle;
+
+  /// No description provided for @activityLevelSedentaryDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vie plutôt sédentaire (bureau, peu de marche), pas ou très peu de sport.'**
+  String get activityLevelSedentaryDesc;
+
+  /// No description provided for @activityLevelLightDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un peu de marche au quotidien, et/ou 1 à 3 séances de sport par semaine.'**
+  String get activityLevelLightDesc;
+
+  /// No description provided for @activityLevelModerateDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonne marche au quotidien (~8 000-10 000 pas), et/ou 3 à 5 séances de sport par semaine.'**
+  String get activityLevelModerateDesc;
+
+  /// No description provided for @activityLevelActiveDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Beaucoup de mouvement au quotidien (métier debout), et/ou sport quasi quotidien (5-6 séances/semaine).'**
+  String get activityLevelActiveDesc;
+
+  /// No description provided for @activityLevelVeryActiveDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Métier physique, et/ou plusieurs séances intenses certains jours (ex. course + muscu le même jour).'**
+  String get activityLevelVeryActiveDesc;
+
+  /// No description provided for @activityLevelExtremeDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Métier physique intense ET entraînement quasi quotidien à haute intensité (ex. sportif semi-pro).'**
+  String get activityLevelExtremeDesc;
+
+  /// No description provided for @bodyFatTierEssential.
+  ///
+  /// In fr, this message translates to:
+  /// **'Essentiel'**
+  String get bodyFatTierEssential;
+
+  /// No description provided for @bodyFatTierAthlete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Athlète'**
+  String get bodyFatTierAthlete;
+
+  /// No description provided for @bodyFatTierFitness.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fitness'**
+  String get bodyFatTierFitness;
+
+  /// No description provided for @bodyFatTierAverage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyen'**
+  String get bodyFatTierAverage;
+
+  /// No description provided for @bodyFatTierHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Élevé'**
+  String get bodyFatTierHigh;
+
+  /// No description provided for @dietStyleBalancedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équilibré'**
+  String get dietStyleBalancedTitle;
+
+  /// No description provided for @dietStyleHighCarbTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Riche en glucides'**
+  String get dietStyleHighCarbTitle;
+
+  /// No description provided for @dietStyleHighFatTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Riche en lipides'**
+  String get dietStyleHighFatTitle;
+
+  /// No description provided for @dietStyleKetoTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cétogène (Keto)'**
+  String get dietStyleKetoTitle;
+
+  /// No description provided for @dietStyleBalancedDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartition de référence (~30 % lipides / ~45 % glucides des calories totales) : la zone associée à la mortalité totale la plus basse dans les grandes études de cohorte, dans les bornes officielles (AMDR).'**
+  String get dietStyleBalancedDesc;
+
+  /// No description provided for @dietStyleHighCarbDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lipides ramenés vers le bas de la fourchette recommandée, glucides plus généreux — utile pour les sports d\'endurance à fort volume, sans jamais sortir des bornes officielles.'**
+  String get dietStyleHighCarbDesc;
+
+  /// No description provided for @dietStyleHighFatDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lipides plus présents pour qui les préfère (satiété, appétence) — plafonnés à la limite haute recommandée (35 % des calories), jamais au-delà.'**
+  String get dietStyleHighFatDesc;
+
+  /// No description provided for @dietStyleKetoDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Glucides maintenus très bas, lipides très élevés — approche validée pour certains usages thérapeutiques encadrés (ex. épilepsie), mais dont les effets cardiovasculaires à long terme en population générale restent peu documentés (études majoritairement sur quelques semaines). À utiliser ponctuellement et avec discernement, pas comme réglage par défaut.'**
+  String get dietStyleKetoDesc;
+
+  /// No description provided for @profileDietOmnivore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Omnivore'**
+  String get profileDietOmnivore;
+
+  /// No description provided for @profileDietVegetarian.
+  ///
+  /// In fr, this message translates to:
+  /// **'Végétarien'**
+  String get profileDietVegetarian;
+
+  /// No description provided for @profileDietVegan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Végétalien'**
+  String get profileDietVegan;
+
+  /// No description provided for @goalLoseTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Perte de gras'**
+  String get goalLoseTitle;
+
+  /// No description provided for @goalLoseDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Perdre de la masse grasse à un bon rythme, tout en préservant tes muscles et ton énergie.'**
+  String get goalLoseDesc;
+
+  /// No description provided for @goalLoseTip1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Garde un bon apport en protéines pour protéger tes muscles'**
+  String get goalLoseTip1;
+
+  /// No description provided for @goalLoseTip2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bouge régulièrement — même une marche quotidienne compte'**
+  String get goalLoseTip2;
+
+  /// No description provided for @goalLoseTip3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dors suffisamment : la récupération fait partie du résultat'**
+  String get goalLoseTip3;
+
+  /// No description provided for @goalLoseTip4.
+  ///
+  /// In fr, this message translates to:
+  /// **'Après 8 à 10 semaines, prévois une pause en Maintien'**
+  String get goalLoseTip4;
+
+  /// No description provided for @goalLoseCoach.
+  ///
+  /// In fr, this message translates to:
+  /// **'La priorité est de préserver ta masse musculaire pendant que tu perds du gras. TOTUM relève automatiquement ta cible en protéines. Un rythme modéré est plus efficace et bien plus durable qu\'un régime extrême.'**
+  String get goalLoseCoach;
+
+  /// No description provided for @goalLoseMildTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Perte en douceur'**
+  String get goalLoseMildTitle;
+
+  /// No description provided for @goalLoseMildDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Perdre du poids progressivement, sans frustration ni coup de fatigue. Idéal pour tenir dans le temps.'**
+  String get goalLoseMildDesc;
+
+  /// No description provided for @goalLoseMildTip1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un déficit léger, plus facile à tenir au quotidien'**
+  String get goalLoseMildTip1;
+
+  /// No description provided for @goalLoseMildTip2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prends soin de ta récupération et de ton sommeil'**
+  String get goalLoseMildTip2;
+
+  /// No description provided for @goalLoseMildTip3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Garde de l\'énergie pour tes activités et ta forme'**
+  String get goalLoseMildTip3;
+
+  /// No description provided for @goalLoseMildTip4.
+  ///
+  /// In fr, this message translates to:
+  /// **'La régularité compte plus que la vitesse'**
+  String get goalLoseMildTip4;
+
+  /// No description provided for @goalLoseMildCoach.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette approche tout en douceur est parfaite pour perdre du poids sans y penser en permanence. La progression est plus lente, mais c\'est justement ce qui la rend durable : patience et constance sont tes meilleures alliées.'**
+  String get goalLoseMildCoach;
+
+  /// No description provided for @goalMaintainTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintien'**
+  String get goalMaintainTitle;
+
+  /// No description provided for @goalMaintainDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Stabiliser ton poids et te sentir bien, sur la durée.'**
+  String get goalMaintainDesc;
+
+  /// No description provided for @goalMaintainTip1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mange à hauteur de tes besoins, ni plus ni moins'**
+  String get goalMaintainTip1;
+
+  /// No description provided for @goalMaintainTip2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Garde une activité physique régulière'**
+  String get goalMaintainTip2;
+
+  /// No description provided for @goalMaintainTip3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Conserve un bon apport en protéines'**
+  String get goalMaintainTip3;
+
+  /// No description provided for @goalMaintainTip4.
+  ///
+  /// In fr, this message translates to:
+  /// **'Observe ton poids moyen sur la semaine, pas au jour le jour'**
+  String get goalMaintainTip4;
+
+  /// No description provided for @goalMaintainCoach.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton objectif n\'est plus de perdre ou de prendre, mais de conserver tes résultats et de te sentir bien. C\'est la régularité qui ancre les bonnes habitudes sur le long terme — tu es dans la zone de la sérénité.'**
+  String get goalMaintainCoach;
+
+  /// No description provided for @goalGainMildTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prise de muscle'**
+  String get goalGainMildTitle;
+
+  /// No description provided for @goalGainMildDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Développer tes muscles progressivement, avec une prise de gras maîtrisée.'**
+  String get goalGainMildDesc;
+
+  /// No description provided for @goalGainMildTip1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un léger surplus, juste ce qu\'il faut pour construire'**
+  String get goalGainMildTip1;
+
+  /// No description provided for @goalGainMildTip2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Associe à une activité de renforcement si tu le peux'**
+  String get goalGainMildTip2;
+
+  /// No description provided for @goalGainMildTip3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un bon apport en protéines soutient tes muscles'**
+  String get goalGainMildTip3;
+
+  /// No description provided for @goalGainMildTip4.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un sommeil de qualité accélère les progrès'**
+  String get goalGainMildTip4;
+
+  /// No description provided for @goalGainMildCoach.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une progression lente et maîtrisée donne un bien meilleur ratio muscle/graisse qu\'une prise rapide. Inutile de forcer : la qualité prime sur la quantité, et ton corps te remerciera.'**
+  String get goalGainMildCoach;
+
+  /// No description provided for @goalGainTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prise de masse'**
+  String get goalGainTitle;
+
+  /// No description provided for @goalGainDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maximiser ta prise de muscle et de force, pour les objectifs les plus ambitieux.'**
+  String get goalGainDesc;
+
+  /// No description provided for @goalGainTip1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un surplus plus marqué pour soutenir la construction'**
+  String get goalGainTip1;
+
+  /// No description provided for @goalGainTip2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Idéal si tu t\'entraînes intensément et régulièrement'**
+  String get goalGainTip2;
+
+  /// No description provided for @goalGainTip3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une bonne récupération est essentielle'**
+  String get goalGainTip3;
+
+  /// No description provided for @goalGainTip4.
+  ///
+  /// In fr, this message translates to:
+  /// **'Surveille ton évolution pour rester sur la bonne voie'**
+  String get goalGainTip4;
+
+  /// No description provided for @goalGainCoach.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce mode est fait pour les objectifs ambitieux. Contrôle régulièrement ton évolution pour éviter une prise de graisse superflue : un surplus maîtrisé donne toujours de meilleurs résultats qu\'un excès non suivi.'**
+  String get goalGainCoach;
+
+  /// No description provided for @profileMaintainDynamic.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintien dynamique'**
+  String get profileMaintainDynamic;
+
+  /// No description provided for @profileEquilibrium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équilibre'**
+  String get profileEquilibrium;
+
+  /// No description provided for @profileTargetedRateNeg.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rythme visé : −{pct} %/sem'**
+  String profileTargetedRateNeg(String pct);
+
+  /// No description provided for @profileTargetedRatePos.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rythme visé : +{pct} %/sem'**
+  String profileTargetedRatePos(String pct);
+
+  /// No description provided for @profileMacroCoherenceOver.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes macros représentent {computed} kcal — {diff} kcal ({pct} %) DE PLUS que les {kcal} kcal indiquées.'**
+  String profileMacroCoherenceOver(
+      String computed, String diff, String pct, String kcal);
+
+  /// No description provided for @profileMacroCoherenceUnder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes macros représentent {computed} kcal — {diff} kcal ({pct} %) DE MOINS que les {kcal} kcal indiquées.'**
+  String profileMacroCoherenceUnder(
+      String computed, String diff, String pct, String kcal);
+
+  /// No description provided for @profileGoalsUpdatedSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectifs mis à jour · {kcal} kcal par jour'**
+  String profileGoalsUpdatedSnackbar(int kcal);
+
+  /// No description provided for @profileConfirmGoals.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer mes objectifs'**
+  String get profileConfirmGoals;
+
+  /// No description provided for @profileGoalsSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectifs enregistrés'**
+  String get profileGoalsSaved;
+
+  /// No description provided for @profileBackToAuto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenir au calcul automatique'**
+  String get profileBackToAuto;
+
+  /// No description provided for @profileCustomizeGoals.
+  ///
+  /// In fr, this message translates to:
+  /// **'Personnaliser mes objectifs'**
+  String get profileCustomizeGoals;
+
+  /// No description provided for @profileFullDetailFooter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le détail complet (vitamines, minéraux, acides gras) se calcule automatiquement dans l\'onglet Bilan.'**
+  String get profileFullDetailFooter;
+
+  /// No description provided for @profileTodayEyebrow.
+  ///
+  /// In fr, this message translates to:
+  /// **'AUJOURD\'HUI'**
+  String get profileTodayEyebrow;
+
+  /// No description provided for @profileKcalOver.
+  ///
+  /// In fr, this message translates to:
+  /// **'kcal dépassé'**
+  String get profileKcalOver;
+
+  /// No description provided for @profileKcalRemaining.
+  ///
+  /// In fr, this message translates to:
+  /// **'kcal restant'**
+  String get profileKcalRemaining;
+
+  /// No description provided for @profileBaseGoal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif de base'**
+  String get profileBaseGoal;
+
+  /// No description provided for @profileFoodsLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliments'**
+  String get profileFoodsLabel;
+
+  /// No description provided for @profileRefinedByResults.
+  ///
+  /// In fr, this message translates to:
+  /// **'Affiné selon tes résultats réels'**
+  String get profileRefinedByResults;
+
+  /// No description provided for @profileMacroGramsOver.
+  ///
+  /// In fr, this message translates to:
+  /// **'+{amount} g dépassé'**
+  String profileMacroGramsOver(int amount);
+
+  /// No description provided for @profileMacroGramsRemaining.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} g restants'**
+  String profileMacroGramsRemaining(int amount);
+
+  /// No description provided for @profileMacronutrients.
+  ///
+  /// In fr, this message translates to:
+  /// **'Macronutriments'**
+  String get profileMacronutrients;
+
+  /// No description provided for @profileCarbs.
+  ///
+  /// In fr, this message translates to:
+  /// **'Glucides'**
+  String get profileCarbs;
+
+  /// No description provided for @profileFats.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lipides'**
+  String get profileFats;
+
+  /// No description provided for @profileProteins.
+  ///
+  /// In fr, this message translates to:
+  /// **'Protéines'**
+  String get profileProteins;
+
+  /// No description provided for @profilePlateToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton assiette aujourd\'hui'**
+  String get profilePlateToday;
+
+  /// No description provided for @profilePlateGoal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton assiette (objectif)'**
+  String get profilePlateGoal;
+
+  /// No description provided for @profileMicronutrientsFeatured.
+  ///
+  /// In fr, this message translates to:
+  /// **'Micronutriments en vedette'**
+  String get profileMicronutrientsFeatured;
+
+  /// No description provided for @profileGoalTileLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif'**
+  String get profileGoalTileLabel;
+
+  /// No description provided for @profileMeasuresTileLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mesures'**
+  String get profileMeasuresTileLabel;
+
+  /// No description provided for @profileActivityLevelTileLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Niveau d\'activité'**
+  String get profileActivityLevelTileLabel;
+
+  /// No description provided for @profileDietTileLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Régime alimentaire'**
+  String get profileDietTileLabel;
+
+  /// No description provided for @profileMacroSplitTileLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartition des macros'**
+  String get profileMacroSplitTileLabel;
+
+  /// No description provided for @profileDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Terminé'**
+  String get profileDone;
+
+  /// No description provided for @profileImpactChanged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impact sur ton objectif : {before} → {after} kcal ({diff})'**
+  String profileImpactChanged(int before, int after, String diff);
+
+  /// No description provided for @profileImpactUnchanged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif actuel : {after} kcal'**
+  String profileImpactUnchanged(int after);
+
+  /// No description provided for @profileYourGoalTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton objectif'**
+  String get profileYourGoalTitle;
+
+  /// No description provided for @profileToRemember.
+  ///
+  /// In fr, this message translates to:
+  /// **'À retenir'**
+  String get profileToRemember;
+
+  /// No description provided for @profileCoachAdvice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Conseil du coach'**
+  String get profileCoachAdvice;
+
+  /// No description provided for @profileMeasuresSheetTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes mesures'**
+  String get profileMeasuresSheetTitle;
+
+  /// No description provided for @profileMale.
+  ///
+  /// In fr, this message translates to:
+  /// **'Homme'**
+  String get profileMale;
+
+  /// No description provided for @profileFemale.
+  ///
+  /// In fr, this message translates to:
+  /// **'Femme'**
+  String get profileFemale;
+
+  /// No description provided for @profileAgeYears.
+  ///
+  /// In fr, this message translates to:
+  /// **'Âge (ans)'**
+  String get profileAgeYears;
+
+  /// No description provided for @profileHeightCm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taille (cm)'**
+  String get profileHeightCm;
+
+  /// No description provided for @profileHeightIn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taille (in)'**
+  String get profileHeightIn;
+
+  /// No description provided for @profileWeightKg.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids (kg)'**
+  String get profileWeightKg;
+
+  /// No description provided for @profileWeightLb.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids (lb)'**
+  String get profileWeightLb;
+
+  /// No description provided for @profileWeighInAdvice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pèse-toi si possible tous les jours, dans les mêmes conditions à chaque fois — idéalement le matin à jeun, au lever.'**
+  String get profileWeighInAdvice;
+
+  /// No description provided for @profileTargetWeightKg.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids cible (kg) — optionnel'**
+  String get profileTargetWeightKg;
+
+  /// No description provided for @profileTargetWeightLb.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids cible (lb) — optionnel'**
+  String get profileTargetWeightLb;
+
+  /// No description provided for @profileTargetWeightHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisé uniquement pour l\'objectif Maintien : une fois proche de ta cible, tes calories suivent ta dépense réelle ; si tu t\'en éloignes, un léger ajustement automatique t\'y ramène doucement.'**
+  String get profileTargetWeightHint;
+
+  /// No description provided for @profileBodyFatOptional.
+  ///
+  /// In fr, this message translates to:
+  /// **'Masse grasse — optionnel'**
+  String get profileBodyFatOptional;
+
+  /// No description provided for @profileBodyFatHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis la plage la plus proche de ta silhouette actuelle.'**
+  String get profileBodyFatHint;
+
+  /// No description provided for @profileActivitySheetTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton niveau d\'activité'**
+  String get profileActivitySheetTitle;
+
+  /// No description provided for @profileActivitySheetDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis la description la plus proche de TA semaine type — quotidien ET sport confondus, l\'un ou l\'autre suffit à te situer dans un palier.'**
+  String get profileActivitySheetDesc;
+
+  /// No description provided for @profileMacroSplitSheetDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ne change ni tes calories ni tes protéines — seulement comment le reste se répartit entre lipides et glucides.'**
+  String get profileMacroSplitSheetDesc;
+
+  /// No description provided for @profileInvalidNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre invalide'**
+  String get profileInvalidNumber;
+
+  /// No description provided for @profileYourEvolution.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton évolution'**
+  String get profileYourEvolution;
+
+  /// No description provided for @profileLast60Days.
+  ///
+  /// In fr, this message translates to:
+  /// **'60 derniers jours'**
+  String get profileLast60Days;
+
+  /// No description provided for @profileAdaptiveEstimate.
+  ///
+  /// In fr, this message translates to:
+  /// **'estimation adaptative'**
+  String get profileAdaptiveEstimate;
+
+  /// No description provided for @profileCustomGoalsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes objectifs personnalisés'**
+  String get profileCustomGoalsTitle;
+
+  /// No description provided for @profileCustomGoalsSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces valeurs remplacent le calcul automatique.'**
+  String get profileCustomGoalsSubtitle;
+
+  /// No description provided for @profileEnergyKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Énergie (kcal)'**
+  String get profileEnergyKcal;
+
+  /// No description provided for @profileProteinG.
+  ///
+  /// In fr, this message translates to:
+  /// **'Protéines (g)'**
+  String get profileProteinG;
+
+  /// No description provided for @profileCarbG.
+  ///
+  /// In fr, this message translates to:
+  /// **'Glucides (g)'**
+  String get profileCarbG;
+
+  /// No description provided for @profileFatG.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lipides (g)'**
+  String get profileFatG;
+
+  /// No description provided for @profileFiberG.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fibres (g)'**
+  String get profileFiberG;
+
+  /// No description provided for @profileApplyGoals.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appliquer mes objectifs'**
+  String get profileApplyGoals;
 }
 
 class _AppLocalizationsDelegate

@@ -699,4 +699,445 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutVersionLabel => 'Version';
+
+  @override
+  String get activityLevelSedentaryTitle => 'Sedentary';
+
+  @override
+  String get activityLevelLightTitle => 'Lightly active';
+
+  @override
+  String get activityLevelModerateTitle => 'Moderately active';
+
+  @override
+  String get activityLevelActiveTitle => 'Active';
+
+  @override
+  String get activityLevelVeryActiveTitle => 'Very active';
+
+  @override
+  String get activityLevelExtremeTitle => 'Extremely active';
+
+  @override
+  String get activityLevelSedentaryDesc =>
+      'Mostly sedentary life (desk job, little walking), little to no sport.';
+
+  @override
+  String get activityLevelLightDesc =>
+      'Some daily walking, and/or 1 to 3 sport sessions per week.';
+
+  @override
+  String get activityLevelModerateDesc =>
+      'Good amount of daily walking (~8,000-10,000 steps), and/or 3 to 5 sport sessions per week.';
+
+  @override
+  String get activityLevelActiveDesc =>
+      'Lots of daily movement (standing job), and/or near-daily sport (5-6 sessions/week).';
+
+  @override
+  String get activityLevelVeryActiveDesc =>
+      'Physical job, and/or several intense sessions some days (e.g. running + weights the same day).';
+
+  @override
+  String get activityLevelExtremeDesc =>
+      'Intense physical job AND near-daily high-intensity training (e.g. semi-pro athlete).';
+
+  @override
+  String get bodyFatTierEssential => 'Essential';
+
+  @override
+  String get bodyFatTierAthlete => 'Athlete';
+
+  @override
+  String get bodyFatTierFitness => 'Fitness';
+
+  @override
+  String get bodyFatTierAverage => 'Average';
+
+  @override
+  String get bodyFatTierHigh => 'High';
+
+  @override
+  String get dietStyleBalancedTitle => 'Balanced';
+
+  @override
+  String get dietStyleHighCarbTitle => 'High-carb';
+
+  @override
+  String get dietStyleHighFatTitle => 'High-fat';
+
+  @override
+  String get dietStyleKetoTitle => 'Ketogenic (Keto)';
+
+  @override
+  String get dietStyleBalancedDesc =>
+      'Reference split (~30% fat / ~45% carbs of total calories): the zone associated with the lowest all-cause mortality in large cohort studies, within official bounds (AMDR).';
+
+  @override
+  String get dietStyleHighCarbDesc =>
+      'Fat brought toward the lower end of the recommended range, carbs more generous — useful for high-volume endurance sports, without ever going outside official bounds.';
+
+  @override
+  String get dietStyleHighFatDesc =>
+      'More fat for those who prefer it (satiety, palatability) — capped at the recommended upper limit (35% of calories), never beyond.';
+
+  @override
+  String get dietStyleKetoDesc =>
+      'Carbs kept very low, fat very high — an approach validated for certain supervised therapeutic uses (e.g. epilepsy), but whose long-term cardiovascular effects in the general population remain poorly documented (studies mostly over a few weeks). Use occasionally and with judgment, not as a default setting.';
+
+  @override
+  String get profileDietOmnivore => 'Omnivore';
+
+  @override
+  String get profileDietVegetarian => 'Vegetarian';
+
+  @override
+  String get profileDietVegan => 'Vegan';
+
+  @override
+  String get goalLoseTitle => 'Fat loss';
+
+  @override
+  String get goalLoseDesc =>
+      'Lose fat mass at a good pace, while preserving your muscle and energy.';
+
+  @override
+  String get goalLoseTip1 =>
+      'Keep a good protein intake to protect your muscles';
+
+  @override
+  String get goalLoseTip2 => 'Move regularly — even a daily walk counts';
+
+  @override
+  String get goalLoseTip3 => 'Sleep enough: recovery is part of the result';
+
+  @override
+  String get goalLoseTip4 => 'After 8 to 10 weeks, plan a break in Maintenance';
+
+  @override
+  String get goalLoseCoach =>
+      'The priority is to preserve your muscle mass while you lose fat. TOTUM automatically raises your protein target. A moderate pace is more effective and far more sustainable than an extreme diet.';
+
+  @override
+  String get goalLoseMildTitle => 'Gentle loss';
+
+  @override
+  String get goalLoseMildDesc =>
+      'Lose weight gradually, without frustration or fatigue crashes. Ideal for staying the course.';
+
+  @override
+  String get goalLoseMildTip1 =>
+      'A light deficit, easier to sustain day to day';
+
+  @override
+  String get goalLoseMildTip2 => 'Take care of your recovery and sleep';
+
+  @override
+  String get goalLoseMildTip3 =>
+      'Keep energy for your activities and wellbeing';
+
+  @override
+  String get goalLoseMildTip4 => 'Consistency matters more than speed';
+
+  @override
+  String get goalLoseMildCoach =>
+      'This gentle approach is perfect for losing weight without thinking about it constantly. Progress is slower, but that\'s exactly what makes it sustainable: patience and consistency are your best allies.';
+
+  @override
+  String get goalMaintainTitle => 'Maintenance';
+
+  @override
+  String get goalMaintainDesc =>
+      'Stabilize your weight and feel good, over the long run.';
+
+  @override
+  String get goalMaintainTip1 => 'Eat according to your needs, no more no less';
+
+  @override
+  String get goalMaintainTip2 => 'Keep a regular physical activity';
+
+  @override
+  String get goalMaintainTip3 => 'Keep a good protein intake';
+
+  @override
+  String get goalMaintainTip4 =>
+      'Watch your average weight over the week, not day to day';
+
+  @override
+  String get goalMaintainCoach =>
+      'Your goal is no longer to lose or gain, but to keep your results and feel good. Consistency is what anchors good habits over the long term — you\'re in the zone of serenity.';
+
+  @override
+  String get goalGainMildTitle => 'Muscle gain';
+
+  @override
+  String get goalGainMildDesc =>
+      'Build muscle progressively, with controlled fat gain.';
+
+  @override
+  String get goalGainMildTip1 => 'A slight surplus, just enough to build';
+
+  @override
+  String get goalGainMildTip2 => 'Pair with resistance training if you can';
+
+  @override
+  String get goalGainMildTip3 => 'A good protein intake supports your muscles';
+
+  @override
+  String get goalGainMildTip4 => 'Quality sleep speeds up progress';
+
+  @override
+  String get goalGainMildCoach =>
+      'A slow, controlled progression gives a much better muscle-to-fat ratio than a fast gain. No need to force it: quality beats quantity, and your body will thank you.';
+
+  @override
+  String get goalGainTitle => 'Mass gain';
+
+  @override
+  String get goalGainDesc =>
+      'Maximize your muscle and strength gains, for the most ambitious goals.';
+
+  @override
+  String get goalGainTip1 => 'A more pronounced surplus to support building';
+
+  @override
+  String get goalGainTip2 => 'Ideal if you train intensely and regularly';
+
+  @override
+  String get goalGainTip3 => 'Good recovery is essential';
+
+  @override
+  String get goalGainTip4 => 'Monitor your progress to stay on track';
+
+  @override
+  String get goalGainCoach =>
+      'This mode is built for ambitious goals. Regularly check your progress to avoid excess fat gain: a controlled surplus always gives better results than an untracked excess.';
+
+  @override
+  String get profileMaintainDynamic => 'Dynamic maintenance';
+
+  @override
+  String get profileEquilibrium => 'Balance';
+
+  @override
+  String profileTargetedRateNeg(String pct) {
+    return 'Target pace: −$pct %/wk';
+  }
+
+  @override
+  String profileTargetedRatePos(String pct) {
+    return 'Target pace: +$pct %/wk';
+  }
+
+  @override
+  String profileMacroCoherenceOver(
+      String computed, String diff, String pct, String kcal) {
+    return 'Your macros add up to $computed kcal — $diff kcal ($pct %) MORE than the $kcal kcal shown.';
+  }
+
+  @override
+  String profileMacroCoherenceUnder(
+      String computed, String diff, String pct, String kcal) {
+    return 'Your macros add up to $computed kcal — $diff kcal ($pct %) LESS than the $kcal kcal shown.';
+  }
+
+  @override
+  String profileGoalsUpdatedSnackbar(int kcal) {
+    return 'Goals updated · $kcal kcal per day';
+  }
+
+  @override
+  String get profileConfirmGoals => 'Confirm my goals';
+
+  @override
+  String get profileGoalsSaved => 'Goals saved';
+
+  @override
+  String get profileBackToAuto => 'Back to automatic calculation';
+
+  @override
+  String get profileCustomizeGoals => 'Customize my goals';
+
+  @override
+  String get profileFullDetailFooter =>
+      'The full detail (vitamins, minerals, fatty acids) is calculated automatically in the Overview tab.';
+
+  @override
+  String get profileTodayEyebrow => 'TODAY';
+
+  @override
+  String get profileKcalOver => 'kcal over';
+
+  @override
+  String get profileKcalRemaining => 'kcal left';
+
+  @override
+  String get profileBaseGoal => 'Base goal';
+
+  @override
+  String get profileFoodsLabel => 'Food';
+
+  @override
+  String get profileRefinedByResults => 'Refined based on your actual results';
+
+  @override
+  String profileMacroGramsOver(int amount) {
+    return '+$amount g over';
+  }
+
+  @override
+  String profileMacroGramsRemaining(int amount) {
+    return '$amount g left';
+  }
+
+  @override
+  String get profileMacronutrients => 'Macronutrients';
+
+  @override
+  String get profileCarbs => 'Carbs';
+
+  @override
+  String get profileFats => 'Fat';
+
+  @override
+  String get profileProteins => 'Protein';
+
+  @override
+  String get profilePlateToday => 'Your plate today';
+
+  @override
+  String get profilePlateGoal => 'Your plate (goal)';
+
+  @override
+  String get profileMicronutrientsFeatured => 'Featured micronutrients';
+
+  @override
+  String get profileGoalTileLabel => 'Goal';
+
+  @override
+  String get profileMeasuresTileLabel => 'Measurements';
+
+  @override
+  String get profileActivityLevelTileLabel => 'Activity level';
+
+  @override
+  String get profileDietTileLabel => 'Diet';
+
+  @override
+  String get profileMacroSplitTileLabel => 'Macro split';
+
+  @override
+  String get profileDone => 'Done';
+
+  @override
+  String profileImpactChanged(int before, int after, String diff) {
+    return 'Impact on your goal: $before → $after kcal ($diff)';
+  }
+
+  @override
+  String profileImpactUnchanged(int after) {
+    return 'Current goal: $after kcal';
+  }
+
+  @override
+  String get profileYourGoalTitle => 'Your goal';
+
+  @override
+  String get profileToRemember => 'Key points';
+
+  @override
+  String get profileCoachAdvice => 'Coach\'s advice';
+
+  @override
+  String get profileMeasuresSheetTitle => 'Your measurements';
+
+  @override
+  String get profileMale => 'Male';
+
+  @override
+  String get profileFemale => 'Female';
+
+  @override
+  String get profileAgeYears => 'Age (years)';
+
+  @override
+  String get profileHeightCm => 'Height (cm)';
+
+  @override
+  String get profileHeightIn => 'Height (in)';
+
+  @override
+  String get profileWeightKg => 'Weight (kg)';
+
+  @override
+  String get profileWeightLb => 'Weight (lb)';
+
+  @override
+  String get profileWeighInAdvice =>
+      'Weigh yourself every day if possible, under the same conditions each time — ideally in the morning, fasted, right after waking up.';
+
+  @override
+  String get profileTargetWeightKg => 'Target weight (kg) — optional';
+
+  @override
+  String get profileTargetWeightLb => 'Target weight (lb) — optional';
+
+  @override
+  String get profileTargetWeightHint =>
+      'Used only for the Maintenance goal: once close to your target, your calories follow your actual expenditure; if you drift away, a small automatic adjustment gently brings you back.';
+
+  @override
+  String get profileBodyFatOptional => 'Body fat — optional';
+
+  @override
+  String get profileBodyFatHint =>
+      'Choose the range closest to your current physique.';
+
+  @override
+  String get profileActivitySheetTitle => 'Your activity level';
+
+  @override
+  String get profileActivitySheetDesc =>
+      'Choose the description closest to YOUR typical week — daily life AND sport combined, either one is enough to place you in a tier.';
+
+  @override
+  String get profileMacroSplitSheetDesc =>
+      'Doesn\'t change your calories or protein — only how the rest is split between fat and carbs.';
+
+  @override
+  String get profileInvalidNumber => 'Invalid number';
+
+  @override
+  String get profileYourEvolution => 'Your evolution';
+
+  @override
+  String get profileLast60Days => 'last 60 days';
+
+  @override
+  String get profileAdaptiveEstimate => 'adaptive estimate';
+
+  @override
+  String get profileCustomGoalsTitle => 'My custom goals';
+
+  @override
+  String get profileCustomGoalsSubtitle =>
+      'These values replace the automatic calculation.';
+
+  @override
+  String get profileEnergyKcal => 'Energy (kcal)';
+
+  @override
+  String get profileProteinG => 'Protein (g)';
+
+  @override
+  String get profileCarbG => 'Carbs (g)';
+
+  @override
+  String get profileFatG => 'Fat (g)';
+
+  @override
+  String get profileFiberG => 'Fiber (g)';
+
+  @override
+  String get profileApplyGoals => 'Apply my goals';
 }
