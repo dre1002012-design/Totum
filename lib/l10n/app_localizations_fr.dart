@@ -2136,4 +2136,109 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get consAdviceCategories =>
       'Nutrition, mouvement, sommeil, stress, mindset';
+
+  @override
+  String get consWellbeingTitle => 'Bien-être holistique';
+
+  @override
+  String get consWellbeingIntro =>
+      'Les trois piliers de ta vitalité au quotidien : sommeil, stress et exposition au soleil.';
+
+  @override
+  String get consSleepVeryShort => 'Très court';
+
+  @override
+  String get consSleepInsufficient => 'Insuffisant';
+
+  @override
+  String get consSleepCorrect => 'Correct';
+
+  @override
+  String get consSleepIdeal => 'Idéal';
+
+  @override
+  String get consSleepLong => 'Long';
+
+  @override
+  String get consStressSerene => 'Serein';
+
+  @override
+  String get consStressCalm => 'Calme';
+
+  @override
+  String get consStressModerate => 'Modéré';
+
+  @override
+  String get consStressHigh => 'Élevé';
+
+  @override
+  String get consStressVeryHigh => 'Très élevé';
+
+  @override
+  String get consSleepTipVeryShort =>
+      'Une nuit aussi courte pèse sur ta récupération et tes fringales dès demain — priorise le coucher ce soir.';
+
+  @override
+  String get consSleepTipUnder6 =>
+      'Sous 6h de façon répétée, le risque de fatigue et de fringales augmente nettement — regagne du terrain progressivement.';
+
+  @override
+  String get consSleepTipBorderline =>
+      'Zone \"limite acceptable\" pour les experts du sommeil : quelques minutes de plus suffiraient à basculer dans la zone recommandée.';
+
+  @override
+  String get consSleepTipRecommended =>
+      'Tu es dans la fourchette recommandée pour un adulte — la zone la plus favorable à ta récupération.';
+
+  @override
+  String get consSleepTipAcceptableLong =>
+      'Toujours une zone jugée acceptable — un besoin naturel de dormir un peu plus n\'est pas un problème en soi.';
+
+  @override
+  String get consSleepTipTooLong =>
+      'Au-delà de 10h de façon récurrente, ça vaut la peine de vérifier la qualité de ton sommeil si la fatigue persiste.';
+
+  @override
+  String get consStressTipVeryLow =>
+      'Un très bon terrain pour ta récupération globale — profites-en pour ancrer ce qui fonctionne bien pour toi.';
+
+  @override
+  String get consStressTipHealthy =>
+      'Un niveau sain. Garde les leviers qui t\'aident à rester dans cette zone.';
+
+  @override
+  String get consStressTipModerate =>
+      'Rien d\'alarmant, mais quelques minutes de respiration lente peuvent t\'aider à redescendre encore.';
+
+  @override
+  String get consStressTipHigh =>
+      'À ce niveau, le corps carbure aux hormones du stress — une pause respiration ou une marche peuvent vraiment faire la différence aujourd\'hui.';
+
+  @override
+  String get consStressTipVeryHigh =>
+      'Un niveau qui mérite ton attention en priorité aujourd\'hui — commence par une pause calme avant toute autre chose.';
+
+  @override
+  String get consSleepPillarTitle => 'Sommeil';
+
+  @override
+  String get consEveningRitualTitle => 'Rituel du soir';
+
+  @override
+  String get consSleepBetterSubtitle => 'Mieux dormir';
+
+  @override
+  String get consStressPillarTitle => 'Stress';
+
+  @override
+  String get consBreathingTitle => 'Respiration';
+
+  @override
+  String get consAntiStressSubtitle => 'Anti-stress';
+
+  @override
+  String get consTodayAnalysisTitle => 'Ton analyse du jour';
+
+  @override
+  String get consUpdateMyAdviceButton => 'Mettre à jour mes conseils';
 }

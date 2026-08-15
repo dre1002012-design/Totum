@@ -2121,4 +2121,109 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get consAdviceCategories =>
       'Nutrition, movement, sleep, stress, mindset';
+
+  @override
+  String get consWellbeingTitle => 'Holistic wellbeing';
+
+  @override
+  String get consWellbeingIntro =>
+      'The three pillars of your daily vitality: sleep, stress and sun exposure.';
+
+  @override
+  String get consSleepVeryShort => 'Very short';
+
+  @override
+  String get consSleepInsufficient => 'Insufficient';
+
+  @override
+  String get consSleepCorrect => 'Decent';
+
+  @override
+  String get consSleepIdeal => 'Ideal';
+
+  @override
+  String get consSleepLong => 'Long';
+
+  @override
+  String get consStressSerene => 'Serene';
+
+  @override
+  String get consStressCalm => 'Calm';
+
+  @override
+  String get consStressModerate => 'Moderate';
+
+  @override
+  String get consStressHigh => 'High';
+
+  @override
+  String get consStressVeryHigh => 'Very high';
+
+  @override
+  String get consSleepTipVeryShort =>
+      'Such a short night weighs on your recovery and cravings as soon as tomorrow — make going to bed a priority tonight.';
+
+  @override
+  String get consSleepTipUnder6 =>
+      'Repeatedly under 6h, the risk of fatigue and cravings increases significantly — gain ground gradually.';
+
+  @override
+  String get consSleepTipBorderline =>
+      'A \"borderline acceptable\" zone according to sleep experts: just a few more minutes would tip you into the recommended range.';
+
+  @override
+  String get consSleepTipRecommended =>
+      'You\'re within the recommended range for an adult — the zone most favorable to your recovery.';
+
+  @override
+  String get consSleepTipAcceptableLong =>
+      'Still an acceptable zone — a natural need to sleep a bit more isn\'t a problem in itself.';
+
+  @override
+  String get consSleepTipTooLong =>
+      'Beyond 10h on a recurring basis, it\'s worth checking your sleep quality if fatigue persists.';
+
+  @override
+  String get consStressTipVeryLow =>
+      'Great ground for your overall recovery — take the chance to lock in what\'s working well for you.';
+
+  @override
+  String get consStressTipHealthy =>
+      'A healthy level. Keep the levers that help you stay in this zone.';
+
+  @override
+  String get consStressTipModerate =>
+      'Nothing alarming, but a few minutes of slow breathing can help you settle even further.';
+
+  @override
+  String get consStressTipHigh =>
+      'At this level, the body is running on stress hormones — a breathing break or a walk can really make a difference today.';
+
+  @override
+  String get consStressTipVeryHigh =>
+      'A level that deserves your priority attention today — start with a calm break before anything else.';
+
+  @override
+  String get consSleepPillarTitle => 'Sleep';
+
+  @override
+  String get consEveningRitualTitle => 'Evening ritual';
+
+  @override
+  String get consSleepBetterSubtitle => 'Sleep better';
+
+  @override
+  String get consStressPillarTitle => 'Stress';
+
+  @override
+  String get consBreathingTitle => 'Breathing';
+
+  @override
+  String get consAntiStressSubtitle => 'Anti-stress';
+
+  @override
+  String get consTodayAnalysisTitle => 'Your analysis today';
+
+  @override
+  String get consUpdateMyAdviceButton => 'Update my advice';
 }

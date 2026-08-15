@@ -4837,52 +4837,52 @@ class _WellbeingCardState extends State<_WellbeingCard> {
     widget.stressCtrl.text = _stress.round().toString();
   }
 
-  String _sleepWord() {
-    if (_sleep < 5) return 'Très court';
-    if (_sleep < 6.5) return 'Insuffisant';
-    if (_sleep < 8) return 'Correct';
-    if (_sleep <= 9.5) return 'Idéal';
-    return 'Long';
+  String _sleepWord(AppLocalizations l10n) {
+    if (_sleep < 5) return l10n.consSleepVeryShort;
+    if (_sleep < 6.5) return l10n.consSleepInsufficient;
+    if (_sleep < 8) return l10n.consSleepCorrect;
+    if (_sleep <= 9.5) return l10n.consSleepIdeal;
+    return l10n.consSleepLong;
   }
 
-  String _stressWord() {
-    if (_stress <= 2) return 'Serein';
-    if (_stress <= 4) return 'Calme';
-    if (_stress <= 6) return 'Modéré';
-    if (_stress <= 8) return 'Élevé';
-    return 'Très élevé';
+  String _stressWord(AppLocalizations l10n) {
+    if (_stress <= 2) return l10n.consStressSerene;
+    if (_stress <= 4) return l10n.consStressCalm;
+    if (_stress <= 6) return l10n.consStressModerate;
+    if (_stress <= 8) return l10n.consStressHigh;
+    return l10n.consStressVeryHigh;
   }
 
   // Indication courte, ludique et actionnable sous chaque palier — pour que
   // le mot affiché (« Correct », « Idéal »…) ne reste jamais sans contexte.
-  String _sleepTip() {
-    if (_sleep < 5) return 'Une nuit aussi courte pèse sur ta récupération et tes fringales dès demain — priorise le coucher ce soir.';
-    if (_sleep < 6) return 'Sous 6h de façon répétée, le risque de fatigue et de fringales augmente nettement — regagne du terrain progressivement.';
-    if (_sleep < 7) return 'Zone "limite acceptable" pour les experts du sommeil : quelques minutes de plus suffiraient à basculer dans la zone recommandée.';
-    if (_sleep <= 9) return 'Tu es dans la fourchette recommandée pour un adulte — la zone la plus favorable à ta récupération.';
-    if (_sleep <= 10) return 'Toujours une zone jugée acceptable — un besoin naturel de dormir un peu plus n\'est pas un problème en soi.';
-    return 'Au-delà de 10h de façon récurrente, ça vaut la peine de vérifier la qualité de ton sommeil si la fatigue persiste.';
+  String _sleepTip(AppLocalizations l10n) {
+    if (_sleep < 5) return l10n.consSleepTipVeryShort;
+    if (_sleep < 6) return l10n.consSleepTipUnder6;
+    if (_sleep < 7) return l10n.consSleepTipBorderline;
+    if (_sleep <= 9) return l10n.consSleepTipRecommended;
+    if (_sleep <= 10) return l10n.consSleepTipAcceptableLong;
+    return l10n.consSleepTipTooLong;
   }
 
-  String _stressTip() {
-    if (_stress <= 2) return 'Un très bon terrain pour ta récupération globale — profites-en pour ancrer ce qui fonctionne bien pour toi.';
-    if (_stress <= 4) return 'Un niveau sain. Garde les leviers qui t\'aident à rester dans cette zone.';
-    if (_stress <= 6) return 'Rien d\'alarmant, mais quelques minutes de respiration lente peuvent t\'aider à redescendre encore.';
-    if (_stress <= 8) return 'À ce niveau, le corps carbure aux hormones du stress — une pause respiration ou une marche peuvent vraiment faire la différence aujourd\'hui.';
-    return 'Un niveau qui mérite ton attention en priorité aujourd\'hui — commence par une pause calme avant toute autre chose.';
+  String _stressTip(AppLocalizations l10n) {
+    if (_stress <= 2) return l10n.consStressTipVeryLow;
+    if (_stress <= 4) return l10n.consStressTipHealthy;
+    if (_stress <= 6) return l10n.consStressTipModerate;
+    if (_stress <= 8) return l10n.consStressTipHigh;
+    return l10n.consStressTipVeryHigh;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Bien-être holistique',
-            style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
+        Text(l10n.consWellbeingTitle,
+            style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
         const SizedBox(height: 4),
         Text(
-          'Les trois piliers de ta vitalité au quotidien : sommeil, stress '
-          'et exposition au soleil.',
+          l10n.consWellbeingIntro,
           style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4),
         ),
         const SizedBox(height: 16),
@@ -4891,9 +4891,9 @@ class _WellbeingCardState extends State<_WellbeingCard> {
         _pillarCard(
           color: _sleepColor,
           icon: Icons.nightlight_round,
-          title: 'Sommeil',
-          valueLabel: '${_sleep.toStringAsFixed(1)} h · ${_sleepWord()}',
-          tip: _sleepTip(),
+          title: l10n.consSleepPillarTitle,
+          valueLabel: '${_sleep.toStringAsFixed(1)} h · ${_sleepWord(l10n)}',
+          tip: _sleepTip(l10n),
           slider: Slider(
             value: _sleep.clamp(0, 12),
             min: 0,
@@ -4907,8 +4907,8 @@ class _WellbeingCardState extends State<_WellbeingCard> {
             },
           ),
           toolIcon: Icons.nightlight_round,
-          toolTitle: 'Rituel du soir',
-          toolSubtitle: 'Mieux dormir',
+          toolTitle: l10n.consEveningRitualTitle,
+          toolSubtitle: l10n.consSleepBetterSubtitle,
           onTool: () => Navigator.of(context).push(
             MaterialPageRoute(builder: (_) => const RituelSoirScreen()),
           ),
@@ -4919,9 +4919,9 @@ class _WellbeingCardState extends State<_WellbeingCard> {
         _pillarCard(
           color: _stressColor,
           icon: Icons.spa,
-          title: 'Stress',
-          valueLabel: '${_stress.round()}/10 · ${_stressWord()}',
-          tip: _stressTip(),
+          title: l10n.consStressPillarTitle,
+          valueLabel: '${_stress.round()}/10 · ${_stressWord(l10n)}',
+          tip: _stressTip(l10n),
           slider: Slider(
             value: _stress.clamp(0, 10),
             min: 0,
@@ -4935,8 +4935,8 @@ class _WellbeingCardState extends State<_WellbeingCard> {
             },
           ),
           toolIcon: Icons.air,
-          toolTitle: 'Respiration',
-          toolSubtitle: 'Anti-stress',
+          toolTitle: l10n.consBreathingTitle,
+          toolSubtitle: l10n.consAntiStressSubtitle,
           onTool: () => Navigator.of(context).push(
             MaterialPageRoute(builder: (_) => const BreathGoalPickerScreen()),
           ),
@@ -4964,9 +4964,9 @@ class _WellbeingCardState extends State<_WellbeingCard> {
                           size: 17, color: TotumColors.accent),
                     ),
                     const SizedBox(width: 8),
-                    const Expanded(
-                      child: Text('Ton analyse du jour',
-                          style: TextStyle(
+                    Expanded(
+                      child: Text(l10n.consTodayAnalysisTitle,
+                          style: const TextStyle(
                               fontSize: 13.5, fontWeight: FontWeight.w800)),
                     ),
                   ],
@@ -5005,7 +5005,7 @@ class _WellbeingCardState extends State<_WellbeingCard> {
               widget.onSave();
             },
             icon: const Icon(Icons.refresh, size: 18),
-            label: const Text('Mettre à jour mes conseils'),
+            label: Text(l10n.consUpdateMyAdviceButton),
           ),
         ),
         const SizedBox(height: 20),

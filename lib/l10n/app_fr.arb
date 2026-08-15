@@ -752,5 +752,42 @@
   "consDailyAdviceTitle": "Conseils du jour",
   "consPersonalizedAdviceCount": "{count} conseils personnalisés pour aujourd'hui",
   "@consPersonalizedAdviceCount": { "placeholders": { "count": {"type": "int"} } },
-  "consAdviceCategories": "Nutrition, mouvement, sommeil, stress, mindset"
+  "consAdviceCategories": "Nutrition, mouvement, sommeil, stress, mindset",
+
+  "consWellbeingTitle": "Bien-être holistique",
+  "consWellbeingIntro": "Les trois piliers de ta vitalité au quotidien : sommeil, stress et exposition au soleil.",
+
+  "consSleepVeryShort": "Très court",
+  "consSleepInsufficient": "Insuffisant",
+  "consSleepCorrect": "Correct",
+  "consSleepIdeal": "Idéal",
+  "consSleepLong": "Long",
+
+  "consStressSerene": "Serein",
+  "consStressCalm": "Calme",
+  "consStressModerate": "Modéré",
+  "consStressHigh": "Élevé",
+  "consStressVeryHigh": "Très élevé",
+
+  "consSleepTipVeryShort": "Une nuit aussi courte pèse sur ta récupération et tes fringales dès demain — priorise le coucher ce soir.",
+  "consSleepTipUnder6": "Sous 6h de façon répétée, le risque de fatigue et de fringales augmente nettement — regagne du terrain progressivement.",
+  "consSleepTipBorderline": "Zone \"limite acceptable\" pour les experts du sommeil : quelques minutes de plus suffiraient à basculer dans la zone recommandée.",
+  "consSleepTipRecommended": "Tu es dans la fourchette recommandée pour un adulte — la zone la plus favorable à ta récupération.",
+  "consSleepTipAcceptableLong": "Toujours une zone jugée acceptable — un besoin naturel de dormir un peu plus n'est pas un problème en soi.",
+  "consSleepTipTooLong": "Au-delà de 10h de façon récurrente, ça vaut la peine de vérifier la qualité de ton sommeil si la fatigue persiste.",
+
+  "consStressTipVeryLow": "Un très bon terrain pour ta récupération globale — profites-en pour ancrer ce qui fonctionne bien pour toi.",
+  "consStressTipHealthy": "Un niveau sain. Garde les leviers qui t'aident à rester dans cette zone.",
+  "consStressTipModerate": "Rien d'alarmant, mais quelques minutes de respiration lente peuvent t'aider à redescendre encore.",
+  "consStressTipHigh": "À ce niveau, le corps carbure aux hormones du stress — une pause respiration ou une marche peuvent vraiment faire la différence aujourd'hui.",
+  "consStressTipVeryHigh": "Un niveau qui mérite ton attention en priorité aujourd'hui — commence par une pause calme avant toute autre chose.",
+
+  "consSleepPillarTitle": "Sommeil",
+  "consEveningRitualTitle": "Rituel du soir",
+  "consSleepBetterSubtitle": "Mieux dormir",
+  "consStressPillarTitle": "Stress",
+  "consBreathingTitle": "Respiration",
+  "consAntiStressSubtitle": "Anti-stress",
+  "consTodayAnalysisTitle": "Ton analyse du jour",
+  "consUpdateMyAdviceButton": "Mettre à jour mes conseils"
 }

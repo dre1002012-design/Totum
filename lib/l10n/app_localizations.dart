@@ -3755,6 +3755,192 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Nutrition, mouvement, sommeil, stress, mindset'**
   String get consAdviceCategories;
+
+  /// No description provided for @consWellbeingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bien-être holistique'**
+  String get consWellbeingTitle;
+
+  /// No description provided for @consWellbeingIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les trois piliers de ta vitalité au quotidien : sommeil, stress et exposition au soleil.'**
+  String get consWellbeingIntro;
+
+  /// No description provided for @consSleepVeryShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Très court'**
+  String get consSleepVeryShort;
+
+  /// No description provided for @consSleepInsufficient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Insuffisant'**
+  String get consSleepInsufficient;
+
+  /// No description provided for @consSleepCorrect.
+  ///
+  /// In fr, this message translates to:
+  /// **'Correct'**
+  String get consSleepCorrect;
+
+  /// No description provided for @consSleepIdeal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Idéal'**
+  String get consSleepIdeal;
+
+  /// No description provided for @consSleepLong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Long'**
+  String get consSleepLong;
+
+  /// No description provided for @consStressSerene.
+  ///
+  /// In fr, this message translates to:
+  /// **'Serein'**
+  String get consStressSerene;
+
+  /// No description provided for @consStressCalm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calme'**
+  String get consStressCalm;
+
+  /// No description provided for @consStressModerate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modéré'**
+  String get consStressModerate;
+
+  /// No description provided for @consStressHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Élevé'**
+  String get consStressHigh;
+
+  /// No description provided for @consStressVeryHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Très élevé'**
+  String get consStressVeryHigh;
+
+  /// No description provided for @consSleepTipVeryShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une nuit aussi courte pèse sur ta récupération et tes fringales dès demain — priorise le coucher ce soir.'**
+  String get consSleepTipVeryShort;
+
+  /// No description provided for @consSleepTipUnder6.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sous 6h de façon répétée, le risque de fatigue et de fringales augmente nettement — regagne du terrain progressivement.'**
+  String get consSleepTipUnder6;
+
+  /// No description provided for @consSleepTipBorderline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zone \"limite acceptable\" pour les experts du sommeil : quelques minutes de plus suffiraient à basculer dans la zone recommandée.'**
+  String get consSleepTipBorderline;
+
+  /// No description provided for @consSleepTipRecommended.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu es dans la fourchette recommandée pour un adulte — la zone la plus favorable à ta récupération.'**
+  String get consSleepTipRecommended;
+
+  /// No description provided for @consSleepTipAcceptableLong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toujours une zone jugée acceptable — un besoin naturel de dormir un peu plus n\'est pas un problème en soi.'**
+  String get consSleepTipAcceptableLong;
+
+  /// No description provided for @consSleepTipTooLong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Au-delà de 10h de façon récurrente, ça vaut la peine de vérifier la qualité de ton sommeil si la fatigue persiste.'**
+  String get consSleepTipTooLong;
+
+  /// No description provided for @consStressTipVeryLow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un très bon terrain pour ta récupération globale — profites-en pour ancrer ce qui fonctionne bien pour toi.'**
+  String get consStressTipVeryLow;
+
+  /// No description provided for @consStressTipHealthy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un niveau sain. Garde les leviers qui t\'aident à rester dans cette zone.'**
+  String get consStressTipHealthy;
+
+  /// No description provided for @consStressTipModerate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien d\'alarmant, mais quelques minutes de respiration lente peuvent t\'aider à redescendre encore.'**
+  String get consStressTipModerate;
+
+  /// No description provided for @consStressTipHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'À ce niveau, le corps carbure aux hormones du stress — une pause respiration ou une marche peuvent vraiment faire la différence aujourd\'hui.'**
+  String get consStressTipHigh;
+
+  /// No description provided for @consStressTipVeryHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un niveau qui mérite ton attention en priorité aujourd\'hui — commence par une pause calme avant toute autre chose.'**
+  String get consStressTipVeryHigh;
+
+  /// No description provided for @consSleepPillarTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sommeil'**
+  String get consSleepPillarTitle;
+
+  /// No description provided for @consEveningRitualTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rituel du soir'**
+  String get consEveningRitualTitle;
+
+  /// No description provided for @consSleepBetterSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mieux dormir'**
+  String get consSleepBetterSubtitle;
+
+  /// No description provided for @consStressPillarTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Stress'**
+  String get consStressPillarTitle;
+
+  /// No description provided for @consBreathingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Respiration'**
+  String get consBreathingTitle;
+
+  /// No description provided for @consAntiStressSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Anti-stress'**
+  String get consAntiStressSubtitle;
+
+  /// No description provided for @consTodayAnalysisTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton analyse du jour'**
+  String get consTodayAnalysisTitle;
+
+  /// No description provided for @consUpdateMyAdviceButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mettre à jour mes conseils'**
+  String get consUpdateMyAdviceButton;
 }
 
 class _AppLocalizationsDelegate

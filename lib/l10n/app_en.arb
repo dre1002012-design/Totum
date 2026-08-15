@@ -676,5 +676,42 @@
   "consTapToSeeWhereToFind": "Tap to see where to find it",
   "consDailyAdviceTitle": "Today's advice",
   "consPersonalizedAdviceCount": "{count} personalized tips for today",
-  "consAdviceCategories": "Nutrition, movement, sleep, stress, mindset"
+  "consAdviceCategories": "Nutrition, movement, sleep, stress, mindset",
+
+  "consWellbeingTitle": "Holistic wellbeing",
+  "consWellbeingIntro": "The three pillars of your daily vitality: sleep, stress and sun exposure.",
+
+  "consSleepVeryShort": "Very short",
+  "consSleepInsufficient": "Insufficient",
+  "consSleepCorrect": "Decent",
+  "consSleepIdeal": "Ideal",
+  "consSleepLong": "Long",
+
+  "consStressSerene": "Serene",
+  "consStressCalm": "Calm",
+  "consStressModerate": "Moderate",
+  "consStressHigh": "High",
+  "consStressVeryHigh": "Very high",
+
+  "consSleepTipVeryShort": "Such a short night weighs on your recovery and cravings as soon as tomorrow — make going to bed a priority tonight.",
+  "consSleepTipUnder6": "Repeatedly under 6h, the risk of fatigue and cravings increases significantly — gain ground gradually.",
+  "consSleepTipBorderline": "A \"borderline acceptable\" zone according to sleep experts: just a few more minutes would tip you into the recommended range.",
+  "consSleepTipRecommended": "You're within the recommended range for an adult — the zone most favorable to your recovery.",
+  "consSleepTipAcceptableLong": "Still an acceptable zone — a natural need to sleep a bit more isn't a problem in itself.",
+  "consSleepTipTooLong": "Beyond 10h on a recurring basis, it's worth checking your sleep quality if fatigue persists.",
+
+  "consStressTipVeryLow": "Great ground for your overall recovery — take the chance to lock in what's working well for you.",
+  "consStressTipHealthy": "A healthy level. Keep the levers that help you stay in this zone.",
+  "consStressTipModerate": "Nothing alarming, but a few minutes of slow breathing can help you settle even further.",
+  "consStressTipHigh": "At this level, the body is running on stress hormones — a breathing break or a walk can really make a difference today.",
+  "consStressTipVeryHigh": "A level that deserves your priority attention today — start with a calm break before anything else.",
+
+  "consSleepPillarTitle": "Sleep",
+  "consEveningRitualTitle": "Evening ritual",
+  "consSleepBetterSubtitle": "Sleep better",
+  "consStressPillarTitle": "Stress",
+  "consBreathingTitle": "Breathing",
+  "consAntiStressSubtitle": "Anti-stress",
+  "consTodayAnalysisTitle": "Your analysis today",
+  "consUpdateMyAdviceButton": "Update my advice"
 }
