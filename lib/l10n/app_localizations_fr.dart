@@ -1846,4 +1846,92 @@ class AppLocalizationsFr extends AppLocalizations {
   String consWhereToFindReadFiche(String label) {
     return 'Où en trouver ? Lire la fiche $label';
   }
+
+  @override
+  String get consRecipeAddedSnackbar => 'Recette ajoutée à tes recettes !';
+
+  @override
+  String get consAddRecipeError => 'Erreur lors de l\'ajout.';
+
+  @override
+  String get consHealthyScoreTitle => 'Healthy Score';
+
+  @override
+  String get consHealthyScoreIntro =>
+      'Une note sur 100 qui évalue la qualité nutritionnelle globale du plat, calculée sur ses vraies valeurs CIQUAL (macros + micronutriments) :';
+
+  @override
+  String get consCriteriaMicronutrients => 'Micronutriments';
+
+  @override
+  String get consCriteriaMicronutrientsDetail =>
+      '20 pts — diversité vitamines/minéraux';
+
+  @override
+  String get consCriteriaProteinDetail => '20 pts — densité protéique du plat';
+
+  @override
+  String get consCriteriaFiberDetail => '15 pts — apport en fibres';
+
+  @override
+  String get consCriteriaFatQuality => 'Qualité des lipides';
+
+  @override
+  String get consCriteriaFatQualityDetail =>
+      '15 pts — part d\'acides gras insaturés';
+
+  @override
+  String get consCriteriaCalorieDensity => 'Densité calorique';
+
+  @override
+  String get consCriteriaCalorieDensityDetail =>
+      '15 pts — pénalise les plats très caloriques au poids';
+
+  @override
+  String get consCriteriaSugarsDetail => '7,5 pts — maîtrise des sucres';
+
+  @override
+  String get consCriteriaSodiumDetail => '7,5 pts — maîtrise du sel';
+
+  @override
+  String get consHealthyScoreLegend =>
+      '70-100 : excellent  •  45-69 : correct  •  <45 : à limiter';
+
+  @override
+  String get consHealthyScorePreworkoutNote =>
+      'Les collations Pré-workout sont volontairement pauvres en fibres/protéines (digestion rapide avant l\'effort) : un score plus bas y est normal, pas un signal à éviter juste avant une séance.';
+
+  @override
+  String get consFitScoreTitle => 'Fit avec ta journée';
+
+  @override
+  String get consFitScoreIntro =>
+      'Un pourcentage qui indique à quel point la taille et l\'équilibre de cette recette sont cohérents pour ce type de repas, compte tenu de ce qu\'il te reste à manger aujourd\'hui et de tes objectifs personnels (calories, protéines, glucides, lipides).';
+
+  @override
+  String get consCriteriaCalories => 'Calories';
+
+  @override
+  String get consFitCriteriaCaloriesDetail =>
+      '40 % — cohérence avec une portion type de ce repas';
+
+  @override
+  String get consFitCriteriaProteinDetail =>
+      '30 % — cohérence avec tes protéines restantes';
+
+  @override
+  String get consFitCriteriaCarbsDetail =>
+      '15 % — cohérence avec tes glucides restants';
+
+  @override
+  String get consFitCriteriaFatDetail =>
+      '15 % — cohérence avec tes lipides restants';
+
+  @override
+  String get consFitScoreLegend =>
+      'Proche de 100 % : une taille de portion cohérente pour ce repas, compte tenu de ce qu\'il te reste aujourd\'hui  •  Score plus bas : le plat est nettement trop copieux ou trop léger pour ce moment de la journée.';
+
+  @override
+  String get consFitScoreDetail =>
+      'Le calcul tient compte du type de repas (un petit-déjeuner ou une collation ne doivent pas peser aussi lourd qu\'un déjeuner) et évolue au fil de la journée selon ce que tu as déjà mangé. C\'est un indicateur de timing/portion, pas de qualité nutritionnelle : regarde-le en complément du Healthy Score, pas à sa place.';
 }

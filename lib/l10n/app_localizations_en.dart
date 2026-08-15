@@ -1830,4 +1830,93 @@ class AppLocalizationsEn extends AppLocalizations {
   String consWhereToFindReadFiche(String label) {
     return 'Where to find it? Read the $label fact sheet';
   }
+
+  @override
+  String get consRecipeAddedSnackbar => 'Recipe added to your recipes!';
+
+  @override
+  String get consAddRecipeError => 'Error while adding.';
+
+  @override
+  String get consHealthyScoreTitle => 'Healthy Score';
+
+  @override
+  String get consHealthyScoreIntro =>
+      'A score out of 100 that rates the dish\'s overall nutritional quality, calculated from its real CIQUAL values (macros + micronutrients):';
+
+  @override
+  String get consCriteriaMicronutrients => 'Micronutrients';
+
+  @override
+  String get consCriteriaMicronutrientsDetail =>
+      '20 pts — vitamin/mineral diversity';
+
+  @override
+  String get consCriteriaProteinDetail =>
+      '20 pts — protein density of the dish';
+
+  @override
+  String get consCriteriaFiberDetail => '15 pts — fiber content';
+
+  @override
+  String get consCriteriaFatQuality => 'Fat quality';
+
+  @override
+  String get consCriteriaFatQualityDetail =>
+      '15 pts — share of unsaturated fatty acids';
+
+  @override
+  String get consCriteriaCalorieDensity => 'Calorie density';
+
+  @override
+  String get consCriteriaCalorieDensityDetail =>
+      '15 pts — penalizes dishes that are very calorie-dense by weight';
+
+  @override
+  String get consCriteriaSugarsDetail => '7.5 pts — sugar control';
+
+  @override
+  String get consCriteriaSodiumDetail => '7.5 pts — salt control';
+
+  @override
+  String get consHealthyScoreLegend =>
+      '70-100: excellent  •  45-69: decent  •  <45: to limit';
+
+  @override
+  String get consHealthyScorePreworkoutNote =>
+      'Pre-workout snacks are intentionally low in fiber/protein (fast digestion before exercise): a lower score there is normal, not a signal to avoid right before a session.';
+
+  @override
+  String get consFitScoreTitle => 'Fit with your day';
+
+  @override
+  String get consFitScoreIntro =>
+      'A percentage showing how well this recipe\'s size and balance fit this type of meal, given what you have left to eat today and your personal goals (calories, protein, carbs, fat).';
+
+  @override
+  String get consCriteriaCalories => 'Calories';
+
+  @override
+  String get consFitCriteriaCaloriesDetail =>
+      '40% — consistency with a typical portion for this meal';
+
+  @override
+  String get consFitCriteriaProteinDetail =>
+      '30% — consistency with your remaining protein';
+
+  @override
+  String get consFitCriteriaCarbsDetail =>
+      '15% — consistency with your remaining carbs';
+
+  @override
+  String get consFitCriteriaFatDetail =>
+      '15% — consistency with your remaining fat';
+
+  @override
+  String get consFitScoreLegend =>
+      'Close to 100%: a portion size that fits this meal, given what you have left today  •  Lower score: the dish is clearly too large or too light for this time of day.';
+
+  @override
+  String get consFitScoreDetail =>
+      'The calculation factors in meal type (breakfast or a snack shouldn\'t weigh as much as lunch) and evolves through the day based on what you\'ve already eaten. It\'s a timing/portion indicator, not a nutritional quality one: use it alongside the Healthy Score, not instead of it.';
 }

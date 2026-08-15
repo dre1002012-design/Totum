@@ -3014,7 +3014,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Recette ajoutée à tes recettes !'),
+            content: Text(context.l10n.consRecipeAddedSnackbar),
             backgroundColor: TotumColors.positive,
           ),
         );
@@ -3023,13 +3023,14 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       if (mounted) {
         setState(() => _saving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Erreur lors de l\'ajout.')),
+          SnackBar(content: Text(context.l10n.consAddRecipeError)),
         );
       }
     }
   }
 
   void _showHealthyScoreInfo(BuildContext context) {
+    final l10n = context.l10n;
     showModalBottomSheet(
       context: context,
       backgroundColor: TotumColors.surface,
@@ -3057,40 +3058,35 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const Row(
+            Row(
               children: [
-                Icon(Icons.favorite, size: 20, color: TotumColors.accent),
-                SizedBox(width: 8),
-                Text('Healthy Score',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900)),
+                const Icon(Icons.favorite, size: 20, color: TotumColors.accent),
+                const SizedBox(width: 8),
+                Text(l10n.consHealthyScoreTitle,
+                    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900)),
               ],
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Une note sur 100 qui évalue la qualité nutritionnelle globale '
-              'du plat, calculée sur ses vraies valeurs CIQUAL (macros + '
-              'micronutriments) :',
-              style: TextStyle(fontSize: 13.5, height: 1.4),
+            Text(
+              l10n.consHealthyScoreIntro,
+              style: const TextStyle(fontSize: 13.5, height: 1.4),
             ),
             const SizedBox(height: 12),
-            const _ScoreCriteriaRow('Protéines', '20 pts — densité protéique du plat'),
-            const _ScoreCriteriaRow('Fibres', '15 pts — apport en fibres'),
-            const _ScoreCriteriaRow('Micronutriments', '20 pts — diversité vitamines/minéraux'),
-            const _ScoreCriteriaRow('Qualité des lipides', '15 pts — part d\'acides gras insaturés'),
-            const _ScoreCriteriaRow('Densité calorique', '15 pts — pénalise les plats très caloriques au poids'),
-            const _ScoreCriteriaRow('Sucres', '7,5 pts — maîtrise des sucres'),
-            const _ScoreCriteriaRow('Sodium', '7,5 pts — maîtrise du sel'),
+            _ScoreCriteriaRow(l10n.nutrientProtein, l10n.consCriteriaProteinDetail),
+            _ScoreCriteriaRow(l10n.nutrientFiber, l10n.consCriteriaFiberDetail),
+            _ScoreCriteriaRow(l10n.consCriteriaMicronutrients, l10n.consCriteriaMicronutrientsDetail),
+            _ScoreCriteriaRow(l10n.consCriteriaFatQuality, l10n.consCriteriaFatQualityDetail),
+            _ScoreCriteriaRow(l10n.consCriteriaCalorieDensity, l10n.consCriteriaCalorieDensityDetail),
+            _ScoreCriteriaRow(l10n.nutrientSugars, l10n.consCriteriaSugarsDetail),
+            _ScoreCriteriaRow('Sodium', l10n.consCriteriaSodiumDetail),
             const SizedBox(height: 12),
             Text(
-              '70-100 : excellent  •  45-69 : correct  •  <45 : à limiter',
+              l10n.consHealthyScoreLegend,
               style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary),
             ),
             const SizedBox(height: 10),
             Text(
-              'Les collations Pré-workout sont volontairement pauvres en '
-              'fibres/protéines (digestion rapide avant l\'effort) : un score '
-              'plus bas y est normal, pas un signal à éviter juste avant '
-              'une séance.',
+              l10n.consHealthyScorePreworkoutNote,
               style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary, height: 1.4),
             ),
           ],
@@ -3100,6 +3096,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 
   void _showFitScoreInfo(BuildContext context) {
+    final l10n = context.l10n;
     showModalBottomSheet(
       context: context,
       backgroundColor: TotumColors.surface,
@@ -3127,43 +3124,32 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const Row(
+            Row(
               children: [
-                Icon(Icons.track_changes, size: 20, color: TotumColors.accent),
-                SizedBox(width: 8),
-                Text('Fit avec ta journée',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900)),
+                const Icon(Icons.track_changes, size: 20, color: TotumColors.accent),
+                const SizedBox(width: 8),
+                Text(l10n.consFitScoreTitle,
+                    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900)),
               ],
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Un pourcentage qui indique à quel point la taille et l\'équilibre '
-              'de cette recette sont cohérents pour ce type de repas, compte '
-              'tenu de ce qu\'il te reste à manger aujourd\'hui et de tes '
-              'objectifs personnels (calories, protéines, glucides, lipides).',
-              style: TextStyle(fontSize: 13.5, height: 1.4),
+            Text(
+              l10n.consFitScoreIntro,
+              style: const TextStyle(fontSize: 13.5, height: 1.4),
             ),
             const SizedBox(height: 12),
-            const _ScoreCriteriaRow('Calories', '40 % — cohérence avec une portion type de ce repas'),
-            const _ScoreCriteriaRow('Protéines', '30 % — cohérence avec tes protéines restantes'),
-            const _ScoreCriteriaRow('Glucides', '15 % — cohérence avec tes glucides restants'),
-            const _ScoreCriteriaRow('Lipides', '15 % — cohérence avec tes lipides restants'),
+            _ScoreCriteriaRow(l10n.consCriteriaCalories, l10n.consFitCriteriaCaloriesDetail),
+            _ScoreCriteriaRow(l10n.nutrientProtein, l10n.consFitCriteriaProteinDetail),
+            _ScoreCriteriaRow(l10n.nutrientCarbs, l10n.consFitCriteriaCarbsDetail),
+            _ScoreCriteriaRow(l10n.nutrientFat, l10n.consFitCriteriaFatDetail),
             const SizedBox(height: 12),
             Text(
-              'Proche de 100 % : une taille de portion cohérente pour ce '
-              'repas, compte tenu de ce qu\'il te reste aujourd\'hui  •  '
-              'Score plus bas : le plat est nettement trop copieux ou trop '
-              'léger pour ce moment de la journée.',
+              l10n.consFitScoreLegend,
               style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary),
             ),
             const SizedBox(height: 10),
             Text(
-              'Le calcul tient compte du type de repas (un petit-déjeuner ou '
-              'une collation ne doivent pas peser aussi lourd qu\'un déjeuner) '
-              'et évolue au fil de la journée selon ce que tu as déjà mangé. '
-              'C\'est un indicateur de timing/portion, pas de qualité '
-              'nutritionnelle : regarde-le en complément du Healthy Score, pas '
-              'à sa place.',
+              l10n.consFitScoreDetail,
               style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary, height: 1.4),
             ),
           ],

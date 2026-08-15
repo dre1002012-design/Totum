@@ -3269,6 +3269,156 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Où en trouver ? Lire la fiche {label}'**
   String consWhereToFindReadFiche(String label);
+
+  /// No description provided for @consRecipeAddedSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recette ajoutée à tes recettes !'**
+  String get consRecipeAddedSnackbar;
+
+  /// No description provided for @consAddRecipeError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur lors de l\'ajout.'**
+  String get consAddRecipeError;
+
+  /// No description provided for @consHealthyScoreTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Healthy Score'**
+  String get consHealthyScoreTitle;
+
+  /// No description provided for @consHealthyScoreIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une note sur 100 qui évalue la qualité nutritionnelle globale du plat, calculée sur ses vraies valeurs CIQUAL (macros + micronutriments) :'**
+  String get consHealthyScoreIntro;
+
+  /// No description provided for @consCriteriaMicronutrients.
+  ///
+  /// In fr, this message translates to:
+  /// **'Micronutriments'**
+  String get consCriteriaMicronutrients;
+
+  /// No description provided for @consCriteriaMicronutrientsDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'20 pts — diversité vitamines/minéraux'**
+  String get consCriteriaMicronutrientsDetail;
+
+  /// No description provided for @consCriteriaProteinDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'20 pts — densité protéique du plat'**
+  String get consCriteriaProteinDetail;
+
+  /// No description provided for @consCriteriaFiberDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'15 pts — apport en fibres'**
+  String get consCriteriaFiberDetail;
+
+  /// No description provided for @consCriteriaFatQuality.
+  ///
+  /// In fr, this message translates to:
+  /// **'Qualité des lipides'**
+  String get consCriteriaFatQuality;
+
+  /// No description provided for @consCriteriaFatQualityDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'15 pts — part d\'acides gras insaturés'**
+  String get consCriteriaFatQualityDetail;
+
+  /// No description provided for @consCriteriaCalorieDensity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Densité calorique'**
+  String get consCriteriaCalorieDensity;
+
+  /// No description provided for @consCriteriaCalorieDensityDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'15 pts — pénalise les plats très caloriques au poids'**
+  String get consCriteriaCalorieDensityDetail;
+
+  /// No description provided for @consCriteriaSugarsDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'7,5 pts — maîtrise des sucres'**
+  String get consCriteriaSugarsDetail;
+
+  /// No description provided for @consCriteriaSodiumDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'7,5 pts — maîtrise du sel'**
+  String get consCriteriaSodiumDetail;
+
+  /// No description provided for @consHealthyScoreLegend.
+  ///
+  /// In fr, this message translates to:
+  /// **'70-100 : excellent  •  45-69 : correct  •  <45 : à limiter'**
+  String get consHealthyScoreLegend;
+
+  /// No description provided for @consHealthyScorePreworkoutNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les collations Pré-workout sont volontairement pauvres en fibres/protéines (digestion rapide avant l\'effort) : un score plus bas y est normal, pas un signal à éviter juste avant une séance.'**
+  String get consHealthyScorePreworkoutNote;
+
+  /// No description provided for @consFitScoreTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fit avec ta journée'**
+  String get consFitScoreTitle;
+
+  /// No description provided for @consFitScoreIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un pourcentage qui indique à quel point la taille et l\'équilibre de cette recette sont cohérents pour ce type de repas, compte tenu de ce qu\'il te reste à manger aujourd\'hui et de tes objectifs personnels (calories, protéines, glucides, lipides).'**
+  String get consFitScoreIntro;
+
+  /// No description provided for @consCriteriaCalories.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calories'**
+  String get consCriteriaCalories;
+
+  /// No description provided for @consFitCriteriaCaloriesDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'40 % — cohérence avec une portion type de ce repas'**
+  String get consFitCriteriaCaloriesDetail;
+
+  /// No description provided for @consFitCriteriaProteinDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'30 % — cohérence avec tes protéines restantes'**
+  String get consFitCriteriaProteinDetail;
+
+  /// No description provided for @consFitCriteriaCarbsDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'15 % — cohérence avec tes glucides restants'**
+  String get consFitCriteriaCarbsDetail;
+
+  /// No description provided for @consFitCriteriaFatDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'15 % — cohérence avec tes lipides restants'**
+  String get consFitCriteriaFatDetail;
+
+  /// No description provided for @consFitScoreLegend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Proche de 100 % : une taille de portion cohérente pour ce repas, compte tenu de ce qu\'il te reste aujourd\'hui  •  Score plus bas : le plat est nettement trop copieux ou trop léger pour ce moment de la journée.'**
+  String get consFitScoreLegend;
+
+  /// No description provided for @consFitScoreDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le calcul tient compte du type de repas (un petit-déjeuner ou une collation ne doivent pas peser aussi lourd qu\'un déjeuner) et évolue au fil de la journée selon ce que tu as déjà mangé. C\'est un indicateur de timing/portion, pas de qualité nutritionnelle : regarde-le en complément du Healthy Score, pas à sa place.'**
+  String get consFitScoreDetail;
 }
 
 class _AppLocalizationsDelegate

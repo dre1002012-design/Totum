@@ -653,5 +653,32 @@
   "consWhatYouAteToday": "Ce que tu as consommé aujourd'hui",
   "consNoFoodContainedTodayAction": "Aucun aliment consommé aujourd'hui n'en contenait. C'est là qu'il faut agir : consulte la fiche ci-dessous pour savoir où le trouver.",
   "consWhereToFindReadFiche": "Où en trouver ? Lire la fiche {label}",
-  "@consWhereToFindReadFiche": { "placeholders": { "label": {"type": "String"} } }
+  "@consWhereToFindReadFiche": { "placeholders": { "label": {"type": "String"} } },
+
+  "consRecipeAddedSnackbar": "Recette ajoutée à tes recettes !",
+  "consAddRecipeError": "Erreur lors de l'ajout.",
+  "consHealthyScoreTitle": "Healthy Score",
+  "consHealthyScoreIntro": "Une note sur 100 qui évalue la qualité nutritionnelle globale du plat, calculée sur ses vraies valeurs CIQUAL (macros + micronutriments) :",
+  "consCriteriaMicronutrients": "Micronutriments",
+  "consCriteriaMicronutrientsDetail": "20 pts — diversité vitamines/minéraux",
+  "consCriteriaProteinDetail": "20 pts — densité protéique du plat",
+  "consCriteriaFiberDetail": "15 pts — apport en fibres",
+  "consCriteriaFatQuality": "Qualité des lipides",
+  "consCriteriaFatQualityDetail": "15 pts — part d'acides gras insaturés",
+  "consCriteriaCalorieDensity": "Densité calorique",
+  "consCriteriaCalorieDensityDetail": "15 pts — pénalise les plats très caloriques au poids",
+  "consCriteriaSugarsDetail": "7,5 pts — maîtrise des sucres",
+  "consCriteriaSodiumDetail": "7,5 pts — maîtrise du sel",
+  "consHealthyScoreLegend": "70-100 : excellent  •  45-69 : correct  •  <45 : à limiter",
+  "consHealthyScorePreworkoutNote": "Les collations Pré-workout sont volontairement pauvres en fibres/protéines (digestion rapide avant l'effort) : un score plus bas y est normal, pas un signal à éviter juste avant une séance.",
+
+  "consFitScoreTitle": "Fit avec ta journée",
+  "consFitScoreIntro": "Un pourcentage qui indique à quel point la taille et l'équilibre de cette recette sont cohérents pour ce type de repas, compte tenu de ce qu'il te reste à manger aujourd'hui et de tes objectifs personnels (calories, protéines, glucides, lipides).",
+  "consCriteriaCalories": "Calories",
+  "consFitCriteriaCaloriesDetail": "40 % — cohérence avec une portion type de ce repas",
+  "consFitCriteriaProteinDetail": "30 % — cohérence avec tes protéines restantes",
+  "consFitCriteriaCarbsDetail": "15 % — cohérence avec tes glucides restants",
+  "consFitCriteriaFatDetail": "15 % — cohérence avec tes lipides restants",
+  "consFitScoreLegend": "Proche de 100 % : une taille de portion cohérente pour ce repas, compte tenu de ce qu'il te reste aujourd'hui  •  Score plus bas : le plat est nettement trop copieux ou trop léger pour ce moment de la journée.",
+  "consFitScoreDetail": "Le calcul tient compte du type de repas (un petit-déjeuner ou une collation ne doivent pas peser aussi lourd qu'un déjeuner) et évolue au fil de la journée selon ce que tu as déjà mangé. C'est un indicateur de timing/portion, pas de qualité nutritionnelle : regarde-le en complément du Healthy Score, pas à sa place."
 }
