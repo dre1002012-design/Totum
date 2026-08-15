@@ -272,6 +272,12 @@ abstract class AppLocalizations {
   /// **'Enregistrer'**
   String get commonSave;
 
+  /// No description provided for @commonDelete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get commonDelete;
+
   /// No description provided for @commonConfirm.
   ///
   /// In fr, this message translates to:
@@ -7187,6 +7193,72 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Dépassé de {kcal} kcal'**
   String jrnlExceededByKcal(String kcal);
+
+  /// No description provided for @jrnlScanProductTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Scanner un produit'**
+  String get jrnlScanProductTooltip;
+
+  /// No description provided for @jrnlMoreOptionsTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus d\'options'**
+  String get jrnlMoreOptionsTooltip;
+
+  /// No description provided for @jrnlClearAllTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout supprimer ?'**
+  String get jrnlClearAllTitle;
+
+  /// No description provided for @jrnlClearAllBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer les {count, plural, =1{1 aliment} other{{count} aliments}} de ce repas ?'**
+  String jrnlClearAllBody(int count);
+
+  /// No description provided for @jrnlExitSelection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quitter la sélection'**
+  String get jrnlExitSelection;
+
+  /// No description provided for @jrnlSelectFoods.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sélectionner des aliments'**
+  String get jrnlSelectFoods;
+
+  /// No description provided for @jrnlClearAllMenuItem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout supprimer'**
+  String get jrnlClearAllMenuItem;
+
+  /// No description provided for @jrnlCheckFoodsToCopy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cochez les aliments à copier'**
+  String get jrnlCheckFoodsToCopy;
+
+  /// No description provided for @jrnlFoodsSelectedCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 aliment sélectionné} other{{count} aliments sélectionnés}}'**
+  String jrnlFoodsSelectedCount(int count);
+
+  /// No description provided for @jrnlCopySelection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier la sélection'**
+  String get jrnlCopySelection;
+
+  /// No description provided for @jrnlMealNutritionDetailsTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Détails nutritionnels du repas'**
+  String get jrnlMealNutritionDetailsTooltip;
 }
 
 class _AppLocalizationsDelegate

@@ -32,6 +32,7 @@
   "commonAdd": "Add",
   "commonNameField": "Name",
   "commonSave": "Save",
+  "commonDelete": "Delete",
   "commonConfirm": "Confirm",
 
   "barcodeEnterTitle": "Enter the barcode",
@@ -1322,5 +1323,16 @@
   "jrnlTargetKcal": "Target {kcal} kcal",
   "jrnlConsumedKcal": "Consumed {kcal} kcal",
   "jrnlRemainingKcal": "Remaining {kcal} kcal",
-  "jrnlExceededByKcal": "Exceeded by {kcal} kcal"
+  "jrnlExceededByKcal": "Exceeded by {kcal} kcal",
+  "jrnlScanProductTooltip": "Scan a product",
+  "jrnlMoreOptionsTooltip": "More options",
+  "jrnlClearAllTitle": "Clear everything?",
+  "jrnlClearAllBody": "Delete the {count, plural, =1{1 item} other{{count} items}} from this meal?",
+  "jrnlExitSelection": "Exit selection",
+  "jrnlSelectFoods": "Select foods",
+  "jrnlClearAllMenuItem": "Clear all",
+  "jrnlCheckFoodsToCopy": "Check the foods to copy",
+  "jrnlFoodsSelectedCount": "{count, plural, =1{1 item selected} other{{count} items selected}}",
+  "jrnlCopySelection": "Copy selection",
+  "jrnlMealNutritionDetailsTooltip": "Meal nutrition details"
 }

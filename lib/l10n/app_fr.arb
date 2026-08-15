@@ -45,6 +45,7 @@
   "commonAdd": "Ajouter",
   "commonNameField": "Nom",
   "commonSave": "Enregistrer",
+  "commonDelete": "Supprimer",
   "commonConfirm": "Valider",
 
   "barcodeEnterTitle": "Saisir le code-barres",
@@ -1494,5 +1495,18 @@
   "jrnlRemainingKcal": "Restant {kcal} kcal",
   "@jrnlRemainingKcal": { "placeholders": { "kcal": {"type": "String"} } },
   "jrnlExceededByKcal": "Dépassé de {kcal} kcal",
-  "@jrnlExceededByKcal": { "placeholders": { "kcal": {"type": "String"} } }
+  "@jrnlExceededByKcal": { "placeholders": { "kcal": {"type": "String"} } },
+  "jrnlScanProductTooltip": "Scanner un produit",
+  "jrnlMoreOptionsTooltip": "Plus d'options",
+  "jrnlClearAllTitle": "Tout supprimer ?",
+  "jrnlClearAllBody": "Supprimer les {count, plural, =1{1 aliment} other{{count} aliments}} de ce repas ?",
+  "@jrnlClearAllBody": { "placeholders": { "count": {"type": "int"} } },
+  "jrnlExitSelection": "Quitter la sélection",
+  "jrnlSelectFoods": "Sélectionner des aliments",
+  "jrnlClearAllMenuItem": "Tout supprimer",
+  "jrnlCheckFoodsToCopy": "Cochez les aliments à copier",
+  "jrnlFoodsSelectedCount": "{count, plural, =1{1 aliment sélectionné} other{{count} aliments sélectionnés}}",
+  "@jrnlFoodsSelectedCount": { "placeholders": { "count": {"type": "int"} } },
+  "jrnlCopySelection": "Copier la sélection",
+  "jrnlMealNutritionDetailsTooltip": "Détails nutritionnels du repas"
 }

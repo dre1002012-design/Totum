@@ -6446,6 +6446,7 @@ class _MealSectionState extends State<_MealSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: TotumCard(
@@ -6511,7 +6512,7 @@ class _MealSectionState extends State<_MealSection> {
                   IconButton(
                     onPressed: widget.onScan,
                     icon: const ScannerIcon(size: 21, color: TotumColors.accent),
-                    tooltip: 'Scanner un produit',
+                    tooltip: l10n.jrnlScanProductTooltip,
                     color: TotumColors.accent,
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 34),
@@ -6522,7 +6523,7 @@ class _MealSectionState extends State<_MealSection> {
                   icon: Icon(Icons.more_vert, size: 20, color: TotumColors.textSecondary),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 34),
-                  tooltip: 'Plus d\'options',
+                  tooltip: l10n.jrnlMoreOptionsTooltip,
                   onSelected: (value) async {
                     if (value == 'select') {
                       _toggleSelectMode();
@@ -6532,19 +6533,19 @@ class _MealSectionState extends State<_MealSection> {
                       final confirm = await showDialog<bool>(
                         context: context,
                         builder: (ctx) => AlertDialog(
-                          title: const Text('Tout supprimer ?'),
+                          title: Text(ctx.l10n.jrnlClearAllTitle),
                           content: Text(
-                              'Supprimer les ${widget.items.length} aliment(s) de ce repas ?'),
+                              ctx.l10n.jrnlClearAllBody(widget.items.length)),
                           actions: [
                             TextButton(
                                 onPressed: () => Navigator.pop(ctx, false),
-                                child: const Text('Annuler')),
+                                child: Text(ctx.l10n.commonCancel)),
                             FilledButton(
                               style: FilledButton.styleFrom(
                                   backgroundColor: TotumColors.negative,
                                   foregroundColor: Colors.white),
                               onPressed: () => Navigator.pop(ctx, true),
-                              child: const Text('Supprimer'),
+                              child: Text(ctx.l10n.commonDelete),
                             ),
                           ],
                         ),
@@ -6568,8 +6569,8 @@ class _MealSectionState extends State<_MealSection> {
                           ),
                           const SizedBox(width: 10),
                           Text(_selectMode
-                              ? 'Quitter la sélection'
-                              : 'Sélectionner des aliments'),
+                              ? l10n.jrnlExitSelection
+                              : l10n.jrnlSelectFoods),
                         ],
                       ),
                     ),
@@ -6581,7 +6582,7 @@ class _MealSectionState extends State<_MealSection> {
                             Icon(Icons.copy_outlined,
                                 size: 20, color: TotumColors.textSecondary),
                             const SizedBox(width: 10),
-                            const Text('Copier ce repas'),
+                            Text(l10n.jrnlCopyMealTitle),
                           ],
                         ),
                       ),
@@ -6593,7 +6594,7 @@ class _MealSectionState extends State<_MealSection> {
                             Icon(Icons.delete_sweep_outlined,
                                 size: 20, color: TotumColors.negative),
                             const SizedBox(width: 10),
-                            const Text('Tout supprimer'),
+                            Text(l10n.jrnlClearAllMenuItem),
                           ],
                         ),
                       ),
@@ -6608,8 +6609,8 @@ class _MealSectionState extends State<_MealSection> {
                   Expanded(
                     child: Text(
                       _selected.isEmpty
-                          ? 'Cochez les aliments à copier'
-                          : '${_selected.length} aliment(s) sélectionné(s)',
+                          ? l10n.jrnlCheckFoodsToCopy
+                          : l10n.jrnlFoodsSelectedCount(_selected.length),
                       style: TextStyle(
                           fontSize: 12,
                           color: _selected.isEmpty ? TotumColors.textSecondary : TotumColors.accent,
@@ -6624,7 +6625,7 @@ class _MealSectionState extends State<_MealSection> {
                         setState(() { _selectMode = false; _selected.clear(); });
                       },
                       icon: const Icon(Icons.copy_outlined, size: 16),
-                      label: const Text('Copier la sélection', style: TextStyle(fontSize: 13)),
+                      label: Text(l10n.jrnlCopySelection, style: const TextStyle(fontSize: 13)),
                       style: TextButton.styleFrom(foregroundColor: TotumColors.accent),
                     ),
                 ],
@@ -6670,7 +6671,7 @@ class _MealSectionState extends State<_MealSection> {
                     IconButton(
                       onPressed: () => _showMealDetailSheet(context),
                       icon: const Icon(Icons.info_outline, size: 20),
-                      tooltip: 'Détails nutritionnels du repas',
+                      tooltip: l10n.jrnlMealNutritionDetailsTooltip,
                       color: TotumColors.textMuted,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),

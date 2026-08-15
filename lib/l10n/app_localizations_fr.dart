@@ -106,6 +106,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get commonSave => 'Enregistrer';
 
   @override
+  String get commonDelete => 'Supprimer';
+
+  @override
   String get commonConfirm => 'Valider';
 
   @override
@@ -4285,4 +4288,54 @@ class AppLocalizationsFr extends AppLocalizations {
   String jrnlExceededByKcal(String kcal) {
     return 'Dépassé de $kcal kcal';
   }
+
+  @override
+  String get jrnlScanProductTooltip => 'Scanner un produit';
+
+  @override
+  String get jrnlMoreOptionsTooltip => 'Plus d\'options';
+
+  @override
+  String get jrnlClearAllTitle => 'Tout supprimer ?';
+
+  @override
+  String jrnlClearAllBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aliments',
+      one: '1 aliment',
+    );
+    return 'Supprimer les $_temp0 de ce repas ?';
+  }
+
+  @override
+  String get jrnlExitSelection => 'Quitter la sélection';
+
+  @override
+  String get jrnlSelectFoods => 'Sélectionner des aliments';
+
+  @override
+  String get jrnlClearAllMenuItem => 'Tout supprimer';
+
+  @override
+  String get jrnlCheckFoodsToCopy => 'Cochez les aliments à copier';
+
+  @override
+  String jrnlFoodsSelectedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aliments sélectionnés',
+      one: '1 aliment sélectionné',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get jrnlCopySelection => 'Copier la sélection';
+
+  @override
+  String get jrnlMealNutritionDetailsTooltip =>
+      'Détails nutritionnels du repas';
 }
