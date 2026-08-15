@@ -4220,4 +4220,49 @@ class AppLocalizationsFr extends AppLocalizations {
   String jrnlSavedToPersonalMeals(String name) {
     return '\"$name\" enregistré dans tes repas perso';
   }
+
+  @override
+  String jrnlQuantityGrams(String grams) {
+    return 'Quantité : $grams g';
+  }
+
+  @override
+  String get jrnlDetailNotAvailable =>
+      'Détail complet non disponible pour cet aliment.';
+
+  @override
+  String get jrnlToday => 'Aujourd\'hui';
+
+  @override
+  String get jrnlWeekdayMon => 'Lun';
+
+  @override
+  String get jrnlWeekdayTue => 'Mar';
+
+  @override
+  String get jrnlWeekdayWed => 'Mer';
+
+  @override
+  String get jrnlWeekdayThu => 'Jeu';
+
+  @override
+  String get jrnlWeekdayFri => 'Ven';
+
+  @override
+  String get jrnlWeekdaySat => 'Sam';
+
+  @override
+  String get jrnlWeekdaySun => 'Dim';
+
+  @override
+  String get jrnlJournalTitle => 'Journal';
+
+  @override
+  String get jrnlAccountSettingsTooltip => 'Compte & Paramètres';
+
+  @override
+  String get jrnlPreviousDayTooltip => 'Jour précédent';
+
+  @override
+  String get jrnlNextDayTooltip => 'Jour suivant';
 }

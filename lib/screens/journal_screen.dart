@@ -5786,26 +5786,26 @@ class _DayJournalViewState extends State<_DayJournalView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  (entry['name'] ?? 'Aliment').toString(),
+                  (entry['name'] ?? ctx.l10n.jrnlGenericFoodFallback).toString(),
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 12),
-                Text('Quantité : $grams g',
+                Text(ctx.l10n.jrnlQuantityGrams(grams.toString()),
                     style: TextStyle(color: TotumColors.textSecondary)),
                 const SizedBox(height: 8),
-                _simpleRow('Énergie',
+                _simpleRow(nutrientDisplayLabel('Énergie', ctx.l10n),
                     '${((entry['kcal'] as num?)?.toDouble() ?? 0).toStringAsFixed(0)} kcal'),
-                _simpleRow('Protéines',
+                _simpleRow(nutrientDisplayLabel('Protéines', ctx.l10n),
                     '${((entry['prot'] as num?)?.toDouble() ?? 0).toStringAsFixed(1)} g'),
-                _simpleRow('Glucides',
+                _simpleRow(nutrientDisplayLabel('Glucides', ctx.l10n),
                     '${((entry['carb'] as num?)?.toDouble() ?? 0).toStringAsFixed(1)} g'),
-                _simpleRow('Lipides',
+                _simpleRow(nutrientDisplayLabel('Lipides', ctx.l10n),
                     '${((entry['fat'] as num?)?.toDouble() ?? 0).toStringAsFixed(1)} g'),
-                _simpleRow('Fibres',
+                _simpleRow(nutrientDisplayLabel('Fibres', ctx.l10n),
                     '${((entry['fiber'] as num?)?.toDouble() ?? 0).toStringAsFixed(1)} g'),
                 const SizedBox(height: 8),
                 Text(
-                  'Détail complet non disponible pour cet aliment.',
+                  ctx.l10n.jrnlDetailNotAvailable,
                   style: TextStyle(fontSize: 12, color: TotumColors.textMuted,
                       fontStyle: FontStyle.italic),
                 ),
@@ -5957,12 +5957,20 @@ class _DayJournalViewState extends State<_DayJournalView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final goals = widget.goals;
     final double gKcal = goals.kcal <= 0 ? 2000.0 : goals.kcal;
-    final weekdays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-    final months = ['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+    final weekdays = [
+      l10n.jrnlWeekdayMon, l10n.jrnlWeekdayTue, l10n.jrnlWeekdayWed, l10n.jrnlWeekdayThu,
+      l10n.jrnlWeekdayFri, l10n.jrnlWeekdaySat, l10n.jrnlWeekdaySun,
+    ];
+    final months = [
+      l10n.bilanMonthJan, l10n.bilanMonthFeb, l10n.bilanMonthMar, l10n.bilanMonthApr,
+      l10n.bilanMonthMay, l10n.bilanMonthJun, l10n.bilanMonthJul, l10n.bilanMonthAug,
+      l10n.bilanMonthSep, l10n.bilanMonthOct, l10n.bilanMonthNov, l10n.bilanMonthDec,
+    ];
     final dateLabel = _isToday
-        ? 'Aujourd\'hui'
+        ? l10n.jrnlToday
         : '${weekdays[_currentDate.weekday - 1]} '
           '${_currentDate.day} '
           '${months[_currentDate.month - 1]} '
@@ -5975,7 +5983,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         foregroundColor: TotumColors.textPrimary,
-        title: Text('Journal',
+        title: Text(l10n.jrnlJournalTitle,
             style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
         // Priorité 50 (14/08/2026, retour d'Alex) : icône Compte &
         // Paramètres présente sur tous les autres onglets (Profil, écran
@@ -5983,7 +5991,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.account_circle_outlined),
-            tooltip: 'Compte & Paramètres',
+            tooltip: l10n.jrnlAccountSettingsTooltip,
             onPressed: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => const AccountScreen())),
           ),
@@ -5997,7 +6005,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
               children: [
                 IconButton(
                   icon: Icon(Icons.chevron_left, color: TotumColors.textSecondary),
-                  tooltip: 'Jour précédent',
+                  tooltip: l10n.jrnlPreviousDayTooltip,
                   onPressed: _goToPreviousDay,
                 ),
                 InkWell(
@@ -6023,7 +6031,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.chevron_right),
-                  tooltip: 'Jour suivant',
+                  tooltip: l10n.jrnlNextDayTooltip,
                   onPressed: _isToday ? null : _goToNextDay,
                   color: _isToday ? TotumColors.textMuted : TotumColors.textSecondary,
                 ),

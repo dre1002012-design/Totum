@@ -1471,5 +1471,20 @@
   "jrnlPersonalMealNameField": "Nom du repas perso",
   "jrnlCopyButton": "Copier",
   "jrnlSavedToPersonalMeals": "\"{name}\" enregistré dans tes repas perso",
-  "@jrnlSavedToPersonalMeals": { "placeholders": { "name": {"type": "String"} } }
+  "@jrnlSavedToPersonalMeals": { "placeholders": { "name": {"type": "String"} } },
+  "jrnlQuantityGrams": "Quantité : {grams} g",
+  "@jrnlQuantityGrams": { "placeholders": { "grams": {"type": "String"} } },
+  "jrnlDetailNotAvailable": "Détail complet non disponible pour cet aliment.",
+  "jrnlToday": "Aujourd'hui",
+  "jrnlWeekdayMon": "Lun",
+  "jrnlWeekdayTue": "Mar",
+  "jrnlWeekdayWed": "Mer",
+  "jrnlWeekdayThu": "Jeu",
+  "jrnlWeekdayFri": "Ven",
+  "jrnlWeekdaySat": "Sam",
+  "jrnlWeekdaySun": "Dim",
+  "jrnlJournalTitle": "Journal",
+  "jrnlAccountSettingsTooltip": "Compte & Paramètres",
+  "jrnlPreviousDayTooltip": "Jour précédent",
+  "jrnlNextDayTooltip": "Jour suivant"
 }

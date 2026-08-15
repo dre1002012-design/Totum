@@ -1304,5 +1304,19 @@
   "jrnlPersonalMealSegment": "Personal meal",
   "jrnlPersonalMealNameField": "Personal meal name",
   "jrnlCopyButton": "Copy",
-  "jrnlSavedToPersonalMeals": "\"{name}\" saved to your personal meals"
+  "jrnlSavedToPersonalMeals": "\"{name}\" saved to your personal meals",
+  "jrnlQuantityGrams": "Quantity: {grams} g",
+  "jrnlDetailNotAvailable": "Full details not available for this food.",
+  "jrnlToday": "Today",
+  "jrnlWeekdayMon": "Mon",
+  "jrnlWeekdayTue": "Tue",
+  "jrnlWeekdayWed": "Wed",
+  "jrnlWeekdayThu": "Thu",
+  "jrnlWeekdayFri": "Fri",
+  "jrnlWeekdaySat": "Sat",
+  "jrnlWeekdaySun": "Sun",
+  "jrnlJournalTitle": "Journal",
+  "jrnlAccountSettingsTooltip": "Account & Settings",
+  "jrnlPreviousDayTooltip": "Previous day",
+  "jrnlNextDayTooltip": "Next day"
 }

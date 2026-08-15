@@ -7079,6 +7079,90 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'\"{name}\" enregistré dans tes repas perso'**
   String jrnlSavedToPersonalMeals(String name);
+
+  /// No description provided for @jrnlQuantityGrams.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quantité : {grams} g'**
+  String jrnlQuantityGrams(String grams);
+
+  /// No description provided for @jrnlDetailNotAvailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Détail complet non disponible pour cet aliment.'**
+  String get jrnlDetailNotAvailable;
+
+  /// No description provided for @jrnlToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get jrnlToday;
+
+  /// No description provided for @jrnlWeekdayMon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lun'**
+  String get jrnlWeekdayMon;
+
+  /// No description provided for @jrnlWeekdayTue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mar'**
+  String get jrnlWeekdayTue;
+
+  /// No description provided for @jrnlWeekdayWed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mer'**
+  String get jrnlWeekdayWed;
+
+  /// No description provided for @jrnlWeekdayThu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jeu'**
+  String get jrnlWeekdayThu;
+
+  /// No description provided for @jrnlWeekdayFri.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ven'**
+  String get jrnlWeekdayFri;
+
+  /// No description provided for @jrnlWeekdaySat.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sam'**
+  String get jrnlWeekdaySat;
+
+  /// No description provided for @jrnlWeekdaySun.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dim'**
+  String get jrnlWeekdaySun;
+
+  /// No description provided for @jrnlJournalTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Journal'**
+  String get jrnlJournalTitle;
+
+  /// No description provided for @jrnlAccountSettingsTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte & Paramètres'**
+  String get jrnlAccountSettingsTooltip;
+
+  /// No description provided for @jrnlPreviousDayTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jour précédent'**
+  String get jrnlPreviousDayTooltip;
+
+  /// No description provided for @jrnlNextDayTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jour suivant'**
+  String get jrnlNextDayTooltip;
 }
 
 class _AppLocalizationsDelegate
