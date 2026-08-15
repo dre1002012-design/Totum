@@ -1,4 +1,14 @@
 {
   "@@locale": "en",
-  "appTitle": "Totum"
+  "appTitle": "Totum",
+
+  "weightScreenTitle": "Weight",
+  "weightTrendEmptyState": "Save your profile a few days apart to see your curve appear here.",
+  "weightTrendRangeYear": "1Y",
+  "weightTrendRangeAll": "All",
+  "weightTrendRawLegend": "Raw weight",
+  "weightTrendSmoothedLegend": "Weight trend",
+  "weightTrendAdviceText": "Weigh yourself every day if possible, under the same conditions each time — ideally in the morning, fasted, right after waking up. The reliability of the trend — and your recalculated targets — depends directly on this consistency.",
+  "weightTrendRecentEvolution": "Recent evolution (weight trend)",
+  "lastNDays": "Last {days} days"
 }

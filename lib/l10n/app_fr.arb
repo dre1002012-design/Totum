@@ -3,5 +3,20 @@
   "appTitle": "Totum",
   "@appTitle": {
     "description": "Nom de l'application"
+  },
+
+  "weightScreenTitle": "Poids",
+  "weightTrendEmptyState": "Sauvegarde ton profil à quelques jours d'écart pour voir ta courbe apparaître ici.",
+  "weightTrendRangeYear": "1A",
+  "weightTrendRangeAll": "Tout",
+  "weightTrendRawLegend": "Poids brut",
+  "weightTrendSmoothedLegend": "Poids tendance",
+  "weightTrendAdviceText": "Pèse-toi si possible tous les jours, dans les mêmes conditions à chaque fois — idéalement le matin à jeun, au lever. La fiabilité de la tendance — et de tes objectifs recalculés — dépend directement de cette régularité.",
+  "weightTrendRecentEvolution": "Évolution récente (poids tendance)",
+  "lastNDays": "{days} derniers jours",
+  "@lastNDays": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
   }
 }

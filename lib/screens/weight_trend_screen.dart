@@ -7,6 +7,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n_ext.dart';
 import '../services/app_settings.dart';
 import '../services/calibration_service.dart';
 import '../services/units.dart';
@@ -27,7 +28,7 @@ class WeightTrendChart extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(color: TotumColors.page, borderRadius: BorderRadius.circular(12)),
         child: Text(
-          'Sauvegarde ton profil à quelques jours d\'écart pour voir ta courbe apparaître ici.',
+          context.l10n.weightTrendEmptyState,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted),
         ),
@@ -162,7 +163,6 @@ class WeightTrendScreen extends StatefulWidget {
 }
 
 class _WeightTrendScreenState extends State<WeightTrendScreen> {
-  static const _ranges = {30: '1M', 90: '3M', 180: '6M', 365: '1A', 3650: 'Tout'};
   int _rangeDays = 90;
   late Future<List<WeighIn>> _future;
 
@@ -183,7 +183,7 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         foregroundColor: TotumColors.textPrimary,
-        title: Text('Poids', style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+        title: Text(context.l10n.weightScreenTitle, style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
       ),
       body: FutureBuilder<List<WeighIn>>(
         future: _future,
@@ -207,9 +207,9 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
                       const SizedBox(height: 14),
                       Row(
                         children: [
-                          _legendDot(TotumColors.outlineStrong, 'Poids brut'),
+                          _legendDot(TotumColors.outlineStrong, context.l10n.weightTrendRawLegend),
                           const SizedBox(width: 16),
-                          _legendDot(TotumColors.accent, 'Poids tendance'),
+                          _legendDot(TotumColors.accent, context.l10n.weightTrendSmoothedLegend),
                         ],
                       ),
                     ],
@@ -221,8 +221,7 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
                 ],
                 const SizedBox(height: 14),
                 Text(
-                  'Pèse-toi si possible tous les jours, dans les mêmes conditions à chaque fois — idéalement le matin à jeun, au lever. '
-                  'La fiabilité de la tendance — et de tes objectifs recalculés — dépend directement de cette régularité.',
+                  context.l10n.weightTrendAdviceText,
                   style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted, height: 1.4),
                 ),
               ],
@@ -270,20 +269,28 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Évolution récente (poids tendance)',
+          Text(context.l10n.weightTrendRecentEvolution,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
-          row('3 derniers jours', 3),
-          row('7 derniers jours', 7),
+          row(context.l10n.lastNDays(3), 3),
+          row(context.l10n.lastNDays(7), 7),
         ],
       ),
     );
   }
 
   Widget _rangeSelector() {
+    final l10n = context.l10n;
+    final ranges = {
+      30: '1M',
+      90: '3M',
+      180: '6M',
+      365: l10n.weightTrendRangeYear,
+      3650: l10n.weightTrendRangeAll,
+    };
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: _ranges.entries.map((e) {
+        children: ranges.entries.map((e) {
           final selected = _rangeDays == e.key;
           return Padding(
             padding: const EdgeInsets.only(right: 8),

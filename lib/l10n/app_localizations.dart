@@ -103,6 +103,60 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Totum'**
   String get appTitle;
+
+  /// No description provided for @weightScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids'**
+  String get weightScreenTitle;
+
+  /// No description provided for @weightTrendEmptyState.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde ton profil à quelques jours d\'écart pour voir ta courbe apparaître ici.'**
+  String get weightTrendEmptyState;
+
+  /// No description provided for @weightTrendRangeYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'1A'**
+  String get weightTrendRangeYear;
+
+  /// No description provided for @weightTrendRangeAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get weightTrendRangeAll;
+
+  /// No description provided for @weightTrendRawLegend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids brut'**
+  String get weightTrendRawLegend;
+
+  /// No description provided for @weightTrendSmoothedLegend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids tendance'**
+  String get weightTrendSmoothedLegend;
+
+  /// No description provided for @weightTrendAdviceText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pèse-toi si possible tous les jours, dans les mêmes conditions à chaque fois — idéalement le matin à jeun, au lever. La fiabilité de la tendance — et de tes objectifs recalculés — dépend directement de cette régularité.'**
+  String get weightTrendAdviceText;
+
+  /// No description provided for @weightTrendRecentEvolution.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évolution récente (poids tendance)'**
+  String get weightTrendRecentEvolution;
+
+  /// No description provided for @lastNDays.
+  ///
+  /// In fr, this message translates to:
+  /// **'{days} derniers jours'**
+  String lastNDays(int days);
 }
 
 class _AppLocalizationsDelegate
