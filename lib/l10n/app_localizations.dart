@@ -7493,6 +7493,78 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{pct} % de ton objectif — encore {glasses} verre(s) environ'**
   String jrnlPercentGlassesLeft(int pct, int glasses);
+
+  /// No description provided for @jrnlMyAccountTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon compte'**
+  String get jrnlMyAccountTooltip;
+
+  /// No description provided for @jrnlFiltersSortTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Filtres et tri'**
+  String get jrnlFiltersSortTooltip;
+
+  /// No description provided for @jrnlAddFoodTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un aliment'**
+  String get jrnlAddFoodTooltip;
+
+  /// No description provided for @jrnlCopyAsPersonalFoodTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier comme aliment perso'**
+  String get jrnlCopyAsPersonalFoodTooltip;
+
+  /// No description provided for @jrnlTabCommon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commun'**
+  String get jrnlTabCommon;
+
+  /// No description provided for @jrnlTabFavorites.
+  ///
+  /// In fr, this message translates to:
+  /// **'Favoris'**
+  String get jrnlTabFavorites;
+
+  /// No description provided for @jrnlTabPersonal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Perso'**
+  String get jrnlTabPersonal;
+
+  /// No description provided for @jrnlTabBrands.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marques'**
+  String get jrnlTabBrands;
+
+  /// No description provided for @jrnlTabRestaurant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurant'**
+  String get jrnlTabRestaurant;
+
+  /// No description provided for @jrnlSearchBothDb.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher (CIQUAL + USDA)'**
+  String get jrnlSearchBothDb;
+
+  /// No description provided for @jrnlSearchUsdaOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher (USDA uniquement)'**
+  String get jrnlSearchUsdaOnly;
+
+  /// No description provided for @jrnlSearchCiqualOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher (CIQUAL uniquement)'**
+  String get jrnlSearchCiqualOnly;
 }
 
 class _AppLocalizationsDelegate

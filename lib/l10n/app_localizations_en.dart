@@ -4444,4 +4444,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String jrnlPercentGlassesLeft(int pct, int glasses) {
     return '$pct% of your target — about $glasses glass(es) left';
   }
+
+  @override
+  String get jrnlMyAccountTooltip => 'My account';
+
+  @override
+  String get jrnlFiltersSortTooltip => 'Filters and sort';
+
+  @override
+  String get jrnlAddFoodTooltip => 'Add a food';
+
+  @override
+  String get jrnlCopyAsPersonalFoodTooltip => 'Copy as personal food';
+
+  @override
+  String get jrnlTabCommon => 'Common';
+
+  @override
+  String get jrnlTabFavorites => 'Favorites';
+
+  @override
+  String get jrnlTabPersonal => 'Personal';
+
+  @override
+  String get jrnlTabBrands => 'Brands';
+
+  @override
+  String get jrnlTabRestaurant => 'Restaurant';
+
+  @override
+  String get jrnlSearchBothDb => 'Search (CIQUAL + USDA)';
+
+  @override
+  String get jrnlSearchUsdaOnly => 'Search (USDA only)';
+
+  @override
+  String get jrnlSearchCiqualOnly => 'Search (CIQUAL only)';
 }

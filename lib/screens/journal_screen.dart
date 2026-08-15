@@ -1871,7 +1871,7 @@ class JournalScreenState extends State<JournalScreen> {
                         await _addToJournal(meal, it, grams);
                         if (ctx.mounted) Navigator.of(ctx).pop();
                       },
-                      label: const Text('Ajouter au journal'),
+                      label: Text(ctx.l10n.jrnlAddToJournal),
                     ),
                   ),
                 ],
@@ -2709,11 +2709,11 @@ class JournalScreenState extends State<JournalScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDlg) => AlertDialog(
-          title: Text('Ajouter "${meal.name}"'),
+          title: Text(ctx.l10n.jrnlAddQuoted(meal.name)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('${meal.items.length} aliment(s) · ${meal.totalKcal.toStringAsFixed(0)} kcal',
+              Text(ctx.l10n.jrnlItemsAndKcal(meal.items.length, meal.totalKcal.toStringAsFixed(0)),
                   style: TextStyle(color: TotumColors.textSecondary, fontSize: 13)),
               const SizedBox(height: 16),
               InkWell(
@@ -4792,12 +4792,12 @@ class _AddFoodPageState extends State<_AddFoodPage>
         actions: [
           IconButton(
             icon: ScannerIcon(color: IconTheme.of(context).color ?? TotumColors.textSecondary),
-            tooltip: 'Scanner un produit',
+            tooltip: context.l10n.jrnlScanProductTooltip,
             onPressed: p._openBarcodeScanner,
           ),
           IconButton(
             icon: const Icon(Icons.account_circle),
-            tooltip: 'Mon compte',
+            tooltip: context.l10n.jrnlMyAccountTooltip,
             onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const AccountScreen())),
           ),
@@ -4807,12 +4807,12 @@ class _AddFoodPageState extends State<_AddFoodPage>
                 controller: _tab,
                 isScrollable: true,
                 tabAlignment: TabAlignment.start,
-                tabs: const [
-                  Tab(text: 'Commun'),
-                  Tab(text: 'Favoris'),
-                  Tab(text: 'Perso'),
-                  Tab(text: 'Marques'),
-                  Tab(text: 'Restaurant'),
+                tabs: [
+                  Tab(text: context.l10n.jrnlTabCommon),
+                  Tab(text: context.l10n.jrnlTabFavorites),
+                  Tab(text: context.l10n.jrnlTabPersonal),
+                  Tab(text: context.l10n.jrnlTabBrands),
+                  Tab(text: context.l10n.jrnlTabRestaurant),
                 ],
               )
             : null,
@@ -4838,10 +4838,10 @@ class _AddFoodPageState extends State<_AddFoodPage>
                       // quand CIQUAL était décochée — reflète maintenant les
                       // 2 bascules ("Base de données", tiroir de filtre).
                       labelText: _includeCiqual && _includeUsda
-                          ? 'Rechercher (CIQUAL + USDA)'
+                          ? context.l10n.jrnlSearchBothDb
                           : _includeUsda
-                              ? 'Rechercher (USDA uniquement)'
-                              : 'Rechercher (CIQUAL uniquement)',
+                              ? context.l10n.jrnlSearchUsdaOnly
+                              : context.l10n.jrnlSearchCiqualOnly,
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: _searchCtrl.text.isEmpty
                           ? null
@@ -4872,7 +4872,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
                   borderRadius: BorderRadius.circular(12),
                   child: IconButton(
                     icon: const Icon(Icons.tune, color: TotumColors.accent),
-                    tooltip: 'Filtres et tri',
+                    tooltip: context.l10n.jrnlFiltersSortTooltip,
                     onPressed: _openFilterSheet,
                   ),
                 ),
@@ -5018,7 +5018,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Repas perso', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: TotumColors.textSecondary)),
+          Text(context.l10n.jrnlPersonalMealSegment, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: TotumColors.textSecondary)),
           const SizedBox(height: 4),
           for (final meal in matches)
             Card(
@@ -5030,7 +5030,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
                 dense: true,
                 leading: const Icon(Icons.bookmark, color: TotumColors.accent, size: 20),
                 title: Text(meal.name, style: const TextStyle(fontWeight: FontWeight.w700)),
-                subtitle: Text('${meal.items.length} aliment(s) · ${meal.totalKcal.toStringAsFixed(0)} kcal'),
+                subtitle: Text(context.l10n.jrnlItemsAndKcal(meal.items.length, meal.totalKcal.toStringAsFixed(0))),
                 trailing: const Icon(Icons.add_circle_outline, color: TotumColors.accent),
                 onTap: () => p._addMealTemplateDialog(meal),
               ),
@@ -5537,7 +5537,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
               await widget.onAddEntry(meal, food, grams, _currentDate);
               await _fetchDate(_currentDate, showSpinner: false);
             },
-            child: const Text('Ajouter'),
+            child: Text(ctx.l10n.commonAdd),
           ),
         ],
       ),
@@ -6501,7 +6501,7 @@ class _MealSectionState extends State<_MealSection> {
                 IconButton(
                   onPressed: widget.onAddFood,
                   icon: const Icon(Icons.add_circle, size: 24),
-                  tooltip: 'Ajouter un aliment',
+                  tooltip: context.l10n.jrnlAddFoodTooltip,
                   color: TotumColors.accent,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 34),
@@ -6875,13 +6875,13 @@ class _MealRowState extends State<_MealRow> {
               IconButton(
                 onPressed: widget.onEdit,
                 icon: const Icon(Icons.edit_outlined, size: 20),
-                tooltip: 'Modifier',
+                tooltip: context.l10n.sunModifyButton,
                 color: TotumColors.accent,
               ),
             if (_pendingDelete) ...[
               TextButton(
                 onPressed: () => setState(() => _pendingDelete = false),
-                child: Text('Annuler',
+                child: Text(context.l10n.commonCancel,
                     style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
               ),
               IconButton(
@@ -7291,7 +7291,7 @@ class _FoodListView extends StatelessWidget {
             subtitle: Text(
                 meal.description.trim().isNotEmpty
                     ? meal.description
-                    : '${meal.items.length} aliment(s) · ${meal.totalKcal.toStringAsFixed(0)} kcal',
+                    : context.l10n.jrnlItemsAndKcal(meal.items.length, meal.totalKcal.toStringAsFixed(0)),
                 maxLines: meal.description.trim().isNotEmpty ? 1 : null,
                 overflow: meal.description.trim().isNotEmpty ? TextOverflow.ellipsis : null,
                 style: TextStyle(color: TotumColors.textSecondary)),
@@ -7300,25 +7300,25 @@ class _FoodListView extends StatelessWidget {
               children: [
                 if (onEditMeal != null)
                   IconButton(
-                    tooltip: 'Modifier',
+                    tooltip: context.l10n.sunModifyButton,
                     icon: Icon(Icons.edit_outlined, color: TotumColors.textSecondary),
                     onPressed: () => onEditMeal!(meal),
                   ),
                 if (onDeleteMeal != null)
                   IconButton(
-                    tooltip: 'Supprimer',
+                    tooltip: context.l10n.commonDelete,
                     icon: Icon(Icons.delete_outline, color: TotumColors.textSecondary),
                     onPressed: () => onDeleteMeal!(meal.id),
                   ),
                 IconButton(
-                  tooltip: fav ? 'Retirer des favoris' : 'Ajouter aux favoris',
+                  tooltip: fav ? context.l10n.jrnlRemoveFavorite : context.l10n.jrnlAddFavorite,
                   icon: Icon(fav ? Icons.favorite : Icons.favorite_border,
                       color: fav ? TotumColors.accent : TotumColors.textMuted),
                   onPressed: () => onFavToggle(meal.id),
                 ),
                 if (onTapMeal != null)
                   IconButton(
-                    tooltip: 'Ajouter au journal',
+                    tooltip: context.l10n.jrnlAddToJournal,
                     icon: const Icon(Icons.add_circle_outline, color: TotumColors.accent),
                     onPressed: () => onTapMeal!(meal),
                   ),
@@ -7610,25 +7610,25 @@ class _FoodListView extends StatelessWidget {
                         children: [
                           if ((isCustom || isRec) && onEditCustom != null)
                             IconButton(
-                              tooltip: 'Modifier',
+                              tooltip: context.l10n.sunModifyButton,
                               icon: Icon(Icons.edit_outlined, color: TotumColors.textSecondary),
                               onPressed: () => onEditCustom!(it),
                             ),
                           if ((isCustom || isRec) && onDeleteCustom != null)
                             IconButton(
-                              tooltip: 'Supprimer',
+                              tooltip: context.l10n.commonDelete,
                               icon: Icon(Icons.delete_outline, color: TotumColors.textSecondary),
                               onPressed: () => onDeleteCustom!(id),
                             ),
                           if (!isCustom && !isRec && onDuplicate != null)
                             IconButton(
-                              tooltip: 'Copier comme aliment perso',
+                              tooltip: context.l10n.jrnlCopyAsPersonalFoodTooltip,
                               icon: const Icon(Icons.copy_outlined, size: 20),
                               color: TotumColors.textSecondary,
                               onPressed: () => onDuplicate!(it),
                             ),
                           IconButton(
-                            tooltip: fav ? 'Retirer des favoris' : 'Ajouter aux favoris',
+                            tooltip: fav ? context.l10n.jrnlRemoveFavorite : context.l10n.jrnlAddFavorite,
                             icon: Icon(
                               fav ? Icons.favorite : Icons.favorite_border,
                               color: fav ? TotumColors.accent : TotumColors.textMuted,

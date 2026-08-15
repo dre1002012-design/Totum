@@ -4482,4 +4482,40 @@ class AppLocalizationsFr extends AppLocalizations {
   String jrnlPercentGlassesLeft(int pct, int glasses) {
     return '$pct % de ton objectif — encore $glasses verre(s) environ';
   }
+
+  @override
+  String get jrnlMyAccountTooltip => 'Mon compte';
+
+  @override
+  String get jrnlFiltersSortTooltip => 'Filtres et tri';
+
+  @override
+  String get jrnlAddFoodTooltip => 'Ajouter un aliment';
+
+  @override
+  String get jrnlCopyAsPersonalFoodTooltip => 'Copier comme aliment perso';
+
+  @override
+  String get jrnlTabCommon => 'Commun';
+
+  @override
+  String get jrnlTabFavorites => 'Favoris';
+
+  @override
+  String get jrnlTabPersonal => 'Perso';
+
+  @override
+  String get jrnlTabBrands => 'Marques';
+
+  @override
+  String get jrnlTabRestaurant => 'Restaurant';
+
+  @override
+  String get jrnlSearchBothDb => 'Rechercher (CIQUAL + USDA)';
+
+  @override
+  String get jrnlSearchUsdaOnly => 'Rechercher (USDA uniquement)';
+
+  @override
+  String get jrnlSearchCiqualOnly => 'Rechercher (CIQUAL uniquement)';
 }

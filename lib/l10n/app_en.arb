@@ -1373,5 +1373,17 @@
   "jrnlWaterBreakdown": "including {drinks} ml from drinks + {food} ml from food · {pct}% of the total target",
   "jrnlPercentOfTarget": "{pct}% of target",
   "jrnlTargetReached": "Target reached! ({pct}%)",
-  "jrnlPercentGlassesLeft": "{pct}% of your target — about {glasses} glass(es) left"
+  "jrnlPercentGlassesLeft": "{pct}% of your target — about {glasses} glass(es) left",
+  "jrnlMyAccountTooltip": "My account",
+  "jrnlFiltersSortTooltip": "Filters and sort",
+  "jrnlAddFoodTooltip": "Add a food",
+  "jrnlCopyAsPersonalFoodTooltip": "Copy as personal food",
+  "jrnlTabCommon": "Common",
+  "jrnlTabFavorites": "Favorites",
+  "jrnlTabPersonal": "Personal",
+  "jrnlTabBrands": "Brands",
+  "jrnlTabRestaurant": "Restaurant",
+  "jrnlSearchBothDb": "Search (CIQUAL + USDA)",
+  "jrnlSearchUsdaOnly": "Search (USDA only)",
+  "jrnlSearchCiqualOnly": "Search (CIQUAL only)"
 }

@@ -1556,5 +1556,17 @@
   "jrnlTargetReached": "Objectif atteint ! ({pct} %)",
   "@jrnlTargetReached": { "placeholders": { "pct": {"type": "int"} } },
   "jrnlPercentGlassesLeft": "{pct} % de ton objectif — encore {glasses} verre(s) environ",
-  "@jrnlPercentGlassesLeft": { "placeholders": { "pct": {"type": "int"}, "glasses": {"type": "int"} } }
+  "@jrnlPercentGlassesLeft": { "placeholders": { "pct": {"type": "int"}, "glasses": {"type": "int"} } },
+  "jrnlMyAccountTooltip": "Mon compte",
+  "jrnlFiltersSortTooltip": "Filtres et tri",
+  "jrnlAddFoodTooltip": "Ajouter un aliment",
+  "jrnlCopyAsPersonalFoodTooltip": "Copier comme aliment perso",
+  "jrnlTabCommon": "Commun",
+  "jrnlTabFavorites": "Favoris",
+  "jrnlTabPersonal": "Perso",
+  "jrnlTabBrands": "Marques",
+  "jrnlTabRestaurant": "Restaurant",
+  "jrnlSearchBothDb": "Rechercher (CIQUAL + USDA)",
+  "jrnlSearchUsdaOnly": "Rechercher (USDA uniquement)",
+  "jrnlSearchCiqualOnly": "Rechercher (CIQUAL uniquement)"
 }
