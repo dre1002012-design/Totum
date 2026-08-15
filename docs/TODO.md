@@ -1280,6 +1280,34 @@ Alex, après le retour de la Priorité 59 (recommandation de ne pas toucher au S
 - [x] `flutter analyze` : 0 problème. Build APK/AAB/web : tous réussis.
 - [ ] **Test réel nécessaire** (aucun accès à un appareil) : le compilateur garantit que rien n'est cassé et que le mode sombre s'active partout, mais le rendu visuel fin (contrastes, confort de lecture) de la palette sombre choisie (conventions Material standard, pas de valeurs inventées) reste à valider par Alex avant de considérer ce chantier définitivement clos.
 
+## Priorité 61 — Migration Kotlin, version 1.2.0, audit pictogrammes + micronutriments (15/08/2026) ✅ FAIT (sauf i18n complète, scopée mais pas commencée)
+Alex veut anticiper tout blocage Play Console futur (même lointain) et une version "clé en main" prête à publier — garde-fous git déjà en place depuis la Priorité 60, réutilisés ici avant chaque étape risquée.
+
+**Migration "Built-in Kotlin"** (le warning Gradle affiché par Alex) — **testée sérieusement, pas juste lue en documentation** :
+- [x] Suivi pas à pas le guide officiel Flutter : retrait de `org.jetbrains.kotlin.android` (settings.gradle.kts + app/build.gradle.kts), `android.builtInKotlin=true`. Résultat : AGP 9.1.0 embarque en interne Kotlin 2.2.10, sous le minimum exigé par Flutter (2.2.20).
+- [x] Suivi la doc officielle Google pour forcer une version plus récente via `buildscript{}` — sans effet, AGP 9's built-in Kotlin n'utilise pas cette classpath (confirmé empiriquement, pas supposé).
+- [x] Testé AGP 9.3.1 (dernière disponible) — exige alors Gradle ≥ 9.5.0, au-delà de ce que Flutter 3.47 connaît/valide (`maxKnownAgpVersion` de l'outillage Flutter s'arrête à 9.2).
+- [x] **Décision : abandonné proprement, reverté à l'état stable de la Priorité 60** (`git checkout` ciblé sur les 4 fichiers Android touchés) plutôt que de forcer une combinaison de versions non validée par Flutter lui-même, à quelques jours d'une publication. Le warning actuel est informationnel ("future version de Flutter"), pas bloquant aujourd'hui — à reprendre quand Flutter/les 6 plugins concernés (`flutter_foreground_task`, `in_app_purchase_android`, `mobile_scanner`, `package_info_plus`, `share_plus`, `shared_preferences_android`, `url_launcher_android`) auront eux-mêmes évolué.
+
+**Version 1.2.0+41** (mineure, pas juste un patch — mode sombre + refonte Respiration + mise à jour SDK) :
+- [x] `pubspec.yaml` : 1.1.29+40 → 1.2.0+41.
+- [x] Écran À propos : version affichée désormais lue dynamiquement via `package_info_plus` (nouvelle dépendance directe) au lieu d'une constante `kAppVersion` dupliquée à resynchroniser à la main — source d'incohérence éliminée pour de bon plutôt que juste corrigée une fois de plus.
+
+**Audit pictogrammes/catégories, CIQUAL + USDA (≈11 300 aliments)** :
+- [x] Script d'analyse statistique : pour chaque sous-groupe, détection des pictogrammes minoritaires dans un sous-groupe par ailleurs homogène (signal fort d'erreur d'assignation, plutôt qu'une recherche par mots-clés qui aurait généré beaucoup de faux positifs).
+- [x] ~78 "outliers" détectés, examinés un par un : la grande majorité sont en réalité des pictogrammes PLUS PRÉCIS que le reste du sous-groupe (ex. 🍝 pour des lasagnes dans un sous-groupe "plats composés" à dominante 🍲 — un choix plus spécifique, pas une erreur). Confirme que la logique d'assignation des rounds précédents est globalement de bonne qualité.
+- [x] **6 vraies incohérences confirmées et corrigées** (le pictogramme pouvait induire l'utilisateur en erreur sur la nature de l'aliment) : CIQUAL "Sole, frite" (🍟→🐟), "Chocolat noir aux fruits (orange...)" (🍊→🍫), "Oeuf d'oie, cru" (🦆→🥚), "Omelette au fromage" (🧀→🥚), "Sel au céleri" (🥬→🧂) ; USDA "HORMEL... Pork Loin Filets, Lemon Garlic" (🍋→🥓).
+- [x] **Corrections appliquées par substitution ligne par ligne** (jamais une réécriture complète des CSV) : une 1re tentative via `csv.DictWriter` avait introduit un BOM UTF-8 en tête de fichier + changé toutes les fins de ligne LF→CRLF — détecté avant commit (`git diff --stat` anormalement gros), **annulé et refait proprement**. Un BOM en tête de `foods.csv` aurait cassé silencieusement la détection de la colonne `ciqual_code` dans `foods_loader.dart` (comparaison exacte de chaîne, pas de `.trim()` qui retire un BOM) — vérifié avant, pas après coup.
+- [x] Vérifié après coup : `git diff` ne montre que les 6 lignes concernées, rien d'autre ; nombre de lignes CSV inchangé (3490 CIQUAL, 7839 USDA) ; build APK réussi.
+
+**Audit micronutriments, CIQUAL + USDA** :
+- [x] Script d'analyse statistique sur les 49 colonnes numériques × 2 bases : détection de valeurs négatives, non-numériques, et d'outliers extrêmes (>8× le 99e percentile) pouvant trahir une erreur d'unité/de virgule.
+- [x] **Résultat net : aucune anomalie de données confirmée.** Chaque valeur extrême détectée correspond à un fait nutritionnel réel et documenté, vérifié un par un : huile de lin/caméline (oméga-3 ALA), sel/bicarbonate/fleur de sel (sodium quasi pur), algues séchées kombu/gracilaire/ascophylle (iode), huile de foie de morue (vitamine A/D), spiruline (bêta-carotène), acérola (vitamine C), foies (rétinol), noix du Brésil (sélénium), huître (zinc), levure chimique/crème de tartre (phosphore/potassium quasi purs), alcools forts (alcool pur), bonbons/chewing-gums sans sucre (polyols = édulcorants par définition), laits infantiles fortifiés (manganèse/lactose).
+
+**Vérification finale du round** : `flutter analyze lib/` → 0 problème. `flutter build apk/appbundle/web --release` : les 3 réussissent.
+
+- [ ] **Chantier scopé mais NON commencé, à traiter à part** : traduction complète FR/EN de toute l'interface (Alex : "quand on bascule en anglais, tout doit être en anglais... la totalité"). Aujourd'hui, seul `AppSettings.foodNameLanguage` existe et ne traduit QUE le nom des aliments (limite documentée et assumée depuis le chantier Paramètres) — le reste de l'UI (boutons, libellés, messages du coach, écrans entiers) est en dur en français partout. Une vraie i18n complète est un chantier de taille comparable au mode sombre (infrastructure `intl`/`gen-l10n` + fichiers ARB + extraction et traduction de plusieurs milliers de chaînes à travers ~10 gros fichiers d'écran), pas une passe de cohérence — mérite son propre cadrage dédié (mode plan) plutôt que d'être fait à la va-vite en fin de round.
+
 ## Idées à évaluer plus tard (non committées)
 - [ ] Filtre "Vide-frigo" (ingrédients disponibles → recettes avec ≥75% de match).
 - [ ] `AddToJournalBottomSheet` (log direct d'une recette dans le journal).
