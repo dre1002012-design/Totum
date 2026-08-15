@@ -727,5 +727,11 @@
   "consRecipesSelectedForYou": "{count, plural, =1{1 recette sélectionnée pour toi} other{{count} recettes sélectionnées pour toi}}",
   "@consRecipesSelectedForYou": { "placeholders": { "count": {"type": "int"} } },
   "consRecipesCountPlural": "{count, plural, =1{1 recette} other{{count} recettes}}",
-  "@consRecipesCountPlural": { "placeholders": { "count": {"type": "int"} } }
+  "@consRecipesCountPlural": { "placeholders": { "count": {"type": "int"} } },
+
+  "consNoAdviceAvailable": "Aucun conseil disponible.",
+  "consTabCoaching": "Coaching",
+  "consTabVitality": "Vitalité",
+  "consTabRecipes": "Recettes",
+  "consMedicalDisclaimer": "Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé."
 }

@@ -3635,6 +3635,36 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{count, plural, =1{1 recette} other{{count} recettes}}'**
   String consRecipesCountPlural(int count);
+
+  /// No description provided for @consNoAdviceAvailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun conseil disponible.'**
+  String get consNoAdviceAvailable;
+
+  /// No description provided for @consTabCoaching.
+  ///
+  /// In fr, this message translates to:
+  /// **'Coaching'**
+  String get consTabCoaching;
+
+  /// No description provided for @consTabVitality.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitalité'**
+  String get consTabVitality;
+
+  /// No description provided for @consTabRecipes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recettes'**
+  String get consTabRecipes;
+
+  /// No description provided for @consMedicalDisclaimer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.'**
+  String get consMedicalDisclaimer;
 }
 
 class _AppLocalizationsDelegate

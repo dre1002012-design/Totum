@@ -2068,4 +2068,20 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get consNoAdviceAvailable => 'Aucun conseil disponible.';
+
+  @override
+  String get consTabCoaching => 'Coaching';
+
+  @override
+  String get consTabVitality => 'Vitalité';
+
+  @override
+  String get consTabRecipes => 'Recettes';
+
+  @override
+  String get consMedicalDisclaimer =>
+      'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.';
 }

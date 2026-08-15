@@ -2053,4 +2053,20 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get consNoAdviceAvailable => 'No advice available.';
+
+  @override
+  String get consTabCoaching => 'Coaching';
+
+  @override
+  String get consTabVitality => 'Vitality';
+
+  @override
+  String get consTabRecipes => 'Recipes';
+
+  @override
+  String get consMedicalDisclaimer =>
+      'This advice doesn\'t replace medical advice. If you have a medical condition or any doubt, consult your healthcare professional.';
 }

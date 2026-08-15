@@ -653,5 +653,11 @@
   "consForYouToday": "For you today",
   "consNoRecipe": "No recipe",
   "consRecipesSelectedForYou": "{count, plural, =1{1 recipe selected for you} other{{count} recipes selected for you}}",
-  "consRecipesCountPlural": "{count, plural, =1{1 recipe} other{{count} recipes}}"
+  "consRecipesCountPlural": "{count, plural, =1{1 recipe} other{{count} recipes}}",
+
+  "consNoAdviceAvailable": "No advice available.",
+  "consTabCoaching": "Coaching",
+  "consTabVitality": "Vitality",
+  "consTabRecipes": "Recipes",
+  "consMedicalDisclaimer": "This advice doesn't replace medical advice. If you have a medical condition or any doubt, consult your healthcare professional."
 }

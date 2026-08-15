@@ -4270,6 +4270,7 @@ class ConseilsScreenState extends State<ConseilsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: TotumColors.page,
       appBar: AppBar(
@@ -4277,12 +4278,12 @@ class ConseilsScreenState extends State<ConseilsScreen>
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         foregroundColor: TotumColors.textPrimary,
-        title: Text('Conseils',
+        title: Text(l10n.navConseils,
             style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
         actions: [
           IconButton(
             icon: const Icon(Icons.account_circle),
-            tooltip: 'Mon compte',
+            tooltip: l10n.accountScreenTitle,
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const AccountScreen()),
@@ -4295,10 +4296,10 @@ class ConseilsScreenState extends State<ConseilsScreen>
           labelColor: kTotumOrange,
           unselectedLabelColor: TotumColors.textMuted,
           indicatorColor: kTotumOrange,
-          tabs: const [
-            Tab(icon: Icon(Icons.auto_awesome), text: 'Coaching'),
-            Tab(icon: Icon(Icons.spa), text: 'Vitalité'),
-            Tab(icon: Icon(Icons.restaurant_menu), text: 'Recettes'),
+          tabs: [
+            Tab(icon: const Icon(Icons.auto_awesome), text: l10n.consTabCoaching),
+            Tab(icon: const Icon(Icons.spa), text: l10n.consTabVitality),
+            Tab(icon: const Icon(Icons.restaurant_menu), text: l10n.consTabRecipes),
           ],
         ),
       ),
@@ -4311,7 +4312,7 @@ class ConseilsScreenState extends State<ConseilsScreen>
           }
           final data = snap.data ?? _lastData;
           if (data == null) {
-            return const Center(child: Text('Aucun conseil disponible.'));
+            return Center(child: Text(l10n.consNoAdviceAvailable));
           }
           if (snap.connectionState == ConnectionState.done) {
             // Mémorise ce contenu comme "dernier connu" pour les prochains
@@ -4350,7 +4351,7 @@ class ConseilsScreenState extends State<ConseilsScreen>
                         _AnimatedAppear(index: 2, child: _DailyAdviceEntryCard(data: data)),
                         const SizedBox(height: 16),
                         Text(
-                          'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.',
+                          l10n.consMedicalDisclaimer,
                           style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
                           textAlign: TextAlign.center,
                         ),
