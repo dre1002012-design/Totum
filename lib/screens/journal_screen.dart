@@ -479,7 +479,7 @@ String? _nomGeneriqueOf(dynamic it) => it is foods_loader.FoodItem ? it.nomGener
 /// de recherche.
 String displayNameOf(dynamic it, String fallback) {
   if (it is foods_loader.FoodItem) {
-    if (AppSettings.foodNameLanguage.value == 'en') {
+    if (AppSettings.language.value == 'en') {
       final en = it.nameEn;
       if (en != null && en.trim().isNotEmpty) return en;
       return fallback;
@@ -502,7 +502,7 @@ String displayNameOf(dynamic it, String fallback) {
 /// tout le reste du libellé (nombres, fractions, parenthèses, noms propres)
 /// n'est jamais touché.
 String frenchPortionLabel(String label) {
-  if (AppSettings.foodNameLanguage.value != 'fr') return label;
+  if (AppSettings.language.value != 'fr') return label;
   const words = <String, String>{
     'tablespoons': 'cuil. à soupe', 'tablespoon': 'cuil. à soupe', 'tbsp': 'cuil. à soupe',
     'teaspoons': 'cuil. à café', 'teaspoon': 'cuil. à café', 'tsp': 'cuil. à café',

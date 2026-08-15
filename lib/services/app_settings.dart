@@ -44,11 +44,17 @@ class AppSettings {
   /// MediaQuery.textScaler dans main.dart) — 0.85 / 1.0 / 1.15 / 1.3.
   static final ValueNotifier<double> textScale = ValueNotifier(1.0);
 
-  /// Langue préférée pour le NOM des aliments affiché dans les écrans de
-  /// recherche/journal ('fr' ou 'en') — ne traduit PAS le reste de
-  /// l'interface (boutons, libellés), voir displayNameOf() dans
-  /// journal_screen.dart.
-  static final ValueNotifier<String> foodNameLanguage = ValueNotifier('fr');
+  /// Langue de toute l'application ('fr' ou 'en') — Priorité 62 (15/08/2026) :
+  /// pilote À LA FOIS l'interface entière (via AppLocalizations, voir
+  /// main.dart) ET le nom des aliments affiché dans la recherche/le journal
+  /// (voir displayNameOf() dans journal_screen.dart). Un seul réglage pour
+  /// que les deux ne puissent jamais diverger — demande explicite d'Alex
+  /// ("c'est soit l'un, soit l'autre... la totalité en anglais et la
+  /// totalité en français"). S'appelait `language` avant que son
+  /// rôle ne s'étende à toute l'interface ; la clé de persistance
+  /// (`settings_food_name_language`) reste inchangée pour ne pas perdre le
+  /// réglage déjà choisi par un utilisateur existant.
+  static final ValueNotifier<String> language = ValueNotifier('fr');
 
   /// Système d'unités pour le poids/la taille affichés — le stockage local
   /// et Supabase reste toujours en kg/cm (voir lib/services/units.dart).
@@ -66,7 +72,7 @@ class AppSettings {
     if (scale != null) textScale.value = scale;
 
     final lang = sp.getString(_kFoodNameLanguage);
-    if (lang == 'fr' || lang == 'en') foodNameLanguage.value = lang!;
+    if (lang == 'fr' || lang == 'en') language.value = lang!;
 
     final units = sp.getString(_kUnitSystem);
     if (units == 'imperial') unitSystem.value = UnitSystem.imperial;
@@ -83,9 +89,9 @@ class AppSettings {
       final sp = await SharedPreferences.getInstance();
       await sp.setDouble(_kTextScale, textScale.value);
     });
-    foodNameLanguage.addListener(() async {
+    language.addListener(() async {
       final sp = await SharedPreferences.getInstance();
-      await sp.setString(_kFoodNameLanguage, foodNameLanguage.value);
+      await sp.setString(_kFoodNameLanguage, language.value);
     });
     unitSystem.addListener(() async {
       final sp = await SharedPreferences.getInstance();

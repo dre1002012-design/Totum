@@ -1023,7 +1023,7 @@ class LanguageUnitsSettingsScreen extends StatelessWidget {
             _subLabel('Nom des aliments',
                 hint: 'Dans la recherche et le journal — le reste de l\'app reste en français.'),
             ValueListenableBuilder<String>(
-              valueListenable: AppSettings.foodNameLanguage,
+              valueListenable: AppSettings.language,
               builder: (context, lang, _) => SegmentedButton<String>(
                 segments: const [
                   ButtonSegment(value: 'fr', label: Text('Français')),
@@ -1034,7 +1034,7 @@ class LanguageUnitsSettingsScreen extends StatelessWidget {
                   selectedBackgroundColor: TotumColors.accent,
                   selectedForegroundColor: Colors.white,
                 ),
-                onSelectionChanged: (s) => AppSettings.foodNameLanguage.value = s.first,
+                onSelectionChanged: (s) => AppSettings.language.value = s.first,
               ),
             ),
           ],

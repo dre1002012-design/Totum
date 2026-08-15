@@ -1,0 +1,10 @@
+arb-dir: lib/l10n
+template-arb-file: app_fr.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+preferred-supported-locales: ["fr", "en"]
+# Priorité 62 : une clé présente en français mais absente en anglais (ou
+# l'inverse) doit être une ERREUR DE BUILD, jamais un repli silencieux sur
+# l'autre langue — but explicite d'Alex ("je veux plus avoir aucune
+# modification à apporter par la suite").
+nullable-getter: false

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show SystemChrome, SystemUiOverlayStyle;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'l10n/app_localizations.dart';
 import 'screens/profile_screen.dart';
 import 'screens/journal_screen.dart';
 import 'screens/bilan_screen.dart';
@@ -63,39 +64,51 @@ class TotumApp extends StatelessWidget {
         valueListenable: AppSettings.effectiveBrightness,
         builder: (context, brightness, __) => ValueListenableBuilder<double>(
           valueListenable: AppSettings.textScale,
-          builder: (context, scale, ___) {
-            SystemChrome.setSystemUIOverlayStyle(
-              brightness == Brightness.dark
-                  ? SystemUiOverlayStyle.light.copyWith(
-                      statusBarColor: Colors.transparent,
-                      systemNavigationBarColor: TotumColors.surface,
-                      systemNavigationBarIconBrightness: Brightness.light,
-                    )
-                  : SystemUiOverlayStyle.dark.copyWith(
-                      statusBarColor: Colors.transparent,
-                      systemNavigationBarColor: TotumColors.surface,
-                      systemNavigationBarIconBrightness: Brightness.dark,
-                    ),
-            );
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Totum',
-              theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.light),
-                useMaterial3: true,
-              ),
-              darkTheme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.dark),
-                useMaterial3: true,
-              ),
-              themeMode: mode,
-              builder: (context, child) => MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
-                child: child!,
-              ),
-              home: const AuthGate(),
-            );
-          },
+          // Priorité 62 (15/08/2026) : traduction complète FR/EN. Écoute
+          // AppSettings.language (même réglage qui pilotait déjà le nom des
+          // aliments, désormais étendu à toute l'interface) pour
+          // reconstruire l'app avec la bonne Locale — un seul réglage,
+          // jamais de dérive entre la langue des textes et celle des noms
+          // d'aliments.
+          builder: (context, scale, ___) => ValueListenableBuilder<String>(
+            valueListenable: AppSettings.language,
+            builder: (context, lang, ____) {
+              SystemChrome.setSystemUIOverlayStyle(
+                brightness == Brightness.dark
+                    ? SystemUiOverlayStyle.light.copyWith(
+                        statusBarColor: Colors.transparent,
+                        systemNavigationBarColor: TotumColors.surface,
+                        systemNavigationBarIconBrightness: Brightness.light,
+                      )
+                    : SystemUiOverlayStyle.dark.copyWith(
+                        statusBarColor: Colors.transparent,
+                        systemNavigationBarColor: TotumColors.surface,
+                        systemNavigationBarIconBrightness: Brightness.dark,
+                      ),
+              );
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Totum',
+                locale: Locale(lang),
+                supportedLocales: AppLocalizations.supportedLocales,
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                theme: ThemeData(
+                  colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.light),
+                  useMaterial3: true,
+                ),
+                darkTheme: ThemeData(
+                  colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.dark),
+                  useMaterial3: true,
+                ),
+                themeMode: mode,
+                builder: (context, child) => MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
+                  child: child!,
+                ),
+                home: const AuthGate(),
+              );
+            },
+          ),
         ),
       ),
     );
