@@ -1109,47 +1109,39 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
         ms.isNotEmpty ? _dayOfYearIndex(now, ms.length) : 0;
     final mTitle = (ms.isNotEmpty
             ? ms[idx]['title']
-            : '🧠 Progression > perfection') ??
-        '🧠 Progression > perfection';
+            : l10n.advDefaultMindsetTitle) ??
+        l10n.advDefaultMindsetTitle;
     final mBody = (ms.isNotEmpty
             ? ms[idx]['body']
-            : 'Chaque repas aligné est un vote pour ton identité.') ??
-        'Chaque repas aligné est un vote pour ton identité.';
+            : l10n.advDefaultMindsetBody) ??
+        l10n.advDefaultMindsetBody;
 
     return AdviceScript(
-      cardTitle: '🎯 Premier levier : nourrir ton TOTUM',
-      focusTheme: 'Construire ta base de données personnelle',
-      scienceInsight:
-          'Plus tu enregistres tes repas, plus les conseils deviennent précis, utiles et motivants.',
-      deficitCritique: 'Impossible de détecter des déficits sans journal.',
-      beneficeAssocie:
-          'Tu construis ton Totem alimentaire : vision claire de ce que tu offres à ton corps.',
-      sourcePremium:
-          'Enregistre petit-déj + repas principal, avec quantités & aliments détaillés.',
-      astuceAbsorption:
-          'Commence par tes repas « typiques », on raffinera ensuite sur les micronutriments.',
+      cardTitle: l10n.advFirstLeverTitle,
+      focusTheme: l10n.advFirstLeverTheme,
+      scienceInsight: l10n.advFirstLeverInsight,
+      deficitCritique: l10n.advNoJournalCritique,
+      beneficeAssocie: l10n.advNoJournalBenefit,
+      sourcePremium: l10n.advNoJournalSource,
+      astuceAbsorption: l10n.advNoJournalTip,
       extraMicronutrientHints: const [],
       recipeIdeas: const [],
-      chronoAnalyse:
-          'Sans sommeil/eau/stress renseignés, le lien sensations ↔ hygiène de vie reste flou.',
-      actionLifestyle:
-          'Ce soir, note heure de coucher, durée, stress (1–10). Demain matin : humeur/énergie.',
-      logTitle: '📝 Active ton suivi holistique',
-      logFields: const [
-        'Durée de sommeil (heures)',
-        'Litres d’eau (hors café/alcool)',
-        'Stress ressenti (1–10)',
+      chronoAnalyse: l10n.advNoJournalChrono,
+      actionLifestyle: l10n.advNoJournalAction,
+      logTitle: l10n.advNoJournalLogTitle,
+      logFields: [
+        l10n.advLogFieldSleep,
+        l10n.advLogFieldWater,
+        l10n.advLogFieldStress,
       ],
-      defi24h:
-          'Défi 24h : renseigne 2 repas complets + sommeil, eau, stress.',
-      quotePremium: '« Ce qui se mesure se transforme. »',
-      macroSummaryTitle: '⚙️ Macros en attente',
-      macroSummaryBody:
-          'Dès qu’un repas est saisi, je peux vérifier énergie & protéines vs ton objectif.',
-      activityCoachTitle: '🏃‍♂️ Coach activité & récupération',
+      defi24h: l10n.advNoJournalDefi24h,
+      quotePremium: l10n.advNoJournalQuote,
+      macroSummaryTitle: l10n.advNoJournalMacroTitle,
+      macroSummaryBody: l10n.advNoJournalMacroBody,
+      activityCoachTitle: l10n.advActivityCoachTitle,
       activityCoachBody: isSportif
-          ? 'Note tes entraînements + repas pré/post pour affiner énergie & timing.'
-          : '2–3 créneaux de 20–30 min/semaine (marche rapide, vélo doux, renfo).',
+          ? l10n.advActivityCoachSportif
+          : l10n.advActivityCoachSedentary,
       mindsetTitle: mTitle,
       mindsetBody: mBody,
       hydrationRatio: null,
@@ -1190,251 +1182,171 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
   String deficitCritique, beneficeAssocie, sourcePremium, astuceAbsorption;
   switch (decision.microTopic) {
     case 'omega9':
-      deficitCritique =
-          'Oméga-9 en dessous de la zone optimale.';
-      beneficeAssocie =
-          'Soutien cardio-métabolique & souplesse membranaire.';
-      sourcePremium =
-          'Huile d’olive, avocat, amandes/noisettes au quotidien.';
-      astuceAbsorption =
-          'Utilise l’huile d’olive à cru/fin de cuisson douce.';
+      deficitCritique = l10n.advOmega9Critique;
+      beneficeAssocie = l10n.advOmega9Benefit;
+      sourcePremium = l10n.advOmega9Source;
+      astuceAbsorption = l10n.advOmega9Tip;
       break;
     case 'omega6':
-      deficitCritique = 'Oméga-6 (LA) un peu bas.';
-      beneficeAssocie =
-          'Structure membranaire, peau & voies hormonales.';
-      sourcePremium =
-          'Huiles vierges (tournesol bio), noix/graines variées.';
-      astuceAbsorption =
-          'Évite les huiles raffinées surchauffées.';
+      deficitCritique = l10n.advOmega6Critique;
+      beneficeAssocie = l10n.advOmega6Benefit;
+      sourcePremium = l10n.advOmega6Source;
+      astuceAbsorption = l10n.advOmega6Tip;
       break;
     case 'omega3_ALA':
-      deficitCritique = 'Oméga-3 ALA insuffisants.';
-      beneficeAssocie =
-          'Précurseur végétal des oméga-3 marins EPA/DHA.';
-      sourcePremium =
-          '1 c.s lin/chia moulus/jour ou quelques noix.';
-      astuceAbsorption =
-          'Mouds le lin/chia juste avant de consommer.';
+      deficitCritique = l10n.advOmega3AlaCritique;
+      beneficeAssocie = l10n.advOmega3AlaBenefit;
+      sourcePremium = l10n.advOmega3AlaSource;
+      astuceAbsorption = l10n.advOmega3AlaTip;
       break;
     case 'omega3':
-      deficitCritique = 'Oméga-3 ALA (végétaux) sous la cible.';
-      beneficeAssocie =
-          'Précurseur végétal des oméga-3, anti-inflammatoire.';
-      sourcePremium =
-          'Graines de chanvre/lin moulues, noix, huile de colza.';
-      astuceAbsorption = 'Mouds les graines juste avant de consommer.';
+      deficitCritique = l10n.advOmega3Critique;
+      beneficeAssocie = l10n.advOmega3Benefit;
+      sourcePremium = l10n.advOmega3Source;
+      astuceAbsorption = l10n.advOmega3Tip;
       break;
     case 'omega3_marins':
     case 'EPA':
     case 'DHA':
-      deficitCritique = 'Oméga-3 marins sous la cible.';
-      beneficeAssocie =
-          'Clarté mentale, récupération, anti-inflammation.';
-      sourcePremium =
-          '2×/sem poisson gras (sardines/maquereau/hareng).';
-      astuceAbsorption = 'Cuisson douce + bons lipides.';
+      deficitCritique = l10n.advOmega3MarineCritique;
+      beneficeAssocie = l10n.advOmega3MarineBenefit;
+      sourcePremium = l10n.advOmega3MarineSource;
+      astuceAbsorption = l10n.advOmega3MarineTip;
       break;
     case 'vitA':
-      deficitCritique =
-          'Vitamine A en dessous de l’optimum.';
-      beneficeAssocie =
-          'Vision nocturne, peau/muqueuses, immunité.';
-      sourcePremium =
-          'Carotte/patate douce + abats/œufs (selon choix).';
-      astuceAbsorption =
-          'Associe à un peu de gras pour conversion.';
+      deficitCritique = l10n.advVitACritique;
+      beneficeAssocie = l10n.advVitABenefit;
+      sourcePremium = l10n.advVitASource;
+      astuceAbsorption = l10n.advVitATip;
       break;
     case 'vitD':
-      deficitCritique =
-          'Vitamine D probablement insuffisante.';
-      beneficeAssocie =
-          'Immunité, force, humeur, santé osseuse.';
-      sourcePremium =
-          'Sardines/maquereau/œufs entiers, lumière matin.';
-      astuceAbsorption =
-          'Lipides de qualité au repas contenant vit D.';
+      deficitCritique = l10n.advVitDCritique;
+      beneficeAssocie = l10n.advVitDBenefit;
+      sourcePremium = l10n.advVitDSource;
+      astuceAbsorption = l10n.advVitDTip;
       break;
     case 'vitE':
-      deficitCritique = 'Vitamine E insuffisante.';
-      beneficeAssocie =
-          'Antioxydant des membranes cellulaires.';
-      sourcePremium =
-          'Huiles vierges, amandes, noisettes, graines.';
-      astuceAbsorption =
-          'Utilisation à froid/cuisson douce.';
+      deficitCritique = l10n.advVitECritique;
+      beneficeAssocie = l10n.advVitEBenefit;
+      sourcePremium = l10n.advVitESource;
+      astuceAbsorption = l10n.advVitETip;
       break;
     case 'vitK':
-      deficitCritique = 'Vitamine K un peu juste.';
-      beneficeAssocie =
-          'Coagulation équilibrée & santé osseuse.';
-      sourcePremium =
-          'Légumes verts + un filet d’huile.';
-      astuceAbsorption =
-          'Associe verts feuillus à un peu de lipides.';
+      deficitCritique = l10n.advVitKCritique;
+      beneficeAssocie = l10n.advVitKBenefit;
+      sourcePremium = l10n.advVitKSource;
+      astuceAbsorption = l10n.advVitKTip;
       break;
     case 'vitC':
-      deficitCritique = 'Vitamine C sous optimal.';
-      beneficeAssocie =
-          'Antioxydant, immunité, absorption du fer.';
-      sourcePremium =
-          'Kiwi, agrumes, poivron cru, persil.';
-      astuceAbsorption =
-          'Consomme plutôt cru/peu cuit.';
+      deficitCritique = l10n.advVitCCritique;
+      beneficeAssocie = l10n.advVitCBenefit;
+      sourcePremium = l10n.advVitCSource;
+      astuceAbsorption = l10n.advVitCTip;
       break;
     case 'B1':
     case 'B2':
     case 'B3':
-      deficitCritique = 'B1/B2/B3 un peu en deçà.';
-      beneficeAssocie =
-          'Métabolisme énergétique & système nerveux.';
-      sourcePremium =
-          'Céréales complètes, légumineuses, poissons/œufs.';
-      astuceAbsorption =
-          'Réduis l’ultra-transformé pauvre en B.';
+      deficitCritique = l10n.advB123Critique;
+      beneficeAssocie = l10n.advB123Benefit;
+      sourcePremium = l10n.advB123Source;
+      astuceAbsorption = l10n.advB123Tip;
       break;
     case 'B5':
     case 'B6':
-      deficitCritique = 'B5/B6 sous la cible.';
-      beneficeAssocie = 'Stress, neurotransmetteurs, AA.';
-      sourcePremium =
-          'Volailles, banane, pois chiches, œufs, avocat.';
-      astuceAbsorption = 'Répartis sur la journée.';
+      deficitCritique = l10n.advB56Critique;
+      beneficeAssocie = l10n.advB56Benefit;
+      sourcePremium = l10n.advB56Source;
+      astuceAbsorption = l10n.advB56Tip;
       break;
     case 'B9':
-      deficitCritique =
-          'Folates (B9) insuffisants.';
-      beneficeAssocie =
-          'Renouvellement cellulaire & qualité du sang.';
-      sourcePremium =
-          'Verts feuillus, légumineuses, herbes fraîches.';
-      astuceAbsorption = 'Part crue ou vapeur douce.';
+      deficitCritique = l10n.advB9Critique;
+      beneficeAssocie = l10n.advB9Benefit;
+      sourcePremium = l10n.advB9Source;
+      astuceAbsorption = l10n.advB9Tip;
       break;
     case 'B12':
-      deficitCritique = 'Vitamine B12 basse.';
-      beneficeAssocie =
-          'Système nerveux & globules rouges.';
-      sourcePremium =
-          'Produits animaux ou aliments enrichis.';
-      astuceAbsorption =
-          'Vegan strict : discuter supplémentation pro.';
+      deficitCritique = l10n.advB12Critique;
+      beneficeAssocie = l10n.advB12Benefit;
+      sourcePremium = l10n.advB12Source;
+      astuceAbsorption = l10n.advB12Tip;
       break;
     case 'calcium':
-      deficitCritique = 'Calcium sous la cible.';
-      beneficeAssocie =
-          'Solidité osseuse & signalisation cellulaire.';
-      sourcePremium =
-          'Laitiers/alternatives, eaux calciques, tahini.';
-      astuceAbsorption =
-          'Répartis + statut vit D correct.';
+      deficitCritique = l10n.advCalciumCritique;
+      beneficeAssocie = l10n.advCalciumBenefit;
+      sourcePremium = l10n.advCalciumSource;
+      astuceAbsorption = l10n.advCalciumTip;
       break;
     case 'copper':
-      deficitCritique = 'Cuivre un peu faible.';
-      beneficeAssocie =
-          'Collagène, vaisseaux, métabolisme du fer.';
-      sourcePremium =
-          'Fruits de mer, cacao, noix/graines.';
-      astuceAbsorption =
-          'Associe à alimentation variée.';
+      deficitCritique = l10n.advCopperCritique;
+      beneficeAssocie = l10n.advCopperBenefit;
+      sourcePremium = l10n.advCopperSource;
+      astuceAbsorption = l10n.advCopperTip;
       break;
     case 'iron':
-      deficitCritique = 'Fer sous-optimal.';
-      beneficeAssocie =
-          'Oxygénation musculaire & énergie.';
-      sourcePremium =
-          'Légumineuses/abats/viandes + vit C.';
-      astuceAbsorption =
-          'Évite thé/café juste après repas riches en fer.';
+      deficitCritique = l10n.advIronCritique;
+      beneficeAssocie = l10n.advIronBenefit;
+      sourcePremium = l10n.advIronSource;
+      astuceAbsorption = l10n.advIronTip;
       break;
     case 'iodine':
-      deficitCritique = 'Iode plutôt bas.';
-      beneficeAssocie =
-          'Thyroïde → métabolisme & température.';
-      sourcePremium =
-          'Sel iodé, poissons, fruits de mer, algues raisonnées.';
-      astuceAbsorption =
-          'Évite excès d’algues si pathologie thyroïde.';
+      deficitCritique = l10n.advIodineCritique;
+      beneficeAssocie = l10n.advIodineBenefit;
+      sourcePremium = l10n.advIodineSource;
+      astuceAbsorption = l10n.advIodineTip;
       break;
     case 'magnesium':
-      deficitCritique = 'Magnésium insuffisant.';
-      beneficeAssocie =
-          'Relaxation nerveuse/musculaire, sommeil.';
-      sourcePremium =
-          'Amandes, chocolat noir, verts feuillus, eaux magnésiennes.';
-      astuceAbsorption =
-          'Limite café tardif ; associe B6.';
+      deficitCritique = l10n.advMagnesiumCritique;
+      beneficeAssocie = l10n.advMagnesiumBenefit;
+      sourcePremium = l10n.advMagnesiumSource;
+      astuceAbsorption = l10n.advMagnesiumTip;
       break;
     case 'manganese':
-      deficitCritique = 'Manganèse bas.';
-      beneficeAssocie = 'Cofacteur antioxydant.';
-      sourcePremium =
-          'Céréales complètes, noix, thé vert (modéré).';
-      astuceAbsorption =
-          'Limite raffinés pauvres en oligo-éléments.';
+      deficitCritique = l10n.advManganeseCritique;
+      beneficeAssocie = l10n.advManganeseBenefit;
+      sourcePremium = l10n.advManganeseSource;
+      astuceAbsorption = l10n.advManganeseTip;
       break;
     case 'phosphorus':
-      deficitCritique = 'Phosphore légèrement bas.';
-      beneficeAssocie =
-          'Structure os/dents & énergie.';
-      sourcePremium =
-          'Poisson, œufs, oléagineux.';
-      astuceAbsorption =
-          'Évite sodas aux phosphates ajoutés.';
+      deficitCritique = l10n.advPhosphorusCritique;
+      beneficeAssocie = l10n.advPhosphorusBenefit;
+      sourcePremium = l10n.advPhosphorusSource;
+      astuceAbsorption = l10n.advPhosphorusTip;
       break;
     case 'potassium':
-      deficitCritique = 'Potassium insuffisant.';
-      beneficeAssocie =
-          'Équilibre tensionnel, contraction musculaire.';
-      sourcePremium =
-          'Banane, avocat, verts, patate douce, légumineuses.';
-      astuceAbsorption =
-          'Une part crue/vapeur pour préserver minéraux.';
+      deficitCritique = l10n.advPotassiumCritique;
+      beneficeAssocie = l10n.advPotassiumBenefit;
+      sourcePremium = l10n.advPotassiumSource;
+      astuceAbsorption = l10n.advPotassiumTip;
       break;
     case 'selenium':
-      deficitCritique = 'Sélénium un peu juste.';
-      beneficeAssocie = 'Antioxydant clé + thyroïde.';
-      sourcePremium =
-          'Poisson, fruits de mer, œufs (mieux absorbés).';
-      astuceAbsorption =
-          'Évite les excès prolongés.';
+      deficitCritique = l10n.advSeleniumCritique;
+      beneficeAssocie = l10n.advSeleniumBenefit;
+      sourcePremium = l10n.advSeleniumSource;
+      astuceAbsorption = l10n.advSeleniumTip;
       break;
     case 'sodium':
-      deficitCritique =
-          'Sodium un peu bas vs besoins.';
-      beneficeAssocie =
-          'Hydrique, conduction nerveuse.';
-      sourcePremium =
-          'Sel de qualité sur aliments bruts si transpiration.';
-      astuceAbsorption =
-          'Évite ultra-salés transformés.';
+      deficitCritique = l10n.advSodiumCritique;
+      beneficeAssocie = l10n.advSodiumBenefit;
+      sourcePremium = l10n.advSodiumSource;
+      astuceAbsorption = l10n.advSodiumTip;
       break;
     case 'zinc':
-      deficitCritique =
-          'Zinc possiblement insuffisant.';
-      beneficeAssocie =
-          'Immunité, peau, hormones.';
-      sourcePremium =
-          'Fruits de mer, bœuf, graines de courge.';
-      astuceAbsorption = 'Limite excès de sucre.';
+      deficitCritique = l10n.advZincCritique;
+      beneficeAssocie = l10n.advZincBenefit;
+      sourcePremium = l10n.advZincSource;
+      astuceAbsorption = l10n.advZincTip;
       break;
     case 'fibers':
-      deficitCritique = 'Fibres sous 30 g/j.';
-      beneficeAssocie =
-          'Microbiote, satiété, glycémie.';
-      sourcePremium =
-          '+Légumineuses, légumes à chaque repas, fruits entiers.';
-      astuceAbsorption =
-          'Monte progressivement + eau suffisante.';
+      deficitCritique = l10n.advFibersCritique;
+      beneficeAssocie = l10n.advFibersBenefit;
+      sourcePremium = l10n.advFibersSource;
+      astuceAbsorption = l10n.advFibersTip;
       break;
     default:
-      deficitCritique =
-          'Un ou plusieurs micronutriments sous la cible.';
-      beneficeAssocie =
-          'Plus de densité micro = énergie & sommeil meilleurs.';
-      sourcePremium =
-          'Aliments bruts variés, poissons & œufs.';
-      astuceAbsorption =
-          'Assiette colorée = spectre micro plus large.';
+      deficitCritique = l10n.advDefaultCritique;
+      beneficeAssocie = l10n.advDefaultBenefit;
+      sourcePremium = l10n.advDefaultSource;
+      astuceAbsorption = l10n.advDefaultTip;
       break;
   }
 
@@ -1459,42 +1371,42 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
 
   String chronoAnalyse, actionLifestyle;
   List<String> pickCoach(List<String> list) =>
-      list.isEmpty ? ['Bouge un peu aujourd’hui 😉'] : list;
+      list.isEmpty ? [l10n.advMoveTodayDefault] : list;
 
   // On définit quelques “packs” d’actions possibles
   final lowSleepHighStressPacks = [
-    '1️⃣ 20–30 min dehors (lumière naturelle) + 5 min de respiration nasale lente en fin de journée.',
-    '2️⃣ Couvre-feu digital 45–60 min avant le coucher + lecture légère ou journal de gratitude (3 points).',
-    '3️⃣ Dîner plus tôt, léger et peu sucré, puis douche tiède et respiration 4–6 pendant 3–5 min.',
-    '4️⃣ Si ruminations : noter tout ce qui tourne en boucle sur papier avant d’aller au lit.',
+    l10n.advPackLowSleepHighStress1,
+    l10n.advPackLowSleepHighStress2,
+    l10n.advPackLowSleepHighStress3,
+    l10n.advPackLowSleepHighStress4,
   ];
 
   final lowSleepPacks = [
-    '1️⃣ Fixer une heure de coucher cible réaliste (même le week-end) et s’y tenir 3 soirs de suite.',
-    '2️⃣ Avancer le dernier café/thé noir au plus tard 14–15 h.',
-    '3️⃣ Créer un petit rituel de “décompression” de 10–15 min (étirements doux + lumière tamisée).',
-    '4️⃣ Chambre : fraîche, très sombre, silencieuse ou bruit blanc léger.',
+    l10n.advPackLowSleep1,
+    l10n.advPackLowSleep2,
+    l10n.advPackLowSleep3,
+    l10n.advPackLowSleep4,
   ];
 
   final highStressPacks = [
-    '1️⃣ Micro-pauses : 2–3 min toutes les 60–90 min (respiration calme + quelques pas).',
-    '2️⃣ 5 respirations lentes avant chaque repas pour faire redescendre le système nerveux.',
-    '3️⃣ Marche de 10–15 min en extérieur sans téléphone, en portant l’attention sur la respiration.',
-    '4️⃣ Le soir : écrire 3 choses qui se sont bien passées dans la journée, même si elles sont petites.',
+    l10n.advPackHighStress1,
+    l10n.advPackHighStress2,
+    l10n.advPackHighStress3,
+    l10n.advPackHighStress4,
   ];
 
   final stableTerrainPacks = [
-    '1️⃣ Maintiens ton rythme de coucher et de lever, même le week-end (±1 h max).',
-    '2️⃣ Ajoute 8–12 min de marche lente après un repas pour digestion + glycémie.',
-    '3️⃣ Prévois 1 moment “off écran” de 15–20 min dans la journée (lecture, musique, nature).',
-    '4️⃣ Introduis 1 portion de légumes verts en plus pour soutenir micronutrition & récupération.',
+    l10n.advPackStable1,
+    l10n.advPackStable2,
+    l10n.advPackStable3,
+    l10n.advPackStable4,
   ];
 
   if (sleep != null && stress != null) {
     // Cas le plus “chargé” : peu de sommeil + beaucoup de stress
     if (sleep < 7 && stress >= 7) {
-      chronoAnalyse =
-          'Sommeil court (~${sleep.toStringAsFixed(1)} h) + stress élevé ($stress/10). Le système nerveux tire fort sur les réserves.';
+      chronoAnalyse = l10n.advChronoLowSleepHighStress(
+          sleep.toStringAsFixed(1), stress);
       final pool = [...lowSleepHighStressPacks];
       actionLifestyle = _pickRotating<String>(
         pool,
@@ -1504,8 +1416,7 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
     }
     // Sommeil court mais stress modéré
     else if (sleep < 7) {
-      chronoAnalyse =
-          'Temps de sommeil un peu court (~${sleep.toStringAsFixed(1)} h). L’empilement de nuits raccourcies finit par impacter énergie et humeur.';
+      chronoAnalyse = l10n.advChronoLowSleep(sleep.toStringAsFixed(1));
       final pool = [...lowSleepPacks];
       actionLifestyle = _pickRotating<String>(
         pool,
@@ -1516,10 +1427,10 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
     // Stress élevé mais sommeil correct
     else if (stress >= 7) {
       chronoAnalyse =
-          'Sommeil convenable (~${sleep.toStringAsFixed(1)} h) mais stress élevé ($stress/10). Le mental tourne vite.';
+          l10n.advChronoHighStress(sleep.toStringAsFixed(1), stress);
       var pool = [...highStressPacks];
       if (hydR < 0.7) {
-        pool.add('Hydratation un peu basse : répartir l’eau sur la journée aide aussi la clarté mentale.');
+        pool.add(l10n.advPackHighStressHydration);
       }
       actionLifestyle = _pickRotating<String>(
         pool,
@@ -1529,8 +1440,7 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
     }
     // Sommeil OK + stress modéré
     else {
-      chronoAnalyse =
-          'Sommeil et niveau de stress plutôt stables (≈${sleep.toStringAsFixed(1)} h, stress $stress/10). On peut jouer le “fine tuning” vitalité.';
+      chronoAnalyse = l10n.advChronoStable(sleep.toStringAsFixed(1), stress);
       final pool = [...stableTerrainPacks];
       actionLifestyle = _pickRotating<String>(
         pool,
@@ -1540,10 +1450,8 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
     }
   } else {
     // Données partielles : on motive à compléter l’auto-suivi
-    chronoAnalyse =
-        'Renseigne ton sommeil et ton niveau de stress pour des conseils bien-être personnalisés, adaptés à ta forme du moment.';
-    actionLifestyle =
-        'Pendant 3 jours, note chaque matin tes heures de sommeil, ton niveau de stress (1–10) et ton énergie au réveil. TOTUM affinera progressivement les leviers proposés pour toi.';
+    chronoAnalyse = l10n.advChronoIncomplete;
+    actionLifestyle = l10n.advActionIncomplete;
   }
 
   await _pushHistory(sp, _packHistoryKey, actionLifestyle, keep: 6);
@@ -1555,64 +1463,50 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
   final pR = decision.proteinRatio;
 
   if (goalIdx == 0) {
-    macroSummaryTitle = '⚖️ Perte de poids intelligente';
+    macroSummaryTitle = l10n.advMacroLossTitle;
     if (eR > 1.1) {
-      macroSummaryBody =
-          'Apport ~${pct(eR)} : vise un déficit léger (-10 à -20 %) durable.';
+      macroSummaryBody = l10n.advMacroLossHigh(pct(eR));
     } else if (eR < 0.8) {
-      macroSummaryBody =
-          'Apport ~${pct(eR)} : si fatigue/fringales, remonte avec aliments bruts.';
+      macroSummaryBody = l10n.advMacroLossLow(pct(eR));
     } else {
-      macroSummaryBody =
-          'Énergie ~${pct(eR)} : trajectoire cohérente. Qualité & fibres = priorité.';
+      macroSummaryBody = l10n.advMacroLossOk(pct(eR));
     }
     if (pR < 0.9) {
-      macroSummaryBody +=
-          ' • Protéines ~${pct(pR)} : une source à chaque repas.';
+      macroSummaryBody += l10n.advMacroProteinLow(pct(pR));
     } else if (pR > 1.2 && isSportif) {
-      macroSummaryBody +=
-          ' • Protéines généreuses ~${pct(pR)} : répartis sur 3–4 prises.';
+      macroSummaryBody += l10n.advMacroProteinHighSportif(pct(pR));
     }
   } else if (goalIdx >= 2) {
-    macroSummaryTitle = '🏗️ Construction musculaire';
+    macroSummaryTitle = l10n.advMacroGainTitle;
     if (eR < 0.9) {
-      macroSummaryBody =
-          'Calories ~${pct(eR)} : surplus +10–15 % conseillé.';
+      macroSummaryBody = l10n.advMacroGainLow(pct(eR));
     } else if (eR > 1.2) {
-      macroSummaryBody =
-          'Surplus ~${pct(eR)} : ramène vers +10–15 % pour limiter la prise de gras.';
+      macroSummaryBody = l10n.advMacroGainHigh(pct(eR));
     } else {
-      macroSummaryBody =
-          'Niveau ~${pct(eR)} : OK. Timing glucides autour séances = clé.';
+      macroSummaryBody = l10n.advMacroGainOk(pct(eR));
     }
     if (pR < 1.0) {
-      macroSummaryBody +=
-          ' • Protéines ~${pct(pR)} : 1.6–2.2 g/kg/j sur 3–4 repas.';
+      macroSummaryBody += l10n.advMacroGainProteinLow(pct(pR));
     } else {
-      macroSummaryBody +=
-          ' • Couverture protéique ~${pct(pR)}.';
+      macroSummaryBody += l10n.advMacroGainProteinOk(pct(pR));
     }
   } else {
-    macroSummaryTitle = '⚙️ Maintien du poids de forme';
+    macroSummaryTitle = l10n.advMacroMaintainTitle;
     if (eR < 0.9) {
-      macroSummaryBody =
-          'Énergie ~${pct(eR)} : un peu basse. Remonte légèrement si fatigue.';
+      macroSummaryBody = l10n.advMacroMaintainLow(pct(eR));
     } else if (eR > 1.1) {
-      macroSummaryBody =
-          'Énergie ~${pct(eR)} : un peu haute. Ajuste extras & boissons.';
+      macroSummaryBody = l10n.advMacroMaintainHigh(pct(eR));
     } else {
-      macroSummaryBody =
-          'Énergie ~${pct(eR)} : alignée. Joue la qualité pour digestion/sommeil.';
+      macroSummaryBody = l10n.advMacroMaintainOk(pct(eR));
     }
     if (pR < 0.9) {
-      macroSummaryBody +=
-          ' • Protéines ~${pct(pR)} : garde un socle suffisant.';
+      macroSummaryBody += l10n.advMacroMaintainProteinLow(pct(pR));
     }
   }
 
   // Coach depuis asset
   final repo = AdviceContentRepo.instance;
-  String activityCoachTitle = '🏃‍♂️ Coach activité & récupération';
+  String activityCoachTitle = l10n.advActivityCoachTitle;
   final slotIdx = _hourSlot6(now);
   List<String> coachList;
   if (!isSportif) {
@@ -1629,19 +1523,18 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
       pickedCoach[slotIdx % pickedCoach.length];
 
   // Saisie active & Motivation
-  const logTitle = '🧭 Ajuste ton tableau de bord holistique';
-  const logFields = [
-    'Durée de sommeil (heures)',
-    'Litres d’eau (hors café/alcool)',
-    'Stress ressenti (1–10)',
+  final logTitle = l10n.advDashboardLogTitle;
+  final logFields = [
+    l10n.advLogFieldSleep,
+    l10n.advLogFieldWater,
+    l10n.advLogFieldStress,
   ];
 
   String defi24h, quotePremium;
   if (topic == 'hydration') {
     defi24h =
-        'Atteins ${(hyd.targetMl / 1000).toStringAsFixed(1)} L aujourd’hui, répartis sur la journée.';
-    quotePremium =
-        '« Une cellule bien hydratée travaille en silence pour ta longévité. »';
+        l10n.advDefiHydration((hyd.targetMl / 1000).toStringAsFixed(1));
+    quotePremium = l10n.advQuoteHydration;
   } else if ([
     'omega3',
     'omega3_ALA',
@@ -1650,20 +1543,16 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
     'EPA',
     'DHA',
   ].contains(topic)) {
-    defi24h =
-        'Ajoute une vraie source d’EFAs (poisson gras ou lin/chia moulus + huile colza/olive).';
-    quotePremium =
-        '« Les lipides de qualité sont la matière première de ton cerveau. »';
+    defi24h = l10n.advDefiEfas;
+    quotePremium = l10n.advQuoteEfas;
   } else if ([
     'vitA',
     'vitD',
     'vitE',
     'vitK',
   ].contains(topic)) {
-    defi24h =
-        '1 source liposoluble + lumière du matin 10–15 min.';
-    quotePremium =
-        '« Lumière + liposolubles = orchestration métabolique. »';
+    defi24h = l10n.advDefiLiposoluble;
+    quotePremium = l10n.advQuoteLiposoluble;
   } else if ([
     'vitC',
     'B1',
@@ -1674,20 +1563,14 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
     'B9',
     'B12',
   ].contains(topic)) {
-    defi24h =
-        'Repas très coloré + une bonne source protéique.';
-    quotePremium =
-        '« Ton énergie, c’est du code info + du carburant. »';
+    defi24h = l10n.advDefiBVitamins;
+    quotePremium = l10n.advQuoteBVitamins;
   } else if (topic == 'fibers') {
-    defi24h =
-        '1 portion de légumes en plus + 1 portion de légumineuses.';
-    quotePremium =
-        '« Ton microbiote se nourrit de tes habitudes. »';
+    defi24h = l10n.advDefiFibers;
+    quotePremium = l10n.advQuoteFibers;
   } else {
-    defi24h =
-        'Choisis une action du Labo et applique-la aujourd’hui.';
-    quotePremium =
-        '« Les micronutriments, code source de ta vitalité. »';
+    defi24h = l10n.advDefiDefault;
+    quotePremium = l10n.advQuoteDefault;
   }
 
   // Mindset (depuis asset)
@@ -1697,12 +1580,12 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
       : 0;
   final mindsetTitle = (ms.isNotEmpty
           ? ms[mIdx]['title']
-          : '🧠 Progression > perfection') ??
-      '🧠 Progression > perfection';
+          : l10n.advDefaultMindsetTitle) ??
+      l10n.advDefaultMindsetTitle;
   final mindsetBody = (ms.isNotEmpty
           ? ms[mIdx]['body']
-          : 'Chaque repas aligné est un vote pour ton identité.') ??
-      'Chaque repas aligné est un vote pour ton identité.';
+          : l10n.advDefaultMindsetBody) ??
+      l10n.advDefaultMindsetBody;
 
   final totumScore = await computeTodayTotumScore(l10n);
   await _updateCoachScoreHistory(totumScore);

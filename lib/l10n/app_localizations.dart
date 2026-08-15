@@ -4253,6 +4253,1110 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Séance terminée. Prends un instant pour ressentir.'**
   String get consSessionCompleteSnackbar;
+
+  /// No description provided for @advFirstLeverTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'🎯 Premier levier : nourrir ton TOTUM'**
+  String get advFirstLeverTitle;
+
+  /// No description provided for @advFirstLeverTheme.
+  ///
+  /// In fr, this message translates to:
+  /// **'Construire ta base de données personnelle'**
+  String get advFirstLeverTheme;
+
+  /// No description provided for @advFirstLeverInsight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus tu enregistres tes repas, plus les conseils deviennent précis, utiles et motivants.'**
+  String get advFirstLeverInsight;
+
+  /// No description provided for @advNoJournalCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible de détecter des déficits sans journal.'**
+  String get advNoJournalCritique;
+
+  /// No description provided for @advNoJournalBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu construis ton Totem alimentaire : vision claire de ce que tu offres à ton corps.'**
+  String get advNoJournalBenefit;
+
+  /// No description provided for @advNoJournalSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistre petit-déj + repas principal, avec quantités & aliments détaillés.'**
+  String get advNoJournalSource;
+
+  /// No description provided for @advNoJournalTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commence par tes repas « typiques », on raffinera ensuite sur les micronutriments.'**
+  String get advNoJournalTip;
+
+  /// No description provided for @advNoJournalChrono.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans sommeil/eau/stress renseignés, le lien sensations ↔ hygiène de vie reste flou.'**
+  String get advNoJournalChrono;
+
+  /// No description provided for @advNoJournalAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce soir, note heure de coucher, durée, stress (1–10). Demain matin : humeur/énergie.'**
+  String get advNoJournalAction;
+
+  /// No description provided for @advNoJournalLogTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'📝 Active ton suivi holistique'**
+  String get advNoJournalLogTitle;
+
+  /// No description provided for @advNoJournalDefi24h.
+  ///
+  /// In fr, this message translates to:
+  /// **'Défi 24h : renseigne 2 repas complets + sommeil, eau, stress.'**
+  String get advNoJournalDefi24h;
+
+  /// No description provided for @advNoJournalQuote.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Ce qui se mesure se transforme. »'**
+  String get advNoJournalQuote;
+
+  /// No description provided for @advNoJournalMacroTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'⚙️ Macros en attente'**
+  String get advNoJournalMacroTitle;
+
+  /// No description provided for @advNoJournalMacroBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dès qu\'un repas est saisi, je peux vérifier énergie & protéines vs ton objectif.'**
+  String get advNoJournalMacroBody;
+
+  /// No description provided for @advActivityCoachTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'🏃‍♂️ Coach activité & récupération'**
+  String get advActivityCoachTitle;
+
+  /// No description provided for @advActivityCoachSportif.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note tes entraînements + repas pré/post pour affiner énergie & timing.'**
+  String get advActivityCoachSportif;
+
+  /// No description provided for @advActivityCoachSedentary.
+  ///
+  /// In fr, this message translates to:
+  /// **'2–3 créneaux de 20–30 min/semaine (marche rapide, vélo doux, renfo).'**
+  String get advActivityCoachSedentary;
+
+  /// No description provided for @advDefaultMindsetTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'🧠 Progression > perfection'**
+  String get advDefaultMindsetTitle;
+
+  /// No description provided for @advDefaultMindsetBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque repas aligné est un vote pour ton identité.'**
+  String get advDefaultMindsetBody;
+
+  /// No description provided for @advLogFieldSleep.
+  ///
+  /// In fr, this message translates to:
+  /// **'Durée de sommeil (heures)'**
+  String get advLogFieldSleep;
+
+  /// No description provided for @advLogFieldWater.
+  ///
+  /// In fr, this message translates to:
+  /// **'Litres d\'eau (hors café/alcool)'**
+  String get advLogFieldWater;
+
+  /// No description provided for @advLogFieldStress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Stress ressenti (1–10)'**
+  String get advLogFieldStress;
+
+  /// No description provided for @advDashboardLogTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'🧭 Ajuste ton tableau de bord holistique'**
+  String get advDashboardLogTitle;
+
+  /// No description provided for @advOmega9Critique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga-9 en dessous de la zone optimale.'**
+  String get advOmega9Critique;
+
+  /// No description provided for @advOmega9Benefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Soutien cardio-métabolique & souplesse membranaire.'**
+  String get advOmega9Benefit;
+
+  /// No description provided for @advOmega9Source.
+  ///
+  /// In fr, this message translates to:
+  /// **'Huile d\'olive, avocat, amandes/noisettes au quotidien.'**
+  String get advOmega9Source;
+
+  /// No description provided for @advOmega9Tip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilise l\'huile d\'olive à cru/fin de cuisson douce.'**
+  String get advOmega9Tip;
+
+  /// No description provided for @advOmega6Critique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga-6 (LA) un peu bas.'**
+  String get advOmega6Critique;
+
+  /// No description provided for @advOmega6Benefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Structure membranaire, peau & voies hormonales.'**
+  String get advOmega6Benefit;
+
+  /// No description provided for @advOmega6Source.
+  ///
+  /// In fr, this message translates to:
+  /// **'Huiles vierges (tournesol bio), noix/graines variées.'**
+  String get advOmega6Source;
+
+  /// No description provided for @advOmega6Tip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évite les huiles raffinées surchauffées.'**
+  String get advOmega6Tip;
+
+  /// No description provided for @advOmega3AlaCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga-3 ALA insuffisants.'**
+  String get advOmega3AlaCritique;
+
+  /// No description provided for @advOmega3AlaBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Précurseur végétal des oméga-3 marins EPA/DHA.'**
+  String get advOmega3AlaBenefit;
+
+  /// No description provided for @advOmega3AlaSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'1 c.s lin/chia moulus/jour ou quelques noix.'**
+  String get advOmega3AlaSource;
+
+  /// No description provided for @advOmega3AlaTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mouds le lin/chia juste avant de consommer.'**
+  String get advOmega3AlaTip;
+
+  /// No description provided for @advOmega3Critique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga-3 ALA (végétaux) sous la cible.'**
+  String get advOmega3Critique;
+
+  /// No description provided for @advOmega3Benefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Précurseur végétal des oméga-3, anti-inflammatoire.'**
+  String get advOmega3Benefit;
+
+  /// No description provided for @advOmega3Source.
+  ///
+  /// In fr, this message translates to:
+  /// **'Graines de chanvre/lin moulues, noix, huile de colza.'**
+  String get advOmega3Source;
+
+  /// No description provided for @advOmega3Tip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mouds les graines juste avant de consommer.'**
+  String get advOmega3Tip;
+
+  /// No description provided for @advOmega3MarineCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga-3 marins sous la cible.'**
+  String get advOmega3MarineCritique;
+
+  /// No description provided for @advOmega3MarineBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clarté mentale, récupération, anti-inflammation.'**
+  String get advOmega3MarineBenefit;
+
+  /// No description provided for @advOmega3MarineSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'2×/sem poisson gras (sardines/maquereau/hareng).'**
+  String get advOmega3MarineSource;
+
+  /// No description provided for @advOmega3MarineTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cuisson douce + bons lipides.'**
+  String get advOmega3MarineTip;
+
+  /// No description provided for @advVitACritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine A en dessous de l\'optimum.'**
+  String get advVitACritique;
+
+  /// No description provided for @advVitABenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vision nocturne, peau/muqueuses, immunité.'**
+  String get advVitABenefit;
+
+  /// No description provided for @advVitASource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Carotte/patate douce + abats/œufs (selon choix).'**
+  String get advVitASource;
+
+  /// No description provided for @advVitATip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Associe à un peu de gras pour conversion.'**
+  String get advVitATip;
+
+  /// No description provided for @advVitDCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine D probablement insuffisante.'**
+  String get advVitDCritique;
+
+  /// No description provided for @advVitDBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Immunité, force, humeur, santé osseuse.'**
+  String get advVitDBenefit;
+
+  /// No description provided for @advVitDSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sardines/maquereau/œufs entiers, lumière matin.'**
+  String get advVitDSource;
+
+  /// No description provided for @advVitDTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lipides de qualité au repas contenant vit D.'**
+  String get advVitDTip;
+
+  /// No description provided for @advVitECritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine E insuffisante.'**
+  String get advVitECritique;
+
+  /// No description provided for @advVitEBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Antioxydant des membranes cellulaires.'**
+  String get advVitEBenefit;
+
+  /// No description provided for @advVitESource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Huiles vierges, amandes, noisettes, graines.'**
+  String get advVitESource;
+
+  /// No description provided for @advVitETip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisation à froid/cuisson douce.'**
+  String get advVitETip;
+
+  /// No description provided for @advVitKCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine K un peu juste.'**
+  String get advVitKCritique;
+
+  /// No description provided for @advVitKBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Coagulation équilibrée & santé osseuse.'**
+  String get advVitKBenefit;
+
+  /// No description provided for @advVitKSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Légumes verts + un filet d\'huile.'**
+  String get advVitKSource;
+
+  /// No description provided for @advVitKTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Associe verts feuillus à un peu de lipides.'**
+  String get advVitKTip;
+
+  /// No description provided for @advVitCCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine C sous optimal.'**
+  String get advVitCCritique;
+
+  /// No description provided for @advVitCBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Antioxydant, immunité, absorption du fer.'**
+  String get advVitCBenefit;
+
+  /// No description provided for @advVitCSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Kiwi, agrumes, poivron cru, persil.'**
+  String get advVitCSource;
+
+  /// No description provided for @advVitCTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Consomme plutôt cru/peu cuit.'**
+  String get advVitCTip;
+
+  /// No description provided for @advB123Critique.
+  ///
+  /// In fr, this message translates to:
+  /// **'B1/B2/B3 un peu en deçà.'**
+  String get advB123Critique;
+
+  /// No description provided for @advB123Benefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Métabolisme énergétique & système nerveux.'**
+  String get advB123Benefit;
+
+  /// No description provided for @advB123Source.
+  ///
+  /// In fr, this message translates to:
+  /// **'Céréales complètes, légumineuses, poissons/œufs.'**
+  String get advB123Source;
+
+  /// No description provided for @advB123Tip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réduis l\'ultra-transformé pauvre en B.'**
+  String get advB123Tip;
+
+  /// No description provided for @advB56Critique.
+  ///
+  /// In fr, this message translates to:
+  /// **'B5/B6 sous la cible.'**
+  String get advB56Critique;
+
+  /// No description provided for @advB56Benefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Stress, neurotransmetteurs, AA.'**
+  String get advB56Benefit;
+
+  /// No description provided for @advB56Source.
+  ///
+  /// In fr, this message translates to:
+  /// **'Volailles, banane, pois chiches, œufs, avocat.'**
+  String get advB56Source;
+
+  /// No description provided for @advB56Tip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartis sur la journée.'**
+  String get advB56Tip;
+
+  /// No description provided for @advB9Critique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Folates (B9) insuffisants.'**
+  String get advB9Critique;
+
+  /// No description provided for @advB9Benefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renouvellement cellulaire & qualité du sang.'**
+  String get advB9Benefit;
+
+  /// No description provided for @advB9Source.
+  ///
+  /// In fr, this message translates to:
+  /// **'Verts feuillus, légumineuses, herbes fraîches.'**
+  String get advB9Source;
+
+  /// No description provided for @advB9Tip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Part crue ou vapeur douce.'**
+  String get advB9Tip;
+
+  /// No description provided for @advB12Critique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine B12 basse.'**
+  String get advB12Critique;
+
+  /// No description provided for @advB12Benefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Système nerveux & globules rouges.'**
+  String get advB12Benefit;
+
+  /// No description provided for @advB12Source.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits animaux ou aliments enrichis.'**
+  String get advB12Source;
+
+  /// No description provided for @advB12Tip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vegan strict : discuter supplémentation pro.'**
+  String get advB12Tip;
+
+  /// No description provided for @advCalciumCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calcium sous la cible.'**
+  String get advCalciumCritique;
+
+  /// No description provided for @advCalciumBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solidité osseuse & signalisation cellulaire.'**
+  String get advCalciumBenefit;
+
+  /// No description provided for @advCalciumSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Laitiers/alternatives, eaux calciques, tahini.'**
+  String get advCalciumSource;
+
+  /// No description provided for @advCalciumTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartis + statut vit D correct.'**
+  String get advCalciumTip;
+
+  /// No description provided for @advCopperCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cuivre un peu faible.'**
+  String get advCopperCritique;
+
+  /// No description provided for @advCopperBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Collagène, vaisseaux, métabolisme du fer.'**
+  String get advCopperBenefit;
+
+  /// No description provided for @advCopperSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fruits de mer, cacao, noix/graines.'**
+  String get advCopperSource;
+
+  /// No description provided for @advCopperTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Associe à alimentation variée.'**
+  String get advCopperTip;
+
+  /// No description provided for @advIronCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fer sous-optimal.'**
+  String get advIronCritique;
+
+  /// No description provided for @advIronBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oxygénation musculaire & énergie.'**
+  String get advIronBenefit;
+
+  /// No description provided for @advIronSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Légumineuses/abats/viandes + vit C.'**
+  String get advIronSource;
+
+  /// No description provided for @advIronTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évite thé/café juste après repas riches en fer.'**
+  String get advIronTip;
+
+  /// No description provided for @advIodineCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Iode plutôt bas.'**
+  String get advIodineCritique;
+
+  /// No description provided for @advIodineBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Thyroïde → métabolisme & température.'**
+  String get advIodineBenefit;
+
+  /// No description provided for @advIodineSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sel iodé, poissons, fruits de mer, algues raisonnées.'**
+  String get advIodineSource;
+
+  /// No description provided for @advIodineTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évite excès d\'algues si pathologie thyroïde.'**
+  String get advIodineTip;
+
+  /// No description provided for @advMagnesiumCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Magnésium insuffisant.'**
+  String get advMagnesiumCritique;
+
+  /// No description provided for @advMagnesiumBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relaxation nerveuse/musculaire, sommeil.'**
+  String get advMagnesiumBenefit;
+
+  /// No description provided for @advMagnesiumSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Amandes, chocolat noir, verts feuillus, eaux magnésiennes.'**
+  String get advMagnesiumSource;
+
+  /// No description provided for @advMagnesiumTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Limite café tardif ; associe B6.'**
+  String get advMagnesiumTip;
+
+  /// No description provided for @advManganeseCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Manganèse bas.'**
+  String get advManganeseCritique;
+
+  /// No description provided for @advManganeseBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cofacteur antioxydant.'**
+  String get advManganeseBenefit;
+
+  /// No description provided for @advManganeseSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Céréales complètes, noix, thé vert (modéré).'**
+  String get advManganeseSource;
+
+  /// No description provided for @advManganeseTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Limite raffinés pauvres en oligo-éléments.'**
+  String get advManganeseTip;
+
+  /// No description provided for @advPhosphorusCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Phosphore légèrement bas.'**
+  String get advPhosphorusCritique;
+
+  /// No description provided for @advPhosphorusBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Structure os/dents & énergie.'**
+  String get advPhosphorusBenefit;
+
+  /// No description provided for @advPhosphorusSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poisson, œufs, oléagineux.'**
+  String get advPhosphorusSource;
+
+  /// No description provided for @advPhosphorusTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évite sodas aux phosphates ajoutés.'**
+  String get advPhosphorusTip;
+
+  /// No description provided for @advPotassiumCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Potassium insuffisant.'**
+  String get advPotassiumCritique;
+
+  /// No description provided for @advPotassiumBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équilibre tensionnel, contraction musculaire.'**
+  String get advPotassiumBenefit;
+
+  /// No description provided for @advPotassiumSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Banane, avocat, verts, patate douce, légumineuses.'**
+  String get advPotassiumSource;
+
+  /// No description provided for @advPotassiumTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une part crue/vapeur pour préserver minéraux.'**
+  String get advPotassiumTip;
+
+  /// No description provided for @advSeleniumCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sélénium un peu juste.'**
+  String get advSeleniumCritique;
+
+  /// No description provided for @advSeleniumBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Antioxydant clé + thyroïde.'**
+  String get advSeleniumBenefit;
+
+  /// No description provided for @advSeleniumSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poisson, fruits de mer, œufs (mieux absorbés).'**
+  String get advSeleniumSource;
+
+  /// No description provided for @advSeleniumTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évite les excès prolongés.'**
+  String get advSeleniumTip;
+
+  /// No description provided for @advSodiumCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sodium un peu bas vs besoins.'**
+  String get advSodiumCritique;
+
+  /// No description provided for @advSodiumBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hydrique, conduction nerveuse.'**
+  String get advSodiumBenefit;
+
+  /// No description provided for @advSodiumSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sel de qualité sur aliments bruts si transpiration.'**
+  String get advSodiumSource;
+
+  /// No description provided for @advSodiumTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évite ultra-salés transformés.'**
+  String get advSodiumTip;
+
+  /// No description provided for @advZincCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Zinc possiblement insuffisant.'**
+  String get advZincCritique;
+
+  /// No description provided for @advZincBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Immunité, peau, hormones.'**
+  String get advZincBenefit;
+
+  /// No description provided for @advZincSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fruits de mer, bœuf, graines de courge.'**
+  String get advZincSource;
+
+  /// No description provided for @advZincTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Limite excès de sucre.'**
+  String get advZincTip;
+
+  /// No description provided for @advFibersCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fibres sous 30 g/j.'**
+  String get advFibersCritique;
+
+  /// No description provided for @advFibersBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Microbiote, satiété, glycémie.'**
+  String get advFibersBenefit;
+
+  /// No description provided for @advFibersSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'+Légumineuses, légumes à chaque repas, fruits entiers.'**
+  String get advFibersSource;
+
+  /// No description provided for @advFibersTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Monte progressivement + eau suffisante.'**
+  String get advFibersTip;
+
+  /// No description provided for @advDefaultCritique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un ou plusieurs micronutriments sous la cible.'**
+  String get advDefaultCritique;
+
+  /// No description provided for @advDefaultBenefit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus de densité micro = énergie & sommeil meilleurs.'**
+  String get advDefaultBenefit;
+
+  /// No description provided for @advDefaultSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliments bruts variés, poissons & œufs.'**
+  String get advDefaultSource;
+
+  /// No description provided for @advDefaultTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Assiette colorée = spectre micro plus large.'**
+  String get advDefaultTip;
+
+  /// No description provided for @advMoveTodayDefault.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bouge un peu aujourd\'hui 😉'**
+  String get advMoveTodayDefault;
+
+  /// No description provided for @advPackLowSleepHighStress1.
+  ///
+  /// In fr, this message translates to:
+  /// **'1️⃣ 20–30 min dehors (lumière naturelle) + 5 min de respiration nasale lente en fin de journée.'**
+  String get advPackLowSleepHighStress1;
+
+  /// No description provided for @advPackLowSleepHighStress2.
+  ///
+  /// In fr, this message translates to:
+  /// **'2️⃣ Couvre-feu digital 45–60 min avant le coucher + lecture légère ou journal de gratitude (3 points).'**
+  String get advPackLowSleepHighStress2;
+
+  /// No description provided for @advPackLowSleepHighStress3.
+  ///
+  /// In fr, this message translates to:
+  /// **'3️⃣ Dîner plus tôt, léger et peu sucré, puis douche tiède et respiration 4–6 pendant 3–5 min.'**
+  String get advPackLowSleepHighStress3;
+
+  /// No description provided for @advPackLowSleepHighStress4.
+  ///
+  /// In fr, this message translates to:
+  /// **'4️⃣ Si ruminations : noter tout ce qui tourne en boucle sur papier avant d\'aller au lit.'**
+  String get advPackLowSleepHighStress4;
+
+  /// No description provided for @advPackLowSleep1.
+  ///
+  /// In fr, this message translates to:
+  /// **'1️⃣ Fixer une heure de coucher cible réaliste (même le week-end) et s\'y tenir 3 soirs de suite.'**
+  String get advPackLowSleep1;
+
+  /// No description provided for @advPackLowSleep2.
+  ///
+  /// In fr, this message translates to:
+  /// **'2️⃣ Avancer le dernier café/thé noir au plus tard 14–15 h.'**
+  String get advPackLowSleep2;
+
+  /// No description provided for @advPackLowSleep3.
+  ///
+  /// In fr, this message translates to:
+  /// **'3️⃣ Créer un petit rituel de \"décompression\" de 10–15 min (étirements doux + lumière tamisée).'**
+  String get advPackLowSleep3;
+
+  /// No description provided for @advPackLowSleep4.
+  ///
+  /// In fr, this message translates to:
+  /// **'4️⃣ Chambre : fraîche, très sombre, silencieuse ou bruit blanc léger.'**
+  String get advPackLowSleep4;
+
+  /// No description provided for @advPackHighStress1.
+  ///
+  /// In fr, this message translates to:
+  /// **'1️⃣ Micro-pauses : 2–3 min toutes les 60–90 min (respiration calme + quelques pas).'**
+  String get advPackHighStress1;
+
+  /// No description provided for @advPackHighStress2.
+  ///
+  /// In fr, this message translates to:
+  /// **'2️⃣ 5 respirations lentes avant chaque repas pour faire redescendre le système nerveux.'**
+  String get advPackHighStress2;
+
+  /// No description provided for @advPackHighStress3.
+  ///
+  /// In fr, this message translates to:
+  /// **'3️⃣ Marche de 10–15 min en extérieur sans téléphone, en portant l\'attention sur la respiration.'**
+  String get advPackHighStress3;
+
+  /// No description provided for @advPackHighStress4.
+  ///
+  /// In fr, this message translates to:
+  /// **'4️⃣ Le soir : écrire 3 choses qui se sont bien passées dans la journée, même si elles sont petites.'**
+  String get advPackHighStress4;
+
+  /// No description provided for @advPackHighStressHydration.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hydratation un peu basse : répartir l\'eau sur la journée aide aussi la clarté mentale.'**
+  String get advPackHighStressHydration;
+
+  /// No description provided for @advPackStable1.
+  ///
+  /// In fr, this message translates to:
+  /// **'1️⃣ Maintiens ton rythme de coucher et de lever, même le week-end (±1 h max).'**
+  String get advPackStable1;
+
+  /// No description provided for @advPackStable2.
+  ///
+  /// In fr, this message translates to:
+  /// **'2️⃣ Ajoute 8–12 min de marche lente après un repas pour digestion + glycémie.'**
+  String get advPackStable2;
+
+  /// No description provided for @advPackStable3.
+  ///
+  /// In fr, this message translates to:
+  /// **'3️⃣ Prévois 1 moment \"off écran\" de 15–20 min dans la journée (lecture, musique, nature).'**
+  String get advPackStable3;
+
+  /// No description provided for @advPackStable4.
+  ///
+  /// In fr, this message translates to:
+  /// **'4️⃣ Introduis 1 portion de légumes verts en plus pour soutenir micronutrition & récupération.'**
+  String get advPackStable4;
+
+  /// No description provided for @advChronoLowSleepHighStress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sommeil court (~{hours} h) + stress élevé ({stress}/10). Le système nerveux tire fort sur les réserves.'**
+  String advChronoLowSleepHighStress(String hours, int stress);
+
+  /// No description provided for @advChronoLowSleep.
+  ///
+  /// In fr, this message translates to:
+  /// **'Temps de sommeil un peu court (~{hours} h). L\'empilement de nuits raccourcies finit par impacter énergie et humeur.'**
+  String advChronoLowSleep(String hours);
+
+  /// No description provided for @advChronoHighStress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sommeil convenable (~{hours} h) mais stress élevé ({stress}/10). Le mental tourne vite.'**
+  String advChronoHighStress(String hours, int stress);
+
+  /// No description provided for @advChronoStable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sommeil et niveau de stress plutôt stables (≈{hours} h, stress {stress}/10). On peut jouer le \"fine tuning\" vitalité.'**
+  String advChronoStable(String hours, int stress);
+
+  /// No description provided for @advChronoIncomplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renseigne ton sommeil et ton niveau de stress pour des conseils bien-être personnalisés, adaptés à ta forme du moment.'**
+  String get advChronoIncomplete;
+
+  /// No description provided for @advActionIncomplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pendant 3 jours, note chaque matin tes heures de sommeil, ton niveau de stress (1–10) et ton énergie au réveil. TOTUM affinera progressivement les leviers proposés pour toi.'**
+  String get advActionIncomplete;
+
+  /// No description provided for @advMacroLossTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'⚖️ Perte de poids intelligente'**
+  String get advMacroLossTitle;
+
+  /// No description provided for @advMacroLossHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apport ~{pct} : vise un déficit léger (-10 à -20 %) durable.'**
+  String advMacroLossHigh(String pct);
+
+  /// No description provided for @advMacroLossLow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apport ~{pct} : si fatigue/fringales, remonte avec aliments bruts.'**
+  String advMacroLossLow(String pct);
+
+  /// No description provided for @advMacroLossOk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Énergie ~{pct} : trajectoire cohérente. Qualité & fibres = priorité.'**
+  String advMacroLossOk(String pct);
+
+  /// No description provided for @advMacroProteinLow.
+  ///
+  /// In fr, this message translates to:
+  /// **' • Protéines ~{pct} : une source à chaque repas.'**
+  String advMacroProteinLow(String pct);
+
+  /// No description provided for @advMacroProteinHighSportif.
+  ///
+  /// In fr, this message translates to:
+  /// **' • Protéines généreuses ~{pct} : répartis sur 3–4 prises.'**
+  String advMacroProteinHighSportif(String pct);
+
+  /// No description provided for @advMacroGainTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'🏗️ Construction musculaire'**
+  String get advMacroGainTitle;
+
+  /// No description provided for @advMacroGainLow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calories ~{pct} : surplus +10–15 % conseillé.'**
+  String advMacroGainLow(String pct);
+
+  /// No description provided for @advMacroGainHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Surplus ~{pct} : ramène vers +10–15 % pour limiter la prise de gras.'**
+  String advMacroGainHigh(String pct);
+
+  /// No description provided for @advMacroGainOk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Niveau ~{pct} : OK. Timing glucides autour séances = clé.'**
+  String advMacroGainOk(String pct);
+
+  /// No description provided for @advMacroGainProteinLow.
+  ///
+  /// In fr, this message translates to:
+  /// **' • Protéines ~{pct} : 1.6–2.2 g/kg/j sur 3–4 repas.'**
+  String advMacroGainProteinLow(String pct);
+
+  /// No description provided for @advMacroGainProteinOk.
+  ///
+  /// In fr, this message translates to:
+  /// **' • Couverture protéique ~{pct}.'**
+  String advMacroGainProteinOk(String pct);
+
+  /// No description provided for @advMacroMaintainTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'⚙️ Maintien du poids de forme'**
+  String get advMacroMaintainTitle;
+
+  /// No description provided for @advMacroMaintainLow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Énergie ~{pct} : un peu basse. Remonte légèrement si fatigue.'**
+  String advMacroMaintainLow(String pct);
+
+  /// No description provided for @advMacroMaintainHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Énergie ~{pct} : un peu haute. Ajuste extras & boissons.'**
+  String advMacroMaintainHigh(String pct);
+
+  /// No description provided for @advMacroMaintainOk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Énergie ~{pct} : alignée. Joue la qualité pour digestion/sommeil.'**
+  String advMacroMaintainOk(String pct);
+
+  /// No description provided for @advMacroMaintainProteinLow.
+  ///
+  /// In fr, this message translates to:
+  /// **' • Protéines ~{pct} : garde un socle suffisant.'**
+  String advMacroMaintainProteinLow(String pct);
+
+  /// No description provided for @advDefiHydration.
+  ///
+  /// In fr, this message translates to:
+  /// **'Atteins {liters} L aujourd\'hui, répartis sur la journée.'**
+  String advDefiHydration(String liters);
+
+  /// No description provided for @advQuoteHydration.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Une cellule bien hydratée travaille en silence pour ta longévité. »'**
+  String get advQuoteHydration;
+
+  /// No description provided for @advDefiEfas.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute une vraie source d\'EFAs (poisson gras ou lin/chia moulus + huile colza/olive).'**
+  String get advDefiEfas;
+
+  /// No description provided for @advQuoteEfas.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Les lipides de qualité sont la matière première de ton cerveau. »'**
+  String get advQuoteEfas;
+
+  /// No description provided for @advDefiLiposoluble.
+  ///
+  /// In fr, this message translates to:
+  /// **'1 source liposoluble + lumière du matin 10–15 min.'**
+  String get advDefiLiposoluble;
+
+  /// No description provided for @advQuoteLiposoluble.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Lumière + liposolubles = orchestration métabolique. »'**
+  String get advQuoteLiposoluble;
+
+  /// No description provided for @advDefiBVitamins.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repas très coloré + une bonne source protéique.'**
+  String get advDefiBVitamins;
+
+  /// No description provided for @advQuoteBVitamins.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Ton énergie, c\'est du code info + du carburant. »'**
+  String get advQuoteBVitamins;
+
+  /// No description provided for @advDefiFibers.
+  ///
+  /// In fr, this message translates to:
+  /// **'1 portion de légumes en plus + 1 portion de légumineuses.'**
+  String get advDefiFibers;
+
+  /// No description provided for @advQuoteFibers.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Ton microbiote se nourrit de tes habitudes. »'**
+  String get advQuoteFibers;
+
+  /// No description provided for @advDefiDefault.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis une action du Labo et applique-la aujourd\'hui.'**
+  String get advDefiDefault;
+
+  /// No description provided for @advQuoteDefault.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Les micronutriments, code source de ta vitalité. »'**
+  String get advQuoteDefault;
 }
 
 class _AppLocalizationsDelegate

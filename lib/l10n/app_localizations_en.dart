@@ -2416,4 +2416,656 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get consSessionCompleteSnackbar =>
       'Session complete. Take a moment to feel it.';
+
+  @override
+  String get advFirstLeverTitle => '🎯 First lever: feed your TOTUM';
+
+  @override
+  String get advFirstLeverTheme => 'Build your personal data foundation';
+
+  @override
+  String get advFirstLeverInsight =>
+      'The more meals you log, the more precise, useful and motivating the advice becomes.';
+
+  @override
+  String get advNoJournalCritique =>
+      'Can\'t detect deficiencies without a journal.';
+
+  @override
+  String get advNoJournalBenefit =>
+      'You\'re building your food Totem: a clear view of what you give your body.';
+
+  @override
+  String get advNoJournalSource =>
+      'Log breakfast + your main meal, with detailed quantities and foods.';
+
+  @override
+  String get advNoJournalTip =>
+      'Start with your \"typical\" meals, we\'ll refine on micronutrients next.';
+
+  @override
+  String get advNoJournalChrono =>
+      'Without sleep/water/stress logged, the link between how you feel and your habits stays unclear.';
+
+  @override
+  String get advNoJournalAction =>
+      'Tonight, note your bedtime, its duration, and your stress (1–10). Tomorrow morning: mood/energy.';
+
+  @override
+  String get advNoJournalLogTitle => '📝 Activate your holistic tracking';
+
+  @override
+  String get advNoJournalDefi24h =>
+      '24h challenge: log 2 full meals + sleep, water, stress.';
+
+  @override
+  String get advNoJournalQuote => '\"What gets measured gets transformed.\"';
+
+  @override
+  String get advNoJournalMacroTitle => '⚙️ Macros pending';
+
+  @override
+  String get advNoJournalMacroBody =>
+      'As soon as a meal is logged, I can check energy & protein against your goal.';
+
+  @override
+  String get advActivityCoachTitle => '🏃‍♂️ Activity & recovery coach';
+
+  @override
+  String get advActivityCoachSportif =>
+      'Log your workouts + pre/post meals to fine-tune energy & timing.';
+
+  @override
+  String get advActivityCoachSedentary =>
+      '2–3 slots of 20–30 min/week (brisk walk, easy cycling, light strength work).';
+
+  @override
+  String get advDefaultMindsetTitle => '🧠 Progress > perfection';
+
+  @override
+  String get advDefaultMindsetBody =>
+      'Every aligned meal is a vote for the identity you\'re building.';
+
+  @override
+  String get advLogFieldSleep => 'Sleep duration (hours)';
+
+  @override
+  String get advLogFieldWater => 'Liters of water (excl. coffee/alcohol)';
+
+  @override
+  String get advLogFieldStress => 'Perceived stress (1–10)';
+
+  @override
+  String get advDashboardLogTitle => '🧭 Adjust your holistic dashboard';
+
+  @override
+  String get advOmega9Critique => 'Omega-9 below the optimal zone.';
+
+  @override
+  String get advOmega9Benefit =>
+      'Cardio-metabolic support & membrane flexibility.';
+
+  @override
+  String get advOmega9Source => 'Olive oil, avocado, almonds/hazelnuts daily.';
+
+  @override
+  String get advOmega9Tip => 'Use olive oil raw or for gentle end-of-cooking.';
+
+  @override
+  String get advOmega6Critique => 'Omega-6 (LA) a bit low.';
+
+  @override
+  String get advOmega6Benefit =>
+      'Membrane structure, skin & hormonal pathways.';
+
+  @override
+  String get advOmega6Source =>
+      'Virgin oils (organic sunflower), assorted nuts/seeds.';
+
+  @override
+  String get advOmega6Tip => 'Avoid overheated refined oils.';
+
+  @override
+  String get advOmega3AlaCritique => 'Omega-3 ALA insufficient.';
+
+  @override
+  String get advOmega3AlaBenefit =>
+      'Plant precursor of marine omega-3s EPA/DHA.';
+
+  @override
+  String get advOmega3AlaSource =>
+      '1 tbsp ground flax/chia per day, or a few walnuts.';
+
+  @override
+  String get advOmega3AlaTip => 'Grind flax/chia right before eating.';
+
+  @override
+  String get advOmega3Critique => 'Plant omega-3 ALA below target.';
+
+  @override
+  String get advOmega3Benefit =>
+      'Plant precursor of omega-3, anti-inflammatory.';
+
+  @override
+  String get advOmega3Source =>
+      'Ground hemp/flax seeds, walnuts, rapeseed oil.';
+
+  @override
+  String get advOmega3Tip => 'Grind the seeds right before eating.';
+
+  @override
+  String get advOmega3MarineCritique => 'Marine omega-3 below target.';
+
+  @override
+  String get advOmega3MarineBenefit =>
+      'Mental clarity, recovery, anti-inflammatory.';
+
+  @override
+  String get advOmega3MarineSource =>
+      'Oily fish 2x/week (sardines/mackerel/herring).';
+
+  @override
+  String get advOmega3MarineTip => 'Gentle cooking + good fats.';
+
+  @override
+  String get advVitACritique => 'Vitamin A below optimal.';
+
+  @override
+  String get advVitABenefit => 'Night vision, skin/mucous membranes, immunity.';
+
+  @override
+  String get advVitASource =>
+      'Carrot/sweet potato + organ meats/eggs (depending on choice).';
+
+  @override
+  String get advVitATip => 'Pair with a bit of fat for conversion.';
+
+  @override
+  String get advVitDCritique => 'Vitamin D probably insufficient.';
+
+  @override
+  String get advVitDBenefit => 'Immunity, strength, mood, bone health.';
+
+  @override
+  String get advVitDSource => 'Sardines/mackerel/whole eggs, morning light.';
+
+  @override
+  String get advVitDTip => 'Quality fats in the meal containing vit D.';
+
+  @override
+  String get advVitECritique => 'Vitamin E insufficient.';
+
+  @override
+  String get advVitEBenefit => 'Antioxidant for cell membranes.';
+
+  @override
+  String get advVitESource => 'Virgin oils, almonds, hazelnuts, seeds.';
+
+  @override
+  String get advVitETip => 'Use cold or with gentle cooking.';
+
+  @override
+  String get advVitKCritique => 'Vitamin K a bit tight.';
+
+  @override
+  String get advVitKBenefit => 'Balanced clotting & bone health.';
+
+  @override
+  String get advVitKSource => 'Green vegetables + a drizzle of oil.';
+
+  @override
+  String get advVitKTip => 'Pair leafy greens with a bit of fat.';
+
+  @override
+  String get advVitCCritique => 'Vitamin C below optimal.';
+
+  @override
+  String get advVitCBenefit => 'Antioxidant, immunity, iron absorption.';
+
+  @override
+  String get advVitCSource => 'Kiwi, citrus, raw bell pepper, parsley.';
+
+  @override
+  String get advVitCTip => 'Eat it raw or lightly cooked.';
+
+  @override
+  String get advB123Critique => 'B1/B2/B3 a bit below target.';
+
+  @override
+  String get advB123Benefit => 'Energy metabolism & nervous system.';
+
+  @override
+  String get advB123Source => 'Whole grains, legumes, fish/eggs.';
+
+  @override
+  String get advB123Tip =>
+      'Cut back on ultra-processed food, low in B vitamins.';
+
+  @override
+  String get advB56Critique => 'B5/B6 below target.';
+
+  @override
+  String get advB56Benefit => 'Stress, neurotransmitters, amino acids.';
+
+  @override
+  String get advB56Source => 'Poultry, banana, chickpeas, eggs, avocado.';
+
+  @override
+  String get advB56Tip => 'Spread intake across the day.';
+
+  @override
+  String get advB9Critique => 'Folate (B9) insufficient.';
+
+  @override
+  String get advB9Benefit => 'Cell renewal & blood quality.';
+
+  @override
+  String get advB9Source => 'Leafy greens, legumes, fresh herbs.';
+
+  @override
+  String get advB9Tip => 'Have it raw or lightly steamed.';
+
+  @override
+  String get advB12Critique => 'Vitamin B12 low.';
+
+  @override
+  String get advB12Benefit => 'Nervous system & red blood cells.';
+
+  @override
+  String get advB12Source => 'Animal products or fortified foods.';
+
+  @override
+  String get advB12Tip =>
+      'Strict vegan: discuss supplementation with a professional.';
+
+  @override
+  String get advCalciumCritique => 'Calcium below target.';
+
+  @override
+  String get advCalciumBenefit => 'Bone strength & cell signaling.';
+
+  @override
+  String get advCalciumSource =>
+      'Dairy/alternatives, calcium-rich mineral water, tahini.';
+
+  @override
+  String get advCalciumTip => 'Spread intake + maintain good vitamin D status.';
+
+  @override
+  String get advCopperCritique => 'Copper a bit low.';
+
+  @override
+  String get advCopperBenefit => 'Collagen, blood vessels, iron metabolism.';
+
+  @override
+  String get advCopperSource => 'Seafood, cocoa, nuts/seeds.';
+
+  @override
+  String get advCopperTip => 'Pair with a varied diet.';
+
+  @override
+  String get advIronCritique => 'Iron suboptimal.';
+
+  @override
+  String get advIronBenefit => 'Muscle oxygenation & energy.';
+
+  @override
+  String get advIronSource => 'Legumes/organ meats/red meat + vitamin C.';
+
+  @override
+  String get advIronTip => 'Avoid tea/coffee right after iron-rich meals.';
+
+  @override
+  String get advIodineCritique => 'Iodine rather low.';
+
+  @override
+  String get advIodineBenefit => 'Thyroid → metabolism & body temperature.';
+
+  @override
+  String get advIodineSource =>
+      'Iodized salt, fish, seafood, seaweed in moderation.';
+
+  @override
+  String get advIodineTip =>
+      'Avoid excess seaweed if you have a thyroid condition.';
+
+  @override
+  String get advMagnesiumCritique => 'Magnesium insufficient.';
+
+  @override
+  String get advMagnesiumBenefit => 'Nerve/muscle relaxation, sleep.';
+
+  @override
+  String get advMagnesiumSource =>
+      'Almonds, dark chocolate, leafy greens, magnesium-rich water.';
+
+  @override
+  String get advMagnesiumTip => 'Limit late coffee; pair with B6.';
+
+  @override
+  String get advManganeseCritique => 'Manganese low.';
+
+  @override
+  String get advManganeseBenefit => 'Antioxidant cofactor.';
+
+  @override
+  String get advManganeseSource => 'Whole grains, nuts, green tea (moderate).';
+
+  @override
+  String get advManganeseTip => 'Limit refined foods low in trace elements.';
+
+  @override
+  String get advPhosphorusCritique => 'Phosphorus slightly low.';
+
+  @override
+  String get advPhosphorusBenefit => 'Bone/teeth structure & energy.';
+
+  @override
+  String get advPhosphorusSource => 'Fish, eggs, nuts and seeds.';
+
+  @override
+  String get advPhosphorusTip => 'Avoid sodas with added phosphates.';
+
+  @override
+  String get advPotassiumCritique => 'Potassium insufficient.';
+
+  @override
+  String get advPotassiumBenefit =>
+      'Blood pressure balance, muscle contraction.';
+
+  @override
+  String get advPotassiumSource =>
+      'Banana, avocado, greens, sweet potato, legumes.';
+
+  @override
+  String get advPotassiumTip =>
+      'A raw/steamed portion helps preserve minerals.';
+
+  @override
+  String get advSeleniumCritique => 'Selenium a bit tight.';
+
+  @override
+  String get advSeleniumBenefit => 'Key antioxidant + thyroid support.';
+
+  @override
+  String get advSeleniumSource => 'Fish, seafood, eggs (better absorbed).';
+
+  @override
+  String get advSeleniumTip => 'Avoid prolonged excess.';
+
+  @override
+  String get advSodiumCritique => 'Sodium a bit low vs needs.';
+
+  @override
+  String get advSodiumBenefit => 'Fluid balance, nerve conduction.';
+
+  @override
+  String get advSodiumSource =>
+      'Quality salt on whole foods if sweating a lot.';
+
+  @override
+  String get advSodiumTip => 'Avoid heavily salted processed foods.';
+
+  @override
+  String get advZincCritique => 'Zinc possibly insufficient.';
+
+  @override
+  String get advZincBenefit => 'Immunity, skin, hormones.';
+
+  @override
+  String get advZincSource => 'Seafood, beef, pumpkin seeds.';
+
+  @override
+  String get advZincTip => 'Limit excess sugar.';
+
+  @override
+  String get advFibersCritique => 'Fiber below 30 g/day.';
+
+  @override
+  String get advFibersBenefit => 'Microbiome, satiety, blood sugar.';
+
+  @override
+  String get advFibersSource =>
+      '+ Legumes, vegetables at every meal, whole fruit.';
+
+  @override
+  String get advFibersTip => 'Increase gradually + drink enough water.';
+
+  @override
+  String get advDefaultCritique => 'One or more micronutrients below target.';
+
+  @override
+  String get advDefaultBenefit => 'More micro density = better energy & sleep.';
+
+  @override
+  String get advDefaultSource => 'Varied whole foods, fish & eggs.';
+
+  @override
+  String get advDefaultTip => 'A colorful plate = a wider micro spectrum.';
+
+  @override
+  String get advMoveTodayDefault => 'Move a little today 😉';
+
+  @override
+  String get advPackLowSleepHighStress1 =>
+      '1️⃣ 20–30 min outside (natural light) + 5 min of slow nasal breathing at the end of the day.';
+
+  @override
+  String get advPackLowSleepHighStress2 =>
+      '2️⃣ Digital curfew 45–60 min before bed + light reading or a gratitude journal (3 points).';
+
+  @override
+  String get advPackLowSleepHighStress3 =>
+      '3️⃣ Earlier, lighter, low-sugar dinner, then a warm shower and 4–6 breathing for 3–5 min.';
+
+  @override
+  String get advPackLowSleepHighStress4 =>
+      '4️⃣ If ruminating: write down everything looping in your head on paper before bed.';
+
+  @override
+  String get advPackLowSleep1 =>
+      '1️⃣ Set a realistic target bedtime (even on weekends) and stick to it for 3 nights in a row.';
+
+  @override
+  String get advPackLowSleep2 =>
+      '2️⃣ Move your last coffee/black tea to no later than 2–3 pm.';
+
+  @override
+  String get advPackLowSleep3 =>
+      '3️⃣ Create a short 10–15 min \"wind-down\" ritual (gentle stretching + dim lighting).';
+
+  @override
+  String get advPackLowSleep4 =>
+      '4️⃣ Bedroom: cool, very dark, quiet or light white noise.';
+
+  @override
+  String get advPackHighStress1 =>
+      '1️⃣ Micro-breaks: 2–3 min every 60–90 min (calm breathing + a few steps).';
+
+  @override
+  String get advPackHighStress2 =>
+      '2️⃣ 5 slow breaths before each meal to bring the nervous system down.';
+
+  @override
+  String get advPackHighStress3 =>
+      '3️⃣ A 10–15 min walk outside without your phone, focusing attention on your breathing.';
+
+  @override
+  String get advPackHighStress4 =>
+      '4️⃣ In the evening: write down 3 things that went well today, even small ones.';
+
+  @override
+  String get advPackHighStressHydration =>
+      'Hydration a bit low: spreading water through the day also helps mental clarity.';
+
+  @override
+  String get advPackStable1 =>
+      '1️⃣ Keep your bed/wake rhythm, even on weekends (±1 h max).';
+
+  @override
+  String get advPackStable2 =>
+      '2️⃣ Add an 8–12 min slow walk after a meal for digestion + blood sugar.';
+
+  @override
+  String get advPackStable3 =>
+      '3️⃣ Plan one 15–20 min \"screen-off\" moment in the day (reading, music, nature).';
+
+  @override
+  String get advPackStable4 =>
+      '4️⃣ Add one extra portion of leafy greens to support micronutrition & recovery.';
+
+  @override
+  String advChronoLowSleepHighStress(String hours, int stress) {
+    return 'Short sleep (~$hours h) + high stress ($stress/10). The nervous system is drawing heavily on reserves.';
+  }
+
+  @override
+  String advChronoLowSleep(String hours) {
+    return 'Sleep time a bit short (~$hours h). Stacking up shortened nights ends up affecting energy and mood.';
+  }
+
+  @override
+  String advChronoHighStress(String hours, int stress) {
+    return 'Decent sleep (~$hours h) but high stress ($stress/10). The mind is racing.';
+  }
+
+  @override
+  String advChronoStable(String hours, int stress) {
+    return 'Sleep and stress levels fairly stable (≈$hours h, stress $stress/10). Time for some vitality fine-tuning.';
+  }
+
+  @override
+  String get advChronoIncomplete =>
+      'Log your sleep and stress level for personalized wellbeing advice, tailored to how you\'re doing right now.';
+
+  @override
+  String get advActionIncomplete =>
+      'For 3 days, note each morning your sleep hours, your stress level (1–10) and your energy on waking. TOTUM will progressively fine-tune the levers suggested for you.';
+
+  @override
+  String get advMacroLossTitle => '⚖️ Smart weight loss';
+
+  @override
+  String advMacroLossHigh(String pct) {
+    return 'Intake ~$pct: aim for a light, sustainable deficit (-10 to -20%).';
+  }
+
+  @override
+  String advMacroLossLow(String pct) {
+    return 'Intake ~$pct: if fatigue/cravings, bring it back up with whole foods.';
+  }
+
+  @override
+  String advMacroLossOk(String pct) {
+    return 'Energy ~$pct: consistent trajectory. Quality & fiber are the priority.';
+  }
+
+  @override
+  String advMacroProteinLow(String pct) {
+    return ' • Protein ~$pct: one source at every meal.';
+  }
+
+  @override
+  String advMacroProteinHighSportif(String pct) {
+    return ' • Generous protein ~$pct: spread over 3–4 servings.';
+  }
+
+  @override
+  String get advMacroGainTitle => '🏗️ Muscle building';
+
+  @override
+  String advMacroGainLow(String pct) {
+    return 'Calories ~$pct: a +10–15% surplus is recommended.';
+  }
+
+  @override
+  String advMacroGainHigh(String pct) {
+    return 'Surplus ~$pct: bring it back to +10–15% to limit fat gain.';
+  }
+
+  @override
+  String advMacroGainOk(String pct) {
+    return 'Level ~$pct: OK. Carb timing around sessions is key.';
+  }
+
+  @override
+  String advMacroGainProteinLow(String pct) {
+    return ' • Protein ~$pct: 1.6–2.2 g/kg/day over 3–4 meals.';
+  }
+
+  @override
+  String advMacroGainProteinOk(String pct) {
+    return ' • Protein coverage ~$pct.';
+  }
+
+  @override
+  String get advMacroMaintainTitle => '⚙️ Maintaining your fit weight';
+
+  @override
+  String advMacroMaintainLow(String pct) {
+    return 'Energy ~$pct: a bit low. Bring it up slightly if you feel fatigue.';
+  }
+
+  @override
+  String advMacroMaintainHigh(String pct) {
+    return 'Energy ~$pct: a bit high. Adjust extras & drinks.';
+  }
+
+  @override
+  String advMacroMaintainOk(String pct) {
+    return 'Energy ~$pct: aligned. Focus on quality for digestion/sleep.';
+  }
+
+  @override
+  String advMacroMaintainProteinLow(String pct) {
+    return ' • Protein ~$pct: keep a sufficient base.';
+  }
+
+  @override
+  String advDefiHydration(String liters) {
+    return 'Reach $liters L today, spread across the day.';
+  }
+
+  @override
+  String get advQuoteHydration =>
+      '\"A well-hydrated cell works silently for your longevity.\"';
+
+  @override
+  String get advDefiEfas =>
+      'Add a real source of EFAs (oily fish or ground flax/chia + rapeseed/olive oil).';
+
+  @override
+  String get advQuoteEfas =>
+      '\"Quality fats are the raw material of your brain.\"';
+
+  @override
+  String get advDefiLiposoluble =>
+      '1 fat-soluble source + 10–15 min of morning light.';
+
+  @override
+  String get advQuoteLiposoluble =>
+      '\"Light + fat-soluble vitamins = metabolic orchestration.\"';
+
+  @override
+  String get advDefiBVitamins =>
+      'A very colorful meal + a good protein source.';
+
+  @override
+  String get advQuoteBVitamins =>
+      '\"Your energy is both information code and fuel.\"';
+
+  @override
+  String get advDefiFibers =>
+      '1 extra portion of vegetables + 1 portion of legumes.';
+
+  @override
+  String get advQuoteFibers => '\"Your microbiome feeds on your habits.\"';
+
+  @override
+  String get advDefiDefault =>
+      'Pick an action from the Lab and apply it today.';
+
+  @override
+  String get advQuoteDefault =>
+      '\"Micronutrients: the source code of your vitality.\"';
 }
