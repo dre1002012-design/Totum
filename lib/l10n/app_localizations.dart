@@ -254,6 +254,12 @@ abstract class AppLocalizations {
   /// **'Annuler'**
   String get commonCancel;
 
+  /// No description provided for @commonAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get commonAdd;
+
   /// No description provided for @commonConfirm.
   ///
   /// In fr, this message translates to:
@@ -3227,6 +3233,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Oméga 3 marins (EPA/DHA)'**
   String get nutrientOmega3MarineFull;
+
+  /// No description provided for @nutrientOmega9Short.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga 9'**
+  String get nutrientOmega9Short;
+
+  /// No description provided for @nutrientOmega6Short.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga 6'**
+  String get nutrientOmega6Short;
+
+  /// No description provided for @nutrientOmega3Short.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga 3'**
+  String get nutrientOmega3Short;
 
   /// No description provided for @consPriorityNutritionalTitle.
   ///
@@ -6413,6 +6437,258 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Buddha bowl légumineuses + céréale complète'**
   String get fallbackRecipeFibersBowl;
+
+  /// No description provided for @jrnlOverBy.
+  ///
+  /// In fr, this message translates to:
+  /// **'dépassé de {excess} {unit}'**
+  String jrnlOverBy(String excess, String unit);
+
+  /// No description provided for @jrnlRemainingBy.
+  ///
+  /// In fr, this message translates to:
+  /// **'reste {remaining} {unit}'**
+  String jrnlRemainingBy(String remaining, String unit);
+
+  /// No description provided for @jrnlQtyLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quantité (g)'**
+  String get jrnlQtyLabel;
+
+  /// No description provided for @jrnlMealDropdownLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repas'**
+  String get jrnlMealDropdownLabel;
+
+  /// No description provided for @jrnlGlucidesDetailButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Détail des glucides'**
+  String get jrnlGlucidesDetailButton;
+
+  /// No description provided for @jrnlCompositionFor100g.
+  ///
+  /// In fr, this message translates to:
+  /// **'Composition pour 100 g'**
+  String get jrnlCompositionFor100g;
+
+  /// No description provided for @jrnlCompositionForGrams.
+  ///
+  /// In fr, this message translates to:
+  /// **'Composition (pour {grams} g)'**
+  String jrnlCompositionForGrams(String grams);
+
+  /// No description provided for @jrnlSearchingProduct.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche du produit...'**
+  String get jrnlSearchingProduct;
+
+  /// No description provided for @jrnlProductNotFoundTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produit non trouvé'**
+  String get jrnlProductNotFoundTitle;
+
+  /// No description provided for @jrnlProductNotFoundBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce produit n\'a pas été trouvé dans la base Open Food Facts.\n\nConseils :\n• Vérifiez que tous les chiffres du code-barres sont bien visibles\n• Assurez-vous d\'une bonne luminosité lors du scan\n• Essayez de scanner à nouveau en tenant l\'appareil stable\n\nRéessayez en améliorant les conditions de scan.'**
+  String get jrnlProductNotFoundBody;
+
+  /// No description provided for @jrnlScannedProductFallback.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produit scanné'**
+  String get jrnlScannedProductFallback;
+
+  /// No description provided for @jrnlTechnicalErrorTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur technique'**
+  String get jrnlTechnicalErrorTitle;
+
+  /// No description provided for @jrnlScanErrorBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une erreur est survenue : {error}\n\nRéessayez en scannant à nouveau.'**
+  String jrnlScanErrorBody(String error);
+
+  /// No description provided for @jrnlAddToJournal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter au journal'**
+  String get jrnlAddToJournal;
+
+  /// No description provided for @jrnlAddQuoted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter \"{name}\"'**
+  String jrnlAddQuoted(String name);
+
+  /// No description provided for @jrnlItemsAndKcal.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 aliment} other{{count} aliments}} · {kcal} kcal'**
+  String jrnlItemsAndKcal(int count, String kcal);
+
+  /// No description provided for @jrnlTowardDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers le jour'**
+  String get jrnlTowardDay;
+
+  /// No description provided for @jrnlTowardMeal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers le repas'**
+  String get jrnlTowardMeal;
+
+  /// No description provided for @jrnlRestaurantsInfoTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurants : un écart occasionnel, pas un pilier'**
+  String get jrnlRestaurantsInfoTitle;
+
+  /// No description provided for @jrnlRestaurantsInfoP1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces enseignes viennent de la base USDA (Foundation Foods/SR Legacy) et sont très majoritairement des chaînes de restauration rapide et familiale nord-américaines — recettes et portions reflètent le marché américain.'**
+  String get jrnlRestaurantsInfoP1;
+
+  /// No description provided for @jrnlRestaurantsInfoP2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un repas moyen en chaîne de restauration rapide apporte environ 1200 kcal et 2100 mg de sodium en un seul repas — bien au-dessus des repères pour un repas isolé (environ 700 kcal, moins de 770 mg de sodium).'**
+  String get jrnlRestaurantsInfoP2;
+
+  /// No description provided for @jrnlRestaurantsInfoP3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le comité américain des recommandations alimentaires (Dietary Guidelines Advisory Committee) situe la part raisonnable de calories \"plaisir\" entre 5 et 15% des apports hebdomadaires pour la plupart des adultes. Concrètement, ça représente environ 1 à 2 repas de ce type par semaine — un seul peut déjà représenter l\'essentiel de ce budget.'**
+  String get jrnlRestaurantsInfoP3;
+
+  /// No description provided for @jrnlRestaurantsInfoP4.
+  ///
+  /// In fr, this message translates to:
+  /// **'Au-delà de 3 repas de ce type par semaine, la littérature s\'accorde à dire que ça s\'éloigne nettement d\'une alimentation orientée santé, longévité, vitalité et performance. Pour un écart plus doux, les enseignes \"healthy\"/fast-casual (salades composées, bols, poke...) restent une alternative à considérer.'**
+  String get jrnlRestaurantsInfoP4;
+
+  /// No description provided for @jrnlUnderstood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compris'**
+  String get jrnlUnderstood;
+
+  /// No description provided for @jrnlAboutBrandTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'À propos de cette enseigne'**
+  String get jrnlAboutBrandTitle;
+
+  /// No description provided for @jrnlAboutBrandBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette marque vient de la base USDA (Foundation Foods/SR Legacy) — elle est essentiellement issue du marché américain, ses recettes et portions reflètent donc les produits vendus aux États-Unis, pas nécessairement leur équivalent vendu en France.'**
+  String get jrnlAboutBrandBody;
+
+  /// No description provided for @jrnlInformationsButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Informations'**
+  String get jrnlInformationsButton;
+
+  /// No description provided for @jrnlSearchBrand.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher une enseigne'**
+  String get jrnlSearchBrand;
+
+  /// No description provided for @jrnlSearchWithinBrand.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher dans {name}'**
+  String jrnlSearchWithinBrand(String name);
+
+  /// No description provided for @jrnlNoChainFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune enseigne trouvée'**
+  String get jrnlNoChainFound;
+
+  /// No description provided for @jrnlLoadingEllipsis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chargement...'**
+  String get jrnlLoadingEllipsis;
+
+  /// No description provided for @jrnlNoResults.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun résultat'**
+  String get jrnlNoResults;
+
+  /// No description provided for @jrnlCalorieValueUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valeur calorique non communiquée'**
+  String get jrnlCalorieValueUnknown;
+
+  /// No description provided for @jrnlKcalPer100g.
+  ///
+  /// In fr, this message translates to:
+  /// **'{kcal} kcal / 100 g'**
+  String jrnlKcalPer100g(String kcal);
+
+  /// No description provided for @jrnlGenericFoodFallback.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliment'**
+  String get jrnlGenericFoodFallback;
+
+  /// No description provided for @jrnlRemoveFavorite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer des favoris'**
+  String get jrnlRemoveFavorite;
+
+  /// No description provided for @jrnlAddFavorite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter aux favoris'**
+  String get jrnlAddFavorite;
+
+  /// No description provided for @jrnlItemCountPlain.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 aliment} other{{count} aliments}}'**
+  String jrnlItemCountPlain(int count);
+
+  /// No description provided for @jrnlItemsSelected.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 aliment sélectionné} other{{count} aliments sélectionnés}}'**
+  String jrnlItemsSelected(int count);
+
+  /// No description provided for @jrnlItemsCopiedTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 aliment copié} other{{count} aliments copiés}} vers {meal}'**
+  String jrnlItemsCopiedTo(int count, String meal);
+
+  /// No description provided for @jrnlItemsAddedTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 aliment ajouté} other{{count} aliments ajoutés}} à {meal} (100 g par défaut, ajustable ensuite)'**
+  String jrnlItemsAddedTo(int count, String meal);
+
+  /// No description provided for @jrnlAddedTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'\"{name}\" ajouté à {meal}'**
+  String jrnlAddedTo(String name, String meal);
 }
 
 class _AppLocalizationsDelegate

@@ -97,6 +97,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonCancel => 'Cancel';
 
   @override
+  String get commonAdd => 'Add';
+
+  @override
   String get commonConfirm => 'Confirm';
 
   @override
@@ -1802,6 +1805,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nutrientOmega3MarineFull => 'Marine omega-3 (EPA/DHA)';
+
+  @override
+  String get nutrientOmega9Short => 'Omega-9';
+
+  @override
+  String get nutrientOmega6Short => 'Omega-6';
+
+  @override
+  String get nutrientOmega3Short => 'Omega-3';
 
   @override
   String get consPriorityNutritionalTitle => 'Nutritional priorities';
@@ -3755,4 +3767,193 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fallbackRecipeFibersBowl =>
       'Buddha bowl with legumes + whole grain';
+
+  @override
+  String jrnlOverBy(String excess, String unit) {
+    return 'exceeded by $excess $unit';
+  }
+
+  @override
+  String jrnlRemainingBy(String remaining, String unit) {
+    return '$remaining $unit left';
+  }
+
+  @override
+  String get jrnlQtyLabel => 'Quantity (g)';
+
+  @override
+  String get jrnlMealDropdownLabel => 'Meal';
+
+  @override
+  String get jrnlGlucidesDetailButton => 'Carb breakdown';
+
+  @override
+  String get jrnlCompositionFor100g => 'Composition per 100 g';
+
+  @override
+  String jrnlCompositionForGrams(String grams) {
+    return 'Composition (for $grams g)';
+  }
+
+  @override
+  String get jrnlSearchingProduct => 'Looking up the product...';
+
+  @override
+  String get jrnlProductNotFoundTitle => 'Product not found';
+
+  @override
+  String get jrnlProductNotFoundBody =>
+      'This product wasn\'t found in the Open Food Facts database.\n\nTips:\n• Check that all the barcode digits are clearly visible\n• Make sure there\'s good lighting for the scan\n• Try scanning again while holding the device steady\n\nTry again with better scanning conditions.';
+
+  @override
+  String get jrnlScannedProductFallback => 'Scanned product';
+
+  @override
+  String get jrnlTechnicalErrorTitle => 'Technical error';
+
+  @override
+  String jrnlScanErrorBody(String error) {
+    return 'An error occurred: $error\n\nTry scanning again.';
+  }
+
+  @override
+  String get jrnlAddToJournal => 'Add to journal';
+
+  @override
+  String jrnlAddQuoted(String name) {
+    return 'Add \"$name\"';
+  }
+
+  @override
+  String jrnlItemsAndKcal(int count, String kcal) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0 · $kcal kcal';
+  }
+
+  @override
+  String get jrnlTowardDay => 'To day';
+
+  @override
+  String get jrnlTowardMeal => 'To meal';
+
+  @override
+  String get jrnlRestaurantsInfoTitle =>
+      'Restaurants: an occasional detour, not a staple';
+
+  @override
+  String get jrnlRestaurantsInfoP1 =>
+      'These chains come from the USDA database (Foundation Foods/SR Legacy) and are mostly North American fast-food and family-dining chains — recipes and portions reflect the U.S. market.';
+
+  @override
+  String get jrnlRestaurantsInfoP2 =>
+      'An average fast-food chain meal provides about 1200 kcal and 2100 mg of sodium in a single meal — well above the guidelines for one meal (roughly 700 kcal, under 770 mg of sodium).';
+
+  @override
+  String get jrnlRestaurantsInfoP3 =>
+      'The U.S. Dietary Guidelines Advisory Committee places a reasonable share of \"discretionary\" calories at 5 to 15% of weekly intake for most adults. In practice, that\'s roughly 1 to 2 meals of this type per week — a single one can already represent most of that budget.';
+
+  @override
+  String get jrnlRestaurantsInfoP4 =>
+      'Beyond 3 meals of this type per week, the evidence broadly agrees that this drifts noticeably away from an eating pattern oriented toward health, longevity, vitality and performance. For a gentler detour, \"healthy\"/fast-casual chains (composed salads, bowls, poke...) remain an alternative worth considering.';
+
+  @override
+  String get jrnlUnderstood => 'Got it';
+
+  @override
+  String get jrnlAboutBrandTitle => 'About this brand';
+
+  @override
+  String get jrnlAboutBrandBody =>
+      'This brand comes from the USDA database (Foundation Foods/SR Legacy) — it\'s mostly sourced from the U.S. market, so its recipes and portions reflect products sold in the United States, not necessarily their French equivalent.';
+
+  @override
+  String get jrnlInformationsButton => 'Information';
+
+  @override
+  String get jrnlSearchBrand => 'Search a brand';
+
+  @override
+  String jrnlSearchWithinBrand(String name) {
+    return 'Search within $name';
+  }
+
+  @override
+  String get jrnlNoChainFound => 'No brand found';
+
+  @override
+  String get jrnlLoadingEllipsis => 'Loading...';
+
+  @override
+  String get jrnlNoResults => 'No results';
+
+  @override
+  String get jrnlCalorieValueUnknown => 'Calorie value not provided';
+
+  @override
+  String jrnlKcalPer100g(String kcal) {
+    return '$kcal kcal / 100 g';
+  }
+
+  @override
+  String get jrnlGenericFoodFallback => 'Food';
+
+  @override
+  String get jrnlRemoveFavorite => 'Remove from favorites';
+
+  @override
+  String get jrnlAddFavorite => 'Add to favorites';
+
+  @override
+  String jrnlItemCountPlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String jrnlItemsSelected(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items selected',
+      one: '1 item selected',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String jrnlItemsCopiedTo(int count, String meal) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items copied',
+      one: '1 item copied',
+    );
+    return '$_temp0 to $meal';
+  }
+
+  @override
+  String jrnlItemsAddedTo(int count, String meal) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items added',
+      one: '1 item added',
+    );
+    return '$_temp0 to $meal (100 g by default, adjustable after)';
+  }
+
+  @override
+  String jrnlAddedTo(String name, String meal) {
+    return '\"$name\" added to $meal';
+  }
 }

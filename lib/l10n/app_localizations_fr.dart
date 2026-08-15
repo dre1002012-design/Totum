@@ -97,6 +97,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get commonCancel => 'Annuler';
 
   @override
+  String get commonAdd => 'Ajouter';
+
+  @override
   String get commonConfirm => 'Valider';
 
   @override
@@ -1818,6 +1821,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get nutrientOmega3MarineFull => 'Oméga 3 marins (EPA/DHA)';
+
+  @override
+  String get nutrientOmega9Short => 'Oméga 9';
+
+  @override
+  String get nutrientOmega6Short => 'Oméga 6';
+
+  @override
+  String get nutrientOmega3Short => 'Oméga 3';
 
   @override
   String get consPriorityNutritionalTitle => 'Priorités nutritionnelles';
@@ -3792,4 +3804,193 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get fallbackRecipeFibersBowl =>
       'Buddha bowl légumineuses + céréale complète';
+
+  @override
+  String jrnlOverBy(String excess, String unit) {
+    return 'dépassé de $excess $unit';
+  }
+
+  @override
+  String jrnlRemainingBy(String remaining, String unit) {
+    return 'reste $remaining $unit';
+  }
+
+  @override
+  String get jrnlQtyLabel => 'Quantité (g)';
+
+  @override
+  String get jrnlMealDropdownLabel => 'Repas';
+
+  @override
+  String get jrnlGlucidesDetailButton => 'Détail des glucides';
+
+  @override
+  String get jrnlCompositionFor100g => 'Composition pour 100 g';
+
+  @override
+  String jrnlCompositionForGrams(String grams) {
+    return 'Composition (pour $grams g)';
+  }
+
+  @override
+  String get jrnlSearchingProduct => 'Recherche du produit...';
+
+  @override
+  String get jrnlProductNotFoundTitle => 'Produit non trouvé';
+
+  @override
+  String get jrnlProductNotFoundBody =>
+      'Ce produit n\'a pas été trouvé dans la base Open Food Facts.\n\nConseils :\n• Vérifiez que tous les chiffres du code-barres sont bien visibles\n• Assurez-vous d\'une bonne luminosité lors du scan\n• Essayez de scanner à nouveau en tenant l\'appareil stable\n\nRéessayez en améliorant les conditions de scan.';
+
+  @override
+  String get jrnlScannedProductFallback => 'Produit scanné';
+
+  @override
+  String get jrnlTechnicalErrorTitle => 'Erreur technique';
+
+  @override
+  String jrnlScanErrorBody(String error) {
+    return 'Une erreur est survenue : $error\n\nRéessayez en scannant à nouveau.';
+  }
+
+  @override
+  String get jrnlAddToJournal => 'Ajouter au journal';
+
+  @override
+  String jrnlAddQuoted(String name) {
+    return 'Ajouter \"$name\"';
+  }
+
+  @override
+  String jrnlItemsAndKcal(int count, String kcal) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aliments',
+      one: '1 aliment',
+    );
+    return '$_temp0 · $kcal kcal';
+  }
+
+  @override
+  String get jrnlTowardDay => 'Vers le jour';
+
+  @override
+  String get jrnlTowardMeal => 'Vers le repas';
+
+  @override
+  String get jrnlRestaurantsInfoTitle =>
+      'Restaurants : un écart occasionnel, pas un pilier';
+
+  @override
+  String get jrnlRestaurantsInfoP1 =>
+      'Ces enseignes viennent de la base USDA (Foundation Foods/SR Legacy) et sont très majoritairement des chaînes de restauration rapide et familiale nord-américaines — recettes et portions reflètent le marché américain.';
+
+  @override
+  String get jrnlRestaurantsInfoP2 =>
+      'Un repas moyen en chaîne de restauration rapide apporte environ 1200 kcal et 2100 mg de sodium en un seul repas — bien au-dessus des repères pour un repas isolé (environ 700 kcal, moins de 770 mg de sodium).';
+
+  @override
+  String get jrnlRestaurantsInfoP3 =>
+      'Le comité américain des recommandations alimentaires (Dietary Guidelines Advisory Committee) situe la part raisonnable de calories \"plaisir\" entre 5 et 15% des apports hebdomadaires pour la plupart des adultes. Concrètement, ça représente environ 1 à 2 repas de ce type par semaine — un seul peut déjà représenter l\'essentiel de ce budget.';
+
+  @override
+  String get jrnlRestaurantsInfoP4 =>
+      'Au-delà de 3 repas de ce type par semaine, la littérature s\'accorde à dire que ça s\'éloigne nettement d\'une alimentation orientée santé, longévité, vitalité et performance. Pour un écart plus doux, les enseignes \"healthy\"/fast-casual (salades composées, bols, poke...) restent une alternative à considérer.';
+
+  @override
+  String get jrnlUnderstood => 'Compris';
+
+  @override
+  String get jrnlAboutBrandTitle => 'À propos de cette enseigne';
+
+  @override
+  String get jrnlAboutBrandBody =>
+      'Cette marque vient de la base USDA (Foundation Foods/SR Legacy) — elle est essentiellement issue du marché américain, ses recettes et portions reflètent donc les produits vendus aux États-Unis, pas nécessairement leur équivalent vendu en France.';
+
+  @override
+  String get jrnlInformationsButton => 'Informations';
+
+  @override
+  String get jrnlSearchBrand => 'Rechercher une enseigne';
+
+  @override
+  String jrnlSearchWithinBrand(String name) {
+    return 'Rechercher dans $name';
+  }
+
+  @override
+  String get jrnlNoChainFound => 'Aucune enseigne trouvée';
+
+  @override
+  String get jrnlLoadingEllipsis => 'Chargement...';
+
+  @override
+  String get jrnlNoResults => 'Aucun résultat';
+
+  @override
+  String get jrnlCalorieValueUnknown => 'Valeur calorique non communiquée';
+
+  @override
+  String jrnlKcalPer100g(String kcal) {
+    return '$kcal kcal / 100 g';
+  }
+
+  @override
+  String get jrnlGenericFoodFallback => 'Aliment';
+
+  @override
+  String get jrnlRemoveFavorite => 'Retirer des favoris';
+
+  @override
+  String get jrnlAddFavorite => 'Ajouter aux favoris';
+
+  @override
+  String jrnlItemCountPlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aliments',
+      one: '1 aliment',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String jrnlItemsSelected(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aliments sélectionnés',
+      one: '1 aliment sélectionné',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String jrnlItemsCopiedTo(int count, String meal) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aliments copiés',
+      one: '1 aliment copié',
+    );
+    return '$_temp0 vers $meal';
+  }
+
+  @override
+  String jrnlItemsAddedTo(int count, String meal) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aliments ajoutés',
+      one: '1 aliment ajouté',
+    );
+    return '$_temp0 à $meal (100 g par défaut, ajustable ensuite)';
+  }
+
+  @override
+  String jrnlAddedTo(String name, String meal) {
+    return '\"$name\" ajouté à $meal';
+  }
 }

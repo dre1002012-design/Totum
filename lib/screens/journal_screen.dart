@@ -14,6 +14,9 @@ import 'package:http/http.dart' as http;
 import 'barcode_scan_screen.dart';
 import 'bilan_screen.dart' show showGlucidesBreakdown;
 import '../theme/totum_style.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/l10n_ext.dart';
+import '../services/nutrient_labels.dart';
 
 SupabaseClient get _supabaseClient => Supabase.instance.client;
 
@@ -576,6 +579,17 @@ bool _isCiqualFood(dynamic it) {
     return false;
   }
 }
+
+/// 'Petit-déjeuner'/'Déjeuner'/'Dîner'/'Collation' servent d'IDENTIFIANT
+/// INTERNE STABLE dans tout ce fichier (clé de `_journal`, comparaisons,
+/// callbacks) — jamais traduits à la source. Ne traduit que pour l'AFFICHAGE.
+String _mealTypeLabel(String key, AppLocalizations l10n) => switch (key) {
+      'Petit-déjeuner' => l10n.consCatBreakfast,
+      'Déjeuner' => l10n.consCatLunch,
+      'Dîner' => l10n.consCatDinner,
+      'Collation' => l10n.consCatSnack,
+      _ => key,
+    };
 
 /// Petit badge texte discret (ex. "USDA", "Perso", "Recette") — partagé
 /// entre les différentes listes de recherche, jamais un pavé qui polluerait
@@ -1612,7 +1626,7 @@ class JournalScreenState extends State<JournalScreen> {
                             // displayNameOf() (même fonction que partout
                             // ailleurs dans l'app), qui respecte la langue
                             // choisie dans Réglages → Langue des aliments.
-                            displayNameOf(it, ((it as dynamic).name as String?) ?? 'Aliment'),
+                            displayNameOf(it, ((it as dynamic).name as String?) ?? ctx.l10n.jrnlGenericFoodFallback),
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w700),
                             overflow: TextOverflow.ellipsis,
@@ -1621,8 +1635,8 @@ class JournalScreenState extends State<JournalScreen> {
                         IconButton(
                           tooltip: _fav.isFav(
                                   ((it as dynamic).id as String? ?? ''))
-                              ? 'Retirer des favoris'
-                              : 'Ajouter aux favoris',
+                              ? ctx.l10n.jrnlRemoveFavorite
+                              : ctx.l10n.jrnlAddFavorite,
                           icon: Icon(
                             _fav.isFav(((it as dynamic).id as String? ?? ''))
                                 ? Icons.favorite
@@ -1693,7 +1707,8 @@ class JournalScreenState extends State<JournalScreen> {
                           childrenPadding:
                               const EdgeInsets.fromLTRB(4, 0, 4, 8),
                           title: Text(
-                            'Composition (pour ${recipeTotalWeight.toStringAsFixed(0)} g)',
+                            ctx.l10n.jrnlCompositionForGrams(
+                                recipeTotalWeight.toStringAsFixed(0)),
                             style: const TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.w700),
                           ),
@@ -1726,7 +1741,7 @@ class JournalScreenState extends State<JournalScreen> {
                       children: [
                         Expanded(
                           child: _LabeledField(
-                            label: 'Quantité (g)',
+                            label: ctx.l10n.jrnlQtyLabel,
                             controller: qtyCtrl,
                             keyboardType: TextInputType.number,
                             onChanged: onQtyChanged,
@@ -1736,22 +1751,22 @@ class JournalScreenState extends State<JournalScreen> {
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             initialValue: meal,
-                            items: const [
+                            items: [
                               DropdownMenuItem(
                                   value: 'Petit-déjeuner',
-                                  child: Text('Petit-déjeuner')),
+                                  child: Text(ctx.l10n.consCatBreakfast)),
                               DropdownMenuItem(
                                   value: 'Déjeuner',
-                                  child: Text('Déjeuner')),
+                                  child: Text(ctx.l10n.consCatLunch)),
                               DropdownMenuItem(
-                                  value: 'Dîner', child: Text('Dîner')),
+                                  value: 'Dîner', child: Text(ctx.l10n.consCatDinner)),
                               DropdownMenuItem(
                                   value: 'Collation',
-                                  child: Text('Collation')),
+                                  child: Text(ctx.l10n.consCatSnack)),
                             ],
                             onChanged: (v) => meal = v ?? 'Déjeuner',
                             decoration: InputDecoration(
-                              labelText: 'Repas',
+                              labelText: ctx.l10n.jrnlMealDropdownLabel,
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12)),
                               contentPadding: const EdgeInsets.symmetric(
@@ -1815,11 +1830,11 @@ class JournalScreenState extends State<JournalScreen> {
                                 ctx,
                                 (it as dynamic).micros100
                                     as Map<String, double>,
-                                portionLabel: 'Composition pour 100 g',
+                                portionLabel: ctx.l10n.jrnlCompositionFor100g,
                               ),
                               icon: const Icon(Icons.donut_small,
                                   size: 18, color: TotumColors.accent),
-                              label: const Text('Détail des glucides'),
+                              label: Text(ctx.l10n.jrnlGlucidesDetailButton),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: TotumColors.accent,
                                 side: const BorderSide(
@@ -2168,20 +2183,21 @@ class JournalScreenState extends State<JournalScreen> {
   }
 
   Future<void> _handleBarcode(String rawBarcode) async {
+      final l10n = context.l10n;
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (ctx) => const Center(
+        builder: (ctx) => Center(
           child: Card(
-            margin: EdgeInsets.symmetric(horizontal: 40),
+            margin: const EdgeInsets.symmetric(horizontal: 40),
             child: Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text('Recherche du produit...', textAlign: TextAlign.center),
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text(ctx.l10n.jrnlSearchingProduct, textAlign: TextAlign.center),
                 ],
               ),
             ),
@@ -2202,13 +2218,8 @@ class JournalScreenState extends State<JournalScreen> {
 
         if (data == null) {
           _showErrorDialog(
-            'Produit non trouvé',
-            'Ce produit n\'a pas été trouvé dans la base Open Food Facts.\n\n'
-            'Conseils :\n'
-            '• Vérifiez que tous les chiffres du code-barres sont bien visibles\n'
-            '• Assurez-vous d\'une bonne luminosité lors du scan\n'
-            '• Essayez de scanner à nouveau en tenant l\'appareil stable\n\n'
-            'Réessayez en améliorant les conditions de scan.',
+            l10n.jrnlProductNotFoundTitle,
+            l10n.jrnlProductNotFoundBody,
           );
           return;
         }
@@ -2236,9 +2247,9 @@ class JournalScreenState extends State<JournalScreen> {
         if (name.isEmpty) {
           name = (product['product_name_fr'] ??
                   product['product_name_en'] ??
-                  'Produit scanné').toString().trim();
+                  l10n.jrnlScannedProductFallback).toString().trim();
         }
-        if (name.isEmpty) name = 'Produit scanné';
+        if (name.isEmpty) name = l10n.jrnlScannedProductFallback;
 
         // ── Macros ────────────────────────────────────────────────────────
         final kcal100 = toDN(
@@ -2515,8 +2526,8 @@ class JournalScreenState extends State<JournalScreen> {
 
       } catch (e) {
         if (mounted && Navigator.canPop(context)) Navigator.pop(context);
-        _showErrorDialog('Erreur technique',
-            'Une erreur est survenue : $e\n\nRéessayez en scannant à nouveau.');
+        _showErrorDialog(l10n.jrnlTechnicalErrorTitle,
+            l10n.jrnlScanErrorBody(e.toString()));
       }
     }
 
@@ -2595,7 +2606,7 @@ class JournalScreenState extends State<JournalScreen> {
                                 fontSize: 19, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
                       ),
                       IconButton(
-                        tooltip: fav ? 'Retirer des favoris' : 'Ajouter aux favoris',
+                        tooltip: fav ? ctx.l10n.jrnlRemoveFavorite : ctx.l10n.jrnlAddFavorite,
                         icon: Icon(fav ? Icons.favorite : Icons.favorite_border,
                             color: fav ? TotumColors.accent : TotumColors.textMuted),
                         onPressed: () async {
@@ -2622,7 +2633,7 @@ class JournalScreenState extends State<JournalScreen> {
                     ],
                   ),
                   const SizedBox(height: 14),
-                  Text('${meal.items.length} aliment(s)',
+                  Text(ctx.l10n.jrnlItemCountPlain(meal.items.length),
                       style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: TotumColors.textSecondary)),
                   const SizedBox(height: 6),
                   Expanded(
@@ -2657,7 +2668,7 @@ class JournalScreenState extends State<JournalScreen> {
                             _openMealEditor(editMeal: meal);
                           },
                           icon: const Icon(Icons.edit_outlined, size: 18),
-                          label: const Text('Modifier'),
+                          label: Text(ctx.l10n.sunModifyButton),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -2669,7 +2680,7 @@ class JournalScreenState extends State<JournalScreen> {
                             _addMealTemplateDialog(meal);
                           },
                           icon: const Icon(Icons.add),
-                          label: const Text('Ajouter au journal'),
+                          label: Text(ctx.l10n.jrnlAddToJournal),
                         ),
                       ),
                     ],
@@ -2725,7 +2736,7 @@ class JournalScreenState extends State<JournalScreen> {
                 },
                 child: InputDecorator(
                   decoration: InputDecoration(
-                    labelText: 'Vers le jour',
+                    labelText: ctx.l10n.jrnlTowardDay,
                     suffixIcon: const Icon(Icons.calendar_today, size: 18),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   ),
@@ -2736,34 +2747,35 @@ class JournalScreenState extends State<JournalScreen> {
               DropdownButtonFormField<String>(
                 initialValue: targetMeal,
                 decoration: InputDecoration(
-                  labelText: 'Vers le repas',
+                  labelText: ctx.l10n.jrnlTowardMeal,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                items: const [
-                  DropdownMenuItem(value: 'Petit-déjeuner', child: Text('Petit-déjeuner')),
-                  DropdownMenuItem(value: 'Déjeuner', child: Text('Déjeuner')),
-                  DropdownMenuItem(value: 'Dîner', child: Text('Dîner')),
-                  DropdownMenuItem(value: 'Collation', child: Text('Collation')),
+                items: [
+                  DropdownMenuItem(value: 'Petit-déjeuner', child: Text(ctx.l10n.consCatBreakfast)),
+                  DropdownMenuItem(value: 'Déjeuner', child: Text(ctx.l10n.consCatLunch)),
+                  DropdownMenuItem(value: 'Dîner', child: Text(ctx.l10n.consCatDinner)),
+                  DropdownMenuItem(value: 'Collation', child: Text(ctx.l10n.consCatSnack)),
                 ],
                 onChanged: (v) { if (v != null) setDlg(() => targetMeal = v); },
               ),
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Annuler')),
+            TextButton(onPressed: () => Navigator.pop(ctx), child: Text(ctx.l10n.commonCancel)),
             FilledButton(
               style: FilledButton.styleFrom(backgroundColor: kTotumOrange, foregroundColor: Colors.white),
               onPressed: () async {
+                final l10n = ctx.l10n;
                 Navigator.pop(ctx);
                 await _addCustomMealToDate(meal, targetMeal, targetDate);
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('"${meal.name}" ajouté à $targetMeal'),
+                    content: Text(l10n.jrnlAddedTo(meal.name, _mealTypeLabel(targetMeal, l10n))),
                   ));
                   Navigator.of(context).pop();
                 }
               },
-              child: const Text('Ajouter'),
+              child: Text(ctx.l10n.commonAdd),
             ),
           ],
         ),
@@ -3155,7 +3167,9 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
   }
 
   String _kcalLabel(double? kcal100) =>
-      kcal100 != null ? '${kcal100.toStringAsFixed(0)} kcal / 100 g' : 'Valeur calorique non communiquée';
+      kcal100 != null
+          ? context.l10n.jrnlKcalPer100g(kcal100.toStringAsFixed(0))
+          : context.l10n.jrnlCalorieValueUnknown;
 
   /// Fiche éducative (Priorité 40, retour d'Alex : "dans l'éducation et la
   /// prise de conscience") — chiffres sourcés, pas d'invention : la part de
@@ -3174,6 +3188,7 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
   /// Généralisée pour couvrir aussi "Marques" (contenu plus court, cette
   /// famille n'a pas le même enjeu nutritionnel que la restauration rapide).
   void _showSourceInfoSheet() {
+    final l10n = context.l10n;
     Widget p(String text) => Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(text, style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.45)),
@@ -3191,42 +3206,28 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: _isRestaurant
               ? [
-                  const Text('Restaurants : un écart occasionnel, pas un pilier',
-                      style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w800)),
+                  Text(l10n.jrnlRestaurantsInfoTitle,
+                      style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w800)),
                   const SizedBox(height: 14),
-                  p('Ces enseignes viennent de la base USDA (Foundation Foods/SR Legacy) et sont '
-                      'très majoritairement des chaînes de restauration rapide et familiale '
-                      'nord-américaines — recettes et portions reflètent le marché américain.'),
-                  p('Un repas moyen en chaîne de restauration rapide apporte environ 1200 kcal et '
-                      '2100 mg de sodium en un seul repas — bien au-dessus des repères pour un repas '
-                      'isolé (environ 700 kcal, moins de 770 mg de sodium).'),
-                  p('Le comité américain des recommandations alimentaires (Dietary Guidelines '
-                      'Advisory Committee) situe la part raisonnable de calories "plaisir" entre 5 '
-                      'et 15% des apports hebdomadaires pour la plupart des adultes. Concrètement, '
-                      'ça représente environ 1 à 2 repas de ce type par semaine — un seul peut déjà '
-                      'représenter l\'essentiel de ce budget.'),
-                  p('Au-delà de 3 repas de ce type par semaine, la littérature s\'accorde à dire que '
-                      'ça s\'éloigne nettement d\'une alimentation orientée santé, longévité, vitalité '
-                      'et performance. Pour un écart plus doux, les enseignes "healthy"/fast-casual '
-                      '(salades composées, bols, poke...) restent une alternative à considérer.'),
+                  p(l10n.jrnlRestaurantsInfoP1),
+                  p(l10n.jrnlRestaurantsInfoP2),
+                  p(l10n.jrnlRestaurantsInfoP3),
+                  p(l10n.jrnlRestaurantsInfoP4),
                   const SizedBox(height: 4),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Compris')),
+                    child: TextButton(onPressed: () => Navigator.of(ctx).pop(), child: Text(l10n.jrnlUnderstood)),
                   ),
                 ]
               : [
-                  const Text('À propos de cette enseigne',
-                      style: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w800)),
+                  Text(l10n.jrnlAboutBrandTitle,
+                      style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w800)),
                   const SizedBox(height: 14),
-                  p('Cette marque vient de la base USDA (Foundation Foods/SR Legacy) — elle est '
-                      'essentiellement issue du marché américain, ses recettes et portions reflètent '
-                      'donc les produits vendus aux États-Unis, pas nécessairement leur équivalent '
-                      'vendu en France.'),
+                  p(l10n.jrnlAboutBrandBody),
                   const SizedBox(height: 4),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Compris')),
+                    child: TextButton(onPressed: () => Navigator.of(ctx).pop(), child: Text(l10n.jrnlUnderstood)),
                   ),
                 ],
         ),
@@ -3269,7 +3270,7 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
                   onPressed: _showSourceInfoSheet,
                   style: TextButton.styleFrom(foregroundColor: TotumColors.accent),
                   icon: const Icon(Icons.info_outline, size: 16),
-                  label: const Text('Informations', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700)),
+                  label: Text(context.l10n.jrnlInformationsButton, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700)),
                 ),
               ],
             ),
@@ -3279,7 +3280,7 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
           child: TextField(
             controller: _queryCtrl,
             decoration: InputDecoration(
-              labelText: selected == null ? 'Rechercher une enseigne' : 'Rechercher dans $selected',
+              labelText: selected == null ? context.l10n.jrnlSearchBrand : context.l10n.jrnlSearchWithinBrand(selected),
               prefixIcon: const Icon(Icons.search),
               // Retour d'Alex (13/08/2026) : une croix pour vider le champ
               // d'un coup plutôt que d'effacer lettre par lettre.
@@ -3312,7 +3313,7 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
         : names.where((n) => n.toLowerCase().contains(q)).toList();
     if (filtered.isEmpty) {
       return Center(
-        child: Text(_ready ? 'Aucune enseigne trouvée' : 'Chargement...',
+        child: Text(_ready ? context.l10n.jrnlNoChainFound : context.l10n.jrnlLoadingEllipsis,
             style: TextStyle(color: TotumColors.textSecondary)),
       );
     }
@@ -3343,7 +3344,7 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
   Widget _buildFoodList(List<foods_loader.FoodItem> foods) {
     if (foods.isEmpty) {
       return Center(
-        child: Text('Aucun résultat', style: TextStyle(color: TotumColors.textSecondary)),
+        child: Text(context.l10n.jrnlNoResults, style: TextStyle(color: TotumColors.textSecondary)),
       );
     }
     return ListView.builder(
@@ -4211,7 +4212,7 @@ class _NutriBadge extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 11, color: TotumColors.textSecondary)),
+        Text(nutrientDisplayLabel(label, context.l10n), style: TextStyle(fontSize: 11, color: TotumColors.textSecondary)),
         Text(value, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: TotumColors.textPrimary)),
       ],
     );
@@ -6200,6 +6201,7 @@ class _MacroBarRow extends StatelessWidget {
   const _MacroBarRow({required this.item});
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final pct = item.target == 0
         ? 0.0
         : (item.value / item.target).clamp(0.0, double.infinity);
@@ -6215,7 +6217,7 @@ class _MacroBarRow extends StatelessWidget {
             Icon(item.icon, size: 14, color: TotumColors.textSecondary),
             const SizedBox(width: 6),
             Expanded(
-              child: Text(item.label,
+              child: Text(nutrientDisplayLabel(item.label, l10n),
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5, color: TotumColors.textPrimary)),
             ),
             Container(
@@ -6247,8 +6249,8 @@ class _MacroBarRow extends StatelessWidget {
               TextSpan(text: '${item.value.toStringAsFixed(0)} / ${item.target.toStringAsFixed(0)} ${item.unit} · '),
               TextSpan(
                 text: overshot
-                    ? 'dépassé de ${excess.toStringAsFixed(0)} ${item.unit}'
-                    : 'reste ${remaining.toStringAsFixed(0)} ${item.unit}',
+                    ? l10n.jrnlOverBy(excess.toStringAsFixed(0), item.unit)
+                    : l10n.jrnlRemainingBy(remaining.toStringAsFixed(0), item.unit),
                 style: TextStyle(
                   color: overshot ? TotumColors.negative : TotumColors.textMuted,
                   fontWeight: overshot ? FontWeight.w700 : FontWeight.w400,
@@ -7691,6 +7693,16 @@ class _Section extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final displayTitle = switch (title) {
+      'Macro-cibles' => l10n.bilanGroupMacroTargets,
+      'Acides gras essentiels' => l10n.bilanPillarFattyAcidsFull,
+      'À surveiller' => l10n.scorePillarWatch,
+      'Vitamines' => l10n.scorePillarVitamins,
+      'Minéraux' => l10n.scorePillarMinerals,
+      'Apport indicatif' => l10n.bilanGroupIndicative,
+      _ => title,
+    };
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       child: TotumCard(
@@ -7707,7 +7719,7 @@ class _Section extends StatelessWidget {
               children: [
                 Icon(icon, size: 19, color: TotumColors.textSecondary),
                 const SizedBox(width: 10),
-                Text(title,
+                Text(displayTitle,
                     style: TextStyle(
                         fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
               ],
@@ -7725,7 +7737,7 @@ class _Section extends StatelessWidget {
                   children: [
                     Row(children: [
                       Expanded(
-                        child: Text(m.label,
+                        child: Text(nutrientDisplayLabel(m.label, l10n),
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, color: TotumColors.textPrimary)),
                       ),
@@ -7771,8 +7783,8 @@ class _Section extends StatelessWidget {
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
-                                  'Dépasse la limite de sécurité '
-                                  '(${m.ul!.toStringAsFixed(0)} ${m.unit}/jour)',
+                                  l10n.bilanExceedsSafetyLimit(
+                                      m.ul!.toStringAsFixed(0), m.unit),
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: TotumColors.negative,
