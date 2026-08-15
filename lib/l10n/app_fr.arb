@@ -1453,5 +1453,13 @@
   "jrnlSearchOverridesSortHint": "Pendant une recherche, la meilleure correspondance prime toujours sur ce tri.",
   "jrnlDatabaseLabel": "Base de données",
   "jrnlCiqualDefaultCheckbox": "CIQUAL (France) — par défaut",
-  "jrnlUsdaReinforceCheckbox": "USDA (États-Unis) — en renfort"
+  "jrnlUsdaReinforceCheckbox": "USDA (États-Unis) — en renfort",
+  "jrnlAddToMeal": "Ajouter à {meal}",
+  "@jrnlAddToMeal": { "placeholders": { "meal": {"type": "String"} } },
+  "jrnlSearchFood": "Rechercher un aliment",
+  "jrnlTypeToSearchFood": "Tape pour rechercher un aliment",
+  "jrnlPersonalMealSummary": "Repas perso · {count, plural, =1{1 aliment} other{{count} aliments}} · {kcal} kcal",
+  "@jrnlPersonalMealSummary": { "placeholders": { "count": {"type": "int"}, "kcal": {"type": "String"} } },
+  "jrnlTagPersonal": "Perso",
+  "jrnlTagRecipe": "Recette"
 }

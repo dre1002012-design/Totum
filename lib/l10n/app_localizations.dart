@@ -6995,6 +6995,42 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'USDA (États-Unis) — en renfort'**
   String get jrnlUsdaReinforceCheckbox;
+
+  /// No description provided for @jrnlAddToMeal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter à {meal}'**
+  String jrnlAddToMeal(String meal);
+
+  /// No description provided for @jrnlSearchFood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher un aliment'**
+  String get jrnlSearchFood;
+
+  /// No description provided for @jrnlTypeToSearchFood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tape pour rechercher un aliment'**
+  String get jrnlTypeToSearchFood;
+
+  /// No description provided for @jrnlPersonalMealSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repas perso · {count, plural, =1{1 aliment} other{{count} aliments}} · {kcal} kcal'**
+  String jrnlPersonalMealSummary(int count, String kcal);
+
+  /// No description provided for @jrnlTagPersonal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Perso'**
+  String get jrnlTagPersonal;
+
+  /// No description provided for @jrnlTagRecipe.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recette'**
+  String get jrnlTagRecipe;
 }
 
 class _AppLocalizationsDelegate

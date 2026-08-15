@@ -4158,4 +4158,32 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get jrnlUsdaReinforceCheckbox => 'USDA (États-Unis) — en renfort';
+
+  @override
+  String jrnlAddToMeal(String meal) {
+    return 'Ajouter à $meal';
+  }
+
+  @override
+  String get jrnlSearchFood => 'Rechercher un aliment';
+
+  @override
+  String get jrnlTypeToSearchFood => 'Tape pour rechercher un aliment';
+
+  @override
+  String jrnlPersonalMealSummary(int count, String kcal) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aliments',
+      one: '1 aliment',
+    );
+    return 'Repas perso · $_temp0 · $kcal kcal';
+  }
+
+  @override
+  String get jrnlTagPersonal => 'Perso';
+
+  @override
+  String get jrnlTagRecipe => 'Recette';
 }

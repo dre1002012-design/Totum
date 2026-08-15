@@ -1290,5 +1290,11 @@
   "jrnlSearchOverridesSortHint": "While searching, the best match always takes priority over this sort.",
   "jrnlDatabaseLabel": "Database",
   "jrnlCiqualDefaultCheckbox": "CIQUAL (France) — default",
-  "jrnlUsdaReinforceCheckbox": "USDA (United States) — backup"
+  "jrnlUsdaReinforceCheckbox": "USDA (United States) — backup",
+  "jrnlAddToMeal": "Add to {meal}",
+  "jrnlSearchFood": "Search a food",
+  "jrnlTypeToSearchFood": "Type to search a food",
+  "jrnlPersonalMealSummary": "Personal meal · {count, plural, =1{1 item} other{{count} items}} · {kcal} kcal",
+  "jrnlTagPersonal": "Personal",
+  "jrnlTagRecipe": "Recipe"
 }

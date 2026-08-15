@@ -5263,7 +5263,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
                     child: Text(
-                      'Ajouter à $meal',
+                      ctx.l10n.jrnlAddToMeal(_mealTypeLabel(meal, ctx.l10n)),
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w700),
                     ),
@@ -5274,7 +5274,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                       controller: searchCtrl,
                       autofocus: true,
                       decoration: InputDecoration(
-                        labelText: 'Rechercher un aliment',
+                        labelText: ctx.l10n.jrnlSearchFood,
                         prefixIcon: const Icon(Icons.search),
                         suffixIcon: searchCtrl.text.isEmpty
                             ? null
@@ -5298,8 +5298,8 @@ class _DayJournalViewState extends State<_DayJournalView> {
                         ? Center(
                             child: Text(
                               query.trim().isEmpty
-                                  ? 'Tape pour rechercher un aliment'
-                                  : 'Aucun résultat',
+                                  ? ctx.l10n.jrnlTypeToSearchFood
+                                  : ctx.l10n.jrnlNoResults,
                               style: TextStyle(color: TotumColors.textSecondary),
                             ),
                           )
@@ -5322,8 +5322,8 @@ class _DayJournalViewState extends State<_DayJournalView> {
                                   title: Text(food.name,
                                       style: const TextStyle(fontWeight: FontWeight.w700)),
                                   subtitle: Text(
-                                      'Repas perso · ${food.items.length} aliment${food.items.length > 1 ? 's' : ''} · '
-                                      '${food.totalKcal.toStringAsFixed(0)} kcal',
+                                      ctx.l10n.jrnlPersonalMealSummary(
+                                          food.items.length, food.totalKcal.toStringAsFixed(0)),
                                       style: TextStyle(color: TotumColors.textSecondary, fontSize: 12)),
                                   onTap: () async {
                                     Navigator.pop(ctx);
@@ -5334,7 +5334,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                               }
                               final fname =
                                   ((food as dynamic).name as String?) ??
-                                      'Aliment';
+                                      ctx.l10n.jrnlGenericFoodFallback;
                               final fkcal =
                                   ((food).kcal100 as num?)?.toDouble() ?? 0.0;
                               final fid = ((food).id as String?) ?? '';
@@ -5443,10 +5443,10 @@ class _DayJournalViewState extends State<_DayJournalView> {
                                     ),
                                     if (isPerso) ...[
                                       const SizedBox(width: 6),
-                                      _foodTag('Perso', TotumColors.accent),
+                                      _foodTag(ctx.l10n.jrnlTagPersonal, TotumColors.accent),
                                     ] else if (isRecipe) ...[
                                       const SizedBox(width: 6),
-                                      _foodTag('Recette', TotumColors.accent),
+                                      _foodTag(ctx.l10n.jrnlTagRecipe, TotumColors.accent),
                                     ] else if (isUsda) ...[
                                       const SizedBox(width: 6),
                                       _foodTag('USDA', TotumColors.textSecondary),
@@ -5455,7 +5455,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                                 ),
                                 // Retour d'Alex (11/08/2026) : plus d'ancien nom en
                                 // double en dessous — juste le nom et les kcal/100g.
-                                subtitle: Text('${fkcal.toStringAsFixed(0)} kcal / 100 g',
+                                subtitle: Text(ctx.l10n.jrnlKcalPer100g(fkcal.toStringAsFixed(0)),
                                     style: const TextStyle(fontSize: 12)),
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
                                 minVerticalPadding: 8,
@@ -5473,8 +5473,8 @@ class _DayJournalViewState extends State<_DayJournalView> {
                                             : TotumColors.textMuted,
                                       ),
                                       tooltip: favStatus
-                                          ? 'Retirer des favoris'
-                                          : 'Ajouter aux favoris',
+                                          ? ctx.l10n.jrnlRemoveFavorite
+                                          : ctx.l10n.jrnlAddFavorite,
                                       onPressed: (widget.onToggleFav != null &&
                                               fid.isNotEmpty)
                                           ? () async {
@@ -5508,7 +5508,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
   /// Demande la quantité puis enregistre l'aliment sur la date affichée
   Future<void> _openQuantityDialog(String meal, dynamic food) async {
     final qtyCtrl = TextEditingController(text: '100');
-    final fname = displayNameOf(food, ((food as dynamic).name as String?) ?? 'Aliment');
+    final fname = displayNameOf(food, ((food as dynamic).name as String?) ?? context.l10n.jrnlGenericFoodFallback);
 
     await showDialog(
       context: context,
@@ -5519,14 +5519,14 @@ class _DayJournalViewState extends State<_DayJournalView> {
           keyboardType: TextInputType.number,
           autofocus: true,
           decoration: InputDecoration(
-            labelText: 'Quantité (g)',
+            labelText: ctx.l10n.jrnlQtyLabel,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Annuler')),
+              child: Text(ctx.l10n.commonCancel)),
           FilledButton(
             style: FilledButton.styleFrom(
                 backgroundColor: kTotumOrange, foregroundColor: Colors.white),
