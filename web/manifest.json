@@ -1,6 +1,6 @@
 {
-    "name": "totum_clean",
-    "short_name": "totum_clean",
+    "name": "Totum",
+    "short_name": "Totum",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

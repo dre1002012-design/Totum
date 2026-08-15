@@ -1,0 +1,105 @@
+{
+  "_comment": "Explications des limites supérieures de sécurité (LSS) TOTUM. Références ANSES / EFSA. Ton éducatif et rassurant : un dépassement ponctuel n'est pas un danger, c'est la répétition qui compte. Clés alignées sur les ficheKey de bilan_screen.dart.",
+  "limites": {
+    "retinol": {
+      "nutriment": "Rétinol (vitamine A préformée)",
+      "limite": "3 000 µg par jour",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "Le rétinol est une vitamine liposoluble : contrairement aux vitamines hydrosolubles, l'organisme ne l'élimine pas dans les urines, il la stocke dans le foie. Ce stockage est une force au quotidien, mais il signifie aussi que les excès s'accumulent au fil des semaines. La limite protège contre cette accumulation progressive.",
+      "consequences": "Un dépassement occasionnel est sans conséquence. C'est la répétition sur plusieurs semaines qui pose problème : elle peut fragiliser le tissu osseux, solliciter le foie, et provoquer maux de tête, fatigue ou nausées. Pendant la grossesse, la prudence doit être renforcée car un excès de rétinol est nocif pour le développement du fœtus.",
+      "sources_risque": "Le foie, très largement en tête : une seule portion de foie de veau ou de volaille peut représenter plusieurs fois la limite journalière. Viennent ensuite les autres abats, l'huile de foie de morue et les compléments alimentaires.",
+      "que_faire": "Espace simplement tes consommations de foie et d'abats : une portion toutes les deux ou trois semaines est un rythme confortable. Pour couvrir tes besoins en vitamine A le reste du temps, mise sur le bêta-carotène des légumes colorés — carotte, patate douce, courge, épinard. Il n'a aucune limite de sécurité, car l'organisme ne le convertit en vitamine A qu'à hauteur de ses besoins réels.",
+      "rassurance": "Si l'alerte apparaît après un repas contenant du foie, c'est parfaitement attendu et sans gravité. Le bêta-carotène des végétaux n'est jamais concerné par cette limite."
+    },
+    "fer": {
+      "nutriment": "Fer",
+      "limite": "40 mg par jour",
+      "reference": "EFSA 2024",
+      "pourquoi": "L'organisme sait réguler finement l'absorption du fer, mais il ne dispose d'aucun mécanisme actif pour l'éliminer une fois absorbé. Or le fer libre est un puissant pro-oxydant : en excès, il génère du stress oxydatif dans les cellules. La limite protège contre cette accumulation que le corps ne peut pas corriger seul.",
+      "consequences": "À court terme, un excès se manifeste surtout par des troubles digestifs : constipation, nausées, douleurs abdominales. Sur le long terme, il augmente le stress oxydatif et sollicite le foie. Le risque est nettement plus élevé chez les personnes porteuses d'hémochromatose, une prédisposition génétique fréquente et souvent ignorée.",
+      "sources_risque": "L'alimentation brute atteint rarement ce seuil. Les principaux contributeurs sont le boudin noir, le foie et les autres abats. En pratique, la cause la plus fréquente de dépassement reste la supplémentation en fer prise sans contrôle sanguin.",
+      "que_faire": "Ne te supplémente jamais en fer sans un dosage sanguin préalable — la ferritine notamment. Le fer des végétaux, dit non héminique, est très peu absorbé et ne présente pas ce risque. Si tu manges régulièrement du boudin ou des abats, espace-les simplement.",
+      "rassurance": "Atteindre 40 mg par la seule alimentation est peu courant. Une journée de dépassement ne demande aucune action particulière."
+    },
+    "zinc": {
+      "nutriment": "Zinc",
+      "limite": "25 mg par jour",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "Le zinc et le cuivre empruntent les mêmes transporteurs pour traverser la paroi intestinale. Quand le zinc arrive en trop grande quantité, il occupe ces transporteurs et bloque mécaniquement l'absorption du cuivre. La limite ne protège donc pas tant d'une toxicité directe du zinc que d'une carence en cuivre provoquée par son excès.",
+      "consequences": "Un excès prolongé peut induire une carence en cuivre, avec anémie et troubles neurologiques à la clé. Paradoxalement, il peut aussi affaiblir l'immunité alors même que le zinc est réputé la soutenir. Des troubles digestifs accompagnent souvent les apports élevés.",
+      "sources_risque": "Les huîtres arrivent très loin devant : une portion peut à elle seule dépasser plusieurs fois la limite. Le germe de blé, les abats et les compléments alimentaires suivent.",
+      "que_faire": "Les huîtres restent un aliment remarquable, il suffit d'espacer les repas qui en contiennent. Évite surtout de cumuler un complément de zinc avec une alimentation déjà riche, et pense au cuivre si tu te supplémentes durablement.",
+      "rassurance": "Un repas d'huîtres qui fait bondir le compteur est un dépassement ponctuel, sans conséquence. C'est un rythme hebdomadaire élevé qui mériterait un ajustement."
+    },
+    "selenium": {
+      "nutriment": "Sélénium",
+      "limite": "255 µg par jour",
+      "reference": "EFSA 2023",
+      "pourquoi": "Le sélénium possède l'une des fenêtres les plus étroites de tous les micronutriments : le besoin quotidien tourne autour de 70 µg, et les premiers effets indésirables apparaissent à quelques centaines. L'écart entre l'apport optimal et l'excès est donc bien plus faible que pour la plupart des autres minéraux — c'est un nutriment de précision.",
+      "consequences": "Un excès prolongé provoque ce qu'on appelle la sélénose : ongles cassants ou striés, chute de cheveux, haleine à l'odeur d'ail caractéristique, troubles digestifs. À un stade avancé et rare, des troubles neurologiques peuvent apparaître. Ces effets régressent à l'arrêt de la surconsommation.",
+      "sources_risque": "Contrairement à une idée répandue, la noix du Brésil n'est pas la seule en cause. Les produits de la mer en sont très riches et, consommés régulièrement, sont souvent la vraie source d'un dépassement : thon, sardines, huîtres, moules, crevettes. Les œufs, les abats et les compléments contribuent aussi. La noix du Brésil reste un cas particulier à connaître : sa teneur est extrêmement variable selon le sol d'origine (d'un facteur 1 à plus de 100), si bien qu'une seule noix peut parfois suffire à saturer la journée.",
+      "que_faire": "Si tu manges souvent des produits de la mer, tu couvres déjà largement tes besoins : nul besoin d'y ajouter une source concentrée. Côté noix du Brésil, une à deux par jour suffisent amplement, et il vaut mieux ne pas les cumuler avec beaucoup de poisson le même jour. C'est l'ensemble de la journée qui compte, pas un aliment isolé.",
+      "rassurance": "C'est une limite facile à franchir sans s'en rendre compte, justement parce que ses sources sont des aliments sains (poisson, œufs, oléagineux). Un dépassement ponctuel n'a rien de dramatique : c'est la répétition qu'il faut surveiller."
+    },
+    "vitd": {
+      "nutriment": "Vitamine D",
+      "limite": "100 µg par jour (4 000 UI)",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "Comme le rétinol, la vitamine D est liposoluble et se stocke dans l'organisme. Son rôle principal est d'augmenter l'absorption intestinale du calcium : en excès prolongé, elle fait donc passer dans le sang plus de calcium que le corps ne peut en gérer.",
+      "consequences": "L'excès se traduit par une hypercalcémie : nausées, fatigue inhabituelle, soif intense, envies fréquentes d'uriner. Sur la durée, le calcium excédentaire peut se déposer dans les tissus mous et les reins plutôt que dans l'os.",
+      "sources_risque": "L'alimentation seule ne permet pratiquement jamais d'atteindre ce seuil, sauf consommation importante d'huile de foie de morue. Le risque réel vient des compléments fortement dosés, notamment les ampoules trimestrielles. L'exposition au soleil, elle, ne peut pas provoquer d'excès : la peau cesse d'en produire une fois les réserves suffisantes.",
+      "que_faire": "Si tu te supplémentes, fais-le sur avis médical et idéalement après un dosage sanguin. Une dose quotidienne modérée est mieux tolérée et mieux utilisée qu'une dose massive espacée.",
+      "rassurance": "Un dépassement d'origine alimentaire est rare et généralement lié à l'huile de foie de morue. Le soleil ne présente aucun risque de ce point de vue."
+    },
+    "vite": {
+      "nutriment": "Vitamine E",
+      "limite": "300 mg par jour",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "À dose élevée, la vitamine E exerce un effet fluidifiant sur le sang en interférant avec la coagulation. C'est cet effet, et non une toxicité cellulaire, qui justifie la limite.",
+      "consequences": "Le principal risque est hémorragique, et il devient significatif surtout en association avec un traitement anticoagulant ou dans les jours précédant une intervention chirurgicale. En dehors de ces situations, les effets d'un excès modéré restent discrets.",
+      "sources_risque": "Les huiles végétales, en particulier l'huile de germe de blé, très concentrée. Les compléments antioxydants dosés en vitamine E sont la seconde source.",
+      "que_faire": "Les huiles vierges utilisées en assaisonnement ne posent aucun problème aux quantités habituelles. Si tu prends un traitement anticoagulant, signale toute supplémentation en vitamine E à ton médecin.",
+      "rassurance": "Franchir ce seuil par l'alimentation seule est extrêmement inhabituel."
+    },
+    "b6": {
+      "nutriment": "Vitamine B6",
+      "limite": "12 mg par jour",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "La B6 fait figure d'exception parmi les vitamines hydrosolubles. On considère généralement que ces vitamines s'éliminent facilement dans les urines, ce qui les rend peu risquées. La B6 est la seule pour laquelle une toxicité nerveuse a été clairement démontrée à dose élevée et prolongée.",
+      "consequences": "Une prise excessive et durable peut provoquer une neuropathie périphérique : fourmillements, engourdissements des mains et des pieds, parfois troubles de l'équilibre. Ces symptômes régressent le plus souvent à l'arrêt, mais la récupération n'est pas systématiquement complète.",
+      "sources_risque": "L'alimentation ne permet pratiquement jamais d'approcher ce seuil. La cause est presque exclusivement la supplémentation, en particulier les complexes de vitamines B dont les dosages en B6 sont fréquemment très élevés.",
+      "que_faire": "Vérifie le dosage en B6 de tout complexe de vitamines B que tu prendrais, et évite les prises prolongées à dose élevée sans indication médicale.",
+      "rassurance": "Si cette alerte apparaît sans que tu prennes de complément, vérifie ta saisie : c'est le signe le plus probable d'une quantité mal renseignée."
+    },
+    "iode": {
+      "nutriment": "Iode",
+      "limite": "600 µg par jour",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "La thyroïde est aussi sensible à l'excès d'iode qu'à son manque. C'est même l'un des rares nutriments où trop et pas assez produisent des troubles comparables. Face à un afflux massif d'iode, la thyroïde met en place un mécanisme de protection qui peut, paradoxalement, freiner sa propre fonction.",
+      "consequences": "Un apport excessif peut dérégler la thyroïde dans un sens comme dans l'autre — hypo ou hyperthyroïdie. Chez les personnes prédisposées, il peut aussi favoriser l'apparition d'une thyroïdite auto-immune.",
+      "sources_risque": "Les algues séchées sont de très loin la première source de dépassement : le kombu, en particulier, peut contenir plusieurs milliers de microgrammes par gramme. Le sel enrichi consommé en grande quantité et certains compléments suivent.",
+      "que_faire": "Consomme les algues avec parcimonie — quelques grammes suffisent largement, et le kombu mérite une vigilance particulière. Les poissons et fruits de mer, eux, ne posent aucun problème aux quantités habituelles.",
+      "rassurance": "Si l'alerte apparaît, regarde d'abord du côté des algues. C'est presque toujours l'explication."
+    },
+    "calcium": {
+      "nutriment": "Calcium",
+      "limite": "2 500 mg par jour",
+      "reference": "ANSES / EFSA",
+      "pourquoi": "Au-delà d'un certain apport, le calcium supplémentaire n'est plus utilisé efficacement par l'os. Il circule alors dans l'organisme sans destination utile, avec le risque de se déposer là où on ne le souhaite pas. La limite protège aussi l'absorption des autres minéraux, que le calcium concurrence directement.",
+      "consequences": "Les excès chroniques favorisent les calculs rénaux et la constipation. Ils gênent surtout l'absorption du fer, du zinc et du magnésium, qui empruntent des voies communes : un excès de calcium peut donc créer des carences ailleurs.",
+      "sources_risque": "Le cumul est presque toujours en cause : des produits laitiers en quantité importante, associés à une eau minérale très calcique, et parfois à un complément. Aucune de ces sources ne pose problème isolément.",
+      "que_faire": "Varie tes eaux plutôt que de boire toujours la même très minéralisée. Évite de cumuler un complément avec une alimentation déjà riche. Pense aussi que la vitamine D et la vitamine K2 sont ce qui permet au calcium de se fixer sur l'os plutôt que de se déposer dans les artères : elles comptent autant que la quantité de calcium elle-même.",
+      "rassurance": "Un dépassement ponctuel n'a aucune conséquence. C'est un cumul quotidien élevé qui mériterait un rééquilibrage."
+    },
+    "cuivre": {
+      "nutriment": "Cuivre",
+      "limite": "4,9 mg par jour",
+      "reference": "EFSA (0,07 mg/kg — adulte de 70 kg)",
+      "pourquoi": "Le cuivre est indispensable, mais il partage avec le fer une propriété délicate : sous forme libre, c'est un pro-oxydant. L'organisme dispose de protéines de transport qui le neutralisent, et la limite correspond au seuil au-delà duquel ces protections peuvent être débordées.",
+      "consequences": "Les premiers signes d'un excès sont digestifs — nausées, douleurs abdominales. Un excès chronique important sollicite le foie, qui est l'organe de stockage du cuivre. L'équilibre avec le zinc est également perturbé, les deux minéraux étant étroitement liés.",
+      "sources_risque": "Le foie arrive largement en tête : une portion peut dépasser plusieurs fois la limite à elle seule. Les huîtres, le chocolat noir consommé en grande quantité et les compléments suivent.",
+      "que_faire": "Espace tes consommations d'abats, comme pour la vitamine A — ce sont d'ailleurs souvent les mêmes repas qui déclenchent les deux alertes. Le reste de ton alimentation couvrira sans difficulté tes besoins en cuivre.",
+      "rassurance": "Si l'alerte cuivre et l'alerte vitamine A apparaissent ensemble, c'est le signe d'un repas contenant du foie. Rien d'inquiétant si cela reste occasionnel."
+    }
+  }
+}

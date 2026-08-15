@@ -45,5 +45,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Module Respiration : continuité du son procédural écran verrouillé
+	     (pas de NSMicrophoneUsageDescription — l'app émet du son, elle n'en
+	     enregistre jamais, l'ajouter serait un signal inutile en App Review). -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 </dict>
 </plist>

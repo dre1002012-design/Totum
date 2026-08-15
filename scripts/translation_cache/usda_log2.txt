@@ -1,0 +1,6 @@
+7770 déjà traduits (reprise depuis le checkpoint).
+69 restants sur 7839.
+7790/7839 — 26s écoulées, ~1 min restantes
+7810/7839 — 52s écoulées, ~1 min restantes
+7830/7839 — 82s écoulées, ~0 min restantes
+Terminé : 7839/7839 traduits -> scripts\translation_cache\usda_fr.json

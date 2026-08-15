@@ -44,7 +44,9 @@ android {
     defaultConfig {
         applicationId = "com.totumapp.totum"
 
-        minSdk = flutter.minSdkVersion
+        // Health Connect (androidx.health.connect) exige minSdk 26 —
+        // remplace la valeur par défaut de Flutter (souvent 21/24).
+        minSdk = 26
 
         // >> Option recommandé :
         // targetSdk 36 pour cohérence, mais succès possible avec 35
@@ -54,17 +56,21 @@ android {
         versionName = flutter.versionName
     }
 
-    // Packaging legacy (tolérance 16 ko)
-    packagingOptions {
-        jniLibs {
-            useLegacyPackaging = true
-        }
-    }
-
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
+            // Priorité 58 (14/08/2026) : Play Console signale l'app comme non
+            // conforme aux tailles de page mémoire 16 ko (bloquant à partir du
+            // 01/02/2027). Cause identifiée : un ancien `packagingOptions {
+            // jniLibs { useLegacyPackaging = true } }` ici (retiré), pensé à
+            // tort comme une "tolérance 16 ko" — c'est l'inverse : la
+            // compression legacy des .so empêche justement leur alignement
+            // 16 ko. Le défaut AGP (non compressés, alignés) est ce qu'il
+            // faut ; AGP 8.9.1 le fait déjà nativement.
+            // R8 : réduction des ressources activée en plus du minify déjà en
+            // place (recommandation du rapport de conformité).
+            isShrinkResources = true
         }
         debug { }
     }

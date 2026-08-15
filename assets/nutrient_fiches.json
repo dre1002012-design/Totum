@@ -1,0 +1,405 @@
+{
+  "_comment": "Fiches explicatives des nutriments — TOTUM. Contenu basé sur les références ANSES et EFSA. Ton grand public chaleureux. Les clés correspondent au champ ficheKey de chaque Metric du bilan.",
+  "fiches": {
+    "omega9": {
+      "titre": "Oméga 9 (oléique)",
+      "emoji": "🫒",
+      "sousTitre": "Le gras stable de l'huile d'olive",
+      "benefices": "L'acide oléique est un oméga 9 mono-insaturé, star de l'huile d'olive et du régime méditerranéen. Contrairement aux oméga 3 et 6, il n'est pas « essentiel » (le corps sait le fabriquer), mais il reste très bénéfique : il soutient un bon profil lipidique, protège le cœur et résiste bien à la chaleur, ce qui en fait un excellent gras de cuisson.",
+      "apports": "Pas de référence stricte : il s'intègre naturellement dans un apport en bons gras. Le régime méditerranéen, riche en oléique, est l'un des mieux documentés pour la longévité.",
+      "limite": "Aucune limite de sécurité : c'est un acide gras stable et bien toléré.",
+      "sources": "Huile d'olive vierge extra en tête, avocat, oléagineux (amandes, noisettes, macadamia), huile de colza.",
+      "savaisTu": "L'acide oléique étant mono-insaturé, il est bien plus stable à la chaleur que les oméga 3 et 6 polyinsaturés : c'est pourquoi l'huile d'olive vierge extra supporte parfaitement une cuisson douce à moyenne, contrairement aux huiles riches en polyinsaturés qui s'oxydent. Pour cuisiner, c'est l'une des meilleures options qui soit."
+    },
+    "omega6": {
+      "titre": "Oméga 6 (LA)",
+      "emoji": "🌻",
+      "sousTitre": "Essentiel, mais en large excès aujourd'hui",
+      "benefices": "L'acide linoléique (LA) est un oméga 6 essentiel, nécessaire aux membranes cellulaires, à la peau et à certaines fonctions de signalisation. Le paradoxe : il est indispensable, mais l'alimentation moderne en apporte beaucoup trop, ce qui déséquilibre le rapport avec les oméga 3 et bascule le corps vers un terrain pro-inflammatoire.",
+      "apports": "La référence est d'environ 4 % de l'apport énergétique. En pratique, presque personne n'en manque : l'enjeu est plutôt de ne pas en abuser, et surtout de rééquilibrer avec assez d'oméga 3.",
+      "limite": "Pas de limite formelle, mais un excès d'oméga 6 par rapport aux oméga 3 favorise l'inflammation chronique de bas grade, impliquée dans de nombreuses maladies modernes. Le problème n'est pas l'oméga 6 en soi, mais le déséquilibre.",
+      "sources": "Huiles de tournesol, de maïs, de pépins de raisin, la plupart des huiles industrielles, et massivement les produits ultra-transformés et fritures. C'est justement leur omniprésence qui pose problème.",
+      "savaisTu": "Le vrai enjeu des oméga 6 n'est pas d'en manquer — c'est quasi impossible aujourd'hui — mais de réduire leur excès pour rétablir l'équilibre avec les oméga 3. Concrètement : moins d'huiles raffinées et d'ultra-transformé, plus de colza, de lin et de petits poissons gras. Le rapport compte plus que chaque acide gras pris isolément."
+    },
+    "omega3": {
+      "titre": "Oméga 3 (ALA)",
+      "emoji": "🌱",
+      "sousTitre": "L'acide gras anti-inflammatoire, souvent déficitaire",
+      "benefices": "L'acide alpha-linolénique (ALA) est un oméga 3 essentiel : le corps ne sait pas le fabriquer. C'est le chef de file d'une famille aux effets anti-inflammatoires puissants, protectrice du cœur, du cerveau et des membranes cellulaires. L'alimentation moderne en manque cruellement tout en débordant d'oméga 6 : rétablir ce ratio est l'un des leviers santé les plus importants qui soit.",
+      "apports": "La référence est d'environ 2 g d'ALA par jour (environ 1 % de l'apport énergétique). Mais l'enjeu réel n'est pas seulement la quantité : c'est le RAPPORT oméga 6 / oméga 3, idéalement autour de 4 pour 1, alors qu'il dépasse souvent 15 pour 1 dans l'alimentation industrielle.",
+      "limite": "Aucune limite de sécurité par l'alimentation. Les oméga 3 sont à favoriser, pas à limiter — le vrai problème est qu'on n'en consomme pas assez.",
+      "sources": "Les graines et l'huile de chanvre sont une source d'exception : outre un ALA abondant, le chanvre apporte du SDA (acide stéaridonique), un oméga 3 déjà en partie « converti » que le corps valorise bien mieux que l'ALA seul — le tout avec un ratio oméga 3/6 idéal et une richesse rare en protéines et minéraux. Viennent ensuite les graines de lin et de chia moulues, les noix, et les huiles vierges de lin et de noix. L'huile de colza dépanne mais reste moins intéressante (raffinage fréquent, profil moins noble). Pour les formes actives EPA et DHA, voir leurs fiches : les petits poissons gras restent irremplaçables.",
+      "savaisTu": "Le corps convertit très mal l'ALA végétal en EPA actif (souvent moins de 10 %). Le SDA du chanvre est malin : il saute l'étape de conversion la plus limitante, ce qui le rend nettement plus efficace que le lin pour élever réellement ton taux d'oméga 3. À l'inverse, ces huiles sont fragiles : chanvre et lin se consomment crus, au frais, jamais chauffés — un trésor à condition de le respecter."
+    },
+    "epa": {
+      "titre": "EPA",
+      "emoji": "🐟",
+      "sousTitre": "L'oméga 3 marin anti-inflammatoire",
+      "benefices": "L'EPA (acide eicosapentaénoïque) est un oméga 3 à longue chaîne d'origine marine, directement actif. C'est le grand modulateur de l'inflammation : il est le précurseur de molécules qui apaisent les processus inflammatoires. Il soutient la santé cardiovasculaire, l'humeur et la récupération. Le corps convertit très mal l'ALA végétal en EPA — d'où l'importance des sources marines directes.",
+      "apports": "On recommande environ 250 mg par jour d'EPA + DHA combinés pour un adulte, davantage dans un objectif cardiovasculaire. Deux à trois portions de petits poissons gras par semaine suffisent.",
+      "limite": "Pas de limite de sécurité aux doses alimentaires. À très fortes doses (compléments concentrés), un léger effet fluidifiant sanguin peut apparaître.",
+      "sources": "Petits poissons gras sauvages : sardine, maquereau, hareng, anchois. Les petits poissons sont préférables aux gros, car moins chargés en métaux lourds.",
+      "savaisTu": "La conversion de l'oméga 3 végétal (ALA du lin) en EPA actif est très faible chez l'humain — souvent moins de 10 %. C'est pourquoi, même avec une bonne alimentation végétale, les petits poissons gras (ou une supplémentation pour les végétaliens) restent le moyen le plus fiable d'obtenir de l'EPA. Végétal et marin sont complémentaires, pas interchangeables."
+    },
+    "dha": {
+      "titre": "DHA",
+      "emoji": "🧠",
+      "sousTitre": "L'oméga 3 structurel du cerveau",
+      "benefices": "Le DHA (acide docosahexaénoïque) est un oméga 3 marin qui constitue une part majeure de la structure de ton cerveau et de ta rétine. Il est indispensable au fonctionnement cérébral, à la vision et au développement du système nerveux, crucial chez le fœtus et le nourrisson. Un cerveau bien fourni en DHA, c'est un pilier de la santé cognitive et de la longévité.",
+      "apports": "Environ 250 mg par jour de DHA + EPA combinés pour un adulte, avec un besoin accru pendant la grossesse et l'allaitement pour le développement cérébral du bébé.",
+      "limite": "Pas de limite de sécurité aux doses alimentaires. Comme l'EPA, un effet fluidifiant léger peut apparaître à très haute dose de compléments.",
+      "sources": "Petits poissons gras (sardine, maquereau, hareng), et pour les végétaliens, les micro-algues — la source d'origine du DHA, celle-là même dont les poissons se nourrissent.",
+      "savaisTu": "Le DHA que contiennent les poissons provient à l'origine des micro-algues qu'ils consomment : c'est donc directement des algues que les végétaliens peuvent l'obtenir, en supplément. Ton cerveau étant constitué à près de 60 % de gras, dont une bonne part de DHA, en fournir régulièrement est l'un des gestes les plus directs pour ta santé cognitive à long terme."
+    },
+    "retinol": {
+      "titre": "Rétinol (vitamine A)",
+      "emoji": "👁️",
+      "sousTitre": "Puissant et actif — à respecter",
+      "benefices": "Le rétinol est la forme active et directement utilisable de la vitamine A. Il est indispensable à la vision (surtout nocturne), au renouvellement de la peau et des muqueuses, à l'immunité et à la reproduction. Contrairement au bêta-carotène qu'il faut convertir, le rétinol agit immédiatement — d'où sa puissance, mais aussi la nécessité de le respecter.",
+      "apports": "La référence pour l'adulte est d'environ 650 à 750 µg par jour, tous apports de vitamine A confondus.",
+      "limite": "C'est une vitamine liposoluble qui se STOCKE dans le foie : une limite de 3 000 µg par jour est fixée. Un excès chronique fragilise les os et le foie ; pendant la grossesse, la prudence est renforcée car un excès est nocif pour le fœtus. Le foie animal, très concentré, peut à lui seul dépasser plusieurs fois la limite.",
+      "sources": "Foie et abats (très riches, à espacer), huile de foie de morue, jaune d'œuf, beurre, produits laitiers entiers, poissons gras.",
+      "savaisTu": "Une seule portion de foie peut apporter plusieurs fois la limite journalière de vitamine A : c'est un aliment remarquable mais à consommer avec mesure, une fois toutes les deux ou trois semaines. Pour le reste, le bêta-carotène des légumes colorés couvre tes besoins sans aucun risque — la nature a prévu une voie sûre et une voie puissante."
+    },
+    "betacarotene": {
+      "titre": "Bêta-carotène",
+      "emoji": "🥕",
+      "sousTitre": "La provitamine A sans risque",
+      "benefices": "Le bêta-carotène est un pigment antioxydant que le corps convertit en vitamine A selon ses besoins. Il protège les cellules du stress oxydatif, soutient la vision, la peau et l'immunité. Son grand avantage sur le rétinol : le corps ne le transforme qu'à hauteur de ce dont il a besoin, ce qui le rend sans risque de surdosage.",
+      "apports": "Pas de référence stricte isolée : il contribue à couvrir les besoins en vitamine A (environ 650 à 750 µg équivalents/jour). Une alimentation colorée en fournit largement.",
+      "limite": "Aucune limite de sécurité par l'alimentation : c'est tout son intérêt. Le seul « effet » d'un excès est la caroténodermie, une coloration orangée bénigne et réversible de la peau. Note : à très haute dose en complément isolé, la prudence est de mise chez les gros fumeurs.",
+      "sources": "Légumes et fruits orange et vert foncé : carotte, patate douce, courge, potiron, abricot, mangue, épinard, chou kale. Plus c'est coloré, plus c'est riche.",
+      "savaisTu": "Le bêta-carotène est mieux absorbé avec un peu de gras et une cuisson douce : une carotte râpée arrosée d'huile d'olive, ou une soupe de potiron, en libère bien plus qu'un légume cru et sec. Un filet d'huile vierge sur tes légumes colorés n'est pas qu'une question de goût — c'est de la biochimie."
+    },
+    "vitd": {
+      "titre": "Vitamine D",
+      "emoji": "☀️",
+      "sousTitre": "L'hormone du soleil, déficitaire l'hiver",
+      "benefices": "La vitamine D est en réalité une pro-hormone qui agit sur des centaines de gènes. Elle permet d'absorber le calcium et le phosphore (os et dents solides), module puissamment l'immunité, soutient la fonction musculaire et l'humeur. Son rôle dépasse largement l'os : de faibles niveaux sont associés à de nombreux troubles, ce qui en fait un pilier de la santé et de la longévité.",
+      "apports": "La référence est d'environ 15 µg (600 UI) par jour, mais les besoins réels pour maintenir un bon statut sanguin sont souvent supérieurs, surtout l'hiver. Le déficit est extrêmement répandu sous nos latitudes d'octobre à avril.",
+      "limite": "L'EFSA fixe une limite à 100 µg (4 000 UI) par jour. Liposoluble, elle se stocke : un excès prolongé de compléments fortement dosés peut provoquer une hypercalcémie. Le soleil, lui, ne peut jamais causer d'excès — la peau s'autorégule.",
+      "sources": "Peu d'aliments en contiennent vraiment : poissons gras (sardine, maquereau, hareng), jaune d'œuf, foie, et surtout l'exposition de la peau au soleil, principale source naturelle.",
+      "savaisTu": "En France, la peau ne fabrique quasiment pas de vitamine D d'octobre à avril : le soleil est trop bas. C'est pourquoi une supplémentation hivernale fait aujourd'hui largement consensus, y compris chez les naturopathes — associée idéalement à la vitamine K2, qui dirige vers l'os le calcium que la D fait absorber."
+    },
+    "vite": {
+      "titre": "Vitamine E",
+      "emoji": "🫒",
+      "sousTitre": "Le bouclier des graisses de tes cellules",
+      "benefices": "La vitamine E est l'antioxydant liposoluble par excellence : elle protège les graisses de tes membranes cellulaires et tes acides gras (dont les précieux oméga 3) de l'oxydation. Elle soutient la peau, l'immunité et la santé cardiovasculaire, et agit en synergie avec la vitamine C, qui la régénère après qu'elle a neutralisé un radical libre.",
+      "apports": "La référence pour l'adulte est d'environ 10 à 12 mg par jour, facilement couverte par les huiles vierges et les oléagineux.",
+      "limite": "L'EFSA fixe une limite à 300 mg par jour. À très haute dose (compléments), elle peut fluidifier le sang, ce qui demande une vigilance en cas de traitement anticoagulant ou avant une chirurgie. Aucun risque par l'alimentation.",
+      "sources": "Huiles végétales vierges (tournesol, germe de blé, olive), oléagineux (amandes, noisettes), graines de tournesol, avocat, légumes verts.",
+      "savaisTu": "La vitamine E et les oméga 3 forment un duo logique : plus tu consommes d'acides gras fragiles, plus tu as besoin d'antioxydants pour les protéger de l'oxydation. C'est pourquoi la nature emballe souvent les deux ensemble — dans les oléagineux et les huiles vierges, la vitamine E protège naturellement les bons gras qu'ils contiennent."
+    },
+    "vitk": {
+      "titre": "Vitamine K",
+      "emoji": "🥬",
+      "sousTitre": "Deux formes, deux rôles : coagulation et bon aiguillage du calcium",
+      "benefices": "La vitamine K existe sous deux formes complémentaires, et c'est toute la richesse de ce nutriment. La K1 (des végétaux verts) gère avant tout la coagulation du sang, indispensable pour cicatriser. La K2 (des aliments fermentés et animaux) joue un rôle plus subtil et précieux pour la longévité : elle active les protéines qui dirigent le calcium au bon endroit — l'ostéocalcine, qui le fixe sur l'os, et la MGP, qui l'empêche de se déposer dans les artères. En clair, la K2 aide à envoyer le calcium vers ton squelette plutôt que vers tes vaisseaux.",
+      "apports": "La référence pour l'adulte est d'environ 1 µg par kilo de poids corporel, soit ~70 µg par jour. Cette cible correspond surtout à la K1, facilement couverte par une portion de légumes verts. Ton bilan additionne K1 et K2 : la K2, plus rare, vient donc en bonus quand tu manges des aliments qui en contiennent.",
+      "limite": "Aucune limite de sécurité établie : la vitamine K des aliments n'est pas toxique, même en bonne quantité. Une seule vraie précaution : si tu prends un traitement anticoagulant (type anti-vitamine K), tes apports doivent être réguliers et stables — parles-en à ton médecin, mais ne supprime pas les légumes verts pour autant.",
+      "sources": "Pour la K1 : épinard, chou kale, brocoli, blette, persil, laitue, huiles vierges. Pour la K2, bien plus rare : le natto (soja fermenté, champion absolu), les fromages affinés (Edam, gouda), le jaune d'œuf, le foie, la volaille et le beurre d'animaux nourris à l'herbe. La fermentation et les produits animaux de qualité sont les clés de la K2.",
+      "savaisTu": "Longtemps, on a réduit la vitamine K à la coagulation. On sait aujourd'hui que la K2 est une véritable « cheffe d'orchestre » du calcium : un essai clinique publié en 2026 a montré qu'une supplémentation en K2 (MK-7) ralentissait d'environ 29 % la progression de la calcification des artères coronaires sur deux ans. C'est pourquoi le trio calcium + vitamine D + K2 est de plus en plus considéré comme indissociable : la D fait absorber le calcium, la K2 l'envoie dans l'os plutôt que dans les artères."
+    },
+    "vitc": {
+      "titre": "Vitamine C",
+      "emoji": "🍊",
+      "sousTitre": "L'antioxydant polyvalent, fragile et à renouveler",
+      "benefices": "La vitamine C est un antioxydant majeur qui protège tes cellules du stress oxydatif. Elle est indispensable à la fabrication du collagène (peau, vaisseaux, articulations, gencives, cicatrisation), booste l'absorption du fer végétal, soutient puissamment l'immunité et participe à la synthèse de neurotransmetteurs. Le corps humain ne sait pas la fabriquer ni la stocker — d'où un apport quotidien nécessaire.",
+      "apports": "La référence pour l'adulte est d'environ 110 mg par jour, davantage chez les fumeurs et en cas d'infection ou de stress important. Une alimentation riche en fruits et légumes frais la couvre aisément.",
+      "limite": "Pas de limite de sécurité stricte : l'excès est éliminé dans les urines. À très forte dose (compléments, plusieurs grammes), elle peut causer des troubles digestifs et, chez les personnes prédisposées, favoriser des calculs rénaux.",
+      "sources": "Contrairement au cliché de l'orange, les vraies championnes sont ailleurs : poivron rouge, persil, cassis, kiwi, choux (brocoli, chou-fleur), agrumes, fraise. Les végétaux crus et frais sont les plus riches.",
+      "savaisTu": "La vitamine C est l'une des plus fragiles : elle s'oxyde à l'air, à la lumière et à la chaleur. Un jus pressé perd sa vitamine C en quelques dizaines de minutes, et une cuisson prolongée en détruit une grande part. Manger les fruits et légumes crus, frais et rapidement est le meilleur moyen d'en profiter pleinement."
+    },
+    "b1": {
+      "titre": "Vitamine B1 (thiamine)",
+      "emoji": "🌾",
+      "sousTitre": "Le carburant de l'énergie et des nerfs",
+      "benefices": "La thiamine est la vitamine qui transforme les glucides en énergie utilisable par tes cellules. Elle est indispensable au système nerveux, au cerveau et au cœur, gros consommateurs de glucose. Plus tu es actif ou plus ton alimentation est riche en glucides, plus tes besoins grimpent — c'est une vitamine de l'énergie au sens propre.",
+      "apports": "Le besoin est proportionnel à l'énergie consommée : environ 1,3 à 1,5 mg par jour pour un adulte, davantage chez le sportif. Comme elle ne se stocke quasiment pas, un apport régulier est nécessaire.",
+      "limite": "Aucune limite de sécurité : l'excès s'élimine dans les urines, la B1 est totalement sûre par l'alimentation comme en complément.",
+      "sources": "Céréales complètes (l'enveloppe du grain en est riche), légumineuses, porc, graines de tournesol, levure alimentaire, oléagineux. Les aliments bruts et complets sont de loin les meilleures sources.",
+      "savaisTu": "Le raffinage des céréales détruit une grande partie de la thiamine : le riz blanc en contient jusqu'à dix fois moins que le riz complet. Historiquement, l'épidémie de béribéri (carence en B1) est apparue quand le riz blanc poli s'est généralisé en Asie — un rappel puissant que le raffinage appauvrit nos aliments bien au-delà des seules calories."
+    },
+    "b2": {
+      "titre": "Vitamine B2 (riboflavine)",
+      "emoji": "🥛",
+      "sousTitre": "L'étincelle de tes centrales énergétiques",
+      "benefices": "La riboflavine est au cœur de la production d'énergie de chacune de tes cellules : elle forme les coenzymes FAD et FMN, indispensables aux mitochondries, tes centrales énergétiques. Elle aide à réduire la fatigue, protège les cellules du stress oxydatif, et participe au recyclage d'autres vitamines B (dont la B6 et la B9). Elle contribue aussi à une peau et une vision normales.",
+      "apports": "La référence pour l'adulte est d'environ 1,5 à 1,6 mg par jour. Les besoins augmentent légèrement chez le sportif et pendant la grossesse.",
+      "limite": "Aucune limite de sécurité : l'excès est éliminé sans danger (il colore simplement les urines en jaune vif, ce qui est normal et sans conséquence).",
+      "sources": "Produits laitiers, œufs, amandes, foie, champignons, légumes verts, céréales complètes, levure alimentaire.",
+      "savaisTu": "La riboflavine est détruite par la lumière : c'est précisément pour la préserver que le lait n'est plus vendu en bouteilles de verre transparent mais en emballages opaques. Un aliment exposé à la lumière perd une partie de sa B2 en quelques heures."
+    },
+    "b3": {
+      "titre": "Vitamine B3 (niacine)",
+      "emoji": "🥜",
+      "sousTitre": "Le NAD+, molécule de la longévité",
+      "benefices": "La niacine est le précurseur du NAD+, l'une des molécules les plus étudiées en recherche sur le vieillissement. Le NAD+ intervient dans des centaines de réactions : production d'énergie, réparation de l'ADN, communication cellulaire. Ses niveaux déclinent avec l'âge, ce qui explique l'intérêt scientifique croissant pour la niacine et ses dérivés. La B3 contribue aussi à réduire la fatigue et à maintenir peau et système nerveux en bon état.",
+      "apports": "La référence pour l'adulte est d'environ 14 à 16 mg par jour. Le corps sait aussi en fabriquer à partir du tryptophane des protéines.",
+      "limite": "Sous forme d'acide nicotinique en complément, une limite de 10 mg/jour existe car il peut provoquer des rougeurs cutanées passagères (le « flush »). Aucun risque par l'alimentation.",
+      "sources": "Viandes, poissons, arachides, céréales complètes, légumineuses, champignons, levure. Les aliments riches en protéines en fournissent doublement (niacine + tryptophane).",
+      "savaisTu": "Ton corps fabrique de la B3 à partir du tryptophane, un acide aminé des protéines : environ 60 mg de tryptophane donnent 1 mg de niacine. Bien manger ses protéines soutient donc indirectement ton statut en B3 — et à travers lui, ta production de NAD+, au cœur des recherches actuelles sur la longévité."
+    },
+    "b5": {
+      "titre": "Vitamine B5 (acide pantothénique)",
+      "emoji": "🥚",
+      "sousTitre": "Partout, et au cœur de ton énergie",
+      "benefices": "Son nom vient du grec « pantos », partout — car elle est présente dans presque tous les aliments. La B5 est le composant central du coenzyme A, une molécule indispensable à la production d'énergie, à la synthèse des hormones stéroïdiennes, des neurotransmetteurs et à la fabrication des acides gras. Elle contribue aussi à réduire la fatigue et soutient les performances intellectuelles.",
+      "apports": "La référence pour l'adulte est d'environ 5 à 6 mg par jour, facilement atteinte par une alimentation variée.",
+      "limite": "Aucune limite de sécurité : la B5 est parfaitement sûre, l'excès étant éliminé dans les urines.",
+      "sources": "Vraiment partout, avec des sommets dans les abats, le jaune d'œuf, les champignons, l'avocat, les légumineuses, les céréales complètes et le brocoli.",
+      "savaisTu": "Les carences en B5 sont si rares qu'elles ne surviennent presque jamais isolément, précisément parce qu'elle est présente dans quasiment tous les aliments bruts. C'est un bon exemple de la logique TOTUM : une alimentation variée et brute couvre naturellement une immense partie de tes besoins, sans calcul ni complément."
+    },
+    "b6": {
+      "titre": "Vitamine B6 (pyridoxine)",
+      "emoji": "🍗",
+      "sousTitre": "Protéines, humeur et système nerveux",
+      "benefices": "La B6 est la championne du métabolisme des protéines : plus tu en manges, plus tu en as besoin. Elle est indispensable à la fabrication des neurotransmetteurs — sérotonine (humeur), dopamine (motivation), GABA (calme) — ce qui la relie directement à l'équilibre nerveux et émotionnel. Elle soutient l'immunité, la formation des globules rouges et contribue à réduire la fatigue.",
+      "apports": "La référence pour l'adulte est d'environ 1,6 à 1,7 mg par jour, un peu plus si l'alimentation est très riche en protéines.",
+      "limite": "C'est l'exception parmi les vitamines hydrosolubles : l'EFSA fixe une limite de 12 mg par jour. À forte dose et de façon prolongée (compléments, complexes B mal dosés), la B6 peut provoquer une neuropathie — fourmillements, engourdissements. Aucun risque par l'alimentation, mais vérifie le dosage de tout complexe de vitamines B.",
+      "sources": "Volaille, poisson, banane, pomme de terre, pois chiches, pistaches, oléagineux, céréales complètes.",
+      "savaisTu": "Parce qu'elle fabrique la sérotonine et la dopamine, la B6 est un discret allié de l'humeur et de la motivation. C'est aussi la seule vitamine hydrosoluble avec une vraie limite de sécurité : preuve que « naturel » et « hydrosoluble » ne veulent pas dire « sans limite » — la dose fait toujours le poison, même pour une vitamine."
+    },
+    "b9": {
+      "titre": "Vitamine B9 (folates)",
+      "emoji": "🥬",
+      "sousTitre": "Le renouvellement cellulaire et l'ADN",
+      "benefices": "Les folates sont indispensables à la fabrication de nouvelles cellules et à la réplication de l'ADN — partout où le corps se renouvelle vite : sang, muqueuses, peau. La B9 est cruciale avant et pendant la grossesse (elle prévient les malformations du tube neural du bébé), mais aussi toute la vie pour former les globules rouges, réduire la fatigue et réguler l'homocystéine, un marqueur cardiovasculaire.",
+      "apports": "La référence pour l'adulte est d'environ 330 µg par jour, et 400 µg et plus pour les femmes enceintes ou qui souhaitent l'être — idéalement dès avant la conception.",
+      "limite": "L'EFSA fixe une limite de 1 000 µg par jour pour l'acide folique (la forme synthétique des compléments), pas pour les folates alimentaires. À noter : les folates naturels des aliments sont mieux régulés par le corps que l'acide folique de synthèse.",
+      "sources": "Le nom vient de « feuillage » : légumes verts à feuilles en tête (épinard, mâche, chou), puis légumineuses, foie, agrumes, œufs, betterave.",
+      "savaisTu": "Les folates sont fragiles : jusqu'à la moitié peut partir dans l'eau de cuisson ou être détruite par une cuisson longue. Une partie des légumes verts consommés crus ou juste vapeur préserve bien mieux cette vitamine — un argument de plus pour les crudités et les cuissons douces."
+    },
+    "b12": {
+      "titre": "Vitamine B12 (cobalamine)",
+      "emoji": "🥩",
+      "sousTitre": "Nerfs, sang et énergie — le point de vigilance végétal",
+      "benefices": "La B12 est indispensable à la formation des globules rouges, au bon fonctionnement du système nerveux (elle protège la gaine des nerfs) et à la synthèse de l'ADN. Avec la B9, elle régule l'homocystéine. Une carence s'installe lentement mais peut causer fatigue profonde, troubles neurologiques et anémie — d'où l'importance de la surveiller.",
+      "apports": "La référence pour l'adulte est d'environ 4 µg par jour. Le foie en stocke des réserves importantes, ce qui explique qu'une carence mette des mois, voire des années, à se manifester.",
+      "limite": "Aucune limite de sécurité : l'excès est éliminé sans danger.",
+      "sources": "Exclusivement d'origine animale : abats, viandes, poissons, fruits de mer, œufs, produits laitiers. C'est le point clé.",
+      "savaisTu": "La B12 est le talon d'Achille des régimes végétaliens : on ne la trouve quasiment que dans les produits animaux. Une supplémentation est alors indispensable, pas optionnelle — c'est l'un des rares cas où un complément fait consensus, y compris chez les naturopathes. Après 60 ans, l'absorption diminue aussi, ce qui mérite une vigilance même chez les omnivores."
+    },
+    "calcium": {
+      "titre": "Calcium",
+      "emoji": "🦴",
+      "sousTitre": "Le bâtisseur osseux, à bien diriger",
+      "benefices": "Le calcium est le minéral le plus abondant du corps : 99 % constitue le squelette et les dents, qu'il bâtit et entretient en permanence. Le 1 % restant est vital : contraction musculaire (dont le cœur), coagulation, transmission nerveuse, signalisation cellulaire. L'os n'est pas figé, il se renouvelle toute la vie — le capital osseux se construit jeune et s'entretient ensuite.",
+      "apports": "La référence pour l'adulte est d'environ 950 à 1 000 mg par jour, un peu plus à l'adolescence et après 60 ans. Mais la quantité n'est qu'une partie de l'équation : ce qui compte vraiment, c'est que le calcium soit bien dirigé vers l'os.",
+      "limite": "L'EFSA fixe une limite à 2 500 mg par jour. Aucun risque par l'alimentation courante ; la prudence concerne le cumul de compléments avec une eau très calcique. Un excès chronique favorise les calculs rénaux et gêne l'absorption du fer, du zinc et du magnésium.",
+      "sources": "Produits laitiers, sardines et petits poissons avec arêtes, amandes, légumes verts (chou kale, brocoli), tofu, légumineuses, et certaines eaux minérales calciques. Les sources végétales ont l'avantage d'apporter aussi d'autres minéraux.",
+      "savaisTu": "Prendre du calcium ne suffit pas : encore faut-il l'envoyer au bon endroit. La vitamine D permet de l'absorber, et la vitamine K2 active les protéines qui le fixent sur l'os plutôt que dans les artères. Sans ce trio calcium + D + K2, une partie du calcium risque de se déposer là où il ne faut pas. C'est pourquoi mieux vaut miser sur une alimentation complète que sur un simple complément de calcium isolé."
+    },
+    "cuivre": {
+      "titre": "Cuivre",
+      "emoji": "🔶",
+      "sousTitre": "Le partenaire discret du fer",
+      "benefices": "Le cuivre travaille main dans la main avec le fer : il aide à le mobiliser et à former l'hémoglobine. Il participe à la production d'énergie, à la formation du collagène et de l'élastine (peau, vaisseaux, articulations), à la défense antioxydante et au bon fonctionnement du système nerveux et immunitaire.",
+      "apports": "La référence pour l'adulte est d'environ 1,3 à 1,5 mg par jour, facilement couverte par une alimentation variée.",
+      "limite": "L'EFSA fixe une limite à environ 5 mg par jour. Comme le fer, le cuivre libre est un pro-oxydant : le foie le stocke et le régule, mais un excès chronique (souvent via l'eau de canalisations en cuivre ou des compléments) peut le déborder. Son équilibre avec le zinc est étroit — trop de l'un fait chuter l'autre.",
+      "sources": "Le foie en tête, puis les huîtres et fruits de mer, le chocolat noir, les oléagineux, les légumineuses, les champignons.",
+      "savaisTu": "Zinc et cuivre sont comme une balance : un excès prolongé de zinc (souvent par complément) fait chuter le cuivre, et inversement. C'est pourquoi une supplémentation en zinc sur la durée devrait toujours s'accompagner d'un œil sur le cuivre. Dans une alimentation brute et variée, cet équilibre se fait naturellement."
+    },
+    "fer": {
+      "titre": "Fer",
+      "emoji": "🩸",
+      "sousTitre": "L'oxygène du sang, deux formes très inégales",
+      "benefices": "Le fer transporte l'oxygène dans tout ton corps via l'hémoglobine, et le stocke dans les muscles via la myoglobine. Il est central pour l'énergie, l'endurance, la concentration et l'immunité. Une carence — fréquente chez les femmes réglées, les sportifs et les végétariens — provoque fatigue, essoufflement, pâleur et baisse de performance bien avant l'anémie visible.",
+      "apports": "La référence est d'environ 11 mg/jour pour l'homme et jusqu'à 16 mg pour la femme réglée. Mais tout dépend de la forme : le fer héminique (animal) est absorbé à 25-30 %, le fer non héminique (végétal) à seulement 2-10 %.",
+      "limite": "L'EFSA fixe une limite à 40 mg/jour. Le corps sait réguler l'absorption mais ne sait pas éliminer le fer en excès : ne jamais se supplémenter sans dosage sanguin (ferritine). Le risque est réel chez les personnes atteintes d'hémochromatose, une prédisposition génétique fréquente et souvent ignorée.",
+      "sources": "Fer héminique bien absorbé : boudin, foie, viande rouge, mollusques (moules, huîtres). Fer non héminique : légumineuses, tofu, graines de courge, légumes verts — à associer à de la vitamine C qui booste son absorption.",
+      "savaisTu": "La vitamine C multiplie l'absorption du fer végétal : un filet de citron sur des lentilles ou du persil dans un plat de légumineuses change tout. À l'inverse, le thé et le café pris pendant le repas la freinent fortement, à cause des tanins. Le timing et les associations comptent parfois autant que la quantité."
+    },
+    "iode": {
+      "titre": "Iode",
+      "emoji": "🧂",
+      "sousTitre": "Le chef d'orchestre de la thyroïde",
+      "benefices": "L'iode est indispensable à la fabrication des hormones thyroïdiennes, qui règlent ton métabolisme tout entier : énergie, température, poids, humeur, croissance. Il est particulièrement crucial pendant la grossesse pour le développement cérébral du bébé. Ni trop, ni trop peu : la thyroïde est un organe d'équilibre délicat.",
+      "apports": "La référence pour l'adulte est d'environ 150 µg par jour, et davantage pendant la grossesse et l'allaitement (jusqu'à 200 µg).",
+      "limite": "L'EFSA fixe une limite à 600 µg par jour. Fait rare, l'iode est un nutriment où l'excès et le manque produisent des troubles comparables : les deux peuvent dérégler la thyroïde. La prudence vise surtout les algues séchées, dont la teneur peut être vertigineuse.",
+      "sources": "Produits de la mer (poissons, crustacés, coquillages), algues, sel iodé, œufs, produits laitiers. Le poisson reste la source la plus régulière et sûre.",
+      "savaisTu": "Les algues séchées, surtout le kombu, peuvent contenir plusieurs milliers de microgrammes d'iode par gramme : quelques grammes suffisent à exploser la limite de sécurité. Elles sont excellentes avec parcimonie, mais méritent une vraie vigilance — un cas où « naturel » ne signifie pas « sans limite »."
+    },
+    "magnesium": {
+      "titre": "Magnésium",
+      "emoji": "✨",
+      "sousTitre": "Le minéral anti-stress, discrètement déficitaire",
+      "benefices": "Le magnésium est le cofacteur de plus de 300 réactions enzymatiques : production d'énergie cellulaire (l'ATP a besoin de lui), fonction musculaire et nerveuse, régulation du rythme cardiaque, solidité osseuse, équilibre du système nerveux. Il joue un rôle central dans la gestion du stress et la qualité du sommeil. C'est l'un des minéraux les plus stratégiques pour la vitalité et la longévité — et l'un des plus souvent déficitaires.",
+      "apports": "La référence se situe autour de 300 à 400 mg par jour (un peu plus pour les hommes et les sportifs). Un chiffre à connaître : on estime qu'environ un tiers de la population mondiale n'atteint pas cet apport, en partie parce que l'appauvrissement des sols a réduit la teneur en magnésium des céréales d'environ 20 % en quelques décennies.",
+      "limite": "Aucune limite pour le magnésium alimentaire : l'excès est simplement éliminé par les reins. Côté compléments, au-delà d'environ 250 mg de magnésium ajouté par jour, un effet laxatif peut apparaître, sans gravité. À noter : les formes citrate, glycinate ou malate sont bien mieux absorbées que l'oxyde, souvent bon marché mais peu biodisponible.",
+      "sources": "Chocolat noir (le vrai, riche en cacao), oléagineux (amandes, noix de cajou, noix du Brésil), légumineuses, céréales complètes, légumes verts à feuilles, banane, et certaines eaux minérales magnésiennes. Les aliments bruts et complets sont systématiquement plus riches que leurs versions raffinées.",
+      "savaisTu": "Le stress et le magnésium forment un cercle vicieux : le stress fait fuir le magnésium dans les urines, et un manque de magnésium amplifie la réactivité au stress. C'est pourquoi une période de tension intense épuise vite les réserves — et pourquoi remonter ses apports aide concrètement à retrouver du calme et un meilleur sommeil."
+    },
+    "manganese": {
+      "titre": "Manganèse",
+      "emoji": "🌰",
+      "sousTitre": "L'antioxydant des mitochondries et des os",
+      "benefices": "Le manganèse est le cofacteur d'enzymes clés, dont la SOD mitochondriale, l'un de tes antioxydants internes les plus puissants, qui protège tes centrales énergétiques. Il participe à la formation des os et du cartilage, au métabolisme des glucides et des lipides, et à la cicatrisation. Discret mais structurant.",
+      "apports": "La référence pour l'adulte est d'environ 3 mg par jour, largement couverte par les végétaux, les céréales complètes et le thé.",
+      "limite": "Pas de limite formelle par l'alimentation, où les carences comme les excès sont rares. La prudence ne concerne que certaines expositions professionnelles ou compléments très dosés.",
+      "sources": "Céréales complètes, oléagineux, légumineuses, thé (surtout vert), ananas, épinard, chocolat noir. Les aliments végétaux bruts en regorgent.",
+      "savaisTu": "Une seule tasse de thé peut couvrir une bonne part des besoins quotidiens en manganèse — c'est l'une des sources les plus concentrées qui soit. Le manganèse illustre bien ces oligo-éléments dont on parle peu mais qui travaillent en coulisses, notamment pour protéger tes mitochondries du vieillissement."
+    },
+    "phosphore": {
+      "titre": "Phosphore",
+      "emoji": "🦴",
+      "sousTitre": "Le binôme du calcium, rarement en manque",
+      "benefices": "Le phosphore est le deuxième minéral le plus abondant du corps après le calcium, avec qui il forme la structure des os et des dents. Il est aussi au cœur de l'énergie cellulaire (l'ATP est une molécule phosphatée), compose l'ADN et les membranes cellulaires, et régule l'équilibre acido-basique.",
+      "apports": "La référence pour l'adulte est d'environ 550 mg par jour. La carence est très rare car le phosphore est présent dans presque tous les aliments.",
+      "limite": "Pas de limite haute stricte par l'alimentation brute. Le vrai enjeu moderne est ailleurs : les phosphates AJOUTÉS aux produits ultra-transformés (sodas colas, plats préparés, fromages fondus) apportent un phosphore surdosé et mal équilibré, ce qui peut peser sur les reins et les os à long terme.",
+      "sources": "Presque partout : poissons, viandes, œufs, produits laitiers, légumineuses, oléagineux, céréales complètes.",
+      "savaisTu": "Le problème avec le phosphore n'est presque jamais le manque, mais l'excès caché des additifs (les fameux E338 à E452 des sodas et plats industriels). C'est un exemple de plus où l'ultra-transformé déséquilibre un nutriment que l'alimentation brute gère parfaitement — ici, en perturbant le rapport phosphore/calcium."
+    },
+    "potassium": {
+      "titre": "Potassium",
+      "emoji": "🍌",
+      "sousTitre": "Le contrepoids du sel, souvent négligé",
+      "benefices": "Le potassium est le principal minéral intracellulaire et le contrepoids naturel du sodium. Il régule la tension artérielle, l'équilibre hydrique, la contraction musculaire (dont le cœur) et la transmission nerveuse. Un bon apport protège le cœur et les vaisseaux, et soutient la fonction musculaire à l'effort. La plupart des gens en manquent légèrement tout en consommant trop de sel — exactement le déséquilibre inverse de l'idéal.",
+      "apports": "La référence pour l'adulte est d'environ 3 500 mg par jour. Peu de gens l'atteignent, car cela suppose une consommation généreuse de végétaux — ce qui est justement le marqueur d'une alimentation de qualité.",
+      "limite": "Aucune limite pour le potassium alimentaire chez une personne en bonne santé : les reins régulent parfaitement. La prudence ne concerne que les compléments en cas d'insuffisance rénale ou de certains traitements cardiaques (parles-en à ton médecin dans ce cas).",
+      "sources": "Contrairement à l'idée reçue de la banane, les meilleures sources sont souvent ailleurs : pomme de terre et patate douce, légumineuses, épinard et légumes verts, avocat, fruits secs, betterave, et bien sûr la banane. En réalité, presque tous les végétaux bruts en sont riches.",
+      "savaisTu": "Pour la tension artérielle, augmenter le potassium est aussi important que réduire le sel — c'est le rapport entre les deux qui compte le plus. Une alimentation riche en végétaux et pauvre en ultra-transformé rétablit naturellement ce rapport, là où l'alimentation industrielle l'inverse (trop de sodium, pas assez de potassium)."
+    },
+    "selenium": {
+      "titre": "Sélénium",
+      "emoji": "🐟",
+      "sousTitre": "Bien plus que la noix du Brésil",
+      "benefices": "Le sélénium est un oligo-élément antioxydant majeur : il est le cofacteur des glutathion peroxydases, qui protègent les cellules du stress oxydatif, et il est indispensable à la conversion des hormones thyroïdiennes. Il soutient l'immunité, la fertilité masculine et joue un rôle protecteur contre certains cancers. En petite quantité, il est essentiel ; c'est un nutriment de précision.",
+      "apports": "La référence est d'environ 55 à 70 µg par jour pour un adulte. Le sélénium des produits de la mer et des œufs est particulièrement bien absorbé (85-90 %, sous forme de sélénométhionine), bien mieux que celui des compléments inorganiques.",
+      "limite": "Le sélénium a une fenêtre de sécurité étroite : la limite haute se situe autour de 300-400 µg/jour, et un excès chronique (sélénose) provoque ongles cassants, chute de cheveux, troubles digestifs. C'est justement pourquoi il ne faut pas se reposer sur une source unique et concentrée.",
+      "sources": "On réduit trop souvent le sélénium à la noix du Brésil — c'est une simplification trompeuse. Sa teneur y est extrêmement VARIABLE (elle dépend du sol d'origine, d'un facteur 1 à plus de 100), donc « une noix couvre les besoins » est faux et peut même mener au surdosage. Les sources les plus fiables et régulières sont ailleurs : les produits de la mer (thon, sardines, huîtres, moules, crevettes), les œufs, les abats et la viande de qualité. Ils en contiennent beaucoup, sous une forme mieux assimilée. La nature offre bien plus d'une seule option.",
+      "savaisTu": "Si tu manges régulièrement des produits de la mer et des œufs, tu peux facilement atteindre — voire dépasser — tes besoins en sélénium sans jamais toucher une noix du Brésil. C'est un bon exemple de pourquoi il faut regarder l'ensemble de son alimentation plutôt que de courir après un aliment « miracle »."
+    },
+    "sodium": {
+      "titre": "Sodium (sel)",
+      "emoji": "🧂",
+      "sousTitre": "Essentiel, à calibrer selon ton activité",
+      "benefices": "Le sodium, principal composant du sel, est vital : il régule l'équilibre hydrique, la tension artérielle et la transmission nerveuse. On ne manque quasiment jamais de sodium dans nos sociétés — mais chez une personne active qui transpire beaucoup (sport, chaleur, travail physique), les pertes par la sueur sont réelles et un apport suffisant devient nécessaire pour bien performer et récupérer.",
+      "apports": "Pour une personne plutôt sédentaire, l'OMS conseille de ne pas dépasser environ 5 g de sel par jour (soit ~2 g de sodium). Chez le sportif, ce repère se relève pour compenser les pertes sudorales : c'est pour cela que ton objectif s'ajuste automatiquement à ton niveau d'activité dans l'application.",
+      "limite": "Le vrai problème du sel concerne surtout les personnes sédentaires : chez elles, l'excès pèse sur la tension. Et ce excès vient presque toujours du sel CACHÉ des produits ultra-transformés (plats préparés, charcuterie, pain industriel, snacks), pas de la pincée ajoutée à une cuisine maison. C'est ce sel-là qu'il faut traquer en priorité.",
+      "sources": "À privilégier : un sel non raffiné (marin gris, rose), ajouté avec discernement à une cuisine maison à base d'aliments bruts. Certains aliments bruts en contiennent naturellement (céleri, algues, fruits de mer). À limiter : tout l'ultra-transformé, où le sel est omniprésent et invisible.",
+      "savaisTu": "Environ 70 à 80 % du sel que consomme un sédentaire provient des produits industriels, pas de la salière. Cuisiner soi-même à partir d'aliments bruts, c'est reprendre le contrôle total sur son sodium — et pouvoir ensuite l'ajuster librement à son niveau d'activité."
+    },
+    "zinc": {
+      "titre": "Zinc",
+      "emoji": "🛡️",
+      "sousTitre": "Immunité, réparation et fertilité",
+      "benefices": "Le zinc est un oligo-élément indispensable à plus de 300 enzymes. Il est au cœur de l'immunité (les cellules de défense en dépendent directement), de la cicatrisation, de la santé de la peau, des cheveux et des ongles, de la fertilité — notamment masculine, où il soutient la testostérone et la qualité du sperme — et de la synthèse des protéines. Très sollicité par les sportifs et lors des infections.",
+      "apports": "La référence pour l'adulte varie d'environ 7,5 à 14 mg par jour, selon le sexe et la teneur de l'alimentation en fibres et phytates. Les besoins augmentent chez les végétariens (absorption moindre) et les sportifs (pertes accrues).",
+      "limite": "L'EFSA fixe une limite de sécurité à 25 mg par jour. Le vrai risque d'un excès prolongé, presque toujours dû aux compléments, n'est pas une toxicité directe du zinc mais un blocage de l'absorption du cuivre : zinc et cuivre empruntent les mêmes transporteurs. Un excès de zinc peut donc, paradoxalement, créer une carence en cuivre et affaiblir l'immunité qu'il est censé soutenir.",
+      "sources": "Les huîtres sont de très loin la source la plus riche (une portion couvre plusieurs jours de besoins). Viennent ensuite la viande rouge, les graines de courge, le bœuf, les légumineuses, les fromages et les oléagineux.",
+      "savaisTu": "Le zinc des végétaux est moins bien absorbé à cause des phytates des céréales et légumineuses, qui le piègent. Une astuce ancestrale et efficace : le trempage, la germination ou la fermentation (comme le pain au levain) neutralisent une bonne partie des phytates et libèrent le zinc. Nos ancêtres préparaient ainsi leurs céréales sans en connaître la raison biochimique."
+    },
+    "cholesterol": {
+      "titre": "Cholestérol",
+      "emoji": "🥚",
+      "sousTitre": "Vital, et longtemps incompris",
+      "benefices": "Le cholestérol n'est pas un poison, c'est une molécule VITALE. Il compose la membrane de chacune de tes cellules, sert de base à la fabrication de la vitamine D, des hormones sexuelles (testostérone, œstrogènes), du cortisol et des sels biliaires. Ton cerveau en est particulièrement riche. Sans cholestérol, la vie est tout simplement impossible.",
+      "apports": "Il n'existe pas de besoin alimentaire en cholestérol : ton foie en fabrique la majeure partie (environ 80 %), et il ajuste sa production selon ce que tu manges. C'est le point clé longtemps ignoré : le cholestérol est surtout ENDOGÈNE. Quand tu en manges plus, ton corps en produit moins, et inversement. La régulation est interne.",
+      "limite": "L'idée qu'il faut fuir le cholestérol alimentaire (et séparer le jaune d'œuf) est un dogme largement dépassé. Pour la plupart des gens, le cholestérol des aliments a un impact modeste sur le cholestérol sanguin. Les vrais leviers du profil lipidique sont ailleurs : l'excès de sucres et de produits ultra-transformés, le manque de fibres et d'activité physique, l'inflammation chronique. C'est là qu'il faut agir, pas dans la peur d'un œuf.",
+      "sources": "Le cholestérol se trouve dans les aliments d'origine animale : œufs (surtout le jaune), abats, beurre, fromages, viandes. Longtemps diabolisés, les œufs entiers sont en réalité l'un des aliments les plus complets qui soient — jaune compris, qui concentre la choline, la lutéine et les vitamines liposolubles.",
+      "savaisTu": "On a longtemps conseillé de jeter le jaune d'œuf par peur du cholestérol. C'est une erreur : le jaune concentre presque tous les nutriments de l'œuf (choline pour le cerveau, lutéine pour les yeux, vitamines A, D, E, K). Manger l'œuf entier a bien plus de sens nutritionnel que de ne garder que le blanc."
+    },
+    "agsatures": {
+      "titre": "Acides gras saturés",
+      "emoji": "🧈",
+      "sousTitre": "Tous ne se valent pas, loin de là",
+      "benefices": "Les acides gras saturés ne sont pas un bloc uniforme, et la science récente a fait voler en éclats l'idée qu'ils seraient tous « mauvais ». Certains, comme les acides gras à chaîne IMPAIRE — le C15:0 (pentadécanoïque) et le C17:0 (heptadécanoïque), présents dans la matière grasse laitière de qualité (beurre de lait cru, fromages), certains poissons et la viande de bœuf nourri à l'herbe — sont même associés à une MEILLEURE santé : des taux sanguins plus élevés vont de pair avec moins de diabète, de maladies cardiovasculaires et une mortalité plus basse. Le C15:0 active l'AMPK et inhibe mTOR, deux leviers centraux de la longévité, au point que des chercheurs le proposent comme un nouvel acide gras essentiel.",
+      "apports": "Il n'y a pas de « besoin » chiffré en saturés : le corps en fabrique. Les repères de santé publique suggèrent de les limiter à environ 10-12 % de l'apport énergétique, mais ce chiffre global masque l'essentiel — c'est la SOURCE qui compte, pas le pourcentage brut. Des saturés issus d'aliments bruts (beurre cru, œufs, fromage, viande de qualité) n'ont pas le même effet que ceux des produits ultra-transformés.",
+      "limite": "La vraie prudence concerne l'excès d'acides gras saturés issus d'aliments ultra-transformés et raffinés, surtout combinés à des sucres rapides (viennoiseries, plats industriels, fritures). C'est cette matrice-là, pas le beurre de la ferme, qui pose problème. Attention : reconnaître les bénéfices des chaînes impaires ne veut pas dire « mange plus de gras saturé sans limite » — c'est une nuance, pas un permis.",
+      "sources": "Les bonnes sources brutes : beurre et fromages au lait cru, œufs, viande de ruminants nourris à l'herbe, poissons gras. Ces aliments apportent aussi les précieux C15:0 et C17:0. À éviter : les graisses saturées cachées dans l'ultra-transformé et les huiles hydrogénées.",
+      "savaisTu": "Le C15:0 a été découvert en étudiant la longévité des dauphins de l'US Navy : les plus âgés en bonne santé avaient des taux élevés de cet acide gras. Or son apport dans la population a chuté depuis 40 ans, à mesure qu'on diabolisait le gras laitier entier — une possible erreur historique que la science est en train de corriger."
+    },
+    "sucres": {
+      "titre": "Sucres",
+      "emoji": "🍯",
+      "sousTitre": "Naturels et bruts plutôt qu'ajoutés",
+      "benefices": "Le sucre est un carburant, utile notamment autour de l'effort physique. Mais la SOURCE fait tout. Les sucres naturellement présents dans les aliments bruts (fruits entiers, légumes, tubercules) arrivent accompagnés de fibres, d'eau, de vitamines et d'antioxydants : cette matrice ralentit leur absorption et évite les pics de glycémie. Le même sucre, isolé et raffiné, se comporte tout autrement.",
+      "apports": "Il n'y a pas de besoin en sucres ajoutés : zéro est parfaitement viable. L'OMS recommande de limiter les sucres ajoutés à moins de 10 % de l'apport énergétique, idéalement 5 %. Les sucres des aliments bruts entiers, eux, ne sont pas concernés par cette limite.",
+      "limite": "Les sucres vraiment délétères sont les sucres ajoutés raffinés, et surtout le sirop de glucose-fructose des produits transformés et des sodas. Le fructose en est la clé : dans un fruit entier, il est tamponné par les fibres et sans danger ; mais ISOLÉ et consommé en masse (sodas, jus, sirops industriels), il est métabolisé par le foie et favorise, à l'excès, la stéatose hépatique et la résistance à l'insuline. Ce n'est pas le fructose du fruit le problème, c'est le fructose industriel arraché à sa matrice.",
+      "sources": "À privilégier : fruits entiers, légumes, patate douce, un peu de miel brut ou de fruits secs autour de l'effort. À fuir : sodas, jus de fruits industriels, sirops de glucose-fructose, et tous les produits où le sucre ajouté figure haut dans la liste d'ingrédients.",
+      "savaisTu": "Un fruit pressé en jus perd ses fibres : son fructose devient alors rapide, comme celui d'un soda. C'est pourquoi manger une orange n'a rien à voir avec boire un verre de jus d'orange, même « pur jus » — le fruit entier gagne à chaque fois."
+    },
+    "sel": {
+      "titre": "Sel (sodium)",
+      "emoji": "🧂",
+      "sousTitre": "À adapter à ton activité physique",
+      "benefices": "Le sel n'est pas un ennemi : le sodium est vital pour l'équilibre hydrique, la transmission nerveuse et la contraction musculaire. Quand tu es actif et que tu transpires (sport, chaleur, travail physique), tes besoins augmentent réellement, et un apport suffisant est même nécessaire pour bien performer et récupérer. La clé, c'est d'ajuster à ton mode de vie.",
+      "apports": "Pour une personne plutôt sédentaire, l'OMS conseille de ne pas dépasser environ 5 g de sel par jour. Pour une personne physiquement active qui transpire beaucoup, les besoins sont plus élevés : le curseur monte avec la dépense et les pertes en sueur.",
+      "limite": "L'excès de sel n'est problématique surtout chez les personnes sédentaires ou sensibles : il pèse alors sur la tension artérielle. Le point de vigilance reste le sel caché des produits transformés, de mauvaise qualité, plus que le sel non raffiné ajouté avec discernement à une cuisine maison.",
+      "sources": "À privilégier : un sel non raffiné (marin gris, rose), riche en oligo-éléments, ajouté avec discernement à une cuisine maison et adapté à ton activité physique.",
+      "savaisTu": "Un sportif d'endurance peut perdre plusieurs grammes de sodium par la sueur en une seule séance. Pour lui, restreindre le sel comme on le conseille à un sédentaire serait contre-productif : le besoin se personnalise selon l'activité."
+    },
+    "hydratation": {
+      "titre": "Hydratation",
+      "emoji": "💧",
+      "sousTitre": "Le nutriment qu'on oublie de compter",
+      "benefices": "L'eau est le premier constituant de ton corps (environ 60 %) et le milieu de toutes tes réactions vitales : transport des nutriments, élimination des déchets par les reins, régulation de la température, lubrification des articulations, performance physique et mentale. Une déshydratation même légère (1-2 %) réduit déjà la concentration, l'énergie et la performance.",
+      "apports": "On vise environ 1,5 à 2 L d'eau par jour, à ajuster selon l'activité, la chaleur et la transpiration. Une partie vient aussi des aliments riches en eau (fruits, légumes, soupes), qui comptent dans ton hydratation.",
+      "limite": "Boire excessivement et très vite peut, dans de rares cas extrêmes (efforts d'endurance), diluer le sodium sanguin. Pour l'immense majorité, l'enjeu est l'inverse : ne pas boire assez.",
+      "sources": "Eau pure avant tout, mais aussi tisanes, et surtout les aliments gorgés d'eau : concombre, pastèque, courgette, salade, agrumes, soupes. TOTUM compte d'ailleurs l'eau contenue dans tes aliments.",
+      "savaisTu": "La sensation de soif apparaît quand la déshydratation a déjà commencé : mieux vaut boire régulièrement sans attendre d'avoir soif. Un bon repère simple et fiable : la couleur des urines, qui doit rester jaune pâle. Foncées, elles signalent qu'il est temps de boire."
+    },
+    "fibres": {
+      "titre": "Fibres",
+      "emoji": "🌾",
+      "sousTitre": "Le carburant de ton microbiote",
+      "benefices": "Les fibres sont les glucides que tu ne digères pas — mais que ton microbiote intestinal adore. Elles nourrissent tes bonnes bactéries, qui en retour fabriquent des composés protecteurs (les acides gras à chaîne courte). Elles régulent la glycémie, le transit, le cholestérol, procurent de la satiété et sont l'un des marqueurs les plus fiables d'une alimentation de qualité. Un microbiote bien nourri, c'est un pilier de l'immunité et de la longévité.",
+      "apports": "La référence est d'au moins 25 à 30 g par jour, un seuil que la majorité des gens n'atteignent pas. Il existe deux grandes familles complémentaires : les fibres solubles (qui gélifient, régulent glycémie et cholestérol) et insolubles (qui accélèrent le transit).",
+      "limite": "Pas de limite haute, mais une augmentation trop brutale peut causer ballonnements et inconfort : mieux vaut monter progressivement et bien s'hydrater, le temps que le microbiote s'adapte.",
+      "sources": "Légumineuses (championnes), légumes, fruits entiers, céréales complètes, oléagineux, graines. Solubles : avoine, pomme, légumineuses. Insolubles : son, légumes verts, peau des fruits.",
+      "savaisTu": "La diversité des fibres compte autant que la quantité : chaque type de fibre nourrit des bactéries différentes. Manger varié — beaucoup de plantes différentes chaque semaine — enrichit ton microbiote bien plus qu'un seul aliment riche en fibres. Les recherches parlent de viser une trentaine de végétaux différents par semaine pour un microbiote optimal."
+    },
+    "proteines": {
+      "titre": "Protéines",
+      "emoji": "🥩",
+      "sousTitre": "Le nutriment le plus rassasiant et structurant",
+      "benefices": "Les protéines sont le matériau de construction du vivant : muscles, peau, cheveux, enzymes, hormones, anticorps, neurotransmetteurs. Elles se décomposent en acides aminés, dont neuf sont essentiels — le corps ne sait pas les fabriquer. Un apport suffisant préserve la masse musculaire (déterminante pour la longévité), soutient l'immunité, et procure la satiété la plus forte de tous les macronutriments, ce qui aide naturellement à réguler l'appétit et le poids.",
+      "apports": "La recommandation officielle de 0,8 g/kg/jour est un minimum pour éviter la carence, pas un optimum. Les données récentes situent l'optimum bien plus haut : 1,2 à 1,6 g/kg pour une personne active, et 1,6 à 2,2 g/kg pour un sportif ou lors d'une perte de poids, afin de préserver le muscle. Après 60 ans, les besoins AUGMENTENT (le corps utilise moins bien les protéines) : viser 1,2 à 1,5 g/kg est protecteur contre la fonte musculaire.",
+      "limite": "Il faut le dire clairement : l'idée que les protéines « fatiguent les reins » est un mythe pour les personnes en bonne santé. Il vient d'études sur des patients ayant DÉJÀ une maladie rénale. Une grande revue (28 études, 1 300+ participants) a confirmé qu'un apport élevé n'altère pas la fonction rénale chez l'adulte sain. La prudence ne concerne qu'un apport très élevé (>2 g/kg) et prolongé chez les personnes à risque (diabète, hypertension). Pour tous les autres, atteindre l'apport optimal est plus difficile que de le dépasser.",
+      "sources": "Les sources animales — œufs, poissons, viandes, produits laitiers — apportent tous les acides aminés essentiels d'un coup. Côté végétal, associer légumineuses et céréales (lentilles + riz, pois chiches + semoule) pour un profil complet. Œufs, poissons gras et légumineuses restent les piliers les plus intéressants pour la santé et la longévité. La qualité (source, digestibilité) compte autant que la quantité.",
+      "savaisTu": "Le corps ne stocke pas les protéines en réserve comme il le fait pour les graisses. Mieux vaut donc les répartir sur la journée (20 à 40 g par repas) plutôt que tout concentrer le soir : la synthèse musculaire est optimisée par une distribution régulière."
+    },
+    "polyols": {
+      "titre": "Polyols",
+      "emoji": "🍬",
+      "sousTitre": "Naturels dans les fruits, ou signal d'ultra-transformé",
+      "benefices": "Les polyols (sorbitol, xylitol, mannitol, érythritol, maltitol…) sont une famille de glucides au goût légèrement sucré. Il faut distinguer deux réalités très différentes. Dans la NATURE, on en trouve à l'état de traces dans de nombreux fruits et légumes bruts — le sorbitol dans les pommes, poires, prunes, cerises ; le mannitol dans les champignons ; le xylitol dans certaines baies. À ces doses naturelles, accompagnés de fibres et d'eau, ils sont parfaitement anodins et font simplement partie de la matrice de l'aliment.",
+      "apports": "Il n'y a aucun besoin en polyols : ce ne sont pas des nutriments essentiels. Leur présence en petite quantité dans ton bilan, si tu manges des fruits et légumes bruts, est totalement normale et sans conséquence — c'est simplement la signature naturelle de ces aliments.",
+      "limite": "Le problème n'est pas le polyol naturel du fruit, mais le polyol AJOUTÉ en grande quantité dans les produits industriels « sans sucre » (chewing-gums, bonbons, biscuits allégés, barres protéinées). À ces doses concentrées (au-delà de ~20 g/jour), ils fermentent dans le côlon et provoquent ballonnements, gaz et effet laxatif — d'où la mention « peut avoir des effets laxatifs » sur ces emballages. Une teneur élevée en polyols dans ton bilan est donc surtout un bon détecteur de produits transformés.",
+      "sources": "Naturels et sans souci : pommes, poires, prunes, cerises, champignons, quelques baies. À surveiller : tout produit étiqueté « sans sucre » ou « allégé » (bonbons, gommes, pâtisseries industrielles), où ils sont ajoutés en masse.",
+      "savaisTu": "Si tu manges uniquement des aliments bruts et que tu vois un peu de polyols dans ton bilan, c'est bon signe : ça vient de tes fruits, pas d'un produit transformé. Le xylitol naturel est même bénéfique pour les dents (il est utilisé en dentisterie). Tout est une question de dose et d'origine — la nature en petite quantité, oui ; l'industrie en grande quantité, non."
+    },
+    "alcool": {
+      "titre": "Alcool",
+      "emoji": "🍷",
+      "sousTitre": "Aucune dose n'est bénéfique pour la santé",
+      "benefices": "Il faut être direct : l'alcool n'apporte aucun bénéfice nutritionnel. L'idée ancienne d'un « verre de vin bon pour le cœur » a été invalidée par les grandes études récentes. Ses 7 kcal par gramme sont des calories vides, sans vitamine ni minéral, que le corps traite en priorité comme un toxique — mettant en pause la combustion des graisses le temps de l'éliminer.",
+      "apports": "Il n'existe aucun apport recommandé : le niveau sans risque pour la santé est zéro. Les repères de consommation à moindre risque situent le maximum à 10 verres par semaine et pas plus de 2 par jour, avec des jours sans — mais ce sont des seuils de réduction des risques, pas des recommandations.",
+      "limite": "L'alcool est classé cancérogène certain (groupe 1) par le CIRC, au même titre que le tabac. Il augmente le risque de plusieurs cancers dès les faibles doses, fatigue le foie, perturbe le sommeil profond, favorise le stockage des graisses et déshydrate. Ses effets sont cumulatifs sur le long terme.",
+      "sources": "Vin, bière, spiritueux, cidre et cocktails. Cette ligne n'apparaît dans ton bilan que les jours où tu en as consommé — elle te permet de visualiser objectivement ta fréquence sur la semaine ou le mois.",
+      "savaisTu": "Le corps considère l'alcool comme un poison à éliminer d'urgence : tant qu'il n'a pas fini, il suspend la combustion des graisses. Un simple verre le soir peut ainsi réduire la qualité du sommeil profond et ralentir la récupération, un point clé pour la performance comme pour la longévité."
+    },
+    "glucides": {
+      "titre": "Glucides",
+      "emoji": "🌾",
+      "sousTitre": "Le carburant, à choisir avec discernement",
+      "benefices": "Les glucides sont la source d'énergie préférée du corps, en particulier du cerveau et des muscles à l'effort. Mais tous ne se valent pas : les glucides complexes des aliments bruts (céréales complètes, légumineuses, tubercules) libèrent leur énergie lentement, tandis que les sucres simples des produits transformés provoquent des pics de glycémie suivis de chutes qui fatiguent et affament.",
+      "apports": "Ils représentent généralement 40 à 55 % de l'apport énergétique, mais la qualité prime sur la quantité. L'enjeu est de déplacer le curseur des sucres rapides vers les glucides complexes accompagnés de fibres.",
+      "limite": "L'excès de sucres simples est l'un des grands moteurs des maladies modernes. Le repère de l'OMS situe les sucres ajoutés sous 10 % de l'apport, idéalement 5 %. Les glucides complexes bruts n'ont pas cette limite : c'est la forme raffinée qui pose problème.",
+      "sources": "Céréales complètes (avoine, sarrasin, riz complet, quinoa), légumineuses, patates douces, fruits entiers. À éviter : farines blanches, sucres ajoutés, ultra-transformés.",
+      "savaisTu": "Un fruit entier et un jus contiennent le même sucre, mais le fruit l'accompagne de fibres qui ralentissent l'absorption. Presser un fruit, c'est le transformer en sucre rapide."
+    },
+    "lipides": {
+      "titre": "Lipides",
+      "emoji": "🫒",
+      "sousTitre": "Longtemps diabolisés, essentiels à la vie",
+      "benefices": "Les lipides sont vitaux, pas un ennemi. Ils composent la membrane de chacune de tes cellules, permettent d'absorber les vitamines liposolubles A, D, E et K, servent de base à la fabrication des hormones (dont les hormones sexuelles et le cortisol), et fournissent une énergie dense et durable. Le cerveau lui-même est constitué à près de 60 % de gras. L'enjeu n'est jamais d'en manger peu, mais d'en choisir de bons.",
+      "apports": "Ils représentent environ 35 à 40 % de l'apport énergétique. La qualité prime totalement sur la quantité : privilégier les insaturés (huiles vierges d'olive et de colza, oléagineux, avocat, poissons gras) et surtout les oméga 3, souvent déficitaires.",
+      "limite": "Le vrai danger, ce sont les graisses trans industrielles (huiles hydrogénées, fritures industrielles, viennoiseries de longue conservation), délétères pour le cœur. Dans une alimentation brute, les lipides — même saturés de qualité — sont des alliés, pas un risque.",
+      "sources": "Huiles vierges première pression à froid (olive, colza, lin, noix), oléagineux, avocat, petits poissons gras (sardine, maquereau), œufs, beurre de qualité. À fuir : huiles raffinées et gras de l'ultra-transformé.",
+      "savaisTu": "Toutes les huiles ne se cuisinent pas : les riches en oméga 3 (lin, noix, colza) s'oxydent à la chaleur et se consomment crues, tandis que l'huile d'olive et les graisses stables (ghee, coco) supportent la cuisson. Choisir la bonne huile selon l'usage — cru ou cuit — fait toute la différence sur la qualité réelle de tes gras."
+    }
+  }
+}

@@ -8,6 +8,17 @@
     <!-- AJOUTER ICI : permission Billing pour Google Play -->
     <uses-permission android:name="com.android.vending.BILLING" />
 
+    <!-- Localisation (UV index pour la vitamine D solaire) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Module Respiration : continuité du son procédural écran verrouillé
+         (flutter_foreground_task) — FOREGROUND_SERVICE/WAKE_LOCK/
+         POST_NOTIFICATIONS sont déjà fusionnées depuis le manifest propre du
+         plugin, seule FOREGROUND_SERVICE_MEDIA_PLAYBACK doit être ajoutée
+         explicitement (obligatoire Android 14+ pour ce type de service). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
     <application
         android:name="${applicationName}"
         android:label="Totum"
@@ -36,13 +47,21 @@
                     android:scheme="com.totumapp.totum"
                     android:host="login-callback" />
             </intent-filter>
-            
+
         </activity>
 
         <!-- 💡 C’EST CETTE LIGNE QUI DIT À FLUTTER : “JE SUIS EN EMBEDDING V2” -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- Module Respiration : service au premier plan pour la continuité
+             audio écran verrouillé. Nom de classe imposé par le plugin
+             flutter_foreground_task, ne pas renommer. -->
+        <service
+            android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="false" />
 
     </application>
 

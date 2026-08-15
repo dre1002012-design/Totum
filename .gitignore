@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Dump brut USDA FoodData Central (téléchargé par scripts/build_usda_foods.py,
+# ~80 Mo) — pas versionné, régénérable via les URLs documentées dans le script.
+scripts/usda_raw/
+
+# Cache local Firebase CLI (régénéré à chaque déploiement, pas du code).
+.firebase/
+flutter_log.txt

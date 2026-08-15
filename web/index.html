@@ -31,6 +31,13 @@
 
   <title>totum_clean</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Requis par flutter_soloud (module Respiration, Priorité 42) pour
+       charger son moteur audio WASM sur le web — sans ces 2 scripts,
+       SoLoud.init() ne se termine jamais et le module reste muet sans
+       erreur visible. Voir docs.page/alnitak/flutter_soloud_docs. -->
+  <script src="assets/packages/flutter_soloud/web/libflutter_soloud_plugin.js" defer></script>
+  <script src="assets/packages/flutter_soloud/web/init_module.dart.js" defer></script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>

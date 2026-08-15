@@ -2,7 +2,7 @@ name: totum_app
 description: Application Totum – Suivi nutrition et bien-être
 publish_to: 'none'
 
-version: 1.1.10+21
+version: 1.1.29+40
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -13,6 +13,8 @@ dependencies:
 
   shared_preferences: ^2.2.3
   intl: ^0.19.0
+  share_plus: ^10.1.0
+  path_provider: ^2.1.4
 
   # État & navigation
   flutter_riverpod: ^2.5.1
@@ -23,14 +25,22 @@ dependencies:
 
   # Backend & authentification
   supabase_flutter: ^2.6.0
-  in_app_purchase: ^3.1.11
+  in_app_purchase: ^3.3.0
 
   # Autres utilitaires Flutter
   cupertino_icons: ^1.0.8
 
   http: ^1.2.0           # pour appeler les API USDA + Open Food Facts
+  geolocator: ^13.0.1    # pour la localisation (UV index vitamine D soleil)
+  permission_handler: ^11.3.1  # demande d'autorisation runtime (localisation UV)
+  url_launcher: ^6.2.0
   mobile_scanner: ^5.0.0 # pour scanner les codes-barres avec la caméra
-
+  flutter_soloud: ^3.5.4
+  flutter_foreground_task: ^10.0.0
+  audio_session: ^0.2.4
+  # Export web (Priorité 58) — remplace dart:html (déprécié) dans
+  # lib/services/export/download_web.dart.
+  web: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -42,14 +52,30 @@ flutter_launcher_icons:
   android: true
   ios: false
   image_path: "assets/Logo_vierge.jpg"
-  min_sdk_android: 24
+  min_sdk_android: 26
 
 flutter:
   uses-material-design: true
   assets:
     - assets/foods.csv
+    - assets/usda_foods.csv
+    - assets/usda_portions.csv
     - assets/logo.png
+    - assets/logo_wordmark.png
     - assets/icons/google.png
     - assets/icons/apple.png
     - assets/icons/apple_white.png
     - assets/advices.json
+    - assets/nutrient_fiches.json
+    - assets/coach_advices.json
+    - assets/totum_recipes.json
+    - assets/limites_securite.json
+    - assets/common_foods.json
+    # Dossier entier plutôt qu'un fichier par fichier (13/08/2026) : la build
+    # a cassé 2 fois de suite (Priorité 47) parce que pubspec listait des
+    # fichiers renommés/supprimés (inhale.mp3/exhale.mp3/hold.mp3 — package
+    # audioplayers retiré, plus utilisé nulle part dans lib/ — puis les .wav
+    # générés remplacés par les .mp3 fournis par Alex). Déclarer le dossier
+    # entier évite ce piège à l'avenir : Flutter embarque tout ce qui s'y
+    # trouve, sans jamais avoir à resynchroniser cette liste à la main.
+    - assets/sounds/

@@ -1,0 +1,65 @@
+Cahier des Charges Technique : Module Audio Avancé & Synthèse Procédurale pour Application de Respiration
+Projet : Module de Respiration (Cohérence Cardiaque & Respiration Carrée)
+Objectif : Remplacement du système MP3 statique par un moteur audio procédural/hybride haut de gamme, continu, sans rupture, fonctionnant en arrière-plan et en mode veille.
+Cible de qualité : Expérience utilisateur niveau applications référentes du marché (Calm, Endel, Headspace).
+1. Contexte & Problématique Actuelle
+L'application dispose actuellement de trois fichiers audio MP3 hébergés dans le dossier assets/ : inhale.mp3, exhale.mp3, et hold.mp3.
+Limites identifiées :
+Ruptures sonores : L'enchaînement de fichiers audio statiques génère des micro-coupures, bruits d'attaque ou clics aux transitions de phases (Inspire, Exhale, Rétention), ce qui perturbe l'état de relaxation de l'utilisateur.
+Interruption en veille : Lorsque l'écran du smartphone se met en veille automatique ou est verrouillé, la lecture audio s'interrompt.
+Manque d'adaptabilité : Les durées de cycles varient dynamiquement selon la configuration utilisateur (ex. Cohérence Cardiaque : 4/4s, 5/5s, 6/6s ; Respiration Carrée : 4/4/4/4s, 5/5/5/5s, 6/6/6/6s). Les fichiers MP3 fixes subissent un étirement temporel (time-stretching) dégradant la qualité sonore.
+2. Spécifications du Moteur Audio Procedural & Harmonie
+L'assistant de codage doit implémenter un service audio nommé BreathAudioEngine (ou adapter l'architecture existante) reposant sur la synthèse fréquentielle en temps réel ou une gestion multi-pistes avancée avec crossfade millimétré.
+2.1 Paramètres Acoustiques & Psychoacoustique
+Phase du Cycle
+Fréquence / Tonalité
+Enveloppe / Modulation
+Sensations Rechercées
+ 
+Inspiration (Inhale)
+Montée progressive de 220 Hz (A3 / La) vers 330 Hz (E4 / Mi) — Quinte juste.
+Ouverture dynamique d'un filtre passe-bas (Low-Pass Filter) + Fade-in initial doux sur 300ms.
+Expansion, ouverture de la cage thoracique, fraîcheur, élévation douce.
+Rétention Plein / Vide (Hold)
+Maintien de la fréquence cible (330 Hz pour plein, 220 Hz pour vide) + micro-ondulation Binaurale / Thêta (1,5 Hz à 2 Hz).
+Nappe harmonique continue (drone) avec résonance type bol de cristal / synthé analogique chaud. Pas d'attaque.
+Apesanteur, suspension du temps, sécurité, calme profond.
+Expiration (Exhale)
+Descente progressive de 330 Hz vers 220 Hz (A3 / La).
+Fermeture progressive du filtre passe-bas + Fade-out doux en fin de phase d'expiration.
+Ancrage, relâchement musculaire, soupir de soulagement, décompression.
+
+2.2 Gestion des Durées Dynamiques
+Le moteur audio doit lire les paramètres de temps configurés par l'utilisateur sans déformer la timbre sonore :
+Cohérence Cardiaque : Configurations 4/4s, 5/5s, 6/6s.
+Respiration Carrée : Configurations 4/4/4/4s, 5/5/5/5s, 6/6/6/6s (Inspire / Rétention Poumons Pleins / Expire / Rétention Poumons Vides).
+3. Exécution en Arrière-Plan & Gestion de la Veille (Background Audio)
+Le service audio doit maintenir une continuité stricte lorsque le téléphone passe en mise en veille automatique ou lorsque l'écran est verrouillé.
+3.1 Configuration iOS (Info.plist)
+<key>UIBackgroundModes</key>
+<array>
+    <string>audio</string>
+</array>
+<key>NSMicrophoneUsageDescription</key>
+<string>Nécessaire pour la gestion des sessions audio en arrière-plan.</string>
+3.2 Configuration Android (AndroidManifest.xml)
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+<uses-permission android:name="android.permission.WAKE_LOCK" />
+
+<service 
+    android:name="com.ryanheise.audioservice.AudioService"
+    android:foregroundServiceType="mediaPlayback"
+    android:exported="true">
+    <intent-filter>
+        <action android:name="android.media.browse.MediaBrowserService" />
+    </intent-filter>
+</service>
+3.3 Gestion de l'Audio Focus & Interruption
+Prise en compte des événements d'interruption système (appels entrants, alarmes) avec pause / reprise progressive (fade-in / fade-out).
+Libération propre de la mémoire via la méthode dispose() lors de la fermeture de la session de respiration.
+4. Plan d'Action pour l'IA de Codage
+Audit & Remplacement du Moteur : Remplacer les appels séquentiels des 3 fichiers MP3 du dossier assets/ par le nouveau service audio procédural.
+Synchronisation UI & Audio : Lier le timer du composant visuel de respiration au stream de progression du moteur audio pour garantir une synchronisation parfaite à la milliseconde près.
+Intégration Background Audio : Appliquer les configurations natives iOS/Android et vérifier l'exécution continue écran éteint.
+Tests Qualité : Vérifier l'absence totale de pop/clic audio lors des transitions de phase.

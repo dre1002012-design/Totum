@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'auth_screen.dart';
 import 'account_screen.dart';
@@ -16,13 +17,13 @@ class PaywallScreen extends StatefulWidget {
 }
 
 class _PaywallScreenState extends State<PaywallScreen> {
-  // ===== In-App Purchase : uniquement pour afficher le vrai prix Play Store =====
+  // ===== In-App Purchase : uniquement pour Android =====
   final InAppPurchase _iap = InAppPurchase.instance;
-  static const String _kPremiumProductId = 'premium_unlock';
+  static const String _kSubProductId = 'totum_premium_annual';
 
   bool _loadingPrice = true;
   bool _storeAvailable = false;
-  ProductDetails? _premiumProduct;
+  ProductDetails? _subProduct;
   String _priceError = '';
 
   @override
@@ -31,7 +32,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
     if (!kIsWeb) {
       _initStoreInfo();
     } else {
-      // Sur le web, pas de Google Play Billing
       _loadingPrice = false;
       _storeAvailable = false;
     }
@@ -48,7 +48,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         return;
       }
 
-      const ids = {_kPremiumProductId};
+      const ids = {_kSubProductId};
       final response = await _iap.queryProductDetails(ids);
 
       if (response.error != null) {
@@ -63,7 +63,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       if (response.productDetails.isEmpty) {
         setState(() {
           _storeAvailable = false;
-          _priceError = 'Produit Premium introuvable sur le Store.';
+          _priceError = 'Abonnement introuvable sur le Store.';
           _loadingPrice = false;
         });
         return;
@@ -71,7 +71,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
       setState(() {
         _storeAvailable = true;
-        _premiumProduct = response.productDetails.first;
+        _subProduct = response.productDetails.first;
         _loadingPrice = false;
       });
     } catch (e) {
@@ -83,14 +83,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
     }
   }
 
-  // ===== Changer de compte : déconnexion + retour propre à l’auth =====
+  // ===== Changer de compte =====
   Future<void> _changeAccount() async {
     try {
       await Supabase.instance.client.auth.signOut();
       await Future.delayed(const Duration(milliseconds: 50));
-
       if (!mounted) return;
-
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const AuthScreen()),
         (route) => false,
@@ -103,19 +101,69 @@ class _PaywallScreenState extends State<PaywallScreen> {
     }
   }
 
-  // ===== Aller vers l’écran Compte (où se fait l’achat réel) =====
-  void _goToAccountScreen() {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const AccountScreen()),
-      (route) => false,
-    );
+  // ===== Bouton principal =====
+  Future<void> _handlePremiumButton() async {
+    if (kIsWeb) {
+      // Abonnement annuel 14,99 €/an — l'identifiant et l'email du compte
+      // sont transmis à Stripe pour un déblocage automatique fiable
+      // via le webhook.
+      final user = Supabase.instance.client.auth.currentUser;
+      final uid = user?.id ?? '';
+      final email = user?.email ?? '';
+      final uri = Uri.parse(
+        'https://buy.stripe.com/8x24gAd2e67Xfu43Vz1RC01'
+        '?client_reference_id=$uid'
+        '&prefilled_email=${Uri.encodeComponent(email)}',
+      );
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const AccountScreen()),
+        (route) => false,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final Color primaryColor = const Color(0xFFFF7A00); // ton orange TOTUM
-    final String priceText = _premiumProduct?.price ?? '6,99 €';
+    const Color primaryColor = Color(0xFFFF7A00);
+
+    final String priceText = kIsWeb
+        ? '14,99 €/an'
+        : (_subProduct?.price ?? '14,99 €/an');
+
+    final String buttonText = kIsWeb
+        ? 'S\'abonner — 14,99 €/an'
+        : (_loadingPrice
+            ? 'S\'abonner'
+            : 'S\'abonner — $priceText');
+
+    final String subtitleText = kIsWeb
+        ? "Ton essai gratuit de 7 jours est arrivé à son terme. 🎯\n\n"
+          "Tu as pu découvrir TOTUM dans son intégralité : suivi nutritionnel "
+          "complet, conseils bien-être personnalisés et analyse de tes "
+          "micronutriments.\n\n"
+          "Pour continuer à prendre soin de toi sans interruption, passe à "
+          "TOTUM Premium : abonnement de 14,99 € par an — soit 1,25 € par "
+          "mois — renouvelé automatiquement chaque année."
+        : (_loadingPrice
+            ? 'Chargement du prix en cours…'
+            : "Ton essai gratuit de 7 jours est arrivé à son terme. 🎯\n\n"
+              "Pour continuer à profiter de TOTUM sans aucune publicité, passe "
+              "à TOTUM Premium : abonnement de $priceText, renouvelé "
+              "automatiquement chaque année et annulable à tout moment.");
+
+    const String footerText = kIsWeb
+        ? "🔒 Paiement 100 % sécurisé via Stripe\n"
+          "Abonnement annuel de 14,99 €, renouvelé automatiquement chaque "
+          "année. Annulable à tout moment : l'accès reste actif jusqu'à la "
+          "fin de la période déjà payée."
+        : "🔒 Paiement géré de manière sécurisée par Google Play.\n"
+          "Abonnement annuel renouvelé automatiquement. Annulable à tout "
+          "moment depuis le Play Store.";
 
     return Scaffold(
       body: SafeArea(
@@ -143,31 +191,27 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // ==== Sous-titre + explication du modèle ====
+                // ==== Sous-titre ====
                 Text(
-                  _loadingPrice
-                      ? 'Chargement du prix en cours…'
-                      : "Tu as profité de 7 jours complets de TOTUM.\n\n"
-                        "Pour continuer à utiliser l’application à vie, sans aucune publicité, "
-                        "tu peux débloquer l’accès TOTUM Premium avec un paiement unique de $priceText.",
+                  subtitleText,
                   style: const TextStyle(fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
 
-                // ==== Mise en avant des bénéfices ====
+                // ==== Bénéfices ====
                 Card(
                   elevation: 0,
-                  color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           'Avec TOTUM Premium, tu gardes :',
                           style: TextStyle(
@@ -176,9 +220,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           ),
                         ),
                         SizedBox(height: 8),
-                        _BenefitRow(text: 'Accès illimité à toutes les fonctions'),
-                        _BenefitRow(text: 'Aucune publicité ni distraction'),
-                        _BenefitRow(text: 'Un paiement unique, pas d’abonnement'),
+                        _BenefitRow(
+                            text: 'Accès illimité à toutes les fonctions'),
+                        _BenefitRow(
+                            text: 'Aucune publicité ni distraction'),
+                        _BenefitRow(
+                            text: 'Renouvellement annuel — annulable à tout moment'),
                       ],
                     ),
                   ),
@@ -186,7 +233,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
                 const SizedBox(height: 16),
 
-                if (_priceError.isNotEmpty)
+                // ==== Erreurs Android uniquement ====
+                if (!kIsWeb && _priceError.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Text(
@@ -196,23 +244,24 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     ),
                   ),
 
-                if (!_storeAvailable && !_loadingPrice)
+                if (!kIsWeb && !_storeAvailable && !_loadingPrice)
                   const Padding(
                     padding: EdgeInsets.only(bottom: 8.0),
                     child: Text(
-                      "Le Store n’est pas disponible pour le moment.\n"
-                      "Vérifie ta connexion internet ou essaie de relancer l’application.",
+                      "Le Store n'est pas disponible pour le moment.\n"
+                      "Vérifie ta connexion internet ou essaie de relancer "
+                      "l'application.",
                       textAlign: TextAlign.center,
                     ),
                   ),
 
                 const SizedBox(height: 8),
 
-                // ==== Bouton principal : renvoie vers AccountScreen ====
+                // ==== Bouton principal ====
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _goToAccountScreen,
+                    onPressed: _handlePremiumButton,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
                       foregroundColor: Colors.black,
@@ -221,27 +270,22 @@ class _PaywallScreenState extends State<PaywallScreen> {
                         borderRadius: BorderRadius.circular(999),
                       ),
                     ),
-                    child: Text(
-                      _loadingPrice
-                          ? 'Passer en Premium'
-                          : 'Passer en Premium ($priceText à vie)',
-                    ),
+                    child: Text(buttonText),
                   ),
                 ),
 
                 const SizedBox(height: 12),
 
-                // ==== Texte explicatif sur le bouton ====
+                // ==== Texte explicatif ====
                 const Text(
-                  "En appuyant sur ce bouton, tu seras redirigé·e vers la page Compte.\n"
-                  "Le paiement est géré de manière sécurisée par Google Play.",
+                  footerText,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
 
                 const SizedBox(height: 24),
 
-                // ==== Bouton "Changer de compte" ====
+                // ==== Changer de compte ====
                 TextButton(
                   onPressed: _changeAccount,
                   child: const Text('Changer de compte'),
@@ -255,7 +299,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
   }
 }
 
-// ==== Ligne de bénéfice (petite puce) ====
+// ==== Ligne de bénéfice ====
 class _BenefitRow extends StatelessWidget {
   final String text;
   const _BenefitRow({required this.text});

@@ -1,0 +1,1391 @@
+{
+  "_comment": "Banque de conseils TOTUM 2.0 — coach holistique. 5 piliers : nutrition, mouvement, sommeil, stress, mindset. Chaque conseil a des conditions de déclenchement (objectif, seuils). Contenu naturopathe validé (ANSES/EFSA/OMS). Ton chaleureux, clair, actionnable.",
+  "nutrition": [
+    {
+      "id": "nut_mag_bas",
+      "trigger": {
+        "micro": "magnesium",
+        "below": 0.7
+      },
+      "titre": "Recharge ton magnésium",
+      "body": "Ton magnésium est un peu juste aujourd'hui. C'est le minéral de la détente et de l'énergie : il apaise le système nerveux et soutient tes muscles. Une petite poignée d'amandes, quelques carrés de chocolat noir 70%+ ou une portion de légumes verts, et tu remontes la pente naturellement.",
+      "tag": "Minéraux"
+    },
+    {
+      "id": "nut_fer_bas",
+      "trigger": {
+        "micro": "iron",
+        "below": 0.7
+      },
+      "titre": "Soutiens ton fer",
+      "body": "Ton apport en fer est bas : c'est lui qui transporte l'oxygène et nourrit ton énergie. Associe une source de fer (lentilles, œufs, viande rouge de qualité) à un aliment riche en vitamine C (persil, poivron, citron) : tu multiplies son absorption. À l'inverse, éloigne le thé et le café du repas.",
+      "tag": "Minéraux"
+    },
+    {
+      "id": "nut_omega3_bas",
+      "trigger": {
+        "micro": "omega3",
+        "below": 0.7
+      },
+      "titre": "Fais le plein d'oméga 3",
+      "body": "Tes oméga 3 sont en dessous de l'idéal. Ce sont les gras anti-inflammatoires qui protègent ton cœur et ton cerveau. Vise deux portions de petits poissons gras par semaine (sardine, maquereau), ou une cuillère d'huile de lin ou de colza vierge à froid sur tes légumes.",
+      "tag": "Bons gras"
+    },
+    {
+      "id": "nut_vitd_bas",
+      "trigger": {
+        "micro": "vitD",
+        "below": 0.6
+      },
+      "titre": "Pense à ta vitamine D",
+      "body": "La vitamine D est difficile à couvrir par l'alimentation seule, surtout en hiver. Elle soutient tes os, tes muscles et ton immunité. Expose-toi au soleil quelques minutes quand c'est possible, mise sur les poissons gras, et parle d'une éventuelle supplémentation à ton médecin d'octobre à mars.",
+      "tag": "Vitamines"
+    },
+    {
+      "id": "nut_vitc_bas",
+      "trigger": {
+        "micro": "vitC",
+        "below": 0.7
+      },
+      "titre": "Un coup de vitamine C",
+      "body": "Ta vitamine C mérite un petit boost. Antioxydante, elle soutient ton immunité et ton énergie. Elle est fragile à la cuisson : privilégie des végétaux crus et de saison, comme le kiwi, le poivron, les agrumes ou le persil frais ajouté en fin de préparation.",
+      "tag": "Vitamines"
+    },
+    {
+      "id": "nut_zinc_bas",
+      "trigger": {
+        "micro": "zinc",
+        "below": 0.7
+      },
+      "titre": "Renforce ton zinc",
+      "body": "Le zinc soutient ton immunité, ta peau et ta récupération. On le trouve dans les graines de courge, les fruits de mer, les œufs et les légumineuses. Astuce : faire tremper légumineuses et céréales complètes améliore nettement l'absorption de leur zinc.",
+      "tag": "Minéraux"
+    },
+    {
+      "id": "nut_calcium_bas",
+      "trigger": {
+        "micro": "calcium",
+        "below": 0.7
+      },
+      "titre": "Consolide ton calcium",
+      "body": "Ton calcium est un peu bas : c'est le bâtisseur de tes os, tout au long de la vie. Pense aux légumes verts (chou, brocoli), aux amandes, aux petits poissons avec arêtes, ou à une eau minérale riche en calcium. Et rappelle-toi : il a besoin de vitamine D pour être bien fixé.",
+      "tag": "Minéraux"
+    },
+    {
+      "id": "nut_fibres_bas",
+      "trigger": {
+        "micro": "fibers",
+        "below": 0.6
+      },
+      "titre": "Plus de fibres pour ton microbiote",
+      "body": "Tes fibres sont un peu justes. Elles nourrissent ton microbiote, ralentissent l'absorption des sucres et entretiennent une bonne digestion. Ajoute des légumes à chaque repas, des légumineuses, quelques oléagineux ou des fruits entiers plutôt qu'en jus.",
+      "tag": "Digestion"
+    },
+    {
+      "id": "nut_prot_loss",
+      "trigger": {
+        "goal": "loss"
+      },
+      "titre": "Protéines : ton allié minceur",
+      "body": "En phase de perte de gras, les protéines sont ta priorité : elles préservent tes muscles et prolongent la satiété. Répartis-les sur la journée (œufs, poisson, légumineuses, viande de qualité) et n'aie pas peur d'en mettre à chaque repas. Tu perdras du gras, pas du muscle.",
+      "tag": "Objectif"
+    },
+    {
+      "id": "nut_prot_gain",
+      "trigger": {
+        "goal": "gain"
+      },
+      "titre": "Nourris ta construction musculaire",
+      "body": "Pour construire du muscle, ton corps a besoin d'un apport régulier en protéines et d'un léger surplus d'énergie de qualité. Étale tes protéines sur la journée et mise sur des aliments bruts et denses : œufs, poisson, légumineuses, oléagineux, féculents complets.",
+      "tag": "Objectif"
+    },
+    {
+      "id": "nut_brut",
+      "trigger": {},
+      "titre": "Mange vrai, mange vivant",
+      "body": "Le principe qui change tout : privilégier des aliments bruts, locaux, de saison et le moins transformés possible. Plus un aliment est proche de son état naturel, plus il nourrit tes cellules en densité nutritionnelle. Ton assiette idéale ? Colorée, variée, reconnaissable.",
+      "tag": "Fondamental"
+    },
+    {
+      "id": "nut_hydra_cell",
+      "trigger": {},
+      "titre": "L'hydratation, carburant discret",
+      "body": "Une cellule bien hydratée fonctionne mieux : transport des nutriments, clarté mentale, énergie. Bois régulièrement tout au long de la journée, sans attendre la soif. Une bonne hydratation soutient chacun de tes objectifs, en silence.",
+      "tag": "Vitalité"
+    },
+    {
+      "id": "nut_couleurs",
+      "trigger": {},
+      "titre": "Mange l'arc-en-ciel",
+      "body": "Chaque couleur de végétal apporte ses antioxydants et polyphénols spécifiques : le violet des myrtilles, le vert des épinards, l'orange des carottes. Viser la variété de couleurs dans ton assiette, c'est viser la diversité des micronutriments protecteurs.",
+      "tag": "Longévité"
+    },
+    {
+      "id": "nut_sucre",
+      "trigger": {},
+      "titre": "Déjoue les sucres cachés",
+      "body": "Les sucres vraiment problématiques sont les sucres ajoutés et le sirop de glucose-fructose des produits industriels, pas ceux des fruits entiers. Cuisiner à partir d'aliments bruts est le meilleur moyen d'éviter ces sucres invisibles qui fatiguent l'organisme.",
+      "tag": "Fondamental"
+    },
+    {
+      "id": "nut_bons_gras",
+      "trigger": {},
+      "titre": "N'aie pas peur des bons gras",
+      "body": "Les gras de qualité sont essentiels : huile d'olive vierge, avocat, oléagineux, petits poissons gras, œufs. Ils soutiennent tes hormones, ton cerveau et l'absorption des vitamines A, D, E et K. Ce sont les gras industriels et trans qu'il faut éviter, pas le gras en soi.",
+      "tag": "Bons gras"
+    },
+    {
+      "id": "nut_saison",
+      "trigger": {},
+      "titre": "Mange avec les saisons",
+      "body": "Un légume de saison, cueilli à maturité et cultivé près de chez toi, est plus riche en vitamines et en saveur qu'un produit transporté sur des milliers de kilomètres. Suivre les saisons, c'est aussi varier naturellement son assiette au fil de l'année — et donc diversifier ses micronutriments.",
+      "tag": "Fondamental"
+    },
+    {
+      "id": "nut_mastication",
+      "trigger": {},
+      "titre": "Prends le temps de mastiquer",
+      "body": "La digestion commence dans la bouche. Mastiquer longuement libère les enzymes salivaires, réduit le travail de l'estomac et laisse le temps aux signaux de satiété d'arriver au cerveau — il leur faut environ vingt minutes. Manger lentement, c'est manger moins sans se restreindre.",
+      "tag": "Digestion"
+    },
+    {
+      "id": "nut_cuisson",
+      "trigger": {},
+      "titre": "Cuis doux, préserve les nutriments",
+      "body": "Les cuissons douces — vapeur, à l'étouffée, à basse température — préservent les vitamines fragiles et évitent la formation de composés indésirables liés aux hautes températures. Réserve les fortes chaleurs aux exceptions, et garde tes huiles vierges pour l'assaisonnement à froid.",
+      "tag": "Cuisine"
+    },
+    {
+      "id": "nut_proteines_reparties",
+      "trigger": {},
+      "titre": "Répartis tes protéines",
+      "body": "Ton corps ne stocke pas les acides aminés : il utilise ce qui arrive au moment où ça arrive. Étaler tes protéines sur tous les repas plutôt que de tout concentrer le soir améliore nettement leur utilisation, que ton objectif soit de préserver ou de construire du muscle.",
+      "tag": "Protéines"
+    },
+    {
+      "id": "nut_legumineuses",
+      "trigger": {},
+      "titre": "Adopte les légumineuses",
+      "body": "Lentilles, pois chiches et haricots cumulent protéines végétales, fibres, fer et magnésium pour un coût dérisoire. Un trempage de quelques heures avant cuisson améliore leur digestibilité et l'absorption de leurs minéraux. Deux à trois fois par semaine change déjà la donne.",
+      "tag": "Végétal"
+    },
+    {
+      "id": "nut_petit_dej_salé",
+      "trigger": {},
+      "titre": "Ose le petit-déjeuner salé",
+      "body": "Démarrer la journée avec des protéines et des bons gras plutôt qu'avec du sucre stabilise la glycémie et évite le coup de barre de onze heures. Œufs, avocat, légumes, oléagineux : ton énergie sera bien plus régulière sur toute la matinée.",
+      "tag": "Habitude"
+    },
+    {
+      "id": "nut_herbes",
+      "trigger": {},
+      "titre": "Utilise les herbes et les épices",
+      "body": "Persil, curcuma, gingembre, ail, romarin : ce sont des concentrés de composés protecteurs, et ils permettent de réduire le sel sans perdre en saveur. Ajouter les herbes fraîches en fin de cuisson préserve leurs arômes et leurs vitamines.",
+      "tag": "Cuisine"
+    },
+    {
+      "id": "nut_mag_stress",
+      "trigger": {
+        "micro": "magnesium",
+        "below": 0.7
+      },
+      "titre": "Magnésium et stress, le duo lié",
+      "body": "Le stress consomme du magnésium, et le manque de magnésium abaisse ton seuil de tolérance au stress : un cercle qu'il vaut la peine de casser. Les eaux minérales riches en magnésium, le cacao cru et les légumineuses sont des alliés faciles à intégrer sans y penser.",
+      "tag": "Minéraux"
+    },
+    {
+      "id": "nut_mag_cuisson",
+      "trigger": {
+        "micro": "magnesium",
+        "below": 0.7
+      },
+      "titre": "Le magnésium fuit dans l'eau de cuisson",
+      "body": "Une bonne part du magnésium des légumes part dans l'eau de cuisson. Privilégie la cuisson vapeur, ou récupère l'eau de cuisson pour un bouillon ou une soupe : c'est un geste simple qui évite un vrai gaspillage nutritionnel.",
+      "tag": "Cuisine"
+    },
+    {
+      "id": "nut_fer_vege",
+      "trigger": {
+        "micro": "iron",
+        "below": 0.7
+      },
+      "titre": "Le fer végétal se travaille",
+      "body": "Le fer des lentilles ou des épinards s'absorbe moins bien que celui de la viande, mais deux leviers changent la donne : l'associer à la vitamine C, et éviter thé, café et son de blé pendant le repas, qui freinent nettement son absorption.",
+      "tag": "Minéraux"
+    },
+    {
+      "id": "nut_fer_cuisson_fonte",
+      "trigger": {
+        "micro": "iron",
+        "below": 0.7
+      },
+      "titre": "La cocotte en fonte, une source discrète",
+      "body": "Cuisiner des plats acides (sauce tomate, ratatouille) dans une cocotte en fonte enrichit légèrement le plat en fer biodisponible. Un petit geste de cuisine ancestral qui fait une vraie différence cumulée sur la durée.",
+      "tag": "Cuisine"
+    },
+    {
+      "id": "nut_omega3_ratio",
+      "trigger": {
+        "micro": "omega3",
+        "below": 0.7
+      },
+      "titre": "L'équilibre oméga 3 / oméga 6",
+      "body": "Ce n'est pas seulement la quantité d'oméga 3 qui compte, mais leur équilibre avec les oméga 6, très présents dans l'alimentation moderne (huiles de tournesol, produits transformés). Privilégier l'huile de colza ou de noix à l'huile de tournesol rééquilibre naturellement la balance.",
+      "tag": "Bons gras"
+    },
+    {
+      "id": "nut_omega3_conservation",
+      "trigger": {
+        "micro": "omega3",
+        "below": 0.7
+      },
+      "titre": "Protège tes oméga 3 de l'oxydation",
+      "body": "Les oméga 3 sont fragiles : lumière, chaleur et air les dégradent vite. Conserve tes huiles riches en oméga 3 (lin, colza, noix) au réfrigérateur, dans un contenant opaque, et utilise-les crues plutôt qu'en cuisson.",
+      "tag": "Cuisine"
+    },
+    {
+      "id": "nut_vitd_graisse",
+      "trigger": {
+        "micro": "vitD",
+        "below": 0.6
+      },
+      "titre": "La vitamine D aime les bons gras",
+      "body": "Étant liposoluble, la vitamine D s'absorbe bien mieux consommée avec un peu de matière grasse. Un poisson gras avec un filet d'huile d'olive, ou un œuf entier plutôt que le blanc seul, optimisent son assimilation.",
+      "tag": "Vitamines"
+    },
+    {
+      "id": "nut_vitd_saison",
+      "trigger": {
+        "micro": "vitD",
+        "below": 0.6
+      },
+      "titre": "L'hiver, saison à surveiller",
+      "body": "Entre octobre et mars, l'angle du soleil ne permet plus une synthèse cutanée suffisante de vitamine D sous nos latitudes, même en s'exposant. C'est la période où l'attention alimentaire — et une éventuelle supplémentation avec ton médecin — compte le plus.",
+      "tag": "Vitamines"
+    },
+    {
+      "id": "nut_vitc_stockage",
+      "trigger": {
+        "micro": "vitC",
+        "below": 0.7
+      },
+      "titre": "La vitamine C n'aime pas attendre",
+      "body": "Elle se dégrade avec le temps, la lumière et l'air : un jus pressé perd une bonne part de sa vitamine C en quelques heures. Privilégie les fruits et légumes frais consommés rapidement après découpe plutôt que préparés à l'avance.",
+      "tag": "Vitamines"
+    },
+    {
+      "id": "nut_zinc_vege",
+      "trigger": {
+        "micro": "zinc",
+        "below": 0.7
+      },
+      "titre": "Zinc et alimentation végétale",
+      "body": "Le zinc des végétaux (légumineuses, graines, céréales complètes) est moins biodisponible que celui des produits animaux. Le trempage, la fermentation ou la germination des graines et légumineuses en améliorent nettement l'absorption.",
+      "tag": "Minéraux"
+    },
+    {
+      "id": "nut_calcium_vege",
+      "trigger": {
+        "micro": "calcium",
+        "below": 0.7
+      },
+      "titre": "Le calcium ne se limite pas aux laitages",
+      "body": "Chou kale, brocoli, amandes, sésame, sardines avec arêtes : de nombreuses sources non laitières apportent un calcium très bien absorbé. Une diversité utile, que tu consommes des laitages ou non.",
+      "tag": "Minéraux"
+    },
+    {
+      "id": "nut_fibres_progressif",
+      "trigger": {
+        "micro": "fibers",
+        "below": 0.6
+      },
+      "titre": "Augmente tes fibres en douceur",
+      "body": "Une hausse brutale des fibres peut ballonner un intestin qui n'y est pas habitué. Augmente progressivement sur quelques semaines, et bois davantage en parallèle : les fibres ont besoin d'eau pour bien remplir leur rôle digestif.",
+      "tag": "Digestion"
+    },
+    {
+      "id": "nut_prot_maintien",
+      "trigger": {},
+      "titre": "Les protéines, un pilier permanent",
+      "body": "Qu'importe ton objectif du moment, les protéines restent une priorité constante : elles construisent tes muscles, tes enzymes, tes hormones et soutiennent ton immunité. Vise une source de qualité à chaque repas, sans exception.",
+      "tag": "Fondamental"
+    },
+    {
+      "id": "nut_jeune_intuitif",
+      "trigger": {},
+      "titre": "Écoute tes signaux de faim",
+      "body": "Manger quand la faim est réelle, s'arrêter à satiété : ce réflexe naturel se perd souvent avec les habitudes modernes (horaires fixes, distractions, stress). Le réapprendre est l'un des outils les plus puissants pour une relation apaisée à la nourriture.",
+      "tag": "Conscience"
+    },
+    {
+      "id": "nut_fermentation",
+      "trigger": {},
+      "titre": "Invite les aliments fermentés",
+      "body": "Choucroute crue, kéfir, yaourt, miso : les aliments fermentés apportent des probiotiques naturels qui nourrissent ton microbiote intestinal, lui-même lié à ton immunité et même à ton humeur. Une petite portion quotidienne suffit à en tirer bénéfice.",
+      "tag": "Digestion"
+    },
+    {
+      "id": "nut_sel_qualite",
+      "trigger": {},
+      "titre": "Pas tous les sels ne se valent",
+      "body": "Le sel n'est pas l'ennemi en soi — il est essentiel à l'hydratation et à l'influx nerveux. Ce qui pose problème, c'est le sel caché dans les produits ultra-transformés. Cuisiner maison permet de doser toi-même, avec un sel de qualité, avec modération.",
+      "tag": "Fondamental"
+    },
+    {
+      "id": "nut_petit_dej_pas_obligatoire",
+      "trigger": {},
+      "titre": "Le petit-déjeuner n'est pas une obligation",
+      "body": "Contrairement à une idée reçue tenace, sauter le petit-déjeuner n'est pas problématique en soi si tu n'as pas faim le matin. Ce qui compte, c'est la qualité de tes repas sur l'ensemble de la journée, pas un dogme sur l'heure du premier repas.",
+      "tag": "Fondamental"
+    },
+    {
+      "id": "nut_oeufs",
+      "trigger": {},
+      "titre": "L'œuf, un aliment complet réhabilité",
+      "body": "Longtemps accusé à tort à cause du cholestérol alimentaire, l'œuf entier est aujourd'hui reconnu comme l'un des aliments les plus complets qui soient : protéines de haute qualité, vitamines A, D, E, B12, choline. Le cholestérol sanguin dépend surtout de la production interne du corps, pas de l'œuf que tu manges.",
+      "tag": "Fondamental"
+    },
+    {
+      "id": "nut_ag_saturés",
+      "trigger": {},
+      "titre": "Tous les gras saturés ne se valent pas",
+      "body": "Les acides gras saturés à chaîne impaire, présents dans le beurre de lait cru ou certains fromages fermiers, sont associés à des effets métaboliques favorables dans les recherches récentes — nuance importante face au dogme trop simpliste du \"gras saturé = mauvais\".",
+      "tag": "Bons gras"
+    },
+    {
+      "id": "nut_selenium",
+      "trigger": {},
+      "titre": "Le sélénium, discret mais essentiel",
+      "body": "Ce minéral antioxydant soutient ta thyroïde et ton immunité. Les fruits de mer, les œufs et les poissons en apportent régulièrement. Les noix du Brésil en contiennent énormément, mais une seule par jour suffit largement — au-delà, l'excès n'apporte aucun bénéfice supplémentaire.",
+      "tag": "Minéraux"
+    },
+    {
+      "id": "nut_index_glycemique",
+      "trigger": {},
+      "titre": "L'ordre des aliments compte",
+      "body": "Manger les légumes et les fibres avant les féculents et le sucré atténue le pic de glycémie du repas, à contenu identique. Un simple changement d'ordre dans l'assiette, sans rien retirer, pour une énergie plus stable après le repas.",
+      "tag": "Fondamental"
+    },
+    {
+      "id": "nut_snacking_intelligent",
+      "trigger": {},
+      "titre": "Une collation qui tient la route",
+      "body": "Si tu as une petite faim entre les repas, associe toujours une protéine ou un bon gras à un glucide : une pomme avec des amandes plutôt qu'une pomme seule. Cette combinaison stabilise ta glycémie et ton énergie bien plus longtemps.",
+      "tag": "Habitude"
+    }
+  ],
+  "mouvement": [
+    {
+      "id": "mvt_marche_repas",
+      "trigger": {},
+      "titre": "La marche qui change tout",
+      "body": "Une marche de 10 à 15 minutes après un repas aide à stabiliser ta glycémie et soutient ta digestion. C'est l'un des gestes les plus simples et les plus rentables pour ta santé métabolique au quotidien.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "mvt_force_loss",
+      "trigger": {
+        "goal": "loss"
+      },
+      "titre": "Garde le muscle en séchant",
+      "body": "En perte de gras, le renforcement musculaire est ton meilleur allié : il signale à ton corps de préserver le muscle et de puiser dans les réserves de graisse. Deux à trois séances par semaine suffisent à faire une vraie différence sur ta composition corporelle.",
+      "tag": "Objectif"
+    },
+    {
+      "id": "mvt_force_gain",
+      "trigger": {
+        "goal": "gain"
+      },
+      "titre": "Progresse en charge",
+      "body": "Pour construire du muscle, le maître-mot est la progression : augmente régulièrement les charges ou les répétitions. Le muscle se construit quand tu lui demandes un peu plus que ce qu'il sait déjà faire. Note tes performances pour suivre ta progression.",
+      "tag": "Objectif"
+    },
+    {
+      "id": "mvt_sedentaire",
+      "trigger": {
+        "activity": "low"
+      },
+      "titre": "Casse la sédentarité",
+      "body": "Rester assis longtemps est l'un des grands enjeux de santé moderne. Lève-toi quelques minutes toutes les heures, prends les escaliers, gare-toi plus loin. Ces micro-mouvements, cumulés, pèsent plus lourd que tu ne le crois sur ta vitalité.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "mvt_recup",
+      "trigger": {},
+      "titre": "La récupération fait partie de l'effort",
+      "body": "Progresser, ce n'est pas s'entraîner plus, c'est s'entraîner mieux et récupérer. Le muscle se construit pendant le repos, pas pendant la séance. Alterne effort et récupération, et respecte tes jours off : ils sont productifs.",
+      "tag": "Récupération"
+    },
+    {
+      "id": "mvt_nature",
+      "trigger": {},
+      "titre": "Bouge dehors",
+      "body": "L'activité en extérieur cumule les bénéfices : mouvement, lumière naturelle (précieuse pour ton horloge interne et ta vitamine D), et réduction du stress. Une marche en nature vaut autant pour ton corps que pour ton esprit.",
+      "tag": "Bien-être"
+    },
+    {
+      "id": "mvt_souplesse",
+      "trigger": {},
+      "titre": "Entretiens ta mobilité",
+      "body": "La souplesse et la mobilité articulaire sont les grandes oubliées, pourtant clés pour bien vieillir. Quelques minutes d'étirements doux ou de mobilité par jour préservent ton amplitude de mouvement et préviennent bien des douleurs.",
+      "tag": "Longévité"
+    },
+    {
+      "id": "mvt_cardio",
+      "trigger": {},
+      "titre": "Chouchoute ton cœur",
+      "body": "Une activité qui accélère un peu le cœur (marche rapide, vélo, natation) plusieurs fois par semaine renforce ton système cardiovasculaire et ton endurance. Trouve une activité qui te plaît : la meilleure est celle que tu tiendras dans la durée.",
+      "tag": "Endurance"
+    },
+    {
+      "id": "mvt_plaisir",
+      "trigger": {},
+      "titre": "Le mouvement plaisir",
+      "body": "Le meilleur exercice n'est pas le plus intense, c'est celui que tu prends plaisir à faire. Danse, randonnée, sport co, jardinage : tout mouvement compte. Associer activité et plaisir est la clé de la régularité sur le long terme.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "mvt_matin",
+      "trigger": {},
+      "titre": "Réveille ton corps le matin",
+      "body": "Quelques minutes de mouvement au réveil (étirements, mobilité, marche) réveillent ton métabolisme et te mettent en énergie pour la journée. Pas besoin d'une séance complète : la régularité prime sur l'intensité.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "mvt_escalier",
+      "trigger": {},
+      "titre": "Fais des escaliers ton allié",
+      "body": "Prendre les escaliers plutôt que l'ascenseur est un mini-entraînement gratuit qui renforce tes jambes et sollicite ton cœur. Cumulés sur une semaine, ces petits efforts font une vraie différence, sans y penser.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "mvt_progressif",
+      "trigger": {
+        "activity": "low"
+      },
+      "titre": "Commence petit, mais commence",
+      "body": "Si tu reprends le mouvement, l'erreur serait de vouloir trop en faire d'un coup. Commence par 10 minutes par jour, et augmente progressivement. La constance d'un petit effort quotidien bat toujours l'intensité d'une séance isolée.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "mvt_neat",
+      "trigger": {},
+      "titre": "Le mouvement invisible compte",
+      "body": "Au-delà des séances, c'est l'activité de fond qui pèse le plus lourd sur la dépense énergétique quotidienne : marcher, monter, porter, bouger en travaillant. Beaucoup de personnes actives au quotidien dépensent plus qu'un sportif du dimanche sédentaire le reste du temps.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "mvt_gainage",
+      "trigger": {},
+      "titre": "Renforce ton centre",
+      "body": "Un tronc solide protège ton dos, améliore ta posture et transfère mieux la force dans tous tes gestes. Quelques minutes de gainage régulier valent mieux qu'une longue séance occasionnelle. La régularité prime, ici comme ailleurs.",
+      "tag": "Force"
+    },
+    {
+      "id": "mvt_equilibre",
+      "trigger": {},
+      "titre": "Travaille ton équilibre",
+      "body": "Se tenir sur une jambe quelques dizaines de secondes par jour entretient la proprioception, ce sens qui décline avec l'âge et dont dépend la prévention des chutes. C'est l'un des exercices les plus rentables pour bien vieillir, et il ne coûte rien.",
+      "tag": "Longévité"
+    },
+    {
+      "id": "mvt_charge_lourde",
+      "trigger": {},
+      "titre": "Porte des charges",
+      "body": "Soulever et porter du poids stimule non seulement les muscles mais aussi les os, qui se densifient sous la contrainte mécanique. C'est l'un des meilleurs remparts contre la perte osseuse au fil des années, à tout âge.",
+      "tag": "Longévité"
+    },
+    {
+      "id": "mvt_pause_active",
+      "trigger": {},
+      "titre": "Coupe les longues assises",
+      "body": "Deux à trois minutes de mouvement toutes les heures suffisent à relancer la circulation et le métabolisme. Ce n'est pas la durée totale assise qui pose le plus problème, mais la durée d'affilée sans bouger.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "mvt_apres_repas",
+      "trigger": {},
+      "titre": "Bouge après le repas du soir",
+      "body": "Une marche digestive après le dîner lisse la glycémie et facilite l'endormissement. Dix minutes suffisent. C'est probablement le meilleur rapport effort/bénéfice de toute ta journée.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "mvt_intensite",
+      "trigger": {},
+      "titre": "Ajoute un peu d'intensité",
+      "body": "Quelques minutes d'effort plus soutenu par semaine — côtes en marchant, accélérations à vélo — améliorent nettement la capacité cardiorespiratoire, un des meilleurs prédicteurs de longévité connus. Pas besoin d'en faire beaucoup, mais il en faut un peu.",
+      "tag": "Endurance"
+    },
+    {
+      "id": "mvt_regularite",
+      "trigger": {},
+      "titre": "La régularité bat l'intensité",
+      "body": "Trois séances modérées par semaine, tenues sur des années, produisent bien plus de bénéfices qu'un programme intense abandonné au bout d'un mois. Choisis un rythme que tu peux tenir même les semaines chargées.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "mvt_hiit",
+      "trigger": {},
+      "titre": "Le fractionné, efficace et rapide",
+      "body": "Alterner efforts courts et intenses avec des phases de récupération améliore ta capacité cardiovasculaire en peu de temps. Une séance de 15-20 minutes en fractionné peut apporter autant de bénéfices cardio qu'une séance bien plus longue à allure constante.",
+      "tag": "Efficacité"
+    },
+    {
+      "id": "mvt_pas_quotidien",
+      "trigger": {},
+      "titre": "Le repère des 8000 pas",
+      "body": "Les recherches récentes montrent que les bénéfices santé de la marche progressent surtout jusqu'à environ 8000 pas par jour, avec des gains supplémentaires plus modestes au-delà. Un objectif réaliste et suffisant, pas besoin de viser un chiffre extrême.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "mvt_variete",
+      "trigger": {},
+      "titre": "Varie les types d'effort",
+      "body": "Force, endurance, souplesse, équilibre : ce sont quatre qualités physiques différentes, et aucune ne remplace les autres. Varier tes activités au fil de la semaine construit une condition physique plus complète et plus résiliente qu'une pratique unique.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "mvt_posture_bureau",
+      "trigger": {},
+      "titre": "Repense ton poste de travail",
+      "body": "La position assise prolongée pèse sur ton dos et ta circulation. Un écran à hauteur des yeux, des pieds bien à plat, et surtout des pauses régulières font plus pour ta posture qu'une chaise ergonomique coûteuse utilisée sans bouger.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "mvt_etirement_dynamique",
+      "trigger": {},
+      "titre": "Échauffe-toi en mouvement",
+      "body": "Avant un effort, les étirements dynamiques (mobilité articulaire en mouvement) préparent mieux le corps que les étirements statiques prolongés, qui peuvent même réduire temporairement la puissance musculaire. Garde les étirements statiques pour après l'effort.",
+      "tag": "Technique"
+    },
+    {
+      "id": "mvt_velo_quotidien",
+      "trigger": {},
+      "titre": "Le vélo utilitaire, un classique sous-estimé",
+      "body": "Utiliser le vélo pour tes trajets courts cumule activité cardiovasculaire, gain de temps et absence de coût. C'est l'une des façons les plus simples d'intégrer du mouvement sans y consacrer un créneau dédié dans ta journée.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "mvt_danse",
+      "trigger": {},
+      "titre": "Danser, un exercice complet",
+      "body": "La danse combine cardio, coordination, équilibre et plaisir — un cocktail rare. Elle sollicite aussi la mémoire et l'attention, ce qui en fait une activité particulièrement intéressante pour le corps autant que pour le cerveau.",
+      "tag": "Bien-être"
+    },
+    {
+      "id": "mvt_jardinage",
+      "trigger": {},
+      "titre": "Le jardinage, un sport qui s'ignore",
+      "body": "Bêcher, porter, se pencher, marcher : le jardinage sollicite le corps en continu, souvent plus qu'on ne le pense, tout en offrant une exposition au soleil et un vrai effet apaisant. Une activité complète qui ne porte pas le nom de sport.",
+      "tag": "Bien-être"
+    },
+    {
+      "id": "mvt_femmes_force",
+      "trigger": {},
+      "titre": "La musculation n'est pas réservée aux hommes",
+      "body": "Contrairement à une croyance encore répandue, le renforcement musculaire ne fait pas prendre du volume de façon excessive chez la femme — la physiologie hormonale s'y oppose naturellement. C'est au contraire l'un des meilleurs outils pour la santé osseuse et métabolique à tout âge.",
+      "tag": "Force"
+    },
+    {
+      "id": "mvt_age_force",
+      "trigger": {},
+      "titre": "La force ne décline pas, elle s'entretient",
+      "body": "La perte de masse musculaire liée à l'âge n'est pas une fatalité : elle est très largement due à l'inactivité, pas au temps qui passe. Le renforcement musculaire reste efficace et bénéfique à tout âge, y compris pour retarder la sarcopénie.",
+      "tag": "Longévité"
+    },
+    {
+      "id": "mvt_apres_sport_etirement",
+      "trigger": {},
+      "titre": "Le retour au calme compte aussi",
+      "body": "Terminer une séance intense par quelques minutes d'intensité décroissante et d'étirements doux aide le corps à revenir progressivement à son état de repos, plutôt qu'un arrêt brutal. Un vrai geste de récupération, souvent négligé.",
+      "tag": "Récupération"
+    },
+    {
+      "id": "mvt_deux_par_semaine",
+      "trigger": {
+        "activity": "low"
+      },
+      "titre": "Deux séances valent mieux que zéro",
+      "body": "Si l'idée de trois à cinq séances par semaine te semble hors de portée, commence par deux. Deux séances de renforcement par semaine suffisent déjà à produire des bénéfices mesurables sur la force et la santé métabolique.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "mvt_marche_reunion",
+      "trigger": {
+        "activity": "low"
+      },
+      "titre": "Transforme tes appels en marche",
+      "body": "Un appel téléphonique ou une réunion en visio audio-seule peut se faire en marchant. C'est une façon simple d'ajouter du mouvement sans y consacrer de temps supplémentaire dans une journée déjà chargée.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "mvt_amis",
+      "trigger": {},
+      "body": "S'entraîner ou marcher avec quelqu'un augmente nettement la régularité dans le temps : l'engagement social crée un rendez-vous qu'on annule moins facilement qu'un rendez-vous avec soi-même. Trouver un partenaire d'activité est une vraie stratégie de réussite.",
+      "tag": "Motivation",
+      "titre": "Bouge à plusieurs"
+    },
+    {
+      "id": "mvt_objectif_process",
+      "trigger": {},
+      "titre": "Vise le geste, pas seulement le résultat",
+      "body": "Se fixer comme objectif \"faire ma séance\" plutôt que \"perdre 5 kilos\" rend l'objectif atteignable chaque jour, indépendamment des résultats visibles à court terme. Les résultats suivent quand le geste devient une habitude fiable.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "mvt_chaussures",
+      "trigger": {},
+      "titre": "Le bon équipement, un détail qui compte",
+      "body": "Des chaussures adaptées à ton activité et à ta morphologie réduisent significativement le risque de gêne ou de blessure, surtout en marche ou course répétée. Un petit investissement qui protège la régularité de ta pratique.",
+      "tag": "Technique"
+    },
+    {
+      "id": "mvt_micro_seance",
+      "trigger": {},
+      "titre": "La micro-séance a sa place",
+      "body": "Cinq minutes de mouvement valent mieux qu'une séance repoussée indéfiniment faute de temps. Les recherches montrent que des sessions courtes et répétées apportent des bénéfices réels, cumulés au fil de la semaine.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "mvt_reveil_articulaire",
+      "trigger": {},
+      "titre": "Réveille tes articulations en douceur",
+      "body": "Quelques rotations lentes des chevilles, poignets, épaules et hanches au réveil lubrifient tes articulations et préparent le corps à la journée. Un rituel de deux minutes, particulièrement précieux passé un certain âge.",
+      "tag": "Quotidien"
+    }
+  ],
+  "sommeil": [
+    {
+      "id": "som_court",
+      "trigger": {
+        "sleep_below": 6.0
+      },
+      "titre": "Ton sommeil réclame de l'attention",
+      "body": "Moins de 6 h de sommeil, et ton corps le ressent : récupération incomplète, fringales augmentées, concentration en baisse. Ce soir, essaie de te coucher 30 minutes plus tôt. Le sommeil n'est pas du temps perdu, c'est là que ton corps se répare et ancre tes progrès.",
+      "tag": "Priorité"
+    },
+    {
+      "id": "som_ecran",
+      "trigger": {
+        "sleep_below": 7.0
+      },
+      "titre": "Couvre-feu digital",
+      "body": "La lumière bleue des écrans retarde la production de mélatonine, l'hormone du sommeil. Essaie de couper les écrans 45 minutes avant le coucher, ou active le mode nuit. Ton endormissement n'en sera que plus rapide et profond.",
+      "tag": "Hygiène"
+    },
+    {
+      "id": "som_regularite",
+      "trigger": {},
+      "titre": "La régularité avant tout",
+      "body": "Se coucher et se lever à des horaires réguliers, même le week-end, est l'un des piliers d'un bon sommeil. Ton horloge interne adore la routine : elle te récompense par des endormissements plus faciles et des réveils plus frais.",
+      "tag": "Hygiène"
+    },
+    {
+      "id": "som_temperature",
+      "trigger": {},
+      "titre": "Une chambre fraîche et sombre",
+      "body": "Ton corps a besoin d'une légère baisse de température pour bien dormir. Une chambre autour de 18°C, sombre et silencieuse, crée les conditions idéales. L'obscurité complète favorise une mélatonine de qualité.",
+      "tag": "Environnement"
+    },
+    {
+      "id": "som_cafeine",
+      "trigger": {
+        "sleep_below": 7.0
+      },
+      "titre": "Attention à la caféine tardive",
+      "body": "La caféine reste active plusieurs heures dans ton corps. Un café en fin d'après-midi peut discrètement perturber ton sommeil, même si tu t'endors. Essaie de faire du début d'après-midi ta dernière limite, et passe aux tisanes ensuite.",
+      "tag": "Hygiène"
+    },
+    {
+      "id": "som_rituel",
+      "trigger": {},
+      "titre": "Crée ton rituel du soir",
+      "body": "Un rituel apaisant signale à ton cerveau qu'il est temps de ralentir : lecture, tisane, respiration lente, lumière tamisée. Répété chaque soir, ce sas de décompression prépare naturellement un endormissement en douceur.",
+      "tag": "Rituel"
+    },
+    {
+      "id": "som_lumiere_matin",
+      "trigger": {},
+      "titre": "La lumière du matin, ton alliée",
+      "body": "S'exposer à la lumière naturelle dès le matin cale ton horloge interne et améliore la qualité de ton sommeil le soir venu. Quelques minutes dehors ou près d'une fenêtre au réveil, et ton rythme circadien te remercie.",
+      "tag": "Rythme"
+    },
+    {
+      "id": "som_repas_soir",
+      "trigger": {},
+      "titre": "Un dîner léger et pas trop tard",
+      "body": "Un repas du soir trop copieux ou trop tardif force ton corps à digérer quand il devrait se reposer. Privilégie un dîner plus léger, idéalement 2 à 3 heures avant le coucher, pour un sommeil plus réparateur.",
+      "tag": "Nutrition"
+    },
+    {
+      "id": "som_respiration",
+      "trigger": {
+        "sleep_below": 7.0
+      },
+      "titre": "Respire pour t'endormir",
+      "body": "La respiration lente est un interrupteur naturel du calme. Essaie la cohérence cardiaque au coucher : inspire 4 secondes, expire 6 secondes, pendant quelques minutes. Ce simple exercice apaise le système nerveux et facilite l'endormissement.",
+      "tag": "Technique"
+    },
+    {
+      "id": "som_sieste",
+      "trigger": {
+        "sleep_below": 6.0
+      },
+      "titre": "La micro-sieste réparatrice",
+      "body": "Si ta nuit a été courte, une sieste de 10 à 20 minutes en début d'après-midi peut restaurer ta vigilance sans nuire à ta nuit suivante. La clé : rester courte, pour ne pas entrer dans un sommeil profond difficile à quitter.",
+      "tag": "Récupération"
+    },
+    {
+      "id": "som_bon",
+      "trigger": {
+        "sleep_above": 7.5
+      },
+      "titre": "Beau sommeil, continue !",
+      "body": "Ton sommeil est au rendez-vous, et c'est une base précieuse : c'est pendant ces nuits que ton corps récupère, consolide ta mémoire et régule tes hormones. Continue de protéger ce pilier, il porte tous tes autres efforts.",
+      "tag": "Renforcement"
+    },
+    {
+      "id": "som_magnesium",
+      "trigger": {
+        "sleep_below": 7.0
+      },
+      "titre": "Le magnésium du soir",
+      "body": "Le magnésium participe à la détente nerveuse et musculaire, utile pour bien dormir. Un dîner incluant des légumes verts, des oléagineux ou un peu de chocolat noir peut soutenir un sommeil plus serein, naturellement.",
+      "tag": "Nutrition"
+    },
+    {
+      "id": "som_alcool",
+      "trigger": {},
+      "titre": "L'alcool dégrade ton sommeil",
+      "body": "Il facilite l'endormissement mais fragmente la seconde partie de nuit et réduit le sommeil profond, celui qui répare vraiment. Même une consommation modérée en soirée se paie sur la qualité de récupération.",
+      "tag": "Hygiène"
+    },
+    {
+      "id": "som_cycles",
+      "trigger": {},
+      "titre": "Respecte tes cycles",
+      "body": "Le sommeil s'organise en cycles d'environ 90 minutes. Se coucher au moment où la fatigue arrive, plutôt que de la laisser passer, permet d'entrer facilement dans le premier cycle. Rater ce créneau, c'est souvent attendre une heure et demie de plus.",
+      "tag": "Rythme"
+    },
+    {
+      "id": "som_reveil_nuit",
+      "trigger": {},
+      "titre": "Réveils nocturnes : ne lutte pas",
+      "body": "Se réveiller brièvement la nuit est physiologique. Ce qui pose problème, c'est l'agacement qui suit. Si tu ne te rendors pas au bout de vingt minutes, lève-toi, fais quelque chose de calme en lumière tamisée, et retourne te coucher à la vague de sommeil suivante.",
+      "tag": "Technique"
+    },
+    {
+      "id": "som_sport_soir",
+      "trigger": {},
+      "titre": "Attention au sport tardif",
+      "body": "Un effort intense en fin de soirée élève la température corporelle et l'activation nerveuse, deux freins à l'endormissement. Si tu ne peux t'entraîner que le soir, privilégie une fin de séance en douceur et un vrai temps de retour au calme.",
+      "tag": "Hygiène"
+    },
+    {
+      "id": "som_dette",
+      "trigger": {},
+      "titre": "La dette de sommeil se rembourse mal",
+      "body": "Dormir davantage le week-end compense partiellement une semaine courte, mais ne remet pas tout à zéro : la régularité reste supérieure au rattrapage. Mieux vaut gagner trente minutes chaque nuit que cinq heures le samedi.",
+      "tag": "Rythme"
+    },
+    {
+      "id": "som_environnement_sonore",
+      "trigger": {},
+      "titre": "Soigne le silence",
+      "body": "Même sans te réveiller, le bruit fragmente les cycles et réduit la part de sommeil profond. Bouchons d'oreilles, fenêtre fermée ou bruit blanc constant : protéger ton environnement sonore améliore une qualité de nuit que tu ne mesurais pas.",
+      "tag": "Environnement"
+    },
+    {
+      "id": "som_tres_court",
+      "trigger": {
+        "sleep_below": 5.0
+      },
+      "titre": "Une nuit vraiment trop courte",
+      "body": "Moins de 5 heures de sommeil affecte nettement ta vigilance, ta régulation émotionnelle et tes choix alimentaires du lendemain — le corps cherche à compenser en énergie rapide. Priorise ce soir un vrai coucher tôt : c'est la meilleure chose que tu puisses faire pour demain.",
+      "tag": "Priorité"
+    },
+    {
+      "id": "som_exercice_journee",
+      "trigger": {
+        "sleep_below": 7.0
+      },
+      "titre": "L'activité physique améliore le sommeil",
+      "body": "Une activité physique régulière dans la journée, même modérée, favorise un endormissement plus rapide et un sommeil plus profond. L'effet est d'autant plus net si l'effort a lieu le matin ou l'après-midi plutôt qu'en toute fin de soirée.",
+      "tag": "Lien"
+    },
+    {
+      "id": "som_literie",
+      "trigger": {},
+      "titre": "Ta literie mérite de l'attention",
+      "body": "Un matelas ou un oreiller inadaptés perturbent le sommeil sans qu'on fasse toujours le lien. Si tu te réveilles régulièrement courbaturé, c'est un signal à ne pas ignorer : la qualité de ton sommeil en dépend directement.",
+      "tag": "Environnement"
+    },
+    {
+      "id": "som_horaire_repas",
+      "trigger": {},
+      "titre": "Régularise aussi l'heure des repas",
+      "body": "Ton horloge interne se cale non seulement sur la lumière, mais aussi sur des horaires de repas réguliers. Manger à des heures très variables d'un jour à l'autre peut discrètement perturber la qualité de ton sommeil.",
+      "tag": "Rythme"
+    },
+    {
+      "id": "som_reveil_meme_heure",
+      "trigger": {},
+      "titre": "Fixe surtout ton heure de réveil",
+      "body": "S'il fallait choisir un seul horaire à stabiliser, ce serait l'heure de réveil plutôt que celle du coucher : elle ancre plus fortement ton rythme circadien. Se lever à heure fixe, même après une nuit courte, aide à se recaler plus vite.",
+      "tag": "Rythme"
+    },
+    {
+      "id": "som_chambre_travail",
+      "trigger": {},
+      "titre": "Réserve ta chambre au repos",
+      "body": "Travailler ou regarder des écrans depuis le lit brouille l'association mentale entre ce lieu et le sommeil. Réserver la chambre au repos et à l'intimité renforce, avec le temps, un endormissement plus rapide et automatique.",
+      "tag": "Environnement"
+    },
+    {
+      "id": "som_lumiere_soir",
+      "trigger": {},
+      "titre": "Tamise la lumière dès le dîner",
+      "body": "Baisser l'intensité lumineuse de ton intérieur en soirée envoie à ton corps un signal de transition vers la nuit, bien avant l'heure du coucher. Une lampe chaude plutôt que le plafonnier principal peut suffire à amorcer la détente.",
+      "tag": "Environnement"
+    },
+    {
+      "id": "som_grasse_matinee",
+      "trigger": {},
+      "titre": "La grasse matinée a ses limites",
+      "body": "Dormir beaucoup plus tard le week-end décale ton horloge interne, un peu comme un mini décalage horaire — le fameux \"jet-lag social\". Un écart de moins d'une heure avec la semaine préserve mieux ton rythme.",
+      "tag": "Rythme"
+    },
+    {
+      "id": "som_stress_ecriture",
+      "trigger": {
+        "sleep_below": 7.0
+      },
+      "titre": "Vide ton esprit avant de dormir",
+      "body": "Si les pensées tournent en boucle au moment de dormir, noter sur papier ce qui te préoccupe ou ta liste du lendemain libère l'esprit de la charge de \"ne pas oublier\". Un geste simple qui facilite souvent l'endormissement.",
+      "tag": "Technique"
+    },
+    {
+      "id": "som_bain_chaud",
+      "trigger": {},
+      "titre": "Un bain chaud avant de dormir",
+      "body": "Prendre un bain ou une douche chaude environ une heure avant le coucher favorise l'endormissement : la baisse de température corporelle qui suit la sortie du bain imite le signal naturel de mise en sommeil.",
+      "tag": "Rituel"
+    },
+    {
+      "id": "som_glucides_soir",
+      "trigger": {
+        "sleep_below": 7.0
+      },
+      "titre": "Une petite portion de glucides le soir",
+      "body": "Contrairement à une idée répandue, une portion modérée de glucides complets au dîner (riz, patate douce) peut favoriser la disponibilité du tryptophane, précurseur de la mélatonine, et donc faciliter l'endormissement.",
+      "tag": "Nutrition"
+    },
+    {
+      "id": "som_bruit_blanc",
+      "trigger": {},
+      "titre": "Le bruit blanc, un allié discret",
+      "body": "Un bruit de fond constant et neutre (ventilateur, bruit blanc) peut masquer les bruits ponctuels qui fragmentent le sommeil sans que tu t'en rendes compte. Utile en particulier en environnement urbain ou bruyant.",
+      "tag": "Environnement"
+    },
+    {
+      "id": "som_reveil_progressif",
+      "trigger": {},
+      "titre": "Un réveil en douceur vaut mieux",
+      "body": "Un réveil brutal en pleine phase de sommeil profond laisse une sensation de fatigue disproportionnée. Une lumière progressive ou une alarme douce, quand c'est possible, adoucit sensiblement la transition vers l'éveil.",
+      "tag": "Technique"
+    }
+  ],
+  "stress": [
+    {
+      "id": "str_eleve_resp",
+      "trigger": {
+        "stress_above": 6
+      },
+      "titre": "Fais retomber la pression",
+      "body": "Ton stress est élevé aujourd'hui. Le geste le plus rapide et efficace : la respiration lente. Inspire 4 secondes, expire 6 secondes, pendant 3 à 5 minutes. Allonger l'expiration active ton système nerveux parasympathique, celui du calme. Un outil gratuit, disponible partout, tout le temps.",
+      "tag": "Urgence calme"
+    },
+    {
+      "id": "str_eleve_nature",
+      "trigger": {
+        "stress_above": 6
+      },
+      "titre": "Reconnecte-toi à la nature",
+      "body": "Quelques minutes en extérieur, dans un espace vert, font mesurablement baisser le niveau de stress. Même une courte pause dehors, à respirer et observer, agit comme un reset pour ton système nerveux. La nature apaise ce que le mental agite.",
+      "tag": "Apaisement"
+    },
+    {
+      "id": "str_eleve_mouvement",
+      "trigger": {
+        "stress_above": 6
+      },
+      "titre": "Bouge pour évacuer",
+      "body": "Le stress est une énergie qui a besoin de sortir. Une marche rapide, quelques mouvements, une séance douce : l'activité physique brûle les hormones du stress et libère des endorphines apaisantes. Bouger, c'est digérer ses tensions.",
+      "tag": "Décharge"
+    },
+    {
+      "id": "str_digital",
+      "trigger": {},
+      "titre": "Offre-toi des pauses digitales",
+      "body": "La sur-sollicitation numérique entretient un stress de fond dont on n'a pas toujours conscience. S'accorder des moments sans écran, sans notifications, laisse à ton système nerveux l'espace de se réguler. Le silence mental est un soin.",
+      "tag": "Hygiène mentale"
+    },
+    {
+      "id": "str_gratitude",
+      "trigger": {},
+      "titre": "Cultive la gratitude",
+      "body": "Prendre un instant chaque jour pour noter trois choses positives réoriente ton attention vers le bon. Cette pratique simple, validée par la recherche, réduit le stress perçu et améliore l'humeur sur la durée. L'esprit se muscle comme le corps.",
+      "tag": "Pratique"
+    },
+    {
+      "id": "str_respiration_quotid",
+      "trigger": {},
+      "titre": "La cohérence cardiaque",
+      "body": "Pratiquer la respiration lente quelques minutes, deux à trois fois par jour, régule ton rythme cardiaque et ton niveau de stress de fond. Un rendez-vous santé de 5 minutes, aussi puissant qu'accessible : inspire 4 secondes, expire 6.",
+      "tag": "Technique"
+    },
+    {
+      "id": "str_pleine_conscience",
+      "trigger": {},
+      "titre": "Reviens à l'instant présent",
+      "body": "Le stress vit souvent dans l'anticipation du futur ou la rumination du passé. Ramener ton attention à ce que tu vis maintenant — une sensation, une respiration, un son — désamorce la spirale mentale. La pleine conscience, c'est habiter le présent.",
+      "tag": "Ancrage"
+    },
+    {
+      "id": "str_sommeil_lien",
+      "trigger": {
+        "stress_above": 6
+      },
+      "titre": "Stress et sommeil : le cercle",
+      "body": "Stress et mauvais sommeil s'alimentent l'un l'autre. Casser ce cercle passe souvent par le soir : un rituel apaisant, moins d'écrans, une respiration lente au coucher. Mieux dormir, c'est déjà mieux gérer le stress du lendemain.",
+      "tag": "Lien"
+    },
+    {
+      "id": "str_priorites",
+      "trigger": {
+        "stress_above": 6
+      },
+      "titre": "Allège ta charge mentale",
+      "body": "Une partie du stress vient du sentiment de devoir tout gérer en même temps. Poser sur papier tes tâches, puis identifier LA priorité du moment, libère l'esprit. On ne peut pas tout faire d'un coup : choisir, c'est se soulager.",
+      "tag": "Organisation"
+    },
+    {
+      "id": "str_faible",
+      "trigger": {
+        "stress_below": 4
+      },
+      "titre": "Bel équilibre intérieur",
+      "body": "Ton niveau de stress est bien maîtrisé, et c'est un vrai atout pour ta santé globale. Un stress bas favorise un meilleur sommeil, une digestion sereine et une immunité solide. Continue d'entretenir ce qui t'apaise : tu es sur la bonne voie.",
+      "tag": "Renforcement"
+    },
+    {
+      "id": "str_rire",
+      "trigger": {},
+      "titre": "N'oublie pas de rire",
+      "body": "Le rire et les moments de plaisir partagé sont de vrais régulateurs de stress : ils libèrent des endorphines et détendent le corps. Cultiver la légèreté et les liens sociaux nourrit ton bien-être autant qu'une bonne assiette.",
+      "tag": "Bien-être"
+    },
+    {
+      "id": "str_micro_pause",
+      "trigger": {},
+      "titre": "Les micro-pauses qui rechargent",
+      "body": "Entre deux tâches, s'accorder 60 secondes pour respirer, s'étirer ou simplement regarder au loin recharge ton attention et évite l'accumulation de tension. Ces micro-pauses, disséminées dans la journée, préviennent l'épuisement mental.",
+      "tag": "Quotidien"
+    },
+    {
+      "id": "str_soleil_matin",
+      "trigger": {},
+      "titre": "La lumière du matin apaise aussi",
+      "body": "S'exposer à la lumière naturelle en début de journée régule non seulement le sommeil mais aussi l'humeur et la production de cortisol. Quelques minutes dehors le matin posent une base plus stable pour toute la journée.",
+      "tag": "Rythme"
+    },
+    {
+      "id": "str_lien_social",
+      "trigger": {},
+      "titre": "Le lien social est un soin",
+      "body": "La qualité des relations est l'un des facteurs les plus solidement associés à la santé et à la longévité, devant bien des paramètres biologiques. Une conversation sincère, un moment partagé : ce sont de véritables régulateurs du stress.",
+      "tag": "Bien-être"
+    },
+    {
+      "id": "str_ecriture",
+      "trigger": {},
+      "titre": "Pose tes pensées sur papier",
+      "body": "Écrire ce qui te préoccupe, même quelques lignes, réduit l'intensité émotionnelle et clarifie ce qui dépend de toi. La rumination tourne en boucle ; l'écriture, elle, met un point final.",
+      "tag": "Pratique"
+    },
+    {
+      "id": "str_respiration_longue",
+      "trigger": {},
+      "titre": "Allonge ton expiration",
+      "body": "Le principe est simple : une expiration plus longue que l'inspiration active la voie nerveuse du calme. Nul besoin de technique compliquée — inspirer sur quatre temps, expirer sur six, quelques minutes, suffit à faire retomber la tension.",
+      "tag": "Technique"
+    },
+    {
+      "id": "str_froid",
+      "trigger": {},
+      "titre": "Le contraste au réveil",
+      "body": "Terminer sa douche par trente secondes d'eau fraîche stimule la vigilance et l'adaptation au stress. À aborder progressivement, et à éviter en cas de problème cardiovasculaire — dans ce cas, demande l'avis de ton médecin.",
+      "tag": "Technique"
+    },
+    {
+      "id": "str_monotache",
+      "trigger": {},
+      "titre": "Fais une chose à la fois",
+      "body": "Le multitâche donne l'illusion d'efficacité mais augmente la charge mentale et la sensation de débordement. Se concentrer sur une seule tâche, puis la suivante, réduit le stress tout en améliorant le résultat.",
+      "tag": "Organisation"
+    },
+    {
+      "id": "str_dire_non",
+      "trigger": {},
+      "titre": "Apprends à décliner",
+      "body": "Une part importante du stress vient d'engagements pris par difficulté à refuser. Protéger son temps et son énergie n'est pas de l'égoïsme : c'est la condition pour être vraiment disponible sur ce qui compte.",
+      "tag": "Limites"
+    },
+    {
+      "id": "str_digestion",
+      "trigger": {},
+      "titre": "Stress et digestion sont liés",
+      "body": "Manger sous tension perturbe réellement la digestion : le corps priorise l'action plutôt que l'assimilation. Prendre trois respirations lentes avant de commencer à manger améliore le confort digestif autant que le choix des aliments.",
+      "tag": "Lien"
+    },
+    {
+      "id": "str_tres_eleve",
+      "trigger": {
+        "stress_above": 8
+      },
+      "titre": "Le stress est vraiment au sommet aujourd'hui",
+      "body": "À ce niveau, la priorité n'est pas de tout résoudre d'un coup, mais de faire retomber la pression physiologique en premier : respiration lente, quelques minutes seul au calme, un verre d'eau bu lentement. Le reste attendra que le système nerveux redescende.",
+      "tag": "Urgence calme"
+    },
+    {
+      "id": "str_nature_precise",
+      "trigger": {
+        "stress_above": 6
+      },
+      "titre": "20 minutes dehors, un vrai seuil",
+      "body": "Les recherches situent autour de 20 minutes le temps passé en extérieur nécessaire pour observer une baisse mesurable du cortisol, l'hormone du stress. Une vraie pause dans un parc ou en nature vaut largement une pause café à l'intérieur.",
+      "tag": "Apaisement"
+    },
+    {
+      "id": "str_musique",
+      "trigger": {},
+      "titre": "La musique comme régulateur",
+      "body": "Écouter une musique que tu aimes, en particulier avec un tempo lent, peut réduire mesurablement le rythme cardiaque et la tension perçue. Une playlist \"apaisement\" dédiée peut devenir un outil de gestion du stress à portée de main.",
+      "tag": "Technique"
+    },
+    {
+      "id": "str_toucher",
+      "trigger": {},
+      "titre": "Le pouvoir du contact",
+      "body": "Une accolade prolongée, un contact physique bienveillant avec un proche, libère de l'ocytocine, une hormone qui contrecarre directement les effets du stress. Ne sous-estime pas ce levier simple et immédiatement accessible.",
+      "tag": "Bien-être"
+    },
+    {
+      "id": "str_controle",
+      "trigger": {},
+      "titre": "Distingue ce qui dépend de toi",
+      "body": "Une grande part du stress vient de vouloir contrôler ce qui ne dépend pas de nous. Se recentrer consciemment sur ce qui est réellement en ton pouvoir d'action, ici et maintenant, allège nettement la charge mentale.",
+      "tag": "Ancrage"
+    },
+    {
+      "id": "str_perspective",
+      "trigger": {},
+      "titre": "Prends de la hauteur",
+      "body": "Se demander \"est-ce que ça comptera dans un an ?\" face à une contrariété du quotidien remet souvent les choses en perspective. Ce n'est pas nier l'émotion présente, c'est lui donner sa juste taille.",
+      "tag": "Ancrage"
+    },
+    {
+      "id": "str_odorat",
+      "trigger": {},
+      "titre": "Les senteurs apaisantes",
+      "body": "Certaines odeurs comme la lavande ont montré des effets mesurables sur la détente nerveuse. Une huile essentielle diffusée ou quelques gouttes sur un mouchoir peuvent faire partie de ta boîte à outils anti-stress.",
+      "tag": "Technique"
+    },
+    {
+      "id": "str_routine_matin",
+      "trigger": {},
+      "titre": "Un matin structuré désamorce la journée",
+      "body": "Démarrer la journée dans la précipitation installe une tension qui se prolonge souvent bien au-delà du matin. Se lever quelques minutes plus tôt pour un rituel calme change la tonalité de toute la journée qui suit.",
+      "tag": "Organisation"
+    },
+    {
+      "id": "str_devoir_vs_choix",
+      "trigger": {},
+      "titre": "Reformule tes obligations",
+      "body": "Remplacer mentalement \"je dois\" par \"je choisis de\" change la charge émotionnelle d'une tâche, même contrainte. Un simple glissement de vocabulaire qui redonne un sentiment d'agentivité et réduit la sensation de subir.",
+      "tag": "Pratique"
+    },
+    {
+      "id": "str_alimentation_stress",
+      "trigger": {
+        "stress_above": 6
+      },
+      "titre": "Ne saute pas de repas sous stress",
+      "body": "Le stress pousse parfois à négliger les repas, ce qui aggrave en retour l'irritabilité et la fatigue via les variations de glycémie. Manger normalement, même sans grand appétit, aide en réalité à mieux traverser une période tendue.",
+      "tag": "Lien"
+    },
+    {
+      "id": "str_stress_positif",
+      "trigger": {},
+      "titre": "Tout stress n'est pas mauvais",
+      "body": "Un stress modéré et ponctuel — avant une échéance importante par exemple — peut améliorer la concentration et la performance. C'est la chronicité et l'intensité excessive qui posent problème, pas le stress en tant que tel.",
+      "tag": "Philosophie"
+    },
+    {
+      "id": "str_delegation",
+      "trigger": {
+        "stress_above": 6
+      },
+      "titre": "Tu n'as pas à tout porter seul",
+      "body": "Demander de l'aide ou déléguer une tâche n'est pas un échec, c'est une compétence. Une partie du stress chronique vient du sentiment de devoir tout assumer seul — partager la charge, quand c'est possible, est un vrai soin.",
+      "tag": "Limites"
+    }
+  ],
+  "mindset": [
+    {
+      "id": "min_petit_pas",
+      "trigger": {},
+      "titre": "Les petits pas font les grands changements",
+      "body": "La santé ne se construit pas dans les grandes résolutions, mais dans les petits gestes répétés. Un verre d'eau, une marche, un légume de plus : ces micro-choix, cumulés jour après jour, transforment ta vie bien plus que n'importe quel effort ponctuel.",
+      "tag": "Philosophie"
+    },
+    {
+      "id": "min_identite",
+      "trigger": {},
+      "titre": "Deviens qui tu veux être",
+      "body": "Chaque choix aligné est un vote pour la personne que tu veux devenir. Tu n'as pas besoin d'être parfait, juste d'avancer dans la bonne direction plus souvent qu'hier. Ton identité se construit action après action.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "min_progres_perfection",
+      "trigger": {},
+      "titre": "Le progrès, pas la perfection",
+      "body": "Viser la perfection mène souvent à l'abandon au premier écart. Vise plutôt le progrès : un repas moins équilibré ne défait pas une semaine de bons choix. Ce qui compte, c'est la tendance générale, pas chaque détail. Sois indulgent et constant.",
+      "tag": "Bienveillance"
+    },
+    {
+      "id": "min_pourquoi",
+      "trigger": {},
+      "titre": "Reconnecte-toi à ton pourquoi",
+      "body": "Dans les moments de doute, reviens à ta motivation profonde : pourquoi as-tu commencé ? Se sentir plus énergique, vieillir en forme, être présent pour ses proches... Ton « pourquoi » est le carburant qui tient quand la volonté fatigue.",
+      "tag": "Sens"
+    },
+    {
+      "id": "min_celebrer",
+      "trigger": {},
+      "titre": "Célèbre tes victoires",
+      "body": "On oublie trop souvent de reconnaître ses progrès. Prends un instant pour mesurer le chemin parcouru, même modeste. Célébrer tes petites victoires nourrit ta motivation et transforme l'effort en élan positif.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "min_patience",
+      "trigger": {},
+      "titre": "Fais confiance au temps",
+      "body": "Les vrais changements de santé prennent du temps à se voir, mais ils s'installent en profondeur. Ne te décourage pas si les résultats tardent : ton corps travaille en coulisses. La constance finit toujours par payer.",
+      "tag": "Sagesse"
+    },
+    {
+      "id": "min_holistique",
+      "trigger": {},
+      "titre": "Corps, cœur et esprit ensemble",
+      "body": "La vraie santé ne se résume pas à ton assiette : elle englobe ton sommeil, ton stress, ton mouvement, tes relations. Prendre soin de toi dans toutes ces dimensions crée un équilibre qu'aucun élément seul ne peut offrir. Tu es un tout.",
+      "tag": "Holistique"
+    },
+    {
+      "id": "min_environnement",
+      "trigger": {},
+      "titre": "Façonne ton environnement",
+      "body": "La volonté est une ressource limitée ; ton environnement, lui, agit en continu. Une corbeille de fruits visible, des placards sans tentations, des baskets prêtes à l'entrée : rendre le bon choix facile est plus puissant que se forcer.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "min_ecoute",
+      "trigger": {},
+      "titre": "Apprends à t'écouter",
+      "body": "Ton corps t'envoie des signaux : faim réelle ou émotionnelle, fatigue, tension, satiété. Réapprendre à les écouter, sans jugement, est une compétence précieuse. L'intuition alimentaire se cultive, et elle vaut tous les régimes.",
+      "tag": "Conscience"
+    },
+    {
+      "id": "min_un_jour",
+      "trigger": {},
+      "titre": "Un jour à la fois",
+      "body": "Ne te laisse pas submerger par l'objectif final. Concentre-toi sur aujourd'hui : un bon choix maintenant, puis le suivant. La santé se joue au présent, un jour après l'autre. C'est en réussissant tes journées que tu réussis ta transformation.",
+      "tag": "Ancrage"
+    },
+    {
+      "id": "min_rechute",
+      "trigger": {},
+      "titre": "Une chute n'est pas un échec",
+      "body": "Tout le monde dévie de sa route parfois. Ce qui distingue ceux qui réussissent, ce n'est pas de ne jamais tomber, c'est de repartir sans se flageller. Un écart n'efface rien : reprends simplement au repas suivant, l'esprit léger.",
+      "tag": "Résilience"
+    },
+    {
+      "id": "min_gentillesse",
+      "trigger": {},
+      "titre": "Parle-toi avec bienveillance",
+      "body": "La façon dont tu te parles compte. Remplacer la critique intérieure par l'encouragement change tout ton rapport à l'effort. Traite-toi comme tu traiterais un ami cher : avec patience, respect et gentillesse. Tu mérites ta propre bienveillance.",
+      "tag": "Bienveillance"
+    },
+    {
+      "id": "min_systeme",
+      "trigger": {},
+      "titre": "Mise sur le système, pas sur l'objectif",
+      "body": "Un objectif dit où tu veux aller ; un système dit ce que tu fais chaque jour. Ceux qui tiennent dans la durée ne sont pas les plus motivés, ce sont ceux qui ont construit des habitudes qui ne dépendent plus de leur motivation.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "min_deux_minutes",
+      "trigger": {},
+      "titre": "La règle des deux minutes",
+      "body": "Quand une habitude te semble insurmontable, réduis-la à sa version de deux minutes : enfiler ses chaussures, préparer un légume, respirer une minute. Commencer est le vrai obstacle ; le reste suit presque toujours.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "min_comparaison",
+      "trigger": {},
+      "titre": "Compare-toi à toi-même",
+      "body": "Le seul point de référence utile, c'est toi il y a trois mois. Les parcours, les génétiques et les contraintes de chacun sont trop différents pour que la comparaison aux autres t'apprenne quoi que ce soit d'utile.",
+      "tag": "Bienveillance"
+    },
+    {
+      "id": "min_energie",
+      "trigger": {},
+      "titre": "Suis ton énergie, pas que la balance",
+      "body": "Le poids est un indicateur bruyant et partiel. Ton énergie au réveil, ta qualité de sommeil, ton humeur, ta digestion et ta force en disent bien plus sur ta santé réelle. Ce sont eux qu'il vaut la peine d'observer.",
+      "tag": "Conscience"
+    },
+    {
+      "id": "min_plaisir",
+      "trigger": {},
+      "titre": "Le plaisir fait partie du plan",
+      "body": "Une alimentation santé qui exclut tout plaisir ne tient jamais dans le temps. Manger doit rester un moment agréable et social. La cuisine maison à base de bons produits est précisément ce qui réconcilie plaisir et santé.",
+      "tag": "Philosophie"
+    },
+    {
+      "id": "min_long_terme",
+      "trigger": {},
+      "titre": "Tu joues une partie longue",
+      "body": "La santé et la longévité ne se gagnent pas en trois semaines. Chaque bon choix est un dépôt sur un compte dont tu percevras les intérêts dans dix ou vingt ans. Cette perspective change la façon de vivre les journées imparfaites.",
+      "tag": "Sagesse"
+    },
+    {
+      "id": "min_curiosite",
+      "trigger": {},
+      "titre": "Apprends une chose par semaine",
+      "body": "Comprendre pourquoi un aliment ou une habitude te fait du bien transforme la contrainte en choix éclairé. Les personnes qui tiennent leurs changements sont presque toujours celles qui ont compris ce qu'elles faisaient.",
+      "tag": "Éducation"
+    },
+    {
+      "id": "min_imperfection",
+      "trigger": {},
+      "titre": "Vise le 80/20",
+      "body": "Si l'essentiel de ton alimentation repose sur des aliments bruts et vrais, la marge restante n'a que peu d'impact. Cette règle simple libère de la culpabilité tout en gardant le cap — et c'est justement ce qui la rend tenable.",
+      "tag": "Philosophie"
+    },
+    {
+      "id": "min_action_avant_motivation",
+      "trigger": {},
+      "titre": "L'action précède souvent la motivation",
+      "body": "On pense qu'il faut être motivé pour agir, mais c'est souvent l'inverse : commencer un geste, même sans envie, génère la motivation qui suit. N'attends pas de te sentir prêt pour commencer, commence pour te sentir prêt.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "min_controle_perception",
+      "trigger": {},
+      "titre": "Tu ne contrôles pas tout, mais ta réaction oui",
+      "body": "Une contrariété extérieure échappe souvent à ton contrôle ; ta façon d'y réagir, elle, t'appartient toujours. Ce léger espace entre l'événement et ta réponse est précisément là où se construit ta liberté d'action.",
+      "tag": "Sagesse"
+    },
+    {
+      "id": "min_reussite_definie",
+      "trigger": {},
+      "titre": "Définis toi-même ta réussite",
+      "body": "Les standards affichés partout — physiques, sociaux, de performance — ne sont pas les tiens tant que tu ne les as pas choisis consciemment. Définir ta propre version de la réussite libère d'une comparaison sans fin.",
+      "tag": "Philosophie"
+    },
+    {
+      "id": "min_habitude_identite",
+      "trigger": {},
+      "titre": "Chaque habitude vote pour une identité",
+      "body": "Ce n'est pas seulement \"je fais du sport\", c'est \"je suis quelqu'un qui bouge\". Formuler tes habitudes en termes d'identité, plutôt que de simple action, ancre le changement bien plus profondément et durablement.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "min_erreur_donnee",
+      "trigger": {},
+      "titre": "Une erreur est une donnée, pas un jugement",
+      "body": "Considérer un écart ou un échec comme une information à ajuster, plutôt qu'un jugement sur ta valeur, change tout le rapport à la progression. Les données ne se jugent pas, elles s'utilisent pour ajuster la trajectoire.",
+      "tag": "Résilience"
+    },
+    {
+      "id": "min_environnement_social",
+      "trigger": {},
+      "titre": "Ton entourage influence tes choix",
+      "body": "Les habitudes des personnes qui t'entourent déteignent, souvent sans que tu t'en rendes compte, sur les tiennes. S'entourer, même partiellement, de personnes qui partagent tes objectifs de santé facilite grandement la tenue dans la durée.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "min_temps_investissement",
+      "trigger": {},
+      "titre": "Le temps que tu investis en toi n'est jamais perdu",
+      "body": "Préparer un repas, faire une séance, dormir suffisamment : ces moments peuvent sembler du temps \"volé\" à une liste de tâches. Ils sont en réalité ce qui te permet de tenir la distance sur tout le reste, avec plus d'énergie et de clarté.",
+      "tag": "Sens"
+    },
+    {
+      "id": "min_signal_corps",
+      "trigger": {},
+      "titre": "Ton corps ne ment pas",
+      "body": "Fatigue persistante, digestion difficile, humeur en dents de scie : ce sont des messages, pas des défauts à ignorer. Apprendre à les décoder plutôt qu'à les faire taire est l'une des formes les plus fines d'intelligence de santé.",
+      "tag": "Conscience"
+    },
+    {
+      "id": "min_petit_dej_decision",
+      "trigger": {},
+      "titre": "La première décision donne le ton",
+      "body": "Le premier choix sain de la journée — boire un verre d'eau, prendre cinq minutes pour soi, un petit-déjeuner équilibré — crée souvent un effet d'entraînement sur les décisions suivantes. Bien commencer facilite tout le reste.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "min_ni_bon_ni_mauvais",
+      "trigger": {},
+      "titre": "Un aliment n'est ni bon ni mauvais",
+      "body": "Classer les aliments en \"bons\" et \"interdits\" nourrit souvent une relation anxieuse à la nourriture. C'est la fréquence et le contexte global qui font la différence, pas un aliment isolé un jour donné. Sors du jugement moral sur l'assiette.",
+      "tag": "Bienveillance"
+    },
+    {
+      "id": "min_vision_long_terme",
+      "trigger": {},
+      "titre": "Projette-toi dans dix ans",
+      "body": "Les choix de santé du quotidien semblent parfois insignifiants pris isolément. Vus sur dix ou vingt ans, ce sont eux qui déterminent en grande partie ta vitalité, ta mobilité et ton indépendance à un âge avancé.",
+      "tag": "Sagesse"
+    },
+    {
+      "id": "min_flexibilite",
+      "trigger": {},
+      "titre": "La rigidité casse, la flexibilité tient",
+      "body": "Un plan trop strict se brise au premier imprévu — un repas de famille, un empêchement, une fatigue. Construire de la flexibilité dans tes habitudes, dès le départ, les rend bien plus résistantes à la durée que la perfection rigide.",
+      "tag": "Stratégie"
+    },
+    {
+      "id": "min_valeurs",
+      "trigger": {},
+      "titre": "Aligne tes actions à tes valeurs",
+      "body": "Si la santé et la longévité comptent vraiment pour toi, chaque choix aligné avec cette valeur renforce ton sentiment de cohérence intérieure — l'un des moteurs de motivation les plus puissants et les plus durables qui soient.",
+      "tag": "Sens"
+    },
+    {
+      "id": "min_saisons_vie",
+      "trigger": {},
+      "titre": "Il y a des saisons dans une vie",
+      "body": "Certaines périodes permettent de tout donner, d'autres demandent simplement de tenir le cap sans reculer. Reconnaître dans quelle saison tu te trouves, sans culpabiliser, est plus sain que de te comparer à ta meilleure version passée.",
+      "tag": "Bienveillance"
+    },
+    {
+      "id": "min_micro_victoires",
+      "trigger": {},
+      "titre": "Compte tes micro-victoires",
+      "body": "Un verre d'eau de plus, un escalier grimpé, un repas préparé maison : ces gestes semblent minuscules pris isolément, mais leur accumulation quotidienne est précisément ce qui construit un changement réel et durable.",
+      "tag": "Motivation"
+    }
+  ]
+}

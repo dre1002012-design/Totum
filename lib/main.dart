@@ -7,6 +7,7 @@ import 'screens/bilan_screen.dart';
 import 'screens/conseils_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/paywall_screen.dart';
+import 'services/app_settings.dart';
 
 
 Future<void> main() async {
@@ -31,9 +32,11 @@ Future<void> main() async {
   };
 
   await Supabase.initialize(
-    url: 'https://yqcbawsszozouhlkxtsj.supabase.co',      // 🔸 tu as déjà mis tes vraies valeurs ici
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxY2Jhd3Nzem96b3VobGt4dHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5NzEwNDUsImV4cCI6MjA3NTU0NzA0NX0.N11gEoG_SZ65GA0bRzFStgXb5YqzIB4trU9FbLbMtcU',        // 🔸 idem
+    url: 'https://yqcbawsszozouhlkxtsj.supabase.co',
+    publishableKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxY2Jhd3Nzem96b3VobGt4dHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5NzEwNDUsImV4cCI6MjA3NTU0NzA0NX0.N11gEoG_SZ65GA0bRzFStgXb5YqzIB4trU9FbLbMtcU',
   );
+
+  await AppSettings.load();
 
   runApp(const TotumApp());
 }
@@ -43,21 +46,43 @@ class TotumApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = const Color(0xFFFF7A00); // ton orange Totum
+    const color = Color(0xFFFF7A00); // orange TOTUM
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Totum',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.light),
-        useMaterial3: true,
+    // Réglages → Apparence pilote themeMode ici. Note pour la suite : le
+    // thème Material par défaut (AppBars, boutons standards, etc.) répond
+    // déjà correctement au mode sombre — les écrans qui utilisent encore
+    // des couleurs codées en dur (Profil via TotumColors, et les futurs
+    // passages Journal/Bilan/Conseils) resteront visuellement clairs tant
+    // que ce système partagé n'a pas lui-même été rendu sensible au thème
+    // (prévu en une seule passe une fois les 4 onglets alignés visuellement).
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: AppSettings.themeMode,
+      builder: (context, mode, _) => ValueListenableBuilder<double>(
+        valueListenable: AppSettings.textScale,
+        builder: (context, scale, __) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Totum',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.light),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: color, brightness: Brightness.dark),
+            useMaterial3: true,
+          ),
+          themeMode: mode,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
+            child: child!,
+          ),
+          home: const AuthGate(),
+        ),
       ),
-      home: const AuthGate(), // ✅ on passe par la "porte d’auth"
     );
   }
 }
 
-// ✅ Cette widget décide : login ou app ?
+// Décide : écran de connexion ou application ?
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
@@ -75,7 +100,7 @@ class AuthGate extends StatelessWidget {
           return const AuthScreen();
         }
 
-        // Connecté → on passe par la porte "Premium / Essai"
+        // Connecté → porte « Premium / Abonnement / Essai »
         return const PremiumGate();
       },
     );
@@ -91,7 +116,7 @@ class PremiumGate extends StatefulWidget {
 
 class _PremiumGateState extends State<PremiumGate> {
   bool _loading = true;
-  bool _allowed = true; // par défaut : on laisse entrer si jamais il y a une erreur
+  bool _allowed = true; // par défaut : on laisse entrer en cas d'erreur
 
   @override
   void initState() {
@@ -100,13 +125,10 @@ class _PremiumGateState extends State<PremiumGate> {
   }
 
   /// S'assure qu'une ligne user_status existe pour cet utilisateur.
-  /// - Si elle existe déjà → on la renvoie.
-  /// - Si elle n'existe pas → on la crée, puis on renvoie la nouvelle.
   Future<Map<String, dynamic>?> _ensureUserStatus(
     SupabaseClient supabase,
     String userId,
   ) async {
-    // 1) On regarde si la ligne existe déjà
     final existing = await supabase
         .from('user_status')
         .select()
@@ -117,8 +139,6 @@ class _PremiumGateState extends State<PremiumGate> {
       return existing;
     }
 
-    // 2) Sinon on la crée.
-    //    trial_start et is_premium utilisent leurs valeurs par défaut dans la base.
     final inserted = await supabase
         .from('user_status')
         .upsert(
@@ -145,7 +165,6 @@ class _PremiumGateState extends State<PremiumGate> {
         return;
       }
 
-      // 🔐 On s'assure qu'il y a une ligne user_status pour cet utilisateur
       final status = await _ensureUserStatus(supabase, user.id);
 
       bool allow = true;
@@ -153,11 +172,22 @@ class _PremiumGateState extends State<PremiumGate> {
       if (status != null) {
         final isPremium = status['is_premium'] == true;
 
-        if (isPremium) {
-          // Déjà premium → accès complet
+        // Abonnement annuel actif ? (premium_until dans le futur)
+        DateTime? premiumUntil;
+        final rawUntil = status['premium_until'];
+        if (rawUntil is String) {
+          premiumUntil = DateTime.tryParse(rawUntil);
+        } else if (rawUntil is DateTime) {
+          premiumUntil = rawUntil;
+        }
+        final subActive = premiumUntil != null &&
+            premiumUntil.toUtc().isAfter(DateTime.now().toUtc());
+
+        if (isPremium || subActive) {
+          // Accès à vie (clients historiques) OU abonnement en cours
           allow = true;
         } else {
-          // Pas premium → on regarde la date de début d'essai
+          // Ni l'un ni l'autre → on regarde l'essai gratuit
           final raw = status['trial_start'];
           DateTime? trialStart;
 
@@ -176,12 +206,11 @@ class _PremiumGateState extends State<PremiumGate> {
             final trialActive = diff.inDays < 7;
             allow = trialActive;
           } else {
-            // Pas de date → par sécurité, on laisse passer (tu pourras durcir plus tard si tu veux)
+            // Pas de date → par sécurité, on laisse passer
             allow = true;
           }
         }
       } else {
-        // Cas très rare : même après upsert on n'a rien → on ne bloque pas
         allow = true;
       }
 
@@ -208,12 +237,12 @@ class _PremiumGateState extends State<PremiumGate> {
       );
     }
 
-    // Essai encore actif OU utilisateur premium
+    // Essai actif OU premium à vie OU abonnement en cours
     if (_allowed) {
       return const _RootShell();
     }
 
-    // Essai terminé et pas premium → paywall
+    // Sinon → paywall
     return const PaywallScreen();
   }
 }
@@ -228,27 +257,118 @@ class _RootShell extends StatefulWidget {
 class _RootShellState extends State<_RootShell> {
   int _index = 0;
 
+  // Clés pour piloter chaque onglet depuis l'extérieur : ouvrir la page
+  // d'ajout depuis le + (Journal), et surtout forcer un rafraîchissement des
+  // données au retour sur un onglet — les 4 onglets restent montés en
+  // permanence (IndexedStack ci-dessous, pour éviter le flash visuel qu'on
+  // avait avant au changement d'onglet), donc `initState()` ne se relance
+  // plus jamais tout seul : sans ce rafraîchissement explicite, un onglet
+  // ne verrait plus jamais les changements faits ailleurs (aliment logué
+  // dans Journal, poids enregistré...) tant que l'app n'est pas totalement
+  // relancée.
+  final GlobalKey<JournalScreenState> _journalKey =
+      GlobalKey<JournalScreenState>();
+  final GlobalKey<ProfileScreenState> _profileKey =
+      GlobalKey<ProfileScreenState>();
+  final GlobalKey<BilanScreenState> _bilanKey = GlobalKey<BilanScreenState>();
+  final GlobalKey<ConseilsScreenState> _conseilsKey =
+      GlobalKey<ConseilsScreenState>();
+
   // === Onglets (pages) =======================================================
-  final _pages = const [
-    ProfileScreen(),   // 👤 profil
-    JournalScreen(),   // 🍽️ journal
-    BilanScreen(),     // 📊 bilan
-    ConseilsScreen(),  // 💡 conseils
+  late final List<Widget> _pages = [
+    ProfileScreen(key: _profileKey),     // 👤 tableau de bord
+    JournalScreen(key: _journalKey),     // 🍽️ journal
+    BilanScreen(key: _bilanKey),         // 📊 bilan
+    ConseilsScreen(key: _conseilsKey),   // 💡 conseils
   ];
+
+  void _selectTab(int i) {
+    if (i == _index) return;
+    setState(() => _index = i);
+    switch (i) {
+      case 0:
+        _profileKey.currentState?.refresh();
+        break;
+      case 1:
+        _journalKey.currentState?.refresh();
+        break;
+      case 2:
+        _bilanKey.currentState?.refresh();
+        break;
+      case 3:
+        _conseilsKey.currentState?.refresh();
+        break;
+    }
+  }
+
+  void _onCentralAdd() {
+    // Bascule sur l'onglet Journal puis ouvre la page d'ajout.
+    _selectTab(1);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _journalKey.currentState?.openAddPage();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    const accent = Color(0xFFFF7A00);
     return Scaffold(
-      body: _pages[_index],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.person), label: 'Profil'),
-          NavigationDestination(icon: Icon(Icons.restaurant), label: 'Journal'),
-          NavigationDestination(icon: Icon(Icons.bar_chart), label: 'Bilan'),
-          NavigationDestination(icon: Icon(Icons.lightbulb), label: 'Conseils'),
-        ],
+      body: IndexedStack(index: _index, children: _pages),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _onCentralAdd,
+        backgroundColor: accent,
+        foregroundColor: Colors.white,
+        elevation: 4,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, size: 32),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 6,
+        height: 60,
+        padding: EdgeInsets.zero,
+        child: Row(
+          children: [
+            _navItem(0, Icons.dashboard_rounded, 'Tableau de bord'),
+            _navItem(1, Icons.restaurant, 'Journal'),
+            const SizedBox(width: 56), // espace pour le bouton central
+            _navItem(2, Icons.bar_chart, 'Bilan'),
+            _navItem(3, Icons.lightbulb, 'Conseils'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _navItem(int i, IconData icon, String label) {
+    const accent = Color(0xFFFF7A00);
+    final selected = _index == i;
+    return Expanded(
+      child: InkWell(
+        onTap: () => _selectTab(i),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 22, color: selected ? accent : Colors.black45),
+            const SizedBox(height: 2),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(label,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                        color: selected ? accent : Colors.black45)),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

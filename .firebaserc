@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "totum-app-2026"
+  },
+  "targets": {
+    "totum-app-ef741": {
+      "hosting": {
+        "default": [
+          "totum-app-ef741"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
