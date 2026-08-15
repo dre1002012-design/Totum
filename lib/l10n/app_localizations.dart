@@ -6269,6 +6269,150 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Aucune recette ne correspond à ces filtres pour le moment.'**
   String get consNoRecipeMatchesFilters;
+
+  /// No description provided for @fallbackMindset1Title.
+  ///
+  /// In fr, this message translates to:
+  /// **'🧠 Progression > perfection'**
+  String get fallbackMindset1Title;
+
+  /// No description provided for @fallbackMindset1Body.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque repas aligné avec ton objectif est un vote pour l\'identité que tu construis.'**
+  String get fallbackMindset1Body;
+
+  /// No description provided for @fallbackMindset2Title.
+  ///
+  /// In fr, this message translates to:
+  /// **'💪 Constance antifragile'**
+  String get fallbackMindset2Title;
+
+  /// No description provided for @fallbackMindset2Body.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les écarts ne te définissent pas. C\'est la moyenne de la semaine qui compte.'**
+  String get fallbackMindset2Body;
+
+  /// No description provided for @fallbackCoachSedentaire1.
+  ///
+  /// In fr, this message translates to:
+  /// **'2–3×/semaine 20–30 min…'**
+  String get fallbackCoachSedentaire1;
+
+  /// No description provided for @fallbackCoachSedentaire2.
+  ///
+  /// In fr, this message translates to:
+  /// **'6–8k pas/j…'**
+  String get fallbackCoachSedentaire2;
+
+  /// No description provided for @fallbackCoachPerte1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déficit léger + protéines…'**
+  String get fallbackCoachPerte1;
+
+  /// No description provided for @fallbackCoachMasse1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Surplus +10–15 %, protéines 1.6–2.2 g/kg…'**
+  String get fallbackCoachMasse1;
+
+  /// No description provided for @fallbackCoachMaintien1.
+  ///
+  /// In fr, this message translates to:
+  /// **'3–4 séances variées/sem…'**
+  String get fallbackCoachMaintien1;
+
+  /// No description provided for @fallbackHeroHydrationTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'💧 Hydratation : ton boost silencieux'**
+  String get fallbackHeroHydrationTitle;
+
+  /// No description provided for @fallbackHeroHydrationTheme.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clarté mentale'**
+  String get fallbackHeroHydrationTheme;
+
+  /// No description provided for @fallbackHeroHydrationInsight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartis l\'eau + tisane le soir.'**
+  String get fallbackHeroHydrationInsight;
+
+  /// No description provided for @fallbackHeroOmega3Title.
+  ///
+  /// In fr, this message translates to:
+  /// **'🐟 Oméga-3 : cerveau & membranes'**
+  String get fallbackHeroOmega3Title;
+
+  /// No description provided for @fallbackHeroOmega3Theme.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inflammation & humeur'**
+  String get fallbackHeroOmega3Theme;
+
+  /// No description provided for @fallbackHeroOmega3Insight.
+  ///
+  /// In fr, this message translates to:
+  /// **'2 poissons gras/sem.'**
+  String get fallbackHeroOmega3Insight;
+
+  /// No description provided for @fallbackHeroFibersTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'🌱 Fibres : microbiote'**
+  String get fallbackHeroFibersTitle;
+
+  /// No description provided for @fallbackHeroFibersTheme.
+  ///
+  /// In fr, this message translates to:
+  /// **'Satiété'**
+  String get fallbackHeroFibersTheme;
+
+  /// No description provided for @fallbackHeroFibersInsight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Légumineuses + légumes + fruits entiers.'**
+  String get fallbackHeroFibersInsight;
+
+  /// No description provided for @fallbackHeroGenericTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Conseil du jour'**
+  String get fallbackHeroGenericTitle;
+
+  /// No description provided for @fallbackHeroGenericTheme.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitalité'**
+  String get fallbackHeroGenericTheme;
+
+  /// No description provided for @fallbackHeroGenericInsight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Varie les aliments bruts colorés.'**
+  String get fallbackHeroGenericInsight;
+
+  /// No description provided for @fallbackRecipeOmega3Bowl.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bowl sardines-citron-avocat'**
+  String get fallbackRecipeOmega3Bowl;
+
+  /// No description provided for @fallbackRecipeOmega3Salad.
+  ///
+  /// In fr, this message translates to:
+  /// **'Salade maquereau + lentilles'**
+  String get fallbackRecipeOmega3Salad;
+
+  /// No description provided for @fallbackRecipeFibersBowl.
+  ///
+  /// In fr, this message translates to:
+  /// **'Buddha bowl légumineuses + céréale complète'**
+  String get fallbackRecipeFibersBowl;
 }
 
 class _AppLocalizationsDelegate

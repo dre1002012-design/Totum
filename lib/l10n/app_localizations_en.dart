@@ -3679,4 +3679,80 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get consNoRecipeMatchesFilters =>
       'No recipe matches these filters for now.';
+
+  @override
+  String get fallbackMindset1Title => '🧠 Progress > perfection';
+
+  @override
+  String get fallbackMindset1Body =>
+      'Every meal aligned with your goal is a vote for the identity you\'re building.';
+
+  @override
+  String get fallbackMindset2Title => '💪 Antifragile consistency';
+
+  @override
+  String get fallbackMindset2Body =>
+      'Slip-ups don\'t define you. It\'s the weekly average that counts.';
+
+  @override
+  String get fallbackCoachSedentaire1 => '2–3x/week 20–30 min…';
+
+  @override
+  String get fallbackCoachSedentaire2 => '6–8k steps/day…';
+
+  @override
+  String get fallbackCoachPerte1 => 'Slight deficit + protein…';
+
+  @override
+  String get fallbackCoachMasse1 => 'Surplus +10–15%, protein 1.6–2.2 g/kg…';
+
+  @override
+  String get fallbackCoachMaintien1 => '3–4 varied sessions/week…';
+
+  @override
+  String get fallbackHeroHydrationTitle => '💧 Hydration: your silent boost';
+
+  @override
+  String get fallbackHeroHydrationTheme => 'Mental clarity';
+
+  @override
+  String get fallbackHeroHydrationInsight =>
+      'Spread your water intake + herbal tea in the evening.';
+
+  @override
+  String get fallbackHeroOmega3Title => '🐟 Omega-3: brain & membranes';
+
+  @override
+  String get fallbackHeroOmega3Theme => 'Inflammation & mood';
+
+  @override
+  String get fallbackHeroOmega3Insight => '2 oily fish/week.';
+
+  @override
+  String get fallbackHeroFibersTitle => '🌱 Fiber: microbiome';
+
+  @override
+  String get fallbackHeroFibersTheme => 'Satiety';
+
+  @override
+  String get fallbackHeroFibersInsight => 'Legumes + vegetables + whole fruit.';
+
+  @override
+  String get fallbackHeroGenericTitle => 'Tip of the day';
+
+  @override
+  String get fallbackHeroGenericTheme => 'Vitality';
+
+  @override
+  String get fallbackHeroGenericInsight => 'Vary your colorful whole foods.';
+
+  @override
+  String get fallbackRecipeOmega3Bowl => 'Sardine-lemon-avocado bowl';
+
+  @override
+  String get fallbackRecipeOmega3Salad => 'Mackerel salad + lentils';
+
+  @override
+  String get fallbackRecipeFibersBowl =>
+      'Buddha bowl with legumes + whole grain';
 }

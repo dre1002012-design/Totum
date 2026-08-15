@@ -1163,5 +1163,33 @@
   "consDuJourIntro": "Your personalized tips, chosen based on your day and your goals.",
   "consDuJourDisclaimer": "These tips do not replace medical advice. If you have a condition or any doubt, consult your healthcare professional.",
   "consChallengeOfTheDay": "Your challenge of the day",
-  "consNoRecipeMatchesFilters": "No recipe matches these filters for now."
+  "consNoRecipeMatchesFilters": "No recipe matches these filters for now.",
+
+  "fallbackMindset1Title": "🧠 Progress > perfection",
+  "fallbackMindset1Body": "Every meal aligned with your goal is a vote for the identity you're building.",
+  "fallbackMindset2Title": "💪 Antifragile consistency",
+  "fallbackMindset2Body": "Slip-ups don't define you. It's the weekly average that counts.",
+
+  "fallbackCoachSedentaire1": "2–3x/week 20–30 min…",
+  "fallbackCoachSedentaire2": "6–8k steps/day…",
+  "fallbackCoachPerte1": "Slight deficit + protein…",
+  "fallbackCoachMasse1": "Surplus +10–15%, protein 1.6–2.2 g/kg…",
+  "fallbackCoachMaintien1": "3–4 varied sessions/week…",
+
+  "fallbackHeroHydrationTitle": "💧 Hydration: your silent boost",
+  "fallbackHeroHydrationTheme": "Mental clarity",
+  "fallbackHeroHydrationInsight": "Spread your water intake + herbal tea in the evening.",
+  "fallbackHeroOmega3Title": "🐟 Omega-3: brain & membranes",
+  "fallbackHeroOmega3Theme": "Inflammation & mood",
+  "fallbackHeroOmega3Insight": "2 oily fish/week.",
+  "fallbackHeroFibersTitle": "🌱 Fiber: microbiome",
+  "fallbackHeroFibersTheme": "Satiety",
+  "fallbackHeroFibersInsight": "Legumes + vegetables + whole fruit.",
+  "fallbackHeroGenericTitle": "Tip of the day",
+  "fallbackHeroGenericTheme": "Vitality",
+  "fallbackHeroGenericInsight": "Vary your colorful whole foods.",
+
+  "fallbackRecipeOmega3Bowl": "Sardine-lemon-avocado bowl",
+  "fallbackRecipeOmega3Salad": "Mackerel salad + lentils",
+  "fallbackRecipeFibersBowl": "Buddha bowl with legumes + whole grain"
 }

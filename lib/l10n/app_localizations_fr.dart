@@ -3714,4 +3714,82 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get consNoRecipeMatchesFilters =>
       'Aucune recette ne correspond à ces filtres pour le moment.';
+
+  @override
+  String get fallbackMindset1Title => '🧠 Progression > perfection';
+
+  @override
+  String get fallbackMindset1Body =>
+      'Chaque repas aligné avec ton objectif est un vote pour l\'identité que tu construis.';
+
+  @override
+  String get fallbackMindset2Title => '💪 Constance antifragile';
+
+  @override
+  String get fallbackMindset2Body =>
+      'Les écarts ne te définissent pas. C\'est la moyenne de la semaine qui compte.';
+
+  @override
+  String get fallbackCoachSedentaire1 => '2–3×/semaine 20–30 min…';
+
+  @override
+  String get fallbackCoachSedentaire2 => '6–8k pas/j…';
+
+  @override
+  String get fallbackCoachPerte1 => 'Déficit léger + protéines…';
+
+  @override
+  String get fallbackCoachMasse1 => 'Surplus +10–15 %, protéines 1.6–2.2 g/kg…';
+
+  @override
+  String get fallbackCoachMaintien1 => '3–4 séances variées/sem…';
+
+  @override
+  String get fallbackHeroHydrationTitle =>
+      '💧 Hydratation : ton boost silencieux';
+
+  @override
+  String get fallbackHeroHydrationTheme => 'Clarté mentale';
+
+  @override
+  String get fallbackHeroHydrationInsight =>
+      'Répartis l\'eau + tisane le soir.';
+
+  @override
+  String get fallbackHeroOmega3Title => '🐟 Oméga-3 : cerveau & membranes';
+
+  @override
+  String get fallbackHeroOmega3Theme => 'Inflammation & humeur';
+
+  @override
+  String get fallbackHeroOmega3Insight => '2 poissons gras/sem.';
+
+  @override
+  String get fallbackHeroFibersTitle => '🌱 Fibres : microbiote';
+
+  @override
+  String get fallbackHeroFibersTheme => 'Satiété';
+
+  @override
+  String get fallbackHeroFibersInsight =>
+      'Légumineuses + légumes + fruits entiers.';
+
+  @override
+  String get fallbackHeroGenericTitle => 'Conseil du jour';
+
+  @override
+  String get fallbackHeroGenericTheme => 'Vitalité';
+
+  @override
+  String get fallbackHeroGenericInsight => 'Varie les aliments bruts colorés.';
+
+  @override
+  String get fallbackRecipeOmega3Bowl => 'Bowl sardines-citron-avocat';
+
+  @override
+  String get fallbackRecipeOmega3Salad => 'Salade maquereau + lentilles';
+
+  @override
+  String get fallbackRecipeFibersBowl =>
+      'Buddha bowl légumineuses + céréale complète';
 }

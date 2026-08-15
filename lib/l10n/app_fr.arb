@@ -1311,5 +1311,33 @@
   "consDuJourIntro": "Tes conseils personnalisés, choisis selon ta journée et tes objectifs.",
   "consDuJourDisclaimer": "Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.",
   "consChallengeOfTheDay": "Ton défi du jour",
-  "consNoRecipeMatchesFilters": "Aucune recette ne correspond à ces filtres pour le moment."
+  "consNoRecipeMatchesFilters": "Aucune recette ne correspond à ces filtres pour le moment.",
+
+  "fallbackMindset1Title": "🧠 Progression > perfection",
+  "fallbackMindset1Body": "Chaque repas aligné avec ton objectif est un vote pour l'identité que tu construis.",
+  "fallbackMindset2Title": "💪 Constance antifragile",
+  "fallbackMindset2Body": "Les écarts ne te définissent pas. C'est la moyenne de la semaine qui compte.",
+
+  "fallbackCoachSedentaire1": "2–3×/semaine 20–30 min…",
+  "fallbackCoachSedentaire2": "6–8k pas/j…",
+  "fallbackCoachPerte1": "Déficit léger + protéines…",
+  "fallbackCoachMasse1": "Surplus +10–15 %, protéines 1.6–2.2 g/kg…",
+  "fallbackCoachMaintien1": "3–4 séances variées/sem…",
+
+  "fallbackHeroHydrationTitle": "💧 Hydratation : ton boost silencieux",
+  "fallbackHeroHydrationTheme": "Clarté mentale",
+  "fallbackHeroHydrationInsight": "Répartis l'eau + tisane le soir.",
+  "fallbackHeroOmega3Title": "🐟 Oméga-3 : cerveau & membranes",
+  "fallbackHeroOmega3Theme": "Inflammation & humeur",
+  "fallbackHeroOmega3Insight": "2 poissons gras/sem.",
+  "fallbackHeroFibersTitle": "🌱 Fibres : microbiote",
+  "fallbackHeroFibersTheme": "Satiété",
+  "fallbackHeroFibersInsight": "Légumineuses + légumes + fruits entiers.",
+  "fallbackHeroGenericTitle": "Conseil du jour",
+  "fallbackHeroGenericTheme": "Vitalité",
+  "fallbackHeroGenericInsight": "Varie les aliments bruts colorés.",
+
+  "fallbackRecipeOmega3Bowl": "Bowl sardines-citron-avocat",
+  "fallbackRecipeOmega3Salad": "Salade maquereau + lentilles",
+  "fallbackRecipeFibersBowl": "Buddha bowl légumineuses + céréale complète"
 }

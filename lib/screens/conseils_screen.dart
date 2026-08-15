@@ -312,7 +312,7 @@ class AdviceContentRepo {
 
   bool get isLoaded => heroPool.isNotEmpty;
 
-  Future<void> loadFromAsset(String path) async {
+  Future<void> loadFromAsset(String path, AppLocalizations l10n) async {
     try {
       final raw = await rootBundle.loadString(path);
       final jsonMap = jsonDecode(raw) as Map<String, dynamic>;
@@ -361,63 +361,61 @@ class AdviceContentRepo {
         ),
       );
     } catch (_) {
-      _loadFallback(); // si asset KO → on garde une base interne
+      _loadFallback(l10n); // si asset KO → on garde une base interne
     }
   }
 
-  void _loadFallback() {
+  void _loadFallback(AppLocalizations l10n) {
     // === Fallback minimal (extraits) pour garantir le fonctionnement sans asset ===
     mindsetPacks = [
       {
-        'title': '🧠 Progression > perfection',
-        'body':
-            'Chaque repas aligné avec ton objectif est un vote pour l’identité que tu construis.'
+        'title': l10n.fallbackMindset1Title,
+        'body': l10n.fallbackMindset1Body,
       },
       {
-        'title': '💪 Constance antifragile',
-        'body':
-            'Les écarts ne te définissent pas. C’est la moyenne de la semaine qui compte.'
+        'title': l10n.fallbackMindset2Title,
+        'body': l10n.fallbackMindset2Body,
       },
     ];
     coach = {
       'sedentaire': [
-        '2–3×/semaine 20–30 min…',
-        '6–8k pas/j…',
+        l10n.fallbackCoachSedentaire1,
+        l10n.fallbackCoachSedentaire2,
       ],
-      'perte': ['Déficit léger + protéines…'],
-      'masse': ['Surplus +10–15 %, protéines 1.6–2.2 g/kg…'],
-      'maintien': ['3–4 séances variées/sem…'],
+      'perte': [l10n.fallbackCoachPerte1],
+      'masse': [l10n.fallbackCoachMasse1],
+      'maintien': [l10n.fallbackCoachMaintien1],
     };
     heroPool = {
       'hydration': [
         {
-          'title': '💧 Hydratation : ton boost silencieux',
-          'theme': 'Clarté mentale',
-          'insight': 'Répartis l’eau + tisane le soir.'
+          'title': l10n.fallbackHeroHydrationTitle,
+          'theme': l10n.fallbackHeroHydrationTheme,
+          'insight': l10n.fallbackHeroHydrationInsight,
         }
       ],
       'omega3': [
         {
-          'title': '🐟 Oméga-3 : cerveau & membranes',
-          'theme': 'Inflammation & humeur',
-          'insight': '2 poissons gras/sem.'
+          'title': l10n.fallbackHeroOmega3Title,
+          'theme': l10n.fallbackHeroOmega3Theme,
+          'insight': l10n.fallbackHeroOmega3Insight,
         }
       ],
       'fibers': [
         {
-          'title': '🌱 Fibres : microbiote',
-          'theme': 'Satiété',
-          'insight': 'Légumineuses + légumes + fruits entiers.'
+          'title': l10n.fallbackHeroFibersTitle,
+          'theme': l10n.fallbackHeroFibersTheme,
+          'insight': l10n.fallbackHeroFibersInsight,
         }
       ],
     };
     recipesByKey = {
       'omega3': [
-        'Bowl sardines-citron-avocat',
-        'Salade maquereau + lentilles',
+        l10n.fallbackRecipeOmega3Bowl,
+        l10n.fallbackRecipeOmega3Salad,
       ],
       'fibers': [
-        'Buddha bowl légumineuses + céréale complète',
+        l10n.fallbackRecipeFibersBowl,
       ],
     };
   }
@@ -994,6 +992,7 @@ Map<String, String> _pickHeroFromAsset(
   String topic,
   DateTime now,
   List<String> history,
+  AppLocalizations l10n,
 ) {
   final repo = AdviceContentRepo.instance;
   String topicKey = topic;
@@ -1014,9 +1013,9 @@ Map<String, String> _pickHeroFromAsset(
       repo.heroPool[topicKey] ?? (repo.heroPool['fibers'] ?? const []);
   if (list.isEmpty) {
     return {
-      'title': 'Conseil du jour',
-      'theme': 'Vitalité',
-      'insight': 'Varie les aliments bruts colorés.',
+      'title': l10n.fallbackHeroGenericTitle,
+      'theme': l10n.fallbackHeroGenericTheme,
+      'insight': l10n.fallbackHeroGenericInsight,
     };
   }
 
@@ -1026,14 +1025,11 @@ Map<String, String> _pickHeroFromAsset(
 }
 
 // === RECETTES depuis ASSET ========================================
-final Map<String, List<String>> _recipesFallback = {
-  'fibers': ['Buddha bowl légumineuses + céréale complète'],
-};
-
 List<String> _buildRecipesFromAsset(
   Map<String, double> ratios,
   DateTime now,
   List<String> history,
+  AppLocalizations l10n,
 ) {
   final repo = AdviceContentRepo.instance;
   final sorted = ratios.entries
@@ -1051,7 +1047,7 @@ List<String> _buildRecipesFromAsset(
   }
 
   if (candidates.isEmpty) {
-    return _recipesFallback['fibers'] ?? const [];
+    return [l10n.fallbackRecipeFibersBowl];
   }
 
   final avoid = history.take(3).toList();
@@ -1086,7 +1082,7 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
   // charge l’asset au premier appel (idempotent)
   if (!AdviceContentRepo.instance.isLoaded) {
     await AdviceContentRepo.instance
-        .loadFromAsset('assets/advices.json');
+        .loadFromAsset('assets/advices.json', l10n);
   }
   await CoachAdvicesRepo.instance.load();
   await TotumRecipesRepo.instance.load();
@@ -1173,7 +1169,7 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
   await _pushHistory(sp, _adviceHistoryKey, topic, keep: 6);
 
   // HERO via asset
-  final hero = _pickHeroFromAsset(topic, now, hist);
+  final hero = _pickHeroFromAsset(topic, now, hist, l10n);
   final cardTitle = hero['title']!;
   final focusTheme = hero['theme']!;
   final scienceInsight = hero['insight']!;
@@ -1361,7 +1357,7 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
     if (hints.length >= 12) break;
   }
   final recipes =
-      _buildRecipesFromAsset(decision.microRatios, now, hist);
+      _buildRecipesFromAsset(decision.microRatios, now, hist, l10n);
 
     // Alignement holistique
   final sleep = hol.sleepHours;
