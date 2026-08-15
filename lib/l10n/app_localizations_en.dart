@@ -1919,4 +1919,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get consFitScoreDetail =>
       'The calculation factors in meal type (breakfast or a snack shouldn\'t weigh as much as lunch) and evolves through the day based on what you\'ve already eaten. It\'s a timing/portion indicator, not a nutritional quality one: use it alongside the Healthy Score, not instead of it.';
+
+  @override
+  String get consRecipeScreenTitle => 'TOTUM Recipe';
+
+  @override
+  String consHealthyScoreBadge(int score) {
+    return 'Healthy Score $score/100';
+  }
+
+  @override
+  String consFitBadge(int score) {
+    return 'Fit $score% with your day';
+  }
+
+  @override
+  String get consPreparationTitle => 'Preparation';
+
+  @override
+  String consRecipeValuesFor(String grams) {
+    return 'Values for the recipe ($grams g)';
+  }
+
+  @override
+  String get consAfterThisMeal => 'After this meal, you\'ll have left';
+
+  @override
+  String get consIngredientsTitle => 'Ingredients';
+
+  @override
+  String get consStatProt => 'Prot';
+
+  @override
+  String get consStatCarb => 'Carb';
+
+  @override
+  String get consStatFat => 'Fat';
 }

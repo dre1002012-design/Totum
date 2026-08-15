@@ -1934,4 +1934,40 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get consFitScoreDetail =>
       'Le calcul tient compte du type de repas (un petit-déjeuner ou une collation ne doivent pas peser aussi lourd qu\'un déjeuner) et évolue au fil de la journée selon ce que tu as déjà mangé. C\'est un indicateur de timing/portion, pas de qualité nutritionnelle : regarde-le en complément du Healthy Score, pas à sa place.';
+
+  @override
+  String get consRecipeScreenTitle => 'Recette TOTUM';
+
+  @override
+  String consHealthyScoreBadge(int score) {
+    return 'Healthy Score $score/100';
+  }
+
+  @override
+  String consFitBadge(int score) {
+    return 'Fit $score% avec ta journée';
+  }
+
+  @override
+  String get consPreparationTitle => 'Préparation';
+
+  @override
+  String consRecipeValuesFor(String grams) {
+    return 'Valeurs pour la recette ($grams g)';
+  }
+
+  @override
+  String get consAfterThisMeal => 'Après ce repas, il te restera';
+
+  @override
+  String get consIngredientsTitle => 'Ingrédients';
+
+  @override
+  String get consStatProt => 'Prot';
+
+  @override
+  String get consStatCarb => 'Gluc';
+
+  @override
+  String get consStatFat => 'Lip';
 }

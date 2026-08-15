@@ -3165,9 +3165,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     // Valeurs pour une portion complète
     double perPortion(double? per100) => (per100 ?? 0) * portion / 100;
 
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: TotumColors.page,
-      appBar: AppBar(title: const Text('Recette TOTUM')),
+      appBar: AppBar(title: Text(l10n.consRecipeScreenTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
         children: [
@@ -3205,7 +3206,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     children: [
                       Icon(Icons.favorite, size: 12, color: _healthyScoreColor(r.healthyScore)),
                       const SizedBox(width: 3),
-                      Text('Healthy Score ${r.healthyScore}/100',
+                      Text(l10n.consHealthyScoreBadge(r.healthyScore),
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
@@ -3233,7 +3234,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         const Icon(Icons.track_changes, size: 12, color: TotumColors.accent),
                         const SizedBox(width: 3),
                         Text(
-                            'Fit ${smartMatchScore(r, _remaining!)}% avec ta journée',
+                            l10n.consFitBadge(smartMatchScore(r, _remaining!)),
                             style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
@@ -3264,8 +3265,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     children: [
                       Icon(Icons.soup_kitchen_outlined, size: 17, color: TotumColors.textSecondary),
                       const SizedBox(width: 8),
-                      const Text('Préparation',
-                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
+                      Text(l10n.consPreparationTitle,
+                          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -3312,22 +3313,22 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Valeurs pour la recette (${portion.round()} g)',
+                Text(l10n.consRecipeValuesFor(portion.round().toString()),
                     style: const TextStyle(
                         fontWeight: FontWeight.w800, fontSize: 14)),
                 const SizedBox(height: 12),
-                _macroRow('Énergie', '${perPortion(r.kcal100).round()} kcal',
+                _macroRow(l10n.nutrientEnergy, '${perPortion(r.kcal100).round()} kcal',
                     TotumColors.accent),
-                _macroRow('Protéines',
+                _macroRow(l10n.nutrientProtein,
                     '${perPortion(r.prot100).toStringAsFixed(1)} g',
                     TotumColors.accent),
-                _macroRow('Glucides',
+                _macroRow(l10n.nutrientCarbs,
                     '${perPortion(r.carb100).toStringAsFixed(1)} g',
                     TotumColors.accent),
-                _macroRow('Lipides',
+                _macroRow(l10n.nutrientFat,
                     '${perPortion(r.fat100).toStringAsFixed(1)} g',
                     TotumColors.accent),
-                _macroRow('Fibres',
+                _macroRow(l10n.nutrientFiber,
                     '${perPortion(r.fiber100).toStringAsFixed(1)} g',
                     TotumColors.accent),
               ],
@@ -3354,8 +3355,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Après ce repas, il te restera',
-                      style: TextStyle(
+                  Text(l10n.consAfterThisMeal,
+                      style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 13.5,
                           color: TotumColors.accent)),
@@ -3381,9 +3382,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     return Row(
                       children: [
                         stat('kcal', left(rem.kcal, r.kcal100), ''),
-                        stat('Prot', left(rem.prot, r.prot100), 'g'),
-                        stat('Gluc', left(rem.carb, r.carb100), 'g'),
-                        stat('Lip', left(rem.fat, r.fat100), 'g'),
+                        stat(l10n.consStatProt, left(rem.prot, r.prot100), 'g'),
+                        stat(l10n.consStatCarb, left(rem.carb, r.carb100), 'g'),
+                        stat(l10n.consStatFat, left(rem.fat, r.fat100), 'g'),
                       ],
                     );
                   }),
@@ -3399,8 +3400,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Ingrédients',
-                    style: TextStyle(
+                Text(l10n.consIngredientsTitle,
+                    style: const TextStyle(
                         fontWeight: FontWeight.w800, fontSize: 14)),
                 const SizedBox(height: 12),
                 ...r.ingredients.map((i) => Padding(

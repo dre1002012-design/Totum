@@ -680,5 +680,19 @@
   "consFitCriteriaCarbsDetail": "15 % — cohérence avec tes glucides restants",
   "consFitCriteriaFatDetail": "15 % — cohérence avec tes lipides restants",
   "consFitScoreLegend": "Proche de 100 % : une taille de portion cohérente pour ce repas, compte tenu de ce qu'il te reste aujourd'hui  •  Score plus bas : le plat est nettement trop copieux ou trop léger pour ce moment de la journée.",
-  "consFitScoreDetail": "Le calcul tient compte du type de repas (un petit-déjeuner ou une collation ne doivent pas peser aussi lourd qu'un déjeuner) et évolue au fil de la journée selon ce que tu as déjà mangé. C'est un indicateur de timing/portion, pas de qualité nutritionnelle : regarde-le en complément du Healthy Score, pas à sa place."
+  "consFitScoreDetail": "Le calcul tient compte du type de repas (un petit-déjeuner ou une collation ne doivent pas peser aussi lourd qu'un déjeuner) et évolue au fil de la journée selon ce que tu as déjà mangé. C'est un indicateur de timing/portion, pas de qualité nutritionnelle : regarde-le en complément du Healthy Score, pas à sa place.",
+
+  "consRecipeScreenTitle": "Recette TOTUM",
+  "consHealthyScoreBadge": "Healthy Score {score}/100",
+  "@consHealthyScoreBadge": { "placeholders": { "score": {"type": "int"} } },
+  "consFitBadge": "Fit {score}% avec ta journée",
+  "@consFitBadge": { "placeholders": { "score": {"type": "int"} } },
+  "consPreparationTitle": "Préparation",
+  "consRecipeValuesFor": "Valeurs pour la recette ({grams} g)",
+  "@consRecipeValuesFor": { "placeholders": { "grams": {"type": "String"} } },
+  "consAfterThisMeal": "Après ce repas, il te restera",
+  "consIngredientsTitle": "Ingrédients",
+  "consStatProt": "Prot",
+  "consStatCarb": "Gluc",
+  "consStatFat": "Lip"
 }

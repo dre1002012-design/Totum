@@ -3419,6 +3419,66 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Le calcul tient compte du type de repas (un petit-déjeuner ou une collation ne doivent pas peser aussi lourd qu\'un déjeuner) et évolue au fil de la journée selon ce que tu as déjà mangé. C\'est un indicateur de timing/portion, pas de qualité nutritionnelle : regarde-le en complément du Healthy Score, pas à sa place.'**
   String get consFitScoreDetail;
+
+  /// No description provided for @consRecipeScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recette TOTUM'**
+  String get consRecipeScreenTitle;
+
+  /// No description provided for @consHealthyScoreBadge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Healthy Score {score}/100'**
+  String consHealthyScoreBadge(int score);
+
+  /// No description provided for @consFitBadge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fit {score}% avec ta journée'**
+  String consFitBadge(int score);
+
+  /// No description provided for @consPreparationTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Préparation'**
+  String get consPreparationTitle;
+
+  /// No description provided for @consRecipeValuesFor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valeurs pour la recette ({grams} g)'**
+  String consRecipeValuesFor(String grams);
+
+  /// No description provided for @consAfterThisMeal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Après ce repas, il te restera'**
+  String get consAfterThisMeal;
+
+  /// No description provided for @consIngredientsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ingrédients'**
+  String get consIngredientsTitle;
+
+  /// No description provided for @consStatProt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prot'**
+  String get consStatProt;
+
+  /// No description provided for @consStatCarb.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gluc'**
+  String get consStatCarb;
+
+  /// No description provided for @consStatFat.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lip'**
+  String get consStatFat;
 }
 
 class _AppLocalizationsDelegate

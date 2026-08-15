@@ -612,5 +612,16 @@
   "consFitCriteriaCarbsDetail": "15% — consistency with your remaining carbs",
   "consFitCriteriaFatDetail": "15% — consistency with your remaining fat",
   "consFitScoreLegend": "Close to 100%: a portion size that fits this meal, given what you have left today  •  Lower score: the dish is clearly too large or too light for this time of day.",
-  "consFitScoreDetail": "The calculation factors in meal type (breakfast or a snack shouldn't weigh as much as lunch) and evolves through the day based on what you've already eaten. It's a timing/portion indicator, not a nutritional quality one: use it alongside the Healthy Score, not instead of it."
+  "consFitScoreDetail": "The calculation factors in meal type (breakfast or a snack shouldn't weigh as much as lunch) and evolves through the day based on what you've already eaten. It's a timing/portion indicator, not a nutritional quality one: use it alongside the Healthy Score, not instead of it.",
+
+  "consRecipeScreenTitle": "TOTUM Recipe",
+  "consHealthyScoreBadge": "Healthy Score {score}/100",
+  "consFitBadge": "Fit {score}% with your day",
+  "consPreparationTitle": "Preparation",
+  "consRecipeValuesFor": "Values for the recipe ({grams} g)",
+  "consAfterThisMeal": "After this meal, you'll have left",
+  "consIngredientsTitle": "Ingredients",
+  "consStatProt": "Prot",
+  "consStatCarb": "Carb",
+  "consStatFat": "Fat"
 }
