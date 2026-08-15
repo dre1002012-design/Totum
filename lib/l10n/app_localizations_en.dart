@@ -1224,4 +1224,309 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nutrientOmega3Marine => 'Marine omega-3';
+
+  @override
+  String get moodExcellent => 'Excellent balance!';
+
+  @override
+  String get moodGood => 'Good balance';
+
+  @override
+  String get moodCorrect => 'Decent, room to improve';
+
+  @override
+  String get moodToImprove => 'Needs improvement';
+
+  @override
+  String get moodRebalance => 'Day needs rebalancing';
+
+  @override
+  String get scorePillarVitamins => 'Vitamins';
+
+  @override
+  String get scorePillarMinerals => 'Minerals';
+
+  @override
+  String get scorePillarFattyAcids => 'Fatty acids';
+
+  @override
+  String get scorePillarHydration => 'Hydration';
+
+  @override
+  String get scorePillarWatch => 'To watch';
+
+  @override
+  String scoreCapReason(String label, int pct) {
+    return '$label at $pct% of today\'s target — the score stays capped while this lasts.';
+  }
+
+  @override
+  String get bilanScoreTitle => 'TOTUM Score';
+
+  @override
+  String get bilanScoreUpdatesLive => 'Updates as you add each meal';
+
+  @override
+  String get bilanScoreHowCalculated => 'How is this score calculated?';
+
+  @override
+  String bilanSafetyLimitExceeded(String list) {
+    return 'Safety limit exceeded: $list';
+  }
+
+  @override
+  String bilanUnderstandLabel(String label) {
+    return 'Understand: $label';
+  }
+
+  @override
+  String get bilanWhyLimitExists => 'Why this limit exists';
+
+  @override
+  String get bilanExcessConsequences => 'What prolonged excess can cause';
+
+  @override
+  String get bilanExcessSource => 'Where the excess comes from';
+
+  @override
+  String get bilanWhatToDo => 'What to do, concretely';
+
+  @override
+  String bilanSafetyLimitDetail(String limite, String reference) {
+    return 'Safety limit: $limite  ·  $reference';
+  }
+
+  @override
+  String bilanConcernedFoods(String periode) {
+    return 'Foods involved $periode';
+  }
+
+  @override
+  String get bilanNoFoodIdentifiedPeriod =>
+      'No food identified over this period.';
+
+  @override
+  String get bilanPeriodToday => 'today';
+
+  @override
+  String get bilanPeriodThatDay => 'that day';
+
+  @override
+  String bilanPeriodLastNDays(int days) {
+    return 'over the last $days days';
+  }
+
+  @override
+  String bilanPeriodOnDate(String date) {
+    return 'on $date';
+  }
+
+  @override
+  String get bilanCarbBreakdownTitle => 'Carbohydrate breakdown';
+
+  @override
+  String get bilanCarbBreakdownIntro =>
+      'Not all carbs are equal. Starch releases its energy slowly; simple sugars, quickly.';
+
+  @override
+  String get bilanNoCarbDataPeriod => 'No detailed carb data for this period.';
+
+  @override
+  String get bilanStarchLabel => 'Starch (complex carbs)';
+
+  @override
+  String get bilanStarchHint => 'Grains, legumes, tubers — lasting energy.';
+
+  @override
+  String get bilanSimpleSugarsLabel => 'Simple sugars (total)';
+
+  @override
+  String get bilanSimpleSugarsHint =>
+      'Fast absorption — best from whole fruit.';
+
+  @override
+  String get bilanPolyolsHint =>
+      'Bulk sweeteners — often a sign of a processed product.';
+
+  @override
+  String get bilanSimpleSugarsDetailTitle => 'Simple sugar breakdown';
+
+  @override
+  String get bilanFructoseHint => 'Sugar from fruit and honey.';
+
+  @override
+  String get bilanSaccharoseLabel => 'Sucrose';
+
+  @override
+  String get bilanSaccharoseHint => 'Table sugar (fructose + glucose).';
+
+  @override
+  String get bilanLactoseHint => 'Sugar from milk and dairy products.';
+
+  @override
+  String get bilanFruitVsSodaNote =>
+      'A whole fruit and a soda can contain the same amount of fructose, but the fruit comes with fiber, water and vitamins that slow its absorption. The food matrix matters as much as the sugar itself.';
+
+  @override
+  String get dietNoteOmega3NoFish =>
+      'Without fish, your best direct source of EPA/DHA is an omega-3 supplement from micro-algae — which is exactly where fish get theirs. Plant omega-3s (ALA from flax, hemp, walnuts) are still useful but convert poorly into EPA/DHA.';
+
+  @override
+  String get dietNoteB12Vegan =>
+      'Vitamin B12 doesn\'t exist in plants: on a vegan diet, supplementation is essential, not optional. It\'s the one nutrient with absolute consensus on this point. Aim for a regular intake and monitor your status with a blood test.';
+
+  @override
+  String get dietNoteB12Vegetarian =>
+      'On a vegetarian diet, eggs and dairy cover part of your B12 needs, but monitor your status: depending on your intake, light supplementation may help.';
+
+  @override
+  String get dietNoteIronVegetal =>
+      'Plant (non-heme) iron is absorbed less efficiently than animal iron: systematically pair a vitamin C source (lemon, bell pepper, parsley) with your legumes and whole grains to multiply its absorption. Avoid tea and coffee during meals.';
+
+  @override
+  String get dietNoteZincVegetal =>
+      'Phytates in grains and legumes hinder the absorption of plant zinc. Soaking, sprouting and fermentation (sourdough bread) neutralize much of this — a valuable habit on a plant-based diet.';
+
+  @override
+  String get dietNoteCalciumVegan =>
+      'Without dairy, rely on plants rich in well-absorbed calcium (kale, broccoli, calcium-sulfate tofu, almonds) and calcium-rich mineral waters. Vitamin D and K2 remain essential to fix it properly into bone.';
+
+  @override
+  String get dietNoteIodineVegan =>
+      'Without seafood or dairy, iodine can be lacking on a vegan diet: seaweed (in moderation, as it\'s very concentrated) and iodized salt are your main sources. Keep an eye on this often-overlooked intake.';
+
+  @override
+  String get dietNoteVitDVegan =>
+      'Without oily fish or eggs, diet alone struggles to cover vitamin D on a vegan diet: sun exposure (see the dedicated page) and supplementation, ideally plant-based (lichen), should be prioritized, especially from October to April.';
+
+  @override
+  String get dietNoteProteinVegan =>
+      'On a vegan diet, vary your protein sources throughout the day (legumes + whole grains, tofu, tempeh, nuts/seeds) to get all essential amino acids. Complementarity over the day is enough — no need to combine everything in a single meal.';
+
+  @override
+  String get bilanFicheUnavailable => 'Fact sheet unavailable for now.';
+
+  @override
+  String get bilanFicheBenefits => 'Health benefits';
+
+  @override
+  String get bilanFicheIntakes => 'Recommended intake';
+
+  @override
+  String get bilanFicheSafetyLimit => 'Safety limit';
+
+  @override
+  String get bilanFicheWhereToFind => 'Where to find it';
+
+  @override
+  String get bilanDietAdaptedVegan => 'Adapted to your vegan diet';
+
+  @override
+  String get bilanDietAdaptedVegetarian => 'Adapted to your vegetarian diet';
+
+  @override
+  String get bilanDidYouKnow => 'Did you know?';
+
+  @override
+  String get bilanEducationalDisclaimer =>
+      'Educational information based on ANSES and EFSA references. It does not replace personalized medical advice.';
+
+  @override
+  String get bilanScoreExplainerTitle => 'How is your score calculated?';
+
+  @override
+  String get bilanScoreExplainerIntro =>
+      'The TOTUM Score combines 5 pillars of your day, weighted by their importance to your health, longevity and performance:';
+
+  @override
+  String get bilanPillarFattyAcidsFull => 'Essential fatty acids';
+
+  @override
+  String get bilanPillarVitaminsDetail =>
+      'Coverage of your vitamin needs relative to today\'s targets.';
+
+  @override
+  String get bilanPillarMineralsDetail =>
+      'Coverage of your mineral needs (iron, magnesium, zinc...).';
+
+  @override
+  String get bilanPillarFattyAcidsDetail =>
+      'Omega-3/6/9 — essential, not made by the body.';
+
+  @override
+  String get bilanPillarHydrationDetail =>
+      'Water drunk + water from food, vs your target.';
+
+  @override
+  String get bilanPillarWatchDetail =>
+      'Sugars, salt, saturated fat — staying under today\'s limit is the good signal.';
+
+  @override
+  String get bilanSafetyCapTitle => 'The safety cap';
+
+  @override
+  String get bilanSafetyCapExplainer =>
+      'If a single \"to watch\" element strongly exceeds today\'s limit (for example well beyond double), your score is automatically capped — even if the rest of your day is perfect. A large excess all at once has a real impact on your health (heart, blood pressure), and the score needs to show that clearly rather than dilute it into an average.';
+
+  @override
+  String get bilanScoreLiveNote =>
+      'Your score evolves throughout the day as you add meals — that\'s normal, it reflects what you\'ve actually eaten so far.';
+
+  @override
+  String get bilanScoreSourcesNote =>
+      'Based on official recommendations (WHO, EFSA, ANSES) and international reference indexes (Healthy Eating Index, Alternate Healthy Eating Index).';
+
+  @override
+  String get bilanSunVitDTitle => 'Sun vitamin D';
+
+  @override
+  String bilanSunVitDAverageDesc(String periode) {
+    return 'Estimated average $periode, synthesized by your skin in the sun';
+  }
+
+  @override
+  String bilanSunVitDSingleDesc(String periode) {
+    return 'Estimated $periode, synthesized by your skin in the sun';
+  }
+
+  @override
+  String get bilanSunVitDAlreadyCounted =>
+      'already counted in your \"Vit D\" line above, in addition to what your diet provides.';
+
+  @override
+  String get bilanSunVitDNoSession =>
+      'No sun session logged for this period — only the dietary portion is counted for now.';
+
+  @override
+  String get bilanLogSunExposure => 'Log a sun exposure';
+
+  @override
+  String bilanConsumedPeriod(String periode) {
+    return 'What you consumed $periode';
+  }
+
+  @override
+  String get bilanNoFoodContainedNutrient =>
+      'No food you ate contained this nutrient over this period. This might be exactly where to focus: check the fact sheet to find out where to get it.';
+
+  @override
+  String get bilanUnnamedFood => 'Food';
+
+  @override
+  String bilanIntakeMainFoods(String label) {
+    return '$label intake: main foods';
+  }
+
+  @override
+  String bilanTopContributorsIntro(String label) {
+    return 'Here are the foods that contributed most to your $label intake that day, from largest to smallest.';
+  }
+
+  @override
+  String get bilanNoFoodIdentifiedNutrient =>
+      'No food identified for this nutrient.';
+
+  @override
+  String get bilanOccasionalExcessNote =>
+      'An occasional excess usually isn\'t a concern. If it happens often, you can space out the most concentrated foods or reduce their portion.';
 }

@@ -12,8 +12,11 @@ import '../services/totum_score.dart';
 import '../services/foods_loader.dart' as foods_loader;
 import '../services/calibration_service.dart' show CalibrationService;
 import '../services/export/journal_export.dart';
+import '../services/nutrient_labels.dart';
 import 'account_screen.dart'; // ✅
 import '../theme/totum_style.dart';
+import '../l10n/app_localizations.dart';
+import '../l10n/l10n_ext.dart';
 
 // Supabase client global (comme dans les autres écrans)
 SupabaseClient get _client => Supabase.instance.client;
@@ -1386,7 +1389,7 @@ double _watchScore(MetricGroup g) {
   return (sum / items.length) * 100.0;
 }
 
-TotumScore _computeTotumScore(BilanData d, {bool prorate = false}) {
+TotumScore _computeTotumScore(BilanData d, AppLocalizations l10n, {bool prorate = false}) {
   final f = prorate ? _dayFractionFor(d) : 1.0;
 
   final vit = _groupCoverageScore(d.vitaminsGroup, f);
@@ -1428,6 +1431,7 @@ TotumScore _computeTotumScore(BilanData d, {bool prorate = false}) {
     hydratation: hydra,
     surveiller: watch,
     warnings: warnings,
+    l10n: l10n,
     dayFraction: f,
     watchWorstRatio: watchWorstRatio,
     watchWorstLabel: watchWorstLabel,
@@ -1436,9 +1440,9 @@ TotumScore _computeTotumScore(BilanData d, {bool prorate = false}) {
 
 /// Score TOTUM du jour — point d'entrée public partagé avec l'onglet Conseils.
 /// Garantit que les deux onglets affichent strictement le même chiffre.
-Future<TotumScore> computeTodayTotumScore() async {
+Future<TotumScore> computeTodayTotumScore(AppLocalizations l10n) async {
   final data = await _computeBilanForSpan(ReportSpan.day);
-  return _computeTotumScore(data, prorate: true);
+  return _computeTotumScore(data, l10n, prorate: true);
 }
 
 /// Carte premium du Score TOTUM (note + lettre + sous-scores).
@@ -1459,6 +1463,7 @@ class _TotumScoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = score;
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -1510,7 +1515,7 @@ class _TotumScoreCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text('Score TOTUM',
+                        Text(l10n.bilanScoreTitle,
                             style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
@@ -1536,7 +1541,7 @@ class _TotumScoreCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      s.mood,
+                      s.moodFor(l10n),
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w800,
@@ -1558,7 +1563,7 @@ class _TotumScoreCard extends StatelessWidget {
                             Icon(Icons.autorenew, size: 12, color: TotumColors.textSecondary),
                             const SizedBox(width: 4),
                             Text(
-                              'Se met à jour à chaque repas ajouté',
+                              l10n.bilanScoreUpdatesLive,
                               style: TextStyle(fontSize: 11, color: TotumColors.textSecondary),
                             ),
                           ],
@@ -1581,8 +1586,8 @@ class _TotumScoreCard extends StatelessWidget {
                 foregroundColor: TotumColors.textSecondary,
               ),
               icon: const Icon(Icons.help_outline, size: 15),
-              label: const Text('Comment est calculée cette note ?',
-                  style: TextStyle(fontSize: 11.5)),
+              label: Text(l10n.bilanScoreHowCalculated,
+                  style: const TextStyle(fontSize: 11.5)),
             ),
           ),
           const SizedBox(height: 8),
@@ -1673,7 +1678,8 @@ class _TotumScoreCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Limite de sécurité dépassée : ${s.warnings.join(", ")}',
+                      l10n.bilanSafetyLimitExceeded(
+                          s.warnings.map((w) => nutrientDisplayLabel(w, l10n)).join(", ")),
                       style: TextStyle(
                           fontSize: 12.5,
                           color: TotumColors.negative,
@@ -1717,12 +1723,12 @@ class _TotumScoreCard extends StatelessWidget {
                             from: from,
                             to: to,
                             periodeLabel: spanDays <= 1
-                                ? 'ce jour-là'
-                                : 'sur les $spanDays derniers jours',
+                                ? context.l10n.bilanPeriodThatDay
+                                : context.l10n.bilanPeriodLastNDays(spanDays),
                           );
                         },
                         icon: const Icon(Icons.info_outline, size: 18),
-                        label: Text('Comprendre : $w'),
+                        label: Text(context.l10n.bilanUnderstandLabel(nutrientDisplayLabel(w, context.l10n))),
                       ),
                     ),
                   );
@@ -1857,6 +1863,7 @@ Future<List<_FoodContribution>> _contributorsForRange(
   DateTime from,
   DateTime to,
   String microKey,
+  AppLocalizations l10n,
 ) async {
   // Vitamine K : K1 et K2 sont deux colonnes CIQUAL distinctes mais une
   // seule "vitamine K" côté utilisateur (comme partout ailleurs dans
@@ -1892,7 +1899,7 @@ Future<List<_FoodContribution>> _contributorsForRange(
           .lte('entry_date', ymd(to));
       for (final r in rows) {
         final id = (r['food_id'] ?? '').toString();
-        final name = (r['food_name'] ?? 'Aliment').toString();
+        final name = (r['food_name'] ?? l10n.bilanUnnamedFood).toString();
         final grams = (r['quantity_grams'] as num?)?.toDouble() ?? 0.0;
         double amount = 0.0;
         // Les macros sont stockées en colonnes dédiées (déjà en grammes consommés),
@@ -1939,7 +1946,7 @@ Future<List<_FoodContribution>> _contributorsForRange(
             for (final e in list) {
               final entry = Map<String, dynamic>.from(e as Map);
               final id = (entry['id'] ?? '').toString();
-              final name = (entry['name'] ?? 'Aliment').toString();
+              final name = (entry['name'] ?? l10n.bilanUnnamedFood).toString();
               final grams = (entry['grams'] as num?)?.toDouble() ?? 0.0;
               const macroLocal = {
                 'Protéines_g_100g': 'prot',
@@ -2010,6 +2017,7 @@ void showLimiteSheet(
   required String periodeLabel,
 }) {
   final lim = LimitesRepo.instance.get(ficheKey);
+  final l10n = context.l10n;
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -2044,7 +2052,7 @@ void showLimiteSheet(
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  lim?.nutriment ?? label,
+                  lim?.nutriment ?? nutrientDisplayLabel(label, l10n),
                   style: const TextStyle(
                       fontSize: 19, fontWeight: FontWeight.w900, height: 1.2),
                 ),
@@ -2053,16 +2061,16 @@ void showLimiteSheet(
           ),
           if (lim != null) ...[
             const SizedBox(height: 4),
-            Text('Limite de sécurité : ${lim.limite}  ·  ${lim.reference}',
+            Text(l10n.bilanSafetyLimitDetail(lim.limite, lim.reference),
                 style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
             const SizedBox(height: 16),
-            _limBloc('Pourquoi cette limite existe', lim.pourquoi,
+            _limBloc(l10n.bilanWhyLimitExists, lim.pourquoi,
                 TotumColors.accent),
-            _limBloc('Ce qu\'un excès prolongé peut provoquer',
+            _limBloc(l10n.bilanExcessConsequences,
                 lim.consequences, TotumColors.accent),
-            _limBloc('D\'où vient le dépassement', lim.sourcesRisque,
+            _limBloc(l10n.bilanExcessSource, lim.sourcesRisque,
                 TotumColors.accent),
-            _limBloc('Que faire concrètement', lim.queFaire,
+            _limBloc(l10n.bilanWhatToDo, lim.queFaire,
                 TotumColors.accent),
             Container(
               width: double.infinity,
@@ -2092,11 +2100,11 @@ void showLimiteSheet(
             const SizedBox(height: 16),
           Divider(height: 1, color: TotumColors.outline),
           const SizedBox(height: 16),
-          Text('Les aliments concernés $periodeLabel',
+          Text(l10n.bilanConcernedFoods(periodeLabel),
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
           const SizedBox(height: 10),
           FutureBuilder<List<_FoodContribution>>(
-            future: _contributorsForRange(from, to, microKey),
+            future: _contributorsForRange(from, to, microKey, l10n),
             builder: (context, snap) {
               if (snap.connectionState != ConnectionState.done) {
                 return const Padding(
@@ -2107,7 +2115,7 @@ void showLimiteSheet(
               final list = snap.data ?? const <_FoodContribution>[];
               if (list.isEmpty) {
                 return Text(
-                  'Aucun aliment identifié sur cette période.',
+                  l10n.bilanNoFoodIdentifiedPeriod,
                   style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
                 );
               }
@@ -2130,6 +2138,7 @@ void showLimiteSheet(
 /// Panneau détaillé de la répartition des glucides (amidon vs sucres simples).
 void showGlucidesBreakdown(BuildContext context, Map<String, double> micros,
     {String portionLabel = ''}) {
+  final l10n = context.l10n;
   double v(String k) => micros[k] ?? 0.0;
   final amidon = v('Amidon_g_100g');
   final fructose = v('Fructose_g_100g');
@@ -2211,8 +2220,8 @@ void showGlucidesBreakdown(BuildContext context, Map<String, double> micros,
             ),
           ),
           const SizedBox(height: 16),
-          const Text('Répartition des glucides',
-              style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
+          Text(l10n.bilanCarbBreakdownTitle,
+              style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
           if (portionLabel.isNotEmpty) ...[
             const SizedBox(height: 2),
             Text(portionLabel,
@@ -2223,42 +2232,42 @@ void showGlucidesBreakdown(BuildContext context, Map<String, double> micros,
           ],
           const SizedBox(height: 4),
           Text(
-            'Tous les glucides ne se valent pas. L\'amidon libère son énergie lentement ; les sucres simples, rapidement.',
+            l10n.bilanCarbBreakdownIntro,
             style: TextStyle(fontSize: 13, color: TotumColors.textSecondary, height: 1.4),
           ),
           const SizedBox(height: 20),
           if (total <= 0)
             Text(
-              'Aucune donnée de glucides détaillée pour cette période.',
+              l10n.bilanNoCarbDataPeriod,
               style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
             )
           else ...[
-            bar('Amidon (glucides complexes)', amidon,
+            bar(l10n.bilanStarchLabel, amidon,
                 TotumColors.accent,
-                hint: 'Céréales, légumineuses, tubercules — énergie durable.'),
-            bar('Sucres simples (total)', sucresTotal,
+                hint: l10n.bilanStarchHint),
+            bar(l10n.bilanSimpleSugarsLabel, sucresTotal,
                 TotumColors.accent,
-                hint: 'Assimilation rapide — à privilégier via les fruits entiers.'),
+                hint: l10n.bilanSimpleSugarsHint),
             if (polyols > 0.05)
-              bar('Polyols', polyols, TotumColors.accent,
-                  hint: 'Édulcorants de masse — souvent signe d\'un produit transformé.'),
+              bar(nutrientDisplayLabel('Polyols', l10n), polyols, TotumColors.accent,
+                  hint: l10n.bilanPolyolsHint),
             const SizedBox(height: 8),
             Divider(color: TotumColors.outline),
             const SizedBox(height: 12),
-            const Text('Détail des sucres simples',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+            Text(l10n.bilanSimpleSugarsDetailTitle,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
             const SizedBox(height: 12),
             if (fructose > 0.05)
               bar('Fructose', fructose, TotumColors.accent,
-                  hint: 'Sucre des fruits et du miel.'),
+                  hint: l10n.bilanFructoseHint),
             if (glucose > 0.05)
               bar('Glucose', glucose, TotumColors.accent),
             if (saccharose > 0.05)
-              bar('Saccharose', saccharose, TotumColors.accent,
-                  hint: 'Le sucre de table (fructose + glucose).'),
+              bar(l10n.bilanSaccharoseLabel, saccharose, TotumColors.accent,
+                  hint: l10n.bilanSaccharoseHint),
             if (lactose > 0.05)
               bar('Lactose', lactose, TotumColors.accent,
-                  hint: 'Sucre du lait et des produits laitiers.'),
+                  hint: l10n.bilanLactoseHint),
             if (maltose > 0.05)
               bar('Maltose', maltose, TotumColors.accent),
             if (galactose > 0.05)
@@ -2271,7 +2280,7 @@ void showGlucidesBreakdown(BuildContext context, Map<String, double> micros,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                'Un fruit entier et un soda peuvent contenir le même fructose, mais le fruit l\'accompagne de fibres, d\'eau et de vitamines qui en ralentissent l\'absorption. La matrice compte autant que le sucre.',
+                l10n.bilanFruitVsSodaNote,
                 style: TextStyle(fontSize: 12.5, height: 1.5, color: TotumColors.textPrimary),
               ),
             ),
@@ -2284,40 +2293,40 @@ void showGlucidesBreakdown(BuildContext context, Map<String, double> micros,
 
 /// Note adaptée au régime, affichée dans la fiche nutriment concernée.
 /// diet : 0 = omnivore (aucune note), 1 = végétarien, 2 = végétalien.
-String? _dietFicheNote(String ficheKey, int diet) {
+String? _dietFicheNote(String ficheKey, int diet, AppLocalizations l10n) {
   if (diet == 0) return null;
   switch (ficheKey) {
     case 'omega3_marins':
     case 'epa':
     case 'dha':
-      return 'Sans poisson, ta meilleure source directe d\'EPA/DHA est un complément d\'oméga 3 issu de micro-algues — c\'est justement là que les poissons puisent les leurs. Les oméga 3 végétaux (ALA du lin, chanvre, noix) restent utiles mais se convertissent mal en EPA/DHA.';
+      return l10n.dietNoteOmega3NoFish;
     case 'b12':
       if (diet == 2) {
-        return 'La vitamine B12 n\'existe pas dans le végétal : en régime végétalien, une supplémentation est indispensable, pas optionnelle. C\'est le seul nutriment qui fait consensus absolu sur ce point. Vise une prise régulière et surveille ton statut par une prise de sang.';
+        return l10n.dietNoteB12Vegan;
       }
-      return 'En régime végétarien, les œufs et les produits laitiers couvrent une partie de tes besoins en B12, mais surveille ton statut : selon ta consommation, une supplémentation légère peut être utile.';
+      return l10n.dietNoteB12Vegetarian;
     case 'fer':
-      return 'Le fer végétal (non héminique) s\'absorbe moins bien que le fer animal : associe systématiquement une source de vitamine C (citron, poivron, persil) à tes légumineuses et céréales complètes pour en multiplier l\'absorption. Évite thé et café pendant le repas.';
+      return l10n.dietNoteIronVegetal;
     case 'zinc':
-      return 'Les phytates des céréales et légumineuses freinent l\'absorption du zinc végétal. Le trempage, la germination et la fermentation (pain au levain) les neutralisent en grande partie — un réflexe précieux en régime végétal.';
+      return l10n.dietNoteZincVegetal;
     case 'calcium':
       if (diet == 2) {
-        return 'Sans produits laitiers, mise sur les végétaux riches en calcium bien absorbé (chou kale, brocoli, tofu au sulfate de calcium, amandes) et les eaux minérales calciques. La vitamine D et la K2 restent essentielles pour bien le fixer sur l\'os.';
+        return l10n.dietNoteCalciumVegan;
       }
       return null;
     case 'iode':
       if (diet == 2) {
-        return 'Sans produits de la mer ni laitages, l\'iode peut manquer en régime végétalien : les algues (avec modération, car très concentrées) et le sel iodé sont tes principales sources. Surveille cet apport souvent négligé.';
+        return l10n.dietNoteIodineVegan;
       }
       return null;
     case 'vitd':
       if (diet == 2) {
-        return 'Sans poisson gras ni œufs, l\'alimentation couvre difficilement la vitamine D en régime végétalien : le soleil (voir la page dédiée) et une supplémentation, idéalement d\'origine végétale (lichen), sont à privilégier, surtout d\'octobre à avril.';
+        return l10n.dietNoteVitDVegan;
       }
       return null;
     case 'proteines':
       if (diet == 2) {
-        return 'En régime végétalien, varie tes sources de protéines dans la journée (légumineuses + céréales complètes, tofu, tempeh, oléagineux) pour obtenir tous les acides aminés essentiels. La complémentarité sur la journée suffit, pas besoin de tout combiner à chaque repas.';
+        return l10n.dietNoteProteinVegan;
       }
       return null;
     default:
@@ -2330,14 +2339,15 @@ Future<void> showNutrientFiche(BuildContext context, String ficheKey) async {
   final fiche = NutrientFicheRepo.instance.get(ficheKey);
   if (fiche == null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Fiche non disponible pour le moment.')),
+      SnackBar(content: Text(context.l10n.bilanFicheUnavailable)),
     );
     return;
   }
   final int diet =
       (await SharedPreferences.getInstance()).getInt('profile_diet') ?? 0;
-  final String? dietNote = _dietFicheNote(ficheKey, diet);
   if (!context.mounted) return;
+  final l10n = context.l10n;
+  final String? dietNote = _dietFicheNote(ficheKey, diet, l10n);
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -2402,14 +2412,14 @@ Future<void> showNutrientFiche(BuildContext context, String ficheKey) async {
                 ],
               ),
               const SizedBox(height: 20),
-              _ficheBloc('Bénéfices santé', fiche.benefices,
+              _ficheBloc(l10n.bilanFicheBenefits, fiche.benefices,
                   TotumColors.accent),
-              _ficheBloc('Apports conseillés', fiche.apports,
+              _ficheBloc(l10n.bilanFicheIntakes, fiche.apports,
                   TotumColors.accent),
               if (fiche.limite.trim().isNotEmpty)
-                _ficheBloc('Limite de sécurité', fiche.limite,
+                _ficheBloc(l10n.bilanFicheSafetyLimit, fiche.limite,
                     TotumColors.accent),
-              _ficheBloc('Où en trouver', fiche.sources,
+              _ficheBloc(l10n.bilanFicheWhereToFind, fiche.sources,
                   TotumColors.accent),
               if (dietNote != null)
                 Container(
@@ -2432,8 +2442,8 @@ Future<void> showNutrientFiche(BuildContext context, String ficheKey) async {
                           const SizedBox(width: 6),
                           Text(
                             diet == 2
-                                ? 'Adapté à ton régime végétalien'
-                                : 'Adapté à ton régime végétarien',
+                                ? l10n.bilanDietAdaptedVegan
+                                : l10n.bilanDietAdaptedVegetarian,
                             style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 13,
@@ -2464,12 +2474,12 @@ Future<void> showNutrientFiche(BuildContext context, String ficheKey) async {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
+                      Row(
                         children: [
-                          Icon(Icons.lightbulb_outline, size: 17, color: TotumColors.accent),
-                          SizedBox(width: 6),
-                          Text('Le savais-tu ?',
-                              style: TextStyle(
+                          const Icon(Icons.lightbulb_outline, size: 17, color: TotumColors.accent),
+                          const SizedBox(width: 6),
+                          Text(l10n.bilanDidYouKnow,
+                              style: const TextStyle(
                                   fontWeight: FontWeight.w800,
                                   color: TotumColors.accent)),
                         ],
@@ -2483,8 +2493,7 @@ Future<void> showNutrientFiche(BuildContext context, String ficheKey) async {
                 ),
               const SizedBox(height: 16),
               Text(
-                'Informations éducatives basées sur les références ANSES et EFSA. '
-                'Elles ne remplacent pas un avis médical personnalisé.',
+                l10n.bilanEducationalDisclaimer,
                 style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
               ),
             ],
@@ -2603,6 +2612,7 @@ String? _microKeyForAnyLabel(String label) {
 /// demandé par Alex : synthétique, immédiatement compréhensible, justifié
 /// (Priorité 24). Contenu statique, ne dépend d'aucune donnée du jour.
 void showTotumScoreExplainerSheet(BuildContext context) {
+  final l10n = context.l10n;
   Widget pillarRow(String label, String pct, String detail) => Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Row(
@@ -2657,28 +2667,27 @@ void showTotumScoreExplainerSheet(BuildContext context) {
             ),
           ),
           const SizedBox(height: 16),
-          const Row(
+          Row(
             children: [
-              Icon(Icons.insights, color: TotumColors.accent, size: 24),
-              SizedBox(width: 10),
+              const Icon(Icons.insights, color: TotumColors.accent, size: 24),
+              const SizedBox(width: 10),
               Expanded(
-                child: Text('Comment est calculée ta note ?',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
+                child: Text(l10n.bilanScoreExplainerTitle,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
               ),
             ],
           ),
           const SizedBox(height: 4),
           Text(
-            'Le Score TOTUM combine 5 piliers de ta journée, pondérés selon leur '
-            'importance pour ta santé, ta longévité et ta performance :',
+            l10n.bilanScoreExplainerIntro,
             style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, height: 1.4),
           ),
           const SizedBox(height: 16),
-          pillarRow('Vitamines', '22%', 'Couverture de tes besoins en vitamines par rapport à tes objectifs du jour.'),
-          pillarRow('Minéraux', '22%', 'Couverture de tes besoins en minéraux (fer, magnésium, zinc...).'),
-          pillarRow('Acides gras essentiels', '18%', 'Oméga-3/6/9 — indispensables, non fabriqués par le corps.'),
-          pillarRow('Hydratation', '13%', 'Eau bue + eau apportée par les aliments, vs ton objectif.'),
-          pillarRow('À surveiller', '25%', 'Sucres, sel, graisses saturées — rester sous la limite du jour est le bon signal.'),
+          pillarRow(l10n.scorePillarVitamins, '22%', l10n.bilanPillarVitaminsDetail),
+          pillarRow(l10n.scorePillarMinerals, '22%', l10n.bilanPillarMineralsDetail),
+          pillarRow(l10n.bilanPillarFattyAcidsFull, '18%', l10n.bilanPillarFattyAcidsDetail),
+          pillarRow(l10n.scorePillarHydration, '13%', l10n.bilanPillarHydrationDetail),
+          pillarRow(l10n.scorePillarWatch, '25%', l10n.bilanPillarWatchDetail),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.all(12),
@@ -2694,17 +2703,13 @@ void showTotumScoreExplainerSheet(BuildContext context) {
                   children: [
                     Icon(Icons.report_problem_rounded, size: 17, color: TotumColors.negative),
                     const SizedBox(width: 6),
-                    Text('Le plafond de sécurité',
+                    Text(l10n.bilanSafetyCapTitle,
                         style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.negative)),
                   ],
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Si un seul élément "à surveiller" dépasse fortement ta limite du jour '
-                  '(par exemple bien au-delà du double), ta note est automatiquement '
-                  'plafonnée — même si tout le reste de ta journée est parfait. Un excès '
-                  'important d\'un coup a un vrai impact sur ta santé (cœur, tension), la '
-                  'note doit le montrer clairement, pas le diluer dans une moyenne.',
+                  l10n.bilanSafetyCapExplainer,
                   style: TextStyle(fontSize: 12, color: TotumColors.textPrimary, height: 1.4),
                 ),
               ],
@@ -2718,8 +2723,7 @@ void showTotumScoreExplainerSheet(BuildContext context) {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Ta note évolue au fil de la journée, à mesure que tu ajoutes tes repas — '
-                  'c\'est normal, elle reflète ce que tu as réellement mangé jusqu\'ici.',
+                  l10n.bilanScoreLiveNote,
                   style: TextStyle(fontSize: 12, color: TotumColors.textSecondary, height: 1.4),
                 ),
               ),
@@ -2727,8 +2731,7 @@ void showTotumScoreExplainerSheet(BuildContext context) {
           ),
           const SizedBox(height: 14),
           Text(
-            'Fondé sur les recommandations officielles (OMS, EFSA, ANSES) et les index de '
-            'référence internationaux (Healthy Eating Index, Alternate Healthy Eating Index).',
+            l10n.bilanScoreSourcesNote,
             style: TextStyle(fontSize: 10.5, color: TotumColors.textMuted, fontStyle: FontStyle.italic),
           ),
         ],
@@ -2746,6 +2749,7 @@ void showSunVitDSheet(
   required String periodeLabel,
 }) {
   const sunColor = Color(0xFFF9A825);
+  final l10n = context.l10n;
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -2770,21 +2774,21 @@ void showSunVitDSheet(
             ),
           ),
           const SizedBox(height: 16),
-          const Row(
+          Row(
             children: [
-              Icon(Icons.wb_sunny, color: sunColor, size: 24),
-              SizedBox(width: 10),
+              const Icon(Icons.wb_sunny, color: sunColor, size: 24),
+              const SizedBox(width: 10),
               Expanded(
-                child: Text('Vitamine D solaire',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
+                child: Text(l10n.bilanSunVitDTitle,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
               ),
             ],
           ),
           const SizedBox(height: 4),
           Text(
             isAverage
-                ? 'Moyenne estimée $periodeLabel, synthétisée par ta peau au soleil'
-                : 'Estimée $periodeLabel, synthétisée par ta peau au soleil',
+                ? l10n.bilanSunVitDAverageDesc(periodeLabel)
+                : l10n.bilanSunVitDSingleDesc(periodeLabel),
             style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary),
           ),
           const SizedBox(height: 16),
@@ -2806,8 +2810,8 @@ void showSunVitDSheet(
                 Expanded(
                   child: Text(
                     sunVitDUg > 0
-                        ? 'déjà comptés dans ta ligne "Vit D" ci-dessus, en plus de ce que t\'apporte l\'alimentation.'
-                        : 'Aucune session au soleil enregistrée sur cette période — seule la part alimentaire est comptée pour l\'instant.',
+                        ? l10n.bilanSunVitDAlreadyCounted
+                        : l10n.bilanSunVitDNoSession,
                     style: TextStyle(fontSize: 12.5, color: TotumColors.textPrimary, height: 1.4),
                   ),
                 ),
@@ -2830,7 +2834,7 @@ void showSunVitDSheet(
                 );
               },
               icon: const Icon(Icons.wb_sunny_outlined),
-              label: const Text('Enregistrer une exposition au soleil'),
+              label: Text(l10n.bilanLogSunExposure),
             ),
           ),
         ],
@@ -2848,6 +2852,8 @@ void showConsumedFoodsSheet(
   required DateTime to,
   required String periodeLabel,
 }) {
+  final l10n = context.l10n;
+  final displayLabel = nutrientDisplayLabel(label, l10n);
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -2882,7 +2888,7 @@ void showConsumedFoodsSheet(
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  label.replaceAll(RegExp(r'^[^\p{L}]+', unicode: true), '').trim(),
+                  displayLabel.replaceAll(RegExp(r'^[^\p{L}]+', unicode: true), '').trim(),
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.w900),
                 ),
@@ -2890,11 +2896,11 @@ void showConsumedFoodsSheet(
             ],
           ),
           const SizedBox(height: 4),
-          Text('Ce que tu as consommé $periodeLabel',
+          Text(l10n.bilanConsumedPeriod(periodeLabel),
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
           const SizedBox(height: 16),
           FutureBuilder<List<_FoodContribution>>(
-            future: _contributorsForRange(from, to, microKey),
+            future: _contributorsForRange(from, to, microKey, l10n),
             builder: (context, snap) {
               if (snap.connectionState != ConnectionState.done) {
                 return const Padding(
@@ -2911,7 +2917,7 @@ void showConsumedFoodsSheet(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    'Aucun aliment consommé ne contenait ce nutriment sur cette période. C\'est peut-être là qu\'il faut agir : consulte la fiche pour savoir où le trouver.',
+                    l10n.bilanNoFoodContainedNutrient,
                     style: TextStyle(
                         fontSize: 13, height: 1.5, color: TotumColors.textPrimary),
                   ),
@@ -2939,6 +2945,7 @@ void showConsumedFoodsSheet(
 Future<List<_FoodContribution>> _contributorsForMicro(
   DateTime day,
   String microKey,
+  AppLocalizations l10n,
 ) async {
   await _ensureFoodsLoaded();
   final repo = foods_loader.FoodsRepository.instance;
@@ -2964,7 +2971,7 @@ Future<List<_FoodContribution>> _contributorsForMicro(
           .eq('entry_date', ymd);
       for (final r in rows) {
         final id = (r['food_id'] ?? '').toString();
-        final name = (r['food_name'] ?? 'Aliment').toString();
+        final name = (r['food_name'] ?? l10n.bilanUnnamedFood).toString();
         final grams = (r['quantity_grams'] as num?)?.toDouble() ?? 0.0;
         double amount = 0.0;
         final snap = r['micros'];
@@ -2997,7 +3004,7 @@ Future<List<_FoodContribution>> _contributorsForMicro(
         for (final e in list) {
           final entry = Map<String, dynamic>.from(e as Map);
           final id = (entry['id'] ?? '').toString();
-          final name = (entry['name'] ?? 'Aliment').toString();
+          final name = (entry['name'] ?? l10n.bilanUnnamedFood).toString();
           final grams = (entry['grams'] as num?)?.toDouble() ?? 0.0;
           final food = findFood(id);
           if (food != null) {
@@ -3023,6 +3030,8 @@ void showContributorsSheet(
   String unit,      // "mg"
   DateTime day,
 ) {
+  final l10n = context.l10n;
+  final displayLabel = nutrientDisplayLabel(label, l10n);
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -3038,7 +3047,7 @@ void showContributorsSheet(
         maxChildSize: 0.9,
         expand: false,
         builder: (ctx, scrollCtrl) => FutureBuilder<List<_FoodContribution>>(
-          future: _contributorsForMicro(day, microKey),
+          future: _contributorsForMicro(day, microKey, l10n),
           builder: (ctx, snap) {
             return SingleChildScrollView(
               controller: scrollCtrl,
@@ -3064,7 +3073,7 @@ void showContributorsSheet(
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          'Apport en $label : aliments principaux',
+                          l10n.bilanIntakeMainFoods(displayLabel),
                           style: const TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w800),
                         ),
@@ -3073,8 +3082,7 @@ void showContributorsSheet(
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Voici les aliments qui ont le plus contribué à ton apport '
-                    'en $label ce jour-là, du plus grand au plus petit.',
+                    l10n.bilanTopContributorsIntro(displayLabel),
                     style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
                   ),
                   const SizedBox(height: 16),
@@ -3085,7 +3093,7 @@ void showContributorsSheet(
                       child: CircularProgressIndicator(),
                     ))
                   else if ((snap.data ?? []).isEmpty)
-                    Text('Aucun aliment identifié pour ce nutriment.',
+                    Text(l10n.bilanNoFoodIdentifiedNutrient,
                         style: TextStyle(color: TotumColors.textSecondary))
                   else ...[
                     for (int i = 0; i < snap.data!.length && i < 10; i++)
@@ -3104,9 +3112,7 @@ void showContributorsSheet(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      'Un dépassement ponctuel n\'est généralement pas '
-                      'préoccupant. Si cela se répète souvent, tu peux espacer '
-                      'les aliments les plus concentrés ou en réduire la portion.',
+                      l10n.bilanOccasionalExcessNote,
                       style: TextStyle(fontSize: 12.5, color: TotumColors.textPrimary),
                     ),
                   ),
@@ -3204,7 +3210,7 @@ class DayBilanScreen extends StatelessWidget {
                 title: 'Score TOTUM',
                 icon: Icons.insights,
                 child: _TotumScoreCard(
-                  score: _computeTotumScore(data,
+                  score: _computeTotumScore(data, context.l10n,
                       prorate: _isSameDay(day, DateTime.now())),
                   isDayMode: true,
                   day: day,
@@ -3485,7 +3491,7 @@ class BilanScreenState extends State<BilanScreen> {
                   title: 'Score TOTUM',
                   icon: Icons.insights,
                   child: _TotumScoreCard(
-                    score: _computeTotumScore(data,
+                    score: _computeTotumScore(data, context.l10n,
                         prorate: _span == ReportSpan.day),
                     isDayMode: _span == ReportSpan.day,
                     day: DateTime.now(),

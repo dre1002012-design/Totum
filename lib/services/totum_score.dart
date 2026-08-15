@@ -3,7 +3,9 @@
 // Ne dépend d'aucun écran : il reçoit les 5 sous-scores déjà calculés.
 
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../theme/totum_style.dart';
+import 'nutrient_labels.dart';
 
 class SubScore {
   final String label;
@@ -52,12 +54,12 @@ class TotumScore {
     return TotumColors.negative;
   }
 
-  String get mood {
-    if (global >= 85) return 'Excellent équilibre !';
-    if (global >= 70) return 'Bon équilibre';
-    if (global >= 55) return 'Correct, peut mieux faire';
-    if (global >= 40) return 'À améliorer';
-    return 'Journée à rééquilibrer';
+  String moodFor(AppLocalizations l10n) {
+    if (global >= 85) return l10n.moodExcellent;
+    if (global >= 70) return l10n.moodGood;
+    if (global >= 55) return l10n.moodCorrect;
+    if (global >= 40) return l10n.moodToImprove;
+    return l10n.moodRebalance;
   }
 }
 
@@ -126,6 +128,7 @@ TotumScore computeTotumScoreFromValues({
   required double hydratation,
   required double surveiller,
   required List<String> warnings,
+  required AppLocalizations l10n,
   double dayFraction = 1.0,
   double watchWorstRatio = 0.0,
   String? watchWorstLabel,
@@ -139,18 +142,19 @@ TotumScore computeTotumScoreFromValues({
   final cap = _capFor(watchWorstRatio);
   final global = cap != null ? rawGlobal.clamp(0.0, cap) : rawGlobal;
   final capReason = (cap != null && watchWorstLabel != null)
-      ? '$watchWorstLabel à ${(watchWorstRatio * 100).round()} % de ta cible du jour — la note est plafonnée tant que ça dure.'
+      ? l10n.scoreCapReason(
+          nutrientDisplayLabel(watchWorstLabel, l10n), (watchWorstRatio * 100).round())
       : null;
 
   return TotumScore(
     global: global.clamp(0, 100),
     dayFraction: dayFraction,
     parts: [
-      SubScore('Vitamines', vitamines, _emojiFor(vitamines)),
-      SubScore('Minéraux', mineraux, _emojiFor(mineraux)),
-      SubScore('Acides gras', acidesGras, _emojiFor(acidesGras)),
-      SubScore('Hydratation', hydratation, _emojiFor(hydratation)),
-      SubScore('À surveiller', surveiller, _emojiFor(surveiller)),
+      SubScore(l10n.scorePillarVitamins, vitamines, _emojiFor(vitamines)),
+      SubScore(l10n.scorePillarMinerals, mineraux, _emojiFor(mineraux)),
+      SubScore(l10n.scorePillarFattyAcids, acidesGras, _emojiFor(acidesGras)),
+      SubScore(l10n.scorePillarHydration, hydratation, _emojiFor(hydratation)),
+      SubScore(l10n.scorePillarWatch, surveiller, _emojiFor(surveiller)),
     ],
     warnings: warnings,
     capReason: capReason,

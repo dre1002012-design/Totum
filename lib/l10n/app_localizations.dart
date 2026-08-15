@@ -2241,6 +2241,510 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Oméga 3 marins'**
   String get nutrientOmega3Marine;
+
+  /// No description provided for @moodExcellent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Excellent équilibre !'**
+  String get moodExcellent;
+
+  /// No description provided for @moodGood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bon équilibre'**
+  String get moodGood;
+
+  /// No description provided for @moodCorrect.
+  ///
+  /// In fr, this message translates to:
+  /// **'Correct, peut mieux faire'**
+  String get moodCorrect;
+
+  /// No description provided for @moodToImprove.
+  ///
+  /// In fr, this message translates to:
+  /// **'À améliorer'**
+  String get moodToImprove;
+
+  /// No description provided for @moodRebalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Journée à rééquilibrer'**
+  String get moodRebalance;
+
+  /// No description provided for @scorePillarVitamins.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamines'**
+  String get scorePillarVitamins;
+
+  /// No description provided for @scorePillarMinerals.
+  ///
+  /// In fr, this message translates to:
+  /// **'Minéraux'**
+  String get scorePillarMinerals;
+
+  /// No description provided for @scorePillarFattyAcids.
+  ///
+  /// In fr, this message translates to:
+  /// **'Acides gras'**
+  String get scorePillarFattyAcids;
+
+  /// No description provided for @scorePillarHydration.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hydratation'**
+  String get scorePillarHydration;
+
+  /// No description provided for @scorePillarWatch.
+  ///
+  /// In fr, this message translates to:
+  /// **'À surveiller'**
+  String get scorePillarWatch;
+
+  /// No description provided for @scoreCapReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'{label} à {pct} % de ta cible du jour — la note est plafonnée tant que ça dure.'**
+  String scoreCapReason(String label, int pct);
+
+  /// No description provided for @bilanScoreTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Score TOTUM'**
+  String get bilanScoreTitle;
+
+  /// No description provided for @bilanScoreUpdatesLive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se met à jour à chaque repas ajouté'**
+  String get bilanScoreUpdatesLive;
+
+  /// No description provided for @bilanScoreHowCalculated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment est calculée cette note ?'**
+  String get bilanScoreHowCalculated;
+
+  /// No description provided for @bilanSafetyLimitExceeded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Limite de sécurité dépassée : {list}'**
+  String bilanSafetyLimitExceeded(String list);
+
+  /// No description provided for @bilanUnderstandLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comprendre : {label}'**
+  String bilanUnderstandLabel(String label);
+
+  /// No description provided for @bilanWhyLimitExists.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pourquoi cette limite existe'**
+  String get bilanWhyLimitExists;
+
+  /// No description provided for @bilanExcessConsequences.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce qu\'un excès prolongé peut provoquer'**
+  String get bilanExcessConsequences;
+
+  /// No description provided for @bilanExcessSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'D\'où vient le dépassement'**
+  String get bilanExcessSource;
+
+  /// No description provided for @bilanWhatToDo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Que faire concrètement'**
+  String get bilanWhatToDo;
+
+  /// No description provided for @bilanSafetyLimitDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Limite de sécurité : {limite}  ·  {reference}'**
+  String bilanSafetyLimitDetail(String limite, String reference);
+
+  /// No description provided for @bilanConcernedFoods.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les aliments concernés {periode}'**
+  String bilanConcernedFoods(String periode);
+
+  /// No description provided for @bilanNoFoodIdentifiedPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun aliment identifié sur cette période.'**
+  String get bilanNoFoodIdentifiedPeriod;
+
+  /// No description provided for @bilanPeriodToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'aujourd\'hui'**
+  String get bilanPeriodToday;
+
+  /// No description provided for @bilanPeriodThatDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'ce jour-là'**
+  String get bilanPeriodThatDay;
+
+  /// No description provided for @bilanPeriodLastNDays.
+  ///
+  /// In fr, this message translates to:
+  /// **'sur les {days} derniers jours'**
+  String bilanPeriodLastNDays(int days);
+
+  /// No description provided for @bilanPeriodOnDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'le {date}'**
+  String bilanPeriodOnDate(String date);
+
+  /// No description provided for @bilanCarbBreakdownTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartition des glucides'**
+  String get bilanCarbBreakdownTitle;
+
+  /// No description provided for @bilanCarbBreakdownIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les glucides ne se valent pas. L\'amidon libère son énergie lentement ; les sucres simples, rapidement.'**
+  String get bilanCarbBreakdownIntro;
+
+  /// No description provided for @bilanNoCarbDataPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune donnée de glucides détaillée pour cette période.'**
+  String get bilanNoCarbDataPeriod;
+
+  /// No description provided for @bilanStarchLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Amidon (glucides complexes)'**
+  String get bilanStarchLabel;
+
+  /// No description provided for @bilanStarchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Céréales, légumineuses, tubercules — énergie durable.'**
+  String get bilanStarchHint;
+
+  /// No description provided for @bilanSimpleSugarsLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sucres simples (total)'**
+  String get bilanSimpleSugarsLabel;
+
+  /// No description provided for @bilanSimpleSugarsHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Assimilation rapide — à privilégier via les fruits entiers.'**
+  String get bilanSimpleSugarsHint;
+
+  /// No description provided for @bilanPolyolsHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Édulcorants de masse — souvent signe d\'un produit transformé.'**
+  String get bilanPolyolsHint;
+
+  /// No description provided for @bilanSimpleSugarsDetailTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Détail des sucres simples'**
+  String get bilanSimpleSugarsDetailTitle;
+
+  /// No description provided for @bilanFructoseHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sucre des fruits et du miel.'**
+  String get bilanFructoseHint;
+
+  /// No description provided for @bilanSaccharoseLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saccharose'**
+  String get bilanSaccharoseLabel;
+
+  /// No description provided for @bilanSaccharoseHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le sucre de table (fructose + glucose).'**
+  String get bilanSaccharoseHint;
+
+  /// No description provided for @bilanLactoseHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sucre du lait et des produits laitiers.'**
+  String get bilanLactoseHint;
+
+  /// No description provided for @bilanFruitVsSodaNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un fruit entier et un soda peuvent contenir le même fructose, mais le fruit l\'accompagne de fibres, d\'eau et de vitamines qui en ralentissent l\'absorption. La matrice compte autant que le sucre.'**
+  String get bilanFruitVsSodaNote;
+
+  /// No description provided for @dietNoteOmega3NoFish.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans poisson, ta meilleure source directe d\'EPA/DHA est un complément d\'oméga 3 issu de micro-algues — c\'est justement là que les poissons puisent les leurs. Les oméga 3 végétaux (ALA du lin, chanvre, noix) restent utiles mais se convertissent mal en EPA/DHA.'**
+  String get dietNoteOmega3NoFish;
+
+  /// No description provided for @dietNoteB12Vegan.
+  ///
+  /// In fr, this message translates to:
+  /// **'La vitamine B12 n\'existe pas dans le végétal : en régime végétalien, une supplémentation est indispensable, pas optionnelle. C\'est le seul nutriment qui fait consensus absolu sur ce point. Vise une prise régulière et surveille ton statut par une prise de sang.'**
+  String get dietNoteB12Vegan;
+
+  /// No description provided for @dietNoteB12Vegetarian.
+  ///
+  /// In fr, this message translates to:
+  /// **'En régime végétarien, les œufs et les produits laitiers couvrent une partie de tes besoins en B12, mais surveille ton statut : selon ta consommation, une supplémentation légère peut être utile.'**
+  String get dietNoteB12Vegetarian;
+
+  /// No description provided for @dietNoteIronVegetal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le fer végétal (non héminique) s\'absorbe moins bien que le fer animal : associe systématiquement une source de vitamine C (citron, poivron, persil) à tes légumineuses et céréales complètes pour en multiplier l\'absorption. Évite thé et café pendant le repas.'**
+  String get dietNoteIronVegetal;
+
+  /// No description provided for @dietNoteZincVegetal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les phytates des céréales et légumineuses freinent l\'absorption du zinc végétal. Le trempage, la germination et la fermentation (pain au levain) les neutralisent en grande partie — un réflexe précieux en régime végétal.'**
+  String get dietNoteZincVegetal;
+
+  /// No description provided for @dietNoteCalciumVegan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans produits laitiers, mise sur les végétaux riches en calcium bien absorbé (chou kale, brocoli, tofu au sulfate de calcium, amandes) et les eaux minérales calciques. La vitamine D et la K2 restent essentielles pour bien le fixer sur l\'os.'**
+  String get dietNoteCalciumVegan;
+
+  /// No description provided for @dietNoteIodineVegan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans produits de la mer ni laitages, l\'iode peut manquer en régime végétalien : les algues (avec modération, car très concentrées) et le sel iodé sont tes principales sources. Surveille cet apport souvent négligé.'**
+  String get dietNoteIodineVegan;
+
+  /// No description provided for @dietNoteVitDVegan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans poisson gras ni œufs, l\'alimentation couvre difficilement la vitamine D en régime végétalien : le soleil (voir la page dédiée) et une supplémentation, idéalement d\'origine végétale (lichen), sont à privilégier, surtout d\'octobre à avril.'**
+  String get dietNoteVitDVegan;
+
+  /// No description provided for @dietNoteProteinVegan.
+  ///
+  /// In fr, this message translates to:
+  /// **'En régime végétalien, varie tes sources de protéines dans la journée (légumineuses + céréales complètes, tofu, tempeh, oléagineux) pour obtenir tous les acides aminés essentiels. La complémentarité sur la journée suffit, pas besoin de tout combiner à chaque repas.'**
+  String get dietNoteProteinVegan;
+
+  /// No description provided for @bilanFicheUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fiche non disponible pour le moment.'**
+  String get bilanFicheUnavailable;
+
+  /// No description provided for @bilanFicheBenefits.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bénéfices santé'**
+  String get bilanFicheBenefits;
+
+  /// No description provided for @bilanFicheIntakes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apports conseillés'**
+  String get bilanFicheIntakes;
+
+  /// No description provided for @bilanFicheSafetyLimit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Limite de sécurité'**
+  String get bilanFicheSafetyLimit;
+
+  /// No description provided for @bilanFicheWhereToFind.
+  ///
+  /// In fr, this message translates to:
+  /// **'Où en trouver'**
+  String get bilanFicheWhereToFind;
+
+  /// No description provided for @bilanDietAdaptedVegan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adapté à ton régime végétalien'**
+  String get bilanDietAdaptedVegan;
+
+  /// No description provided for @bilanDietAdaptedVegetarian.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adapté à ton régime végétarien'**
+  String get bilanDietAdaptedVegetarian;
+
+  /// No description provided for @bilanDidYouKnow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le savais-tu ?'**
+  String get bilanDidYouKnow;
+
+  /// No description provided for @bilanEducationalDisclaimer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Informations éducatives basées sur les références ANSES et EFSA. Elles ne remplacent pas un avis médical personnalisé.'**
+  String get bilanEducationalDisclaimer;
+
+  /// No description provided for @bilanScoreExplainerTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment est calculée ta note ?'**
+  String get bilanScoreExplainerTitle;
+
+  /// No description provided for @bilanScoreExplainerIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le Score TOTUM combine 5 piliers de ta journée, pondérés selon leur importance pour ta santé, ta longévité et ta performance :'**
+  String get bilanScoreExplainerIntro;
+
+  /// No description provided for @bilanPillarFattyAcidsFull.
+  ///
+  /// In fr, this message translates to:
+  /// **'Acides gras essentiels'**
+  String get bilanPillarFattyAcidsFull;
+
+  /// No description provided for @bilanPillarVitaminsDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couverture de tes besoins en vitamines par rapport à tes objectifs du jour.'**
+  String get bilanPillarVitaminsDetail;
+
+  /// No description provided for @bilanPillarMineralsDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couverture de tes besoins en minéraux (fer, magnésium, zinc...).'**
+  String get bilanPillarMineralsDetail;
+
+  /// No description provided for @bilanPillarFattyAcidsDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oméga-3/6/9 — indispensables, non fabriqués par le corps.'**
+  String get bilanPillarFattyAcidsDetail;
+
+  /// No description provided for @bilanPillarHydrationDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Eau bue + eau apportée par les aliments, vs ton objectif.'**
+  String get bilanPillarHydrationDetail;
+
+  /// No description provided for @bilanPillarWatchDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sucres, sel, graisses saturées — rester sous la limite du jour est le bon signal.'**
+  String get bilanPillarWatchDetail;
+
+  /// No description provided for @bilanSafetyCapTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le plafond de sécurité'**
+  String get bilanSafetyCapTitle;
+
+  /// No description provided for @bilanSafetyCapExplainer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Si un seul élément \"à surveiller\" dépasse fortement ta limite du jour (par exemple bien au-delà du double), ta note est automatiquement plafonnée — même si tout le reste de ta journée est parfait. Un excès important d\'un coup a un vrai impact sur ta santé (cœur, tension), la note doit le montrer clairement, pas le diluer dans une moyenne.'**
+  String get bilanSafetyCapExplainer;
+
+  /// No description provided for @bilanScoreLiveNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta note évolue au fil de la journée, à mesure que tu ajoutes tes repas — c\'est normal, elle reflète ce que tu as réellement mangé jusqu\'ici.'**
+  String get bilanScoreLiveNote;
+
+  /// No description provided for @bilanScoreSourcesNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fondé sur les recommandations officielles (OMS, EFSA, ANSES) et les index de référence internationaux (Healthy Eating Index, Alternate Healthy Eating Index).'**
+  String get bilanScoreSourcesNote;
+
+  /// No description provided for @bilanSunVitDTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine D solaire'**
+  String get bilanSunVitDTitle;
+
+  /// No description provided for @bilanSunVitDAverageDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyenne estimée {periode}, synthétisée par ta peau au soleil'**
+  String bilanSunVitDAverageDesc(String periode);
+
+  /// No description provided for @bilanSunVitDSingleDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Estimée {periode}, synthétisée par ta peau au soleil'**
+  String bilanSunVitDSingleDesc(String periode);
+
+  /// No description provided for @bilanSunVitDAlreadyCounted.
+  ///
+  /// In fr, this message translates to:
+  /// **'déjà comptés dans ta ligne \"Vit D\" ci-dessus, en plus de ce que t\'apporte l\'alimentation.'**
+  String get bilanSunVitDAlreadyCounted;
+
+  /// No description provided for @bilanSunVitDNoSession.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune session au soleil enregistrée sur cette période — seule la part alimentaire est comptée pour l\'instant.'**
+  String get bilanSunVitDNoSession;
+
+  /// No description provided for @bilanLogSunExposure.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer une exposition au soleil'**
+  String get bilanLogSunExposure;
+
+  /// No description provided for @bilanConsumedPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que tu as consommé {periode}'**
+  String bilanConsumedPeriod(String periode);
+
+  /// No description provided for @bilanNoFoodContainedNutrient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun aliment consommé ne contenait ce nutriment sur cette période. C\'est peut-être là qu\'il faut agir : consulte la fiche pour savoir où le trouver.'**
+  String get bilanNoFoodContainedNutrient;
+
+  /// No description provided for @bilanUnnamedFood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliment'**
+  String get bilanUnnamedFood;
+
+  /// No description provided for @bilanIntakeMainFoods.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apport en {label} : aliments principaux'**
+  String bilanIntakeMainFoods(String label);
+
+  /// No description provided for @bilanTopContributorsIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voici les aliments qui ont le plus contribué à ton apport en {label} ce jour-là, du plus grand au plus petit.'**
+  String bilanTopContributorsIntro(String label);
+
+  /// No description provided for @bilanNoFoodIdentifiedNutrient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun aliment identifié pour ce nutriment.'**
+  String get bilanNoFoodIdentifiedNutrient;
+
+  /// No description provided for @bilanOccasionalExcessNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un dépassement ponctuel n\'est généralement pas préoccupant. Si cela se répète souvent, tu peux espacer les aliments les plus concentrés ou en réduire la portion.'**
+  String get bilanOccasionalExcessNote;
 }
 
 class _AppLocalizationsDelegate

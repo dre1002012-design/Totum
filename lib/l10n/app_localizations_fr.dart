@@ -1236,4 +1236,312 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get nutrientOmega3Marine => 'Oméga 3 marins';
+
+  @override
+  String get moodExcellent => 'Excellent équilibre !';
+
+  @override
+  String get moodGood => 'Bon équilibre';
+
+  @override
+  String get moodCorrect => 'Correct, peut mieux faire';
+
+  @override
+  String get moodToImprove => 'À améliorer';
+
+  @override
+  String get moodRebalance => 'Journée à rééquilibrer';
+
+  @override
+  String get scorePillarVitamins => 'Vitamines';
+
+  @override
+  String get scorePillarMinerals => 'Minéraux';
+
+  @override
+  String get scorePillarFattyAcids => 'Acides gras';
+
+  @override
+  String get scorePillarHydration => 'Hydratation';
+
+  @override
+  String get scorePillarWatch => 'À surveiller';
+
+  @override
+  String scoreCapReason(String label, int pct) {
+    return '$label à $pct % de ta cible du jour — la note est plafonnée tant que ça dure.';
+  }
+
+  @override
+  String get bilanScoreTitle => 'Score TOTUM';
+
+  @override
+  String get bilanScoreUpdatesLive => 'Se met à jour à chaque repas ajouté';
+
+  @override
+  String get bilanScoreHowCalculated => 'Comment est calculée cette note ?';
+
+  @override
+  String bilanSafetyLimitExceeded(String list) {
+    return 'Limite de sécurité dépassée : $list';
+  }
+
+  @override
+  String bilanUnderstandLabel(String label) {
+    return 'Comprendre : $label';
+  }
+
+  @override
+  String get bilanWhyLimitExists => 'Pourquoi cette limite existe';
+
+  @override
+  String get bilanExcessConsequences =>
+      'Ce qu\'un excès prolongé peut provoquer';
+
+  @override
+  String get bilanExcessSource => 'D\'où vient le dépassement';
+
+  @override
+  String get bilanWhatToDo => 'Que faire concrètement';
+
+  @override
+  String bilanSafetyLimitDetail(String limite, String reference) {
+    return 'Limite de sécurité : $limite  ·  $reference';
+  }
+
+  @override
+  String bilanConcernedFoods(String periode) {
+    return 'Les aliments concernés $periode';
+  }
+
+  @override
+  String get bilanNoFoodIdentifiedPeriod =>
+      'Aucun aliment identifié sur cette période.';
+
+  @override
+  String get bilanPeriodToday => 'aujourd\'hui';
+
+  @override
+  String get bilanPeriodThatDay => 'ce jour-là';
+
+  @override
+  String bilanPeriodLastNDays(int days) {
+    return 'sur les $days derniers jours';
+  }
+
+  @override
+  String bilanPeriodOnDate(String date) {
+    return 'le $date';
+  }
+
+  @override
+  String get bilanCarbBreakdownTitle => 'Répartition des glucides';
+
+  @override
+  String get bilanCarbBreakdownIntro =>
+      'Tous les glucides ne se valent pas. L\'amidon libère son énergie lentement ; les sucres simples, rapidement.';
+
+  @override
+  String get bilanNoCarbDataPeriod =>
+      'Aucune donnée de glucides détaillée pour cette période.';
+
+  @override
+  String get bilanStarchLabel => 'Amidon (glucides complexes)';
+
+  @override
+  String get bilanStarchHint =>
+      'Céréales, légumineuses, tubercules — énergie durable.';
+
+  @override
+  String get bilanSimpleSugarsLabel => 'Sucres simples (total)';
+
+  @override
+  String get bilanSimpleSugarsHint =>
+      'Assimilation rapide — à privilégier via les fruits entiers.';
+
+  @override
+  String get bilanPolyolsHint =>
+      'Édulcorants de masse — souvent signe d\'un produit transformé.';
+
+  @override
+  String get bilanSimpleSugarsDetailTitle => 'Détail des sucres simples';
+
+  @override
+  String get bilanFructoseHint => 'Sucre des fruits et du miel.';
+
+  @override
+  String get bilanSaccharoseLabel => 'Saccharose';
+
+  @override
+  String get bilanSaccharoseHint => 'Le sucre de table (fructose + glucose).';
+
+  @override
+  String get bilanLactoseHint => 'Sucre du lait et des produits laitiers.';
+
+  @override
+  String get bilanFruitVsSodaNote =>
+      'Un fruit entier et un soda peuvent contenir le même fructose, mais le fruit l\'accompagne de fibres, d\'eau et de vitamines qui en ralentissent l\'absorption. La matrice compte autant que le sucre.';
+
+  @override
+  String get dietNoteOmega3NoFish =>
+      'Sans poisson, ta meilleure source directe d\'EPA/DHA est un complément d\'oméga 3 issu de micro-algues — c\'est justement là que les poissons puisent les leurs. Les oméga 3 végétaux (ALA du lin, chanvre, noix) restent utiles mais se convertissent mal en EPA/DHA.';
+
+  @override
+  String get dietNoteB12Vegan =>
+      'La vitamine B12 n\'existe pas dans le végétal : en régime végétalien, une supplémentation est indispensable, pas optionnelle. C\'est le seul nutriment qui fait consensus absolu sur ce point. Vise une prise régulière et surveille ton statut par une prise de sang.';
+
+  @override
+  String get dietNoteB12Vegetarian =>
+      'En régime végétarien, les œufs et les produits laitiers couvrent une partie de tes besoins en B12, mais surveille ton statut : selon ta consommation, une supplémentation légère peut être utile.';
+
+  @override
+  String get dietNoteIronVegetal =>
+      'Le fer végétal (non héminique) s\'absorbe moins bien que le fer animal : associe systématiquement une source de vitamine C (citron, poivron, persil) à tes légumineuses et céréales complètes pour en multiplier l\'absorption. Évite thé et café pendant le repas.';
+
+  @override
+  String get dietNoteZincVegetal =>
+      'Les phytates des céréales et légumineuses freinent l\'absorption du zinc végétal. Le trempage, la germination et la fermentation (pain au levain) les neutralisent en grande partie — un réflexe précieux en régime végétal.';
+
+  @override
+  String get dietNoteCalciumVegan =>
+      'Sans produits laitiers, mise sur les végétaux riches en calcium bien absorbé (chou kale, brocoli, tofu au sulfate de calcium, amandes) et les eaux minérales calciques. La vitamine D et la K2 restent essentielles pour bien le fixer sur l\'os.';
+
+  @override
+  String get dietNoteIodineVegan =>
+      'Sans produits de la mer ni laitages, l\'iode peut manquer en régime végétalien : les algues (avec modération, car très concentrées) et le sel iodé sont tes principales sources. Surveille cet apport souvent négligé.';
+
+  @override
+  String get dietNoteVitDVegan =>
+      'Sans poisson gras ni œufs, l\'alimentation couvre difficilement la vitamine D en régime végétalien : le soleil (voir la page dédiée) et une supplémentation, idéalement d\'origine végétale (lichen), sont à privilégier, surtout d\'octobre à avril.';
+
+  @override
+  String get dietNoteProteinVegan =>
+      'En régime végétalien, varie tes sources de protéines dans la journée (légumineuses + céréales complètes, tofu, tempeh, oléagineux) pour obtenir tous les acides aminés essentiels. La complémentarité sur la journée suffit, pas besoin de tout combiner à chaque repas.';
+
+  @override
+  String get bilanFicheUnavailable => 'Fiche non disponible pour le moment.';
+
+  @override
+  String get bilanFicheBenefits => 'Bénéfices santé';
+
+  @override
+  String get bilanFicheIntakes => 'Apports conseillés';
+
+  @override
+  String get bilanFicheSafetyLimit => 'Limite de sécurité';
+
+  @override
+  String get bilanFicheWhereToFind => 'Où en trouver';
+
+  @override
+  String get bilanDietAdaptedVegan => 'Adapté à ton régime végétalien';
+
+  @override
+  String get bilanDietAdaptedVegetarian => 'Adapté à ton régime végétarien';
+
+  @override
+  String get bilanDidYouKnow => 'Le savais-tu ?';
+
+  @override
+  String get bilanEducationalDisclaimer =>
+      'Informations éducatives basées sur les références ANSES et EFSA. Elles ne remplacent pas un avis médical personnalisé.';
+
+  @override
+  String get bilanScoreExplainerTitle => 'Comment est calculée ta note ?';
+
+  @override
+  String get bilanScoreExplainerIntro =>
+      'Le Score TOTUM combine 5 piliers de ta journée, pondérés selon leur importance pour ta santé, ta longévité et ta performance :';
+
+  @override
+  String get bilanPillarFattyAcidsFull => 'Acides gras essentiels';
+
+  @override
+  String get bilanPillarVitaminsDetail =>
+      'Couverture de tes besoins en vitamines par rapport à tes objectifs du jour.';
+
+  @override
+  String get bilanPillarMineralsDetail =>
+      'Couverture de tes besoins en minéraux (fer, magnésium, zinc...).';
+
+  @override
+  String get bilanPillarFattyAcidsDetail =>
+      'Oméga-3/6/9 — indispensables, non fabriqués par le corps.';
+
+  @override
+  String get bilanPillarHydrationDetail =>
+      'Eau bue + eau apportée par les aliments, vs ton objectif.';
+
+  @override
+  String get bilanPillarWatchDetail =>
+      'Sucres, sel, graisses saturées — rester sous la limite du jour est le bon signal.';
+
+  @override
+  String get bilanSafetyCapTitle => 'Le plafond de sécurité';
+
+  @override
+  String get bilanSafetyCapExplainer =>
+      'Si un seul élément \"à surveiller\" dépasse fortement ta limite du jour (par exemple bien au-delà du double), ta note est automatiquement plafonnée — même si tout le reste de ta journée est parfait. Un excès important d\'un coup a un vrai impact sur ta santé (cœur, tension), la note doit le montrer clairement, pas le diluer dans une moyenne.';
+
+  @override
+  String get bilanScoreLiveNote =>
+      'Ta note évolue au fil de la journée, à mesure que tu ajoutes tes repas — c\'est normal, elle reflète ce que tu as réellement mangé jusqu\'ici.';
+
+  @override
+  String get bilanScoreSourcesNote =>
+      'Fondé sur les recommandations officielles (OMS, EFSA, ANSES) et les index de référence internationaux (Healthy Eating Index, Alternate Healthy Eating Index).';
+
+  @override
+  String get bilanSunVitDTitle => 'Vitamine D solaire';
+
+  @override
+  String bilanSunVitDAverageDesc(String periode) {
+    return 'Moyenne estimée $periode, synthétisée par ta peau au soleil';
+  }
+
+  @override
+  String bilanSunVitDSingleDesc(String periode) {
+    return 'Estimée $periode, synthétisée par ta peau au soleil';
+  }
+
+  @override
+  String get bilanSunVitDAlreadyCounted =>
+      'déjà comptés dans ta ligne \"Vit D\" ci-dessus, en plus de ce que t\'apporte l\'alimentation.';
+
+  @override
+  String get bilanSunVitDNoSession =>
+      'Aucune session au soleil enregistrée sur cette période — seule la part alimentaire est comptée pour l\'instant.';
+
+  @override
+  String get bilanLogSunExposure => 'Enregistrer une exposition au soleil';
+
+  @override
+  String bilanConsumedPeriod(String periode) {
+    return 'Ce que tu as consommé $periode';
+  }
+
+  @override
+  String get bilanNoFoodContainedNutrient =>
+      'Aucun aliment consommé ne contenait ce nutriment sur cette période. C\'est peut-être là qu\'il faut agir : consulte la fiche pour savoir où le trouver.';
+
+  @override
+  String get bilanUnnamedFood => 'Aliment';
+
+  @override
+  String bilanIntakeMainFoods(String label) {
+    return 'Apport en $label : aliments principaux';
+  }
+
+  @override
+  String bilanTopContributorsIntro(String label) {
+    return 'Voici les aliments qui ont le plus contribué à ton apport en $label ce jour-là, du plus grand au plus petit.';
+  }
+
+  @override
+  String get bilanNoFoodIdentifiedNutrient =>
+      'Aucun aliment identifié pour ce nutriment.';
+
+  @override
+  String get bilanOccasionalExcessNote =>
+      'Un dépassement ponctuel n\'est généralement pas préoccupant. Si cela se répète souvent, tu peux espacer les aliments les plus concentrés ou en réduire la portion.';
 }
