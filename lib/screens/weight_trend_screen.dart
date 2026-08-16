@@ -107,14 +107,16 @@ class WeightTrendChart extends StatelessWidget {
           borderData: FlBorderData(show: false),
           // Sans ce réglage, fl_chart utilise son tooltip par défaut qui
           // affiche la valeur brute (nombreuses décimales issues du calcul
-          // de tendance EMA) — retour d'Alex (12/08/2026) : forcé à 2
-          // décimales max, cohérent avec l'affichage du résumé au-dessus.
+          // de tendance EMA) — retour d'Alex (12/08/2026) : forcé à 1
+          // décimale (Priorité 63 : 2 décimales encore signalées comme trop
+          // chargées — alignées sur le résumé au-dessus, lui-même en 1
+          // décimale).
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
               getTooltipItems: (spots) => spots.map((s) {
                 final isTrend = s.barIndex == 1;
                 return LineTooltipItem(
-                  '${s.y.toStringAsFixed(2)} $unitLabel',
+                  '${s.y.toStringAsFixed(1)} $unitLabel',
                   TextStyle(
                     color: isTrend ? TotumColors.accent : TotumColors.outlineStrong,
                     fontWeight: FontWeight.w800,

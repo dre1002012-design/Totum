@@ -3340,7 +3340,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                               size: 6, color: TotumColors.accent),
                           const SizedBox(width: 10),
                           Expanded(
-                            child: Text(_cleanName(i.foodName),
+                            child: Text(_ingredientDisplayName(i),
                                 style: const TextStyle(fontSize: 13.5)),
                           ),
                           Text('${i.grams.round()} g',
@@ -3390,6 +3390,18 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     // Raccourcit les noms CIQUAL trop longs (garde avant la 1ère virgule)
     final idx = n.indexOf(',');
     return idx > 0 ? n.substring(0, idx) : n;
+  }
+
+  /// Priorité 63 (retour d'Alex, "encore du français dans les recettes") :
+  /// `foodName` en base recette reste volontairement en français, identique
+  /// dans les 2 langues (identifiant stable, comme partout ailleurs dans
+  /// l'app) — la traduction se fait ICI, à l'affichage, en retrouvant
+  /// l'aliment CIQUAL/USDA correspondant par `foodId` pour réutiliser sa
+  /// traduction déjà connue (même logique que le Journal). Repli sur le nom
+  /// stocké si l'aliment n'est plus trouvable dans la base.
+  String _ingredientDisplayName(TotumRecipeIngredient i) {
+    final food = foods_loader.FoodsRepository.instance.findById(i.foodId);
+    return _cleanName(foods_loader.displayNameOf(food, i.foodName));
   }
 
   Widget _macroRow(String label, String value, Color color) {

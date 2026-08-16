@@ -1385,5 +1385,9 @@
   "jrnlTabRestaurant": "Restaurant",
   "jrnlSearchBothDb": "Search (CIQUAL + USDA)",
   "jrnlSearchUsdaOnly": "Search (USDA only)",
-  "jrnlSearchCiqualOnly": "Search (CIQUAL only)"
+  "jrnlSearchCiqualOnly": "Search (CIQUAL only)",
+  "jrnlMealItemCount": "{count, plural, =1{({count} item)} other{({count} items)}}",
+  "jrnlFilterPersonalFoods": "Personal foods",
+  "jrnlFilterRecipes": "Recipes",
+  "jrnlFilterMeals": "Meals"
 }

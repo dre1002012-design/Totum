@@ -106,7 +106,15 @@ class TotumApp extends StatelessWidget {
                   data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
                   child: child!,
                 ),
-                home: const AuthGate(),
+                // Priorité 63 : pas de `const` — un `home` const est
+                // canonicalisé (même instance à chaque build de MaterialApp),
+                // donc Flutter détecte `child.widget == newWidget` et saute
+                // entièrement la reconstruction de AuthGate et de tout ce qui
+                // suit. Résultat observé (retour d'Alex) : changer le thème
+                // ou la langue dans Réglages ne se voyait qu'après avoir
+                // changé d'onglet (le seul autre déclencheur de rebuild).
+                // ignore: prefer_const_constructors
+                home: AuthGate(),
               );
             },
           ),
@@ -135,7 +143,17 @@ class AuthGate extends StatelessWidget {
         }
 
         // Connecté → porte « Premium / Abonnement / Essai »
-        return const PremiumGate();
+        // Priorité 63 (mode sombre/langue instantanés) : PAS de `const` ici.
+        // `home: AuthGate()` (non-const, voir plus bas) permet à AuthGate de
+        // se reconstruire quand le thème/la langue changent, mais si cette
+        // valeur de retour reste `const PremiumGate()`, l'expression const
+        // canonicalisée reste IDENTIQUE d'un build à l'autre : Flutter
+        // détecte `child.widget == newWidget` (identité) et saute la
+        // reconstruction de tout le sous-arbre en dessous — exactement le
+        // bug qui empêchait le thème/la langue de se propager sans changer
+        // d'onglet.
+        // ignore: prefer_const_constructors
+        return PremiumGate();
       },
     );
   }
@@ -272,12 +290,16 @@ class _PremiumGateState extends State<PremiumGate> {
     }
 
     // Essai actif OU premium à vie OU abonnement en cours
+    // Priorité 63 : pas de `const` — voir commentaire sur PremiumGate() dans
+    // AuthGate.build(), même raison (thème/langue doivent pouvoir traverser).
     if (_allowed) {
-      return const _RootShell();
+      // ignore: prefer_const_constructors
+      return _RootShell();
     }
 
     // Sinon → paywall
-    return const PaywallScreen();
+    // ignore: prefer_const_constructors
+    return PaywallScreen();
   }
 }
 
@@ -315,6 +337,37 @@ class _RootShellState extends State<_RootShell> {
     BilanScreen(key: _bilanKey),         // 📊 bilan
     ConseilsScreen(key: _conseilsKey),   // 💡 conseils
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Priorité 63 (retour d'Alex, mode sombre "collant") : les 4 onglets
+    // restent montés en permanence (late final _pages ci-dessus, jamais
+    // reconstruit), donc même une fois le sous-arbre `const` corrigé
+    // au-dessus (AuthGate/PremiumGate/_RootShell), IndexedStack repasserait
+    // les MÊMES instances de widgets à chaque frame — Flutter les
+    // considère alors identiques et ne les reconstruit pas. On écoute donc
+    // directement les réglages ici et on force, comme pour un changement
+    // d'onglet, le rafraîchissement de la coque ET des 4 onglets.
+    AppSettings.effectiveBrightness.addListener(_onAppearanceChanged);
+    AppSettings.language.addListener(_onAppearanceChanged);
+  }
+
+  @override
+  void dispose() {
+    AppSettings.effectiveBrightness.removeListener(_onAppearanceChanged);
+    AppSettings.language.removeListener(_onAppearanceChanged);
+    super.dispose();
+  }
+
+  void _onAppearanceChanged() {
+    if (!mounted) return;
+    setState(() {}); // recolore la coque (Scaffold, BottomAppBar, FAB)
+    _profileKey.currentState?.refresh();
+    _journalKey.currentState?.refresh();
+    _bilanKey.currentState?.refresh();
+    _conseilsKey.currentState?.refresh();
+  }
 
   void _selectTab(int i) {
     if (i == _index) return;

@@ -85,8 +85,8 @@
     {
       "id": "recipe:totum_002",
       "category": "Petit-déjeuner",
-      "name": "Fromage Blanc, Banana & Walnut Bowl",
-      "description": "Simple, quick, and built for satiety: fromage blanc brings slow-digesting protein, banana brings energy, and chia seeds bring plant-based omega-3s.",
+      "name": "Quark, Banana & Walnut Bowl",
+      "description": "Simple, quick, and built for satiety: quark brings slow-digesting protein, banana brings energy, and chia seeds bring plant-based omega-3s.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -160,7 +160,7 @@
         "rapide"
       ],
       "steps": [
-        "Mix the fromage blanc with the banana, mashed with a fork.",
+        "Mix the quark with the banana, mashed with a fork.",
         "Sprinkle with crushed walnuts and chia seeds.",
         "Finish with a drizzle of honey."
       ]
@@ -939,7 +939,7 @@
       ],
       "steps": [
         "Blend the blueberries with the banana until smooth.",
-        "Pour over the fromage blanc in a bowl.",
+        "Pour over the quark in a bowl.",
         "Top with chia seeds and crushed almonds."
       ]
     },
@@ -3521,8 +3521,8 @@
     {
       "id": "recipe:totum_044",
       "category": "Collation",
-      "name": "Fromage Blanc, Blueberries & Pumpkin Seeds",
-      "description": "Protein-rich and antioxidant-packed, this fromage blanc and blueberry mix comes together in thirty seconds.",
+      "name": "Quark, Blueberries & Pumpkin Seeds",
+      "description": "Protein-rich and antioxidant-packed, this quark and blueberry mix comes together in thirty seconds.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -3586,7 +3586,7 @@
         "rapide"
       ],
       "steps": [
-        "Pour the fromage blanc into a bowl.",
+        "Pour the quark into a bowl.",
         "Add the fresh blueberries.",
         "Sprinkle with pumpkin seeds."
       ]
@@ -4625,8 +4625,8 @@
     {
       "id": "recipe:totum_058",
       "category": "Petit-déjeuner",
-      "name": "Savory Fromage Blanc, Cucumber & Sesame",
-      "description": "A savory, refreshing take on fromage blanc, homemade tzatziki-style, with no additives.",
+      "name": "Savory Quark, Cucumber & Sesame",
+      "description": "A savory, refreshing take on quark, homemade tzatziki-style, with no additives.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -4701,7 +4701,7 @@
       ],
       "steps": [
         "Grate the cucumber and press it lightly to remove excess water.",
-        "Mix the fromage blanc with the crushed garlic and grated cucumber.",
+        "Mix the quark with the crushed garlic and grated cucumber.",
         "Drizzle with olive oil and sprinkle with sesame seeds."
       ]
     },
@@ -6337,8 +6337,8 @@
     {
       "id": "recipe:totum_079",
       "category": "Collation",
-      "name": "Fromage Blanc, Raspberries & Sesame",
-      "description": "Protein-rich and antioxidant-packed, this fromage blanc, raspberry, and sesame mix comes together in an instant.",
+      "name": "Quark, Raspberries & Sesame",
+      "description": "Protein-rich and antioxidant-packed, this quark, raspberry, and sesame mix comes together in an instant.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -6402,7 +6402,7 @@
         "rapide"
       ],
       "steps": [
-        "Pour the fromage blanc into a bowl.",
+        "Pour the quark into a bowl.",
         "Add the fresh raspberries.",
         "Sprinkle with sesame seeds."
       ]
@@ -6490,8 +6490,8 @@
     {
       "id": "recipe:totum_081",
       "category": "Petit-déjeuner",
-      "name": "Protein Fromage Blanc with Pumpkin Seeds",
-      "description": "A fromage blanc boosted with protein thanks to whey, for a filling, fully natural breakfast.",
+      "name": "Protein Quark with Pumpkin Seeds",
+      "description": "A quark boosted with protein thanks to whey, for a filling, fully natural breakfast.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -6558,7 +6558,7 @@
         "rapide"
       ],
       "steps": [
-        "Pour the well-chilled fromage blanc into a bowl.",
+        "Pour the well-chilled quark into a bowl.",
         "Add the whey protein and mix well until fully absorbed.",
         "Sprinkle with pumpkin seeds."
       ]
@@ -7565,8 +7565,8 @@
     {
       "id": "recipe:totum_095",
       "category": "Collation",
-      "name": "Protein Fromage Blanc with Pumpkin Seeds",
-      "description": "A fromage blanc boosted with protein thanks to whey: a filling, fully natural snack.",
+      "name": "Protein Quark with Pumpkin Seeds",
+      "description": "A quark boosted with protein thanks to whey: a filling, fully natural snack.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -7632,7 +7632,7 @@
         "rapide"
       ],
       "steps": [
-        "Pour the well-chilled fromage blanc into a bowl.",
+        "Pour the well-chilled quark into a bowl.",
         "Add the whey protein and mix well.",
         "Sprinkle with pumpkin seeds."
       ]
@@ -8494,8 +8494,8 @@
     {
       "id": "recipe:totum_108",
       "category": "Petit-déjeuner",
-      "name": "Fromage Blanc, Honey & Rolled Oats",
-      "description": "Fromage blanc brings slow-digesting protein, while honey and oats restock carbohydrates for recovery.",
+      "name": "Quark, Honey & Rolled Oats",
+      "description": "Quark brings slow-digesting protein, while honey and oats restock carbohydrates for recovery.",
       "ingredients": [
         {
           "foodId": "19725",
@@ -8552,7 +8552,7 @@
         "faible_calorie"
       ],
       "steps": [
-        "Pour the fromage blanc into a bowl.",
+        "Pour the quark into a bowl.",
         "Add the rolled oats and mix.",
         "Finish with a drizzle of honey."
       ]
@@ -9596,8 +9596,8 @@
     {
       "id": "recipe:totum_123",
       "category": "Petit-déjeuner",
-      "name": "Skyr-Style Fromage Blanc, Strawberries & Almonds",
-      "description": "0% fromage blanc, fresh strawberries, and crushed almonds: creamy texture, rich in protein, with no added sugar.",
+      "name": "Skyr-Style Quark, Strawberries & Almonds",
+      "description": "0% quark, fresh strawberries, and crushed almonds: creamy texture, rich in protein, with no added sugar.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -9662,7 +9662,7 @@
         "rapide"
       ],
       "steps": [
-        "Pour the fromage blanc into a bowl.",
+        "Pour the quark into a bowl.",
         "Add the strawberries, cut into pieces.",
         "Sprinkle with crushed almonds."
       ]
@@ -10305,8 +10305,8 @@
     {
       "id": "recipe:totum_132",
       "category": "Collation",
-      "name": "Fromage Blanc, Flaxseed & Honey",
-      "description": "A bowl of fromage blanc with flaxseed and a drizzle of honey: a simple, protein-rich snack.",
+      "name": "Quark, Flaxseed & Honey",
+      "description": "A bowl of quark with flaxseed and a drizzle of honey: a simple, protein-rich snack.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -10371,7 +10371,7 @@
         "rapide"
       ],
       "steps": [
-        "Pour the fromage blanc into a bowl.",
+        "Pour the quark into a bowl.",
         "Add the flaxseed.",
         "Finish with a drizzle of honey."
       ]
@@ -10538,8 +10538,8 @@
     {
       "id": "recipe:totum_135",
       "category": "Petit-déjeuner",
-      "name": "Fromage Blanc, Peach & Pistachio Bowl",
-      "description": "Creamy fromage blanc, fresh diced peach, and crushed pistachios: light, indulgent, and rich in potassium.",
+      "name": "Quark, Peach & Pistachio Bowl",
+      "description": "Creamy quark, fresh diced peach, and crushed pistachios: light, indulgent, and rich in potassium.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -10604,7 +10604,7 @@
         "rapide"
       ],
       "steps": [
-        "Pour the fromage blanc into a bowl.",
+        "Pour the quark into a bowl.",
         "Add the diced peach.",
         "Sprinkle with crushed pistachios."
       ]
@@ -10753,8 +10753,8 @@
     {
       "id": "recipe:totum_138",
       "category": "Petit-déjeuner",
-      "name": "Fromage Blanc, Orange & Walnuts",
-      "description": "Fromage blanc, fresh orange segments, and walnut halves: vitamin C and healthy omega-3s to start the day.",
+      "name": "Quark, Orange & Walnuts",
+      "description": "Quark, fresh orange segments, and walnut halves: vitamin C and healthy omega-3s to start the day.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -10819,9 +10819,9 @@
         "rapide"
       ],
       "steps": [
-        "Pour the fromage blanc into a bowl.",
+        "Pour the quark into a bowl.",
         "Section the orange into segments (no peel or membrane).",
-        "Add them to the fromage blanc and sprinkle with walnut halves."
+        "Add them to the quark and sprinkle with walnut halves."
       ]
     },
     {
@@ -11976,8 +11976,8 @@
     {
       "id": "recipe:totum_154",
       "category": "Collation",
-      "name": "Fromage Blanc, Peach & Walnuts",
-      "description": "Fromage blanc with diced peach and walnut halves: a fresh, filling snack.",
+      "name": "Quark, Peach & Walnuts",
+      "description": "Quark with diced peach and walnut halves: a fresh, filling snack.",
       "ingredients": [
         {
           "foodId": "19644",
@@ -12042,7 +12042,7 @@
         "rapide"
       ],
       "steps": [
-        "Pour the fromage blanc into a bowl.",
+        "Pour the quark into a bowl.",
         "Dice the peach and add it in.",
         "Sprinkle with walnut halves."
       ]

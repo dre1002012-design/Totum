@@ -7565,6 +7565,30 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Rechercher (CIQUAL uniquement)'**
   String get jrnlSearchCiqualOnly;
+
+  /// No description provided for @jrnlMealItemCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{({count} aliment)} other{({count} aliments)}}'**
+  String jrnlMealItemCount(int count);
+
+  /// No description provided for @jrnlFilterPersonalFoods.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliments perso'**
+  String get jrnlFilterPersonalFoods;
+
+  /// No description provided for @jrnlFilterRecipes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recettes'**
+  String get jrnlFilterRecipes;
+
+  /// No description provided for @jrnlFilterMeals.
+  ///
+  /// In fr, this message translates to:
+  /// **'Repas'**
+  String get jrnlFilterMeals;
 }
 
 class _AppLocalizationsDelegate

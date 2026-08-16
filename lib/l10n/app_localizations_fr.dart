@@ -4518,4 +4518,24 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get jrnlSearchCiqualOnly => 'Rechercher (CIQUAL uniquement)';
+
+  @override
+  String jrnlMealItemCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '($count aliments)',
+      one: '($count aliment)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get jrnlFilterPersonalFoods => 'Aliments perso';
+
+  @override
+  String get jrnlFilterRecipes => 'Recettes';
+
+  @override
+  String get jrnlFilterMeals => 'Repas';
 }

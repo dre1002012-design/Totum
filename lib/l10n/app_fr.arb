@@ -1568,5 +1568,10 @@
   "jrnlTabRestaurant": "Restaurant",
   "jrnlSearchBothDb": "Rechercher (CIQUAL + USDA)",
   "jrnlSearchUsdaOnly": "Rechercher (USDA uniquement)",
-  "jrnlSearchCiqualOnly": "Rechercher (CIQUAL uniquement)"
+  "jrnlSearchCiqualOnly": "Rechercher (CIQUAL uniquement)",
+  "jrnlMealItemCount": "{count, plural, =1{({count} aliment)} other{({count} aliments)}}",
+  "@jrnlMealItemCount": { "placeholders": { "count": {"type": "int"} } },
+  "jrnlFilterPersonalFoods": "Aliments perso",
+  "jrnlFilterRecipes": "Recettes",
+  "jrnlFilterMeals": "Repas"
 }

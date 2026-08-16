@@ -153,6 +153,15 @@ class _RecipeIngredient {
       );
 }
 
+/// Priorité 63 (retour d'Alex, "encore du français dans les recettes") :
+/// `foodName` stocké reste volontairement en français (identifiant stable,
+/// jamais perdu même si l'aliment disparaît de la base) — la traduction se
+/// fait ICI, à l'affichage, via l'aliment CIQUAL/USDA retrouvé par `foodId`.
+String _recipeIngredientDisplayName(_RecipeIngredient ing) =>
+    foods_loader.displayNameOf(
+        foods_loader.FoodsRepository.instance.findById(ing.foodId),
+        ing.foodName);
+
 class _Recipe {
   final String id;
   String name;
@@ -473,27 +482,12 @@ String? _pictogramOf(dynamic it) => it is foods_loader.FoodItem ? it.pictogramme
 
 String? _nomGeneriqueOf(dynamic it) => it is foods_loader.FoodItem ? it.nomGenerique : null;
 
-/// Nom d'affichage le plus pertinent (Priorité 39, langue Priorité 48) :
-/// selon la langue choisie dans Réglages → Langue des aliments, préfère la
-/// traduction française (`nameFr`, aliments USDA) ou anglaise (`nameEn`,
-/// aliments CIQUAL) quand elle existe, sinon le nom générique CIQUAL déjà en
-/// place, sinon le nom brut fourni en repli — jamais de traduction inventée.
-/// Un seul point d'entrée pour ne pas dupliquer cette logique à chaque écran
-/// de recherche.
-String displayNameOf(dynamic it, String fallback) {
-  if (it is foods_loader.FoodItem) {
-    if (AppSettings.language.value == 'en') {
-      final en = it.nameEn;
-      if (en != null && en.trim().isNotEmpty) return en;
-      return fallback;
-    }
-    final fr = it.nameFr;
-    if (fr != null && fr.trim().isNotEmpty) return fr;
-    final generic = it.nomGenerique;
-    if (generic != null && generic.trim().isNotEmpty) return generic;
-  }
-  return fallback;
-}
+/// Priorité 63 : déplacé dans services/foods_loader.dart (`displayNameOf`)
+/// pour être partagé avec conseils_screen.dart (ingrédients de recette) sans
+/// dupliquer la logique. Réexporté ici tel quel pour ne pas casser les ~30
+/// appels existants dans ce fichier.
+String displayNameOf(dynamic it, String fallback) =>
+    foods_loader.displayNameOf(it, fallback);
 
 /// Traduit les unités de portion USDA les plus courantes (Priorité 50,
 /// retour d'Alex 14/08/2026 : "cup"/"serving"/"tablespoon" restent en
@@ -1720,7 +1714,7 @@ class JournalScreenState extends State<JournalScreen> {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                      child: Text(ing.foodName,
+                                      child: Text(_recipeIngredientDisplayName(ing),
                                           style: const TextStyle(fontSize: 13)),
                                     ),
                                     Text('${ing.grams.toStringAsFixed(0)} g',
@@ -3779,7 +3773,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                 margin: const EdgeInsets.only(bottom: 6),
                 child: ListTile(
                   dense: true,
-                  title: Text(ing.foodName),
+                  title: Text(_recipeIngredientDisplayName(ing)),
                   subtitle: Text('${ing.grams.toStringAsFixed(0)} g'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -3793,7 +3787,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                           showDialog(
                             context: context,
                             builder: (ctx) => AlertDialog(
-                              title: Text(ing.foodName,
+                              title: Text(_recipeIngredientDisplayName(ing),
                                   style: const TextStyle(fontSize: 15)),
                               content: TextField(
                                 controller: gCtrl,
@@ -6363,11 +6357,11 @@ class _MealSectionState extends State<_MealSection> {
                 children: [
                   const Icon(Icons.restaurant, size: 18, color: kTotumOrange),
                   const SizedBox(width: 8),
-                  Text(widget.title,
+                  Text(_mealTypeLabel(widget.title, ctx.l10n),
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                   const SizedBox(width: 8),
                   Text(
-                    '(${widget.items.length} aliment${widget.items.length > 1 ? 's' : ''})',
+                    ctx.l10n.jrnlMealItemCount(widget.items.length),
                     style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
                   ),
                 ],
@@ -6470,7 +6464,7 @@ class _MealSectionState extends State<_MealSection> {
                   child: GestureDetector(
                     onTap: () => setState(() => _expanded = !_expanded),
                     child: Text(
-                      widget.title,
+                      _mealTypeLabel(widget.title, l10n),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -7349,7 +7343,7 @@ class _FoodListView extends StatelessWidget {
                     Expanded(
                       child: _PersoFilterCard(
                         icon: Icons.restaurant_menu,
-                        label: 'Aliments perso',
+                        label: context.l10n.jrnlFilterPersonalFoods,
                         count: persoCount,
                         selected: persoFilter == 0,
                         onTap: () => onPersoFilterChanged!(0),
@@ -7359,7 +7353,7 @@ class _FoodListView extends StatelessWidget {
                     Expanded(
                       child: _PersoFilterCard(
                         icon: Icons.menu_book_outlined,
-                        label: 'Recettes',
+                        label: context.l10n.jrnlFilterRecipes,
                         count: recipeCount,
                         selected: persoFilter == 1,
                         onTap: () => onPersoFilterChanged!(1),
@@ -7369,7 +7363,7 @@ class _FoodListView extends StatelessWidget {
                     Expanded(
                       child: _PersoFilterCard(
                         icon: Icons.bookmark_outline,
-                        label: 'Repas',
+                        label: context.l10n.jrnlFilterMeals,
                         count: mealItems.length,
                         selected: persoFilter == 2,
                         onTap: () => onPersoFilterChanged!(2),

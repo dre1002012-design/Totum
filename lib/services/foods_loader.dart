@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'app_settings.dart';
 
 /// Modèle d'un aliment (issu d'une ligne du CSV).
 class FoodItem {
@@ -78,6 +79,28 @@ class FoodItem {
     }
     return m;
   }
+}
+
+/// Nom d'affichage le plus pertinent (Priorité 39, langue Priorité 48) :
+/// selon la langue choisie dans Réglages → Langue des aliments, préfère la
+/// traduction française (`nameFr`, aliments USDA) ou anglaise (`nameEn`,
+/// aliments CIQUAL) quand elle existe, sinon le nom générique CIQUAL déjà en
+/// place, sinon le nom brut fourni en repli — jamais de traduction inventée.
+/// Un seul point d'entrée partagé (Priorité 63) pour ne pas dupliquer cette
+/// logique à chaque écran de recherche/affichage (journal, recettes...).
+String displayNameOf(dynamic it, String fallback) {
+  if (it is FoodItem) {
+    if (AppSettings.language.value == 'en') {
+      final en = it.nameEn;
+      if (en != null && en.trim().isNotEmpty) return en;
+      return fallback;
+    }
+    final fr = it.nameFr;
+    if (fr != null && fr.trim().isNotEmpty) return fr;
+    final generic = it.nomGenerique;
+    if (generic != null && generic.trim().isNotEmpty) return generic;
+  }
+  return fallback;
 }
 
 /// Portion courante d'un aliment USDA (ex. "1 cup" -> 227.0 g), issue de

@@ -80,6 +80,27 @@ class ExpenditureChart extends StatelessWidget {
             ),
           ),
           borderData: FlBorderData(show: false),
+          // Sans ce réglage, fl_chart affiche son tooltip de toucher par
+          // défaut avec la valeur brute (nombreuses décimales) — même bug
+          // que celui déjà corrigé sur la vignette Poids (voir
+          // weight_trend_screen.dart). N'affiche que la ligne centrale
+          // (l'estimation) ; les bornes basse/haute sont invisibles et ne
+          // servent qu'à la bande ombragée.
+          lineTouchData: LineTouchData(
+            touchTooltipData: LineTouchTooltipData(
+              getTooltipItems: (spots) => spots
+                  .where((s) => s.barIndex == 2)
+                  .map((s) => LineTooltipItem(
+                        '${s.y.toStringAsFixed(0)} kcal',
+                        const TextStyle(
+                          color: TotumColors.accent,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 12,
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
           lineBarsData: [
             // Bornes basse/haute — invisibles, elles ne servent qu'à ancrer
             // la bande d'incertitude ombragée (betweenBarsData ci-dessous).
