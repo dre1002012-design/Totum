@@ -1,0 +1,1273 @@
+{
+  "_comment": "TOTUM 2.0 advice bank — holistic coach. 5 pillars: nutrition, movement, sleep, stress, mindset. Each tip has trigger conditions (goal, thresholds). Naturopath-validated content (ANSES/EFSA/WHO). Warm, clear, actionable tone.",
+  "nutrition": [
+    {
+      "id": "nut_mag_bas",
+      "trigger": { "micro": "magnesium", "below": 0.7 },
+      "titre": "Recharge your magnesium",
+      "body": "Your magnesium is a bit low today. It's the mineral of relaxation and energy: it calms your nervous system and supports your muscles. A small handful of almonds, a few squares of 70%+ dark chocolate, or a portion of leafy greens, and you'll bounce back naturally.",
+      "tag": "Minerals"
+    },
+    {
+      "id": "nut_fer_bas",
+      "trigger": { "micro": "iron", "below": 0.7 },
+      "titre": "Support your iron",
+      "body": "Your iron intake is low: it's what carries oxygen and fuels your energy. Pair an iron source (lentils, eggs, quality red meat) with a vitamin-C-rich food (parsley, bell pepper, lemon): you'll multiply its absorption. On the flip side, keep tea and coffee away from the meal.",
+      "tag": "Minerals"
+    },
+    {
+      "id": "nut_omega3_bas",
+      "trigger": { "micro": "omega3", "below": 0.7 },
+      "titre": "Stock up on omega-3s",
+      "body": "Your omega-3s are below ideal. They're the anti-inflammatory fats that protect your heart and brain. Aim for two servings of small oily fish per week (sardine, mackerel), or a spoonful of cold-pressed flax or rapeseed oil on your vegetables.",
+      "tag": "Healthy fats"
+    },
+    {
+      "id": "nut_vitd_bas",
+      "trigger": { "micro": "vitD", "below": 0.6 },
+      "titre": "Think about your vitamin D",
+      "body": "Vitamin D is hard to cover through diet alone, especially in winter. It supports your bones, muscles and immunity. Get a few minutes of sunlight when you can, lean on oily fish, and ask your doctor about supplementation from October to March.",
+      "tag": "Vitamins"
+    },
+    {
+      "id": "nut_vitc_bas",
+      "trigger": { "micro": "vitC", "below": 0.7 },
+      "titre": "A vitamin C boost",
+      "body": "Your vitamin C deserves a little boost. As an antioxidant, it supports your immunity and energy. It's fragile with cooking: favor raw, seasonal produce like kiwi, bell pepper, citrus, or fresh parsley added at the end of cooking.",
+      "tag": "Vitamins"
+    },
+    {
+      "id": "nut_zinc_bas",
+      "trigger": { "micro": "zinc", "below": 0.7 },
+      "titre": "Boost your zinc",
+      "body": "Zinc supports your immunity, skin and recovery. You'll find it in pumpkin seeds, seafood, eggs and legumes. Tip: soaking legumes and whole grains noticeably improves the absorption of their zinc.",
+      "tag": "Minerals"
+    },
+    {
+      "id": "nut_calcium_bas",
+      "trigger": { "micro": "calcium", "below": 0.7 },
+      "titre": "Strengthen your calcium",
+      "body": "Your calcium is a bit low: it's the builder of your bones, throughout your life. Think leafy greens (cabbage, broccoli), almonds, small bony fish, or a calcium-rich mineral water. And remember: it needs vitamin D to be properly absorbed.",
+      "tag": "Minerals"
+    },
+    {
+      "id": "nut_fibres_bas",
+      "trigger": { "micro": "fibers", "below": 0.6 },
+      "titre": "More fiber for your microbiome",
+      "body": "Your fiber intake is a bit low. It feeds your microbiome, slows sugar absorption and keeps digestion running smoothly. Add vegetables to every meal, legumes, a few nuts, or whole fruit rather than juice.",
+      "tag": "Digestion"
+    },
+    {
+      "id": "nut_prot_loss",
+      "trigger": { "goal": "loss" },
+      "titre": "Protein: your ally for weight loss",
+      "body": "During a fat-loss phase, protein is your priority: it preserves your muscle and extends satiety. Spread it across the day (eggs, fish, legumes, quality meat) and don't be afraid to include it at every meal. You'll lose fat, not muscle.",
+      "tag": "Goal"
+    },
+    {
+      "id": "nut_prot_gain",
+      "trigger": { "goal": "gain" },
+      "titre": "Fuel your muscle building",
+      "body": "To build muscle, your body needs a steady protein supply and a slight surplus of quality energy. Spread your protein through the day and lean on whole, dense foods: eggs, fish, legumes, nuts, whole grains.",
+      "tag": "Goal"
+    },
+    {
+      "id": "nut_brut",
+      "trigger": {},
+      "titre": "Eat real, eat alive",
+      "body": "The principle that changes everything: favor whole, local, seasonal foods that are as minimally processed as possible. The closer a food is to its natural state, the more nutrient density it brings to your cells. Your ideal plate? Colorful, varied, recognizable.",
+      "tag": "Fundamental"
+    },
+    {
+      "id": "nut_hydra_cell",
+      "trigger": {},
+      "titre": "Hydration, your quiet fuel",
+      "body": "A well-hydrated cell works better: nutrient transport, mental clarity, energy. Drink regularly throughout the day, without waiting for thirst. Good hydration silently supports every one of your goals.",
+      "tag": "Vitality"
+    },
+    {
+      "id": "nut_couleurs",
+      "trigger": {},
+      "titre": "Eat the rainbow",
+      "body": "Every plant color brings its own specific antioxidants and polyphenols: the purple of blueberries, the green of spinach, the orange of carrots. Aiming for a variety of colors on your plate means aiming for a diversity of protective micronutrients.",
+      "tag": "Longevity"
+    },
+    {
+      "id": "nut_sucre",
+      "trigger": {},
+      "titre": "Outsmart hidden sugars",
+      "body": "The truly problematic sugars are added sugars and glucose-fructose syrup from industrial products, not those in whole fruit. Cooking from whole foods is the best way to avoid these invisible sugars that wear the body down.",
+      "tag": "Fundamental"
+    },
+    {
+      "id": "nut_bons_gras",
+      "trigger": {},
+      "titre": "Don't fear good fats",
+      "body": "Quality fats are essential: virgin olive oil, avocado, nuts, small oily fish, eggs. They support your hormones, your brain and the absorption of vitamins A, D, E and K. It's industrial and trans fats you need to avoid, not fat itself.",
+      "tag": "Healthy fats"
+    },
+    {
+      "id": "nut_saison",
+      "trigger": {},
+      "titre": "Eat with the seasons",
+      "body": "A seasonal vegetable, picked at peak ripeness and grown close to home, is richer in vitamins and flavor than produce shipped thousands of miles. Following the seasons also naturally varies your plate throughout the year — and so diversifies your micronutrients.",
+      "tag": "Fundamental"
+    },
+    {
+      "id": "nut_mastication",
+      "trigger": {},
+      "titre": "Take the time to chew",
+      "body": "Digestion starts in the mouth. Chewing thoroughly releases salivary enzymes, reduces the stomach's workload, and gives satiety signals time to reach the brain — that takes about twenty minutes. Eating slowly means eating less without restricting.",
+      "tag": "Digestion"
+    },
+    {
+      "id": "nut_cuisson",
+      "trigger": {},
+      "titre": "Cook gently, preserve nutrients",
+      "body": "Gentle cooking — steaming, braising, low temperature — preserves fragile vitamins and avoids the formation of unwanted compounds linked to high heat. Save high heat for the exceptions, and keep your virgin oils for cold seasoning.",
+      "tag": "Cooking"
+    },
+    {
+      "id": "nut_proteines_reparties",
+      "trigger": {},
+      "titre": "Spread your protein out",
+      "body": "Your body doesn't store amino acids: it uses what arrives when it arrives. Spreading your protein across all meals rather than loading up in the evening noticeably improves its use, whether your goal is preserving or building muscle.",
+      "tag": "Protein"
+    },
+    {
+      "id": "nut_legumineuses",
+      "trigger": {},
+      "titre": "Embrace legumes",
+      "body": "Lentils, chickpeas and beans combine plant protein, fiber, iron and magnesium at a tiny cost. Soaking for a few hours before cooking improves their digestibility and mineral absorption. Two to three times a week already changes the game.",
+      "tag": "Plant-based"
+    },
+    {
+      "id": "nut_petit_dej_salé",
+      "trigger": {},
+      "titre": "Try a savory breakfast",
+      "body": "Starting the day with protein and good fats rather than sugar stabilizes blood sugar and avoids the eleven o'clock slump. Eggs, avocado, vegetables, nuts: your energy will be far more even all morning long.",
+      "tag": "Habit"
+    },
+    {
+      "id": "nut_herbes",
+      "trigger": {},
+      "titre": "Use herbs and spices",
+      "body": "Parsley, turmeric, ginger, garlic, rosemary: these are concentrates of protective compounds, and they let you cut back on salt without losing flavor. Adding fresh herbs at the end of cooking preserves their aromas and vitamins.",
+      "tag": "Cooking"
+    },
+    {
+      "id": "nut_mag_stress",
+      "trigger": { "micro": "magnesium", "below": 0.7 },
+      "titre": "Magnesium and stress, the linked duo",
+      "body": "Stress consumes magnesium, and low magnesium lowers your stress tolerance threshold: a cycle worth breaking. Magnesium-rich mineral water, raw cacao and legumes are easy allies to work in without even thinking about it.",
+      "tag": "Minerals"
+    },
+    {
+      "id": "nut_mag_cuisson",
+      "trigger": { "micro": "magnesium", "below": 0.7 },
+      "titre": "Magnesium leaches into cooking water",
+      "body": "A good share of the magnesium in vegetables ends up in the cooking water. Favor steaming, or reuse that cooking water for a broth or soup: a simple habit that avoids real nutritional waste.",
+      "tag": "Cooking"
+    },
+    {
+      "id": "nut_fer_vege",
+      "trigger": { "micro": "iron", "below": 0.7 },
+      "titre": "Plant iron takes a little work",
+      "body": "The iron in lentils or spinach absorbs less well than the iron in meat, but two levers change the game: pairing it with vitamin C, and avoiding tea, coffee and wheat bran during the meal, which noticeably slow its absorption.",
+      "tag": "Minerals"
+    },
+    {
+      "id": "nut_fer_cuisson_fonte",
+      "trigger": { "micro": "iron", "below": 0.7 },
+      "titre": "The cast-iron pot, a quiet source",
+      "body": "Cooking acidic dishes (tomato sauce, ratatouille) in a cast-iron pot slightly enriches the dish with bioavailable iron. A small, age-old cooking habit that makes a real difference cumulated over time.",
+      "tag": "Cooking"
+    },
+    {
+      "id": "nut_omega3_ratio",
+      "trigger": { "micro": "omega3", "below": 0.7 },
+      "titre": "The omega-3 / omega-6 balance",
+      "body": "It's not just the amount of omega-3 that matters, but its balance with omega-6, which is very present in the modern diet (sunflower oil, processed products). Favoring rapeseed or walnut oil over sunflower oil naturally rebalances the ratio.",
+      "tag": "Healthy fats"
+    },
+    {
+      "id": "nut_omega3_conservation",
+      "trigger": { "micro": "omega3", "below": 0.7 },
+      "titre": "Protect your omega-3s from oxidation",
+      "body": "Omega-3s are fragile: light, heat and air degrade them quickly. Store your omega-3-rich oils (flax, rapeseed, walnut) in the fridge, in an opaque container, and use them raw rather than for cooking.",
+      "tag": "Cooking"
+    },
+    {
+      "id": "nut_vitd_graisse",
+      "trigger": { "micro": "vitD", "below": 0.6 },
+      "titre": "Vitamin D loves good fats",
+      "body": "Being fat-soluble, vitamin D absorbs far better when eaten with a bit of fat. An oily fish with a drizzle of olive oil, or a whole egg rather than just the white, optimize its assimilation.",
+      "tag": "Vitamins"
+    },
+    {
+      "id": "nut_vitd_saison",
+      "trigger": { "micro": "vitD", "below": 0.6 },
+      "titre": "Winter, a season to watch",
+      "body": "Between October and March, the angle of the sun no longer allows enough skin synthesis of vitamin D at our latitudes, even with sun exposure. This is the period where dietary attention — and possible supplementation with your doctor — matters most.",
+      "tag": "Vitamins"
+    },
+    {
+      "id": "nut_vitc_stockage",
+      "trigger": { "micro": "vitC", "below": 0.7 },
+      "titre": "Vitamin C doesn't like to wait",
+      "body": "It degrades with time, light and air: a fresh-pressed juice loses a good share of its vitamin C within hours. Favor fresh fruit and vegetables eaten soon after cutting rather than prepared in advance.",
+      "tag": "Vitamins"
+    },
+    {
+      "id": "nut_zinc_vege",
+      "trigger": { "micro": "zinc", "below": 0.7 },
+      "titre": "Zinc and a plant-based diet",
+      "body": "The zinc in plants (legumes, seeds, whole grains) is less bioavailable than in animal products. Soaking, fermenting or sprouting seeds and legumes noticeably improves its absorption.",
+      "tag": "Minerals"
+    },
+    {
+      "id": "nut_calcium_vege",
+      "trigger": { "micro": "calcium", "below": 0.7 },
+      "titre": "Calcium isn't just about dairy",
+      "body": "Kale, broccoli, almonds, sesame, bony sardines: many non-dairy sources provide well-absorbed calcium. A useful variety, whether or not you eat dairy.",
+      "tag": "Minerals"
+    },
+    {
+      "id": "nut_fibres_progressif",
+      "trigger": { "micro": "fibers", "below": 0.6 },
+      "titre": "Increase your fiber gently",
+      "body": "A sudden fiber increase can bloat a gut that isn't used to it. Increase gradually over a few weeks, and drink more alongside: fiber needs water to properly do its digestive job.",
+      "tag": "Digestion"
+    },
+    {
+      "id": "nut_prot_maintien",
+      "trigger": {},
+      "titre": "Protein, a constant pillar",
+      "body": "Whatever your current goal, protein remains a constant priority: it builds your muscles, your enzymes, your hormones, and supports your immunity. Aim for a quality source at every meal, no exceptions.",
+      "tag": "Fundamental"
+    },
+    {
+      "id": "nut_jeune_intuitif",
+      "trigger": {},
+      "titre": "Listen to your hunger signals",
+      "body": "Eating when hunger is real, stopping at satiety: this natural reflex often gets lost with modern habits (fixed schedules, distractions, stress). Relearning it is one of the most powerful tools for a peaceful relationship with food.",
+      "tag": "Awareness"
+    },
+    {
+      "id": "nut_fermentation",
+      "trigger": {},
+      "titre": "Invite fermented foods in",
+      "body": "Raw sauerkraut, kefir, yogurt, miso: fermented foods bring natural probiotics that feed your gut microbiome, itself linked to your immunity and even your mood. A small daily portion is enough to reap the benefit.",
+      "tag": "Digestion"
+    },
+    {
+      "id": "nut_sel_qualite",
+      "trigger": {},
+      "titre": "Not all salt is equal",
+      "body": "Salt isn't the enemy in itself — it's essential for hydration and nerve signaling. What's a problem is the hidden salt in ultra-processed products. Cooking at home lets you dose it yourself, with quality salt, in moderation.",
+      "tag": "Fundamental"
+    },
+    {
+      "id": "nut_petit_dej_pas_obligatoire",
+      "trigger": {},
+      "titre": "Breakfast isn't mandatory",
+      "body": "Contrary to a persistent myth, skipping breakfast isn't a problem in itself if you're not hungry in the morning. What matters is the quality of your meals across the whole day, not a dogma about the timing of your first meal.",
+      "tag": "Fundamental"
+    },
+    {
+      "id": "nut_oeufs",
+      "trigger": {},
+      "titre": "The egg, a complete food redeemed",
+      "body": "Long wrongly blamed for dietary cholesterol, the whole egg is now recognized as one of the most complete foods there is: high-quality protein, vitamins A, D, E, B12, choline. Blood cholesterol mostly depends on the body's own production, not the egg you eat.",
+      "tag": "Fundamental"
+    },
+    {
+      "id": "nut_ag_saturés",
+      "trigger": {},
+      "titre": "Not all saturated fats are equal",
+      "body": "Odd-chain saturated fatty acids, found in raw-milk butter or certain farmhouse cheeses, are linked to favorable metabolic effects in recent research — an important nuance against the overly simplistic \"saturated fat = bad\" dogma.",
+      "tag": "Healthy fats"
+    },
+    {
+      "id": "nut_selenium",
+      "trigger": {},
+      "titre": "Selenium, quiet but essential",
+      "body": "This antioxidant mineral supports your thyroid and immunity. Seafood, eggs and fish provide it regularly. Brazil nuts contain a huge amount, but just one a day is plenty — beyond that, the excess brings no extra benefit.",
+      "tag": "Minerals"
+    },
+    {
+      "id": "nut_index_glycemique",
+      "trigger": {},
+      "titre": "The order of your food matters",
+      "body": "Eating vegetables and fiber before starches and sweets blunts the meal's blood sugar spike, with the same content. A simple change in plate order, without removing anything, for more stable energy after eating.",
+      "tag": "Fundamental"
+    },
+    {
+      "id": "nut_snacking_intelligent",
+      "trigger": {},
+      "titre": "A snack that actually holds up",
+      "body": "If you're peckish between meals, always pair a protein or good fat with a carb: an apple with almonds rather than an apple alone. This combination stabilizes your blood sugar and energy for much longer.",
+      "tag": "Habit"
+    }
+  ],
+  "mouvement": [
+    {
+      "id": "mvt_marche_repas",
+      "trigger": {},
+      "titre": "The walk that changes everything",
+      "body": "A 10-to-15-minute walk after a meal helps stabilize your blood sugar and supports digestion. It's one of the simplest, highest-payoff habits for your everyday metabolic health.",
+      "tag": "Daily"
+    },
+    {
+      "id": "mvt_force_loss",
+      "trigger": { "goal": "loss" },
+      "titre": "Keep your muscle while cutting",
+      "body": "During fat loss, strength training is your best ally: it signals your body to preserve muscle and draw from fat reserves. Two to three sessions a week are enough to make a real difference to your body composition.",
+      "tag": "Goal"
+    },
+    {
+      "id": "mvt_force_gain",
+      "trigger": { "goal": "gain" },
+      "titre": "Progress in load",
+      "body": "To build muscle, the key word is progression: steadily increase load or reps. Muscle grows when you ask it for a little more than it already knows how to do. Track your performance to follow your progress.",
+      "tag": "Goal"
+    },
+    {
+      "id": "mvt_sedentaire",
+      "trigger": { "activity": "low" },
+      "titre": "Break up sitting time",
+      "body": "Sitting for long stretches is one of the big modern health issues. Get up for a few minutes every hour, take the stairs, park further away. These micro-movements, added up, weigh more on your vitality than you'd think.",
+      "tag": "Daily"
+    },
+    {
+      "id": "mvt_recup",
+      "trigger": {},
+      "titre": "Recovery is part of the effort",
+      "body": "Progressing isn't about training more, it's about training better and recovering. Muscle builds during rest, not during the session. Alternate effort and recovery, and respect your off days: they're productive.",
+      "tag": "Recovery"
+    },
+    {
+      "id": "mvt_nature",
+      "trigger": {},
+      "titre": "Move outdoors",
+      "body": "Outdoor activity stacks the benefits: movement, natural light (precious for your internal clock and vitamin D), and lower stress. A walk in nature is worth as much for your body as for your mind.",
+      "tag": "Well-being"
+    },
+    {
+      "id": "mvt_souplesse",
+      "trigger": {},
+      "titre": "Maintain your mobility",
+      "body": "Flexibility and joint mobility are the great forgotten factors, yet they're key to aging well. A few minutes of gentle stretching or mobility work a day preserve your range of motion and prevent a lot of pain.",
+      "tag": "Longevity"
+    },
+    {
+      "id": "mvt_cardio",
+      "trigger": {},
+      "titre": "Take care of your heart",
+      "body": "An activity that gets your heart rate up a bit (brisk walking, cycling, swimming) several times a week strengthens your cardiovascular system and endurance. Find an activity you enjoy: the best one is the one you'll stick with.",
+      "tag": "Endurance"
+    },
+    {
+      "id": "mvt_plaisir",
+      "trigger": {},
+      "titre": "Movement for the joy of it",
+      "body": "The best exercise isn't the most intense one, it's the one you enjoy doing. Dancing, hiking, team sports, gardening: every movement counts. Pairing activity with enjoyment is the key to long-term consistency.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "mvt_matin",
+      "trigger": {},
+      "titre": "Wake your body up in the morning",
+      "body": "A few minutes of movement upon waking (stretching, mobility, walking) wakes up your metabolism and sets you up with energy for the day. No need for a full session: consistency beats intensity.",
+      "tag": "Daily"
+    },
+    {
+      "id": "mvt_escalier",
+      "trigger": {},
+      "titre": "Make the stairs your ally",
+      "body": "Taking the stairs instead of the elevator is a free mini-workout that strengthens your legs and gets your heart working. Added up over a week, these small efforts make a real difference, without even thinking about it.",
+      "tag": "Daily"
+    },
+    {
+      "id": "mvt_progressif",
+      "trigger": { "activity": "low" },
+      "titre": "Start small, but start",
+      "body": "If you're getting back into movement, the mistake would be wanting to do too much at once. Start with 10 minutes a day, and increase gradually. The consistency of a small daily effort always beats the intensity of a one-off session.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "mvt_neat",
+      "trigger": {},
+      "titre": "Invisible movement counts",
+      "body": "Beyond workouts, it's your background activity that weighs most on daily energy expenditure: walking, climbing, carrying, moving while working. Many people active throughout the day burn more than a sedentary weekend athlete does the rest of the time.",
+      "tag": "Daily"
+    },
+    {
+      "id": "mvt_gainage",
+      "trigger": {},
+      "titre": "Strengthen your core",
+      "body": "A solid trunk protects your back, improves your posture and transfers force better into every movement you make. A few minutes of regular core work beat one long occasional session. Consistency comes first, here as elsewhere.",
+      "tag": "Strength"
+    },
+    {
+      "id": "mvt_equilibre",
+      "trigger": {},
+      "titre": "Work on your balance",
+      "body": "Standing on one leg for a few tens of seconds a day maintains proprioception, the sense that declines with age and that fall prevention depends on. It's one of the highest-payoff exercises for aging well, and it costs nothing.",
+      "tag": "Longevity"
+    },
+    {
+      "id": "mvt_charge_lourde",
+      "trigger": {},
+      "titre": "Carry loads",
+      "body": "Lifting and carrying weight stimulates not just muscles but also bones, which densify under mechanical stress. It's one of the best defenses against bone loss over the years, at any age.",
+      "tag": "Longevity"
+    },
+    {
+      "id": "mvt_pause_active",
+      "trigger": {},
+      "titre": "Break up long sitting stretches",
+      "body": "Two to three minutes of movement every hour is enough to get circulation and metabolism going again. It's not the total time spent sitting that's the biggest issue, it's the length of an unbroken stretch without moving.",
+      "tag": "Daily"
+    },
+    {
+      "id": "mvt_apres_repas",
+      "trigger": {},
+      "titre": "Move after your evening meal",
+      "body": "A digestive walk after dinner smooths blood sugar and helps you fall asleep. Ten minutes is enough. It's probably the best effort-to-benefit ratio of your entire day.",
+      "tag": "Daily"
+    },
+    {
+      "id": "mvt_intensite",
+      "trigger": {},
+      "titre": "Add a bit of intensity",
+      "body": "A few minutes of harder effort per week — hill walking, cycling sprints — noticeably improve cardiorespiratory fitness, one of the best known predictors of longevity. You don't need much, but you need a little.",
+      "tag": "Endurance"
+    },
+    {
+      "id": "mvt_regularite",
+      "trigger": {},
+      "titre": "Consistency beats intensity",
+      "body": "Three moderate sessions a week, kept up for years, produce far more benefit than an intense program abandoned after a month. Choose a pace you can sustain even during busy weeks.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "mvt_hiit",
+      "trigger": {},
+      "titre": "Interval training, effective and fast",
+      "body": "Alternating short, intense bursts with recovery phases improves your cardiovascular capacity in little time. A 15-to-20-minute interval session can bring as much cardio benefit as a much longer steady-pace session.",
+      "tag": "Efficiency"
+    },
+    {
+      "id": "mvt_pas_quotidien",
+      "trigger": {},
+      "titre": "The 8,000-step benchmark",
+      "body": "Recent research shows the health benefits of walking mostly build up to around 8,000 steps a day, with more modest extra gains beyond that. A realistic, sufficient target — no need to chase an extreme number.",
+      "tag": "Daily"
+    },
+    {
+      "id": "mvt_variete",
+      "trigger": {},
+      "titre": "Vary your types of effort",
+      "body": "Strength, endurance, flexibility, balance: these are four distinct physical qualities, and none replaces the others. Varying your activities through the week builds a more complete, more resilient fitness than a single practice.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "mvt_posture_bureau",
+      "trigger": {},
+      "titre": "Rethink your workstation",
+      "body": "Prolonged sitting weighs on your back and circulation. A screen at eye level, feet flat on the floor, and above all regular breaks do more for your posture than an expensive ergonomic chair used without moving.",
+      "tag": "Daily"
+    },
+    {
+      "id": "mvt_etirement_dynamique",
+      "trigger": {},
+      "titre": "Warm up in motion",
+      "body": "Before a workout, dynamic stretching (joint mobility in motion) prepares the body better than prolonged static stretching, which can even temporarily reduce muscle power. Save static stretching for after the effort.",
+      "tag": "Technique"
+    },
+    {
+      "id": "mvt_velo_quotidien",
+      "trigger": {},
+      "titre": "Everyday cycling, an underrated classic",
+      "body": "Using a bike for short trips combines cardiovascular activity, time savings and zero cost. It's one of the simplest ways to fit movement in without setting aside a dedicated slot in your day.",
+      "tag": "Daily"
+    },
+    {
+      "id": "mvt_danse",
+      "trigger": {},
+      "titre": "Dancing, a complete exercise",
+      "body": "Dancing combines cardio, coordination, balance and joy — a rare combo. It also engages memory and attention, which makes it a particularly rich activity for the body as well as the brain.",
+      "tag": "Well-being"
+    },
+    {
+      "id": "mvt_jardinage",
+      "trigger": {},
+      "titre": "Gardening, a sport that hides in plain sight",
+      "body": "Digging, carrying, bending, walking: gardening engages the body continuously, often more than you'd think, while offering sun exposure and a real calming effect. A complete activity that doesn't carry the name of sport.",
+      "tag": "Well-being"
+    },
+    {
+      "id": "mvt_femmes_force",
+      "trigger": {},
+      "titre": "Strength training isn't just for men",
+      "body": "Contrary to a still-common belief, strength training doesn't make women bulk up excessively — hormonal physiology naturally works against that. On the contrary, it's one of the best tools for bone and metabolic health at any age.",
+      "tag": "Strength"
+    },
+    {
+      "id": "mvt_age_force",
+      "trigger": {},
+      "titre": "Strength doesn't decline, it's maintained",
+      "body": "Age-related muscle loss isn't inevitable: it's largely due to inactivity, not the passage of time. Strength training remains effective and beneficial at any age, including to delay sarcopenia.",
+      "tag": "Longevity"
+    },
+    {
+      "id": "mvt_apres_sport_etirement",
+      "trigger": {},
+      "titre": "The cool-down matters too",
+      "body": "Ending an intense session with a few minutes of decreasing intensity and gentle stretching helps the body gradually return to rest, rather than a sudden stop. A real recovery step, often overlooked.",
+      "tag": "Recovery"
+    },
+    {
+      "id": "mvt_deux_par_semaine",
+      "trigger": { "activity": "low" },
+      "titre": "Two sessions beat zero",
+      "body": "If the idea of three to five sessions a week feels out of reach, start with two. Two strength sessions a week are already enough to produce measurable benefits for strength and metabolic health.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "mvt_marche_reunion",
+      "trigger": { "activity": "low" },
+      "titre": "Turn your calls into walks",
+      "body": "A phone call or an audio-only video meeting can be done while walking. It's a simple way to add movement without setting aside extra time in an already busy day.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "mvt_amis",
+      "trigger": {},
+      "titre": "Move with others",
+      "body": "Training or walking with someone noticeably increases consistency over time: social commitment creates a standing appointment that's harder to cancel than one with yourself alone. Finding an activity partner is a real success strategy.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "mvt_objectif_process",
+      "trigger": {},
+      "titre": "Aim for the action, not just the result",
+      "body": "Setting \"do my workout\" as the goal rather than \"lose 5 kilos\" makes the goal achievable every day, regardless of short-term visible results. Results follow once the action becomes a reliable habit.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "mvt_chaussures",
+      "trigger": {},
+      "titre": "The right gear, a detail that matters",
+      "body": "Shoes suited to your activity and your build significantly reduce the risk of discomfort or injury, especially with repeated walking or running. A small investment that protects the consistency of your practice.",
+      "tag": "Technique"
+    },
+    {
+      "id": "mvt_micro_seance",
+      "trigger": {},
+      "titre": "The micro-session has its place",
+      "body": "Five minutes of movement beats a session postponed indefinitely for lack of time. Research shows short, repeated sessions bring real benefits, adding up over the course of a week.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "mvt_reveil_articulaire",
+      "trigger": {},
+      "titre": "Wake your joints up gently",
+      "body": "A few slow rotations of the ankles, wrists, shoulders and hips upon waking lubricate your joints and prepare the body for the day. A two-minute ritual, especially precious past a certain age.",
+      "tag": "Daily"
+    }
+  ],
+  "sommeil": [
+    {
+      "id": "som_court",
+      "trigger": { "sleep_below": 6.0 },
+      "titre": "Your sleep needs attention",
+      "body": "Under 6 hours of sleep, and your body feels it: incomplete recovery, more cravings, lower focus. Tonight, try going to bed 30 minutes earlier. Sleep isn't wasted time, it's when your body repairs itself and locks in your progress.",
+      "tag": "Priority"
+    },
+    {
+      "id": "som_ecran",
+      "trigger": { "sleep_below": 7.0 },
+      "titre": "Digital curfew",
+      "body": "Blue light from screens delays melatonin production, the sleep hormone. Try cutting screens 45 minutes before bed, or turn on night mode. You'll fall asleep faster and deeper.",
+      "tag": "Hygiene"
+    },
+    {
+      "id": "som_regularite",
+      "trigger": {},
+      "titre": "Regularity above all",
+      "body": "Going to bed and waking up at regular times, even on weekends, is one of the pillars of good sleep. Your internal clock loves routine: it rewards you with easier falling asleep and fresher wake-ups.",
+      "tag": "Hygiene"
+    },
+    {
+      "id": "som_temperature",
+      "trigger": {},
+      "titre": "A cool, dark bedroom",
+      "body": "Your body needs a slight temperature drop to sleep well. A room around 18°C (64°F), dark and quiet, creates ideal conditions. Complete darkness supports quality melatonin.",
+      "tag": "Environment"
+    },
+    {
+      "id": "som_cafeine",
+      "trigger": { "sleep_below": 7.0 },
+      "titre": "Watch out for late caffeine",
+      "body": "Caffeine stays active in your body for several hours. A coffee in the late afternoon can quietly disrupt your sleep, even if you fall asleep fine. Try making early afternoon your cutoff, and switch to herbal tea after that.",
+      "tag": "Hygiene"
+    },
+    {
+      "id": "som_rituel",
+      "trigger": {},
+      "titre": "Build your evening ritual",
+      "body": "A calming ritual signals to your brain that it's time to slow down: reading, herbal tea, slow breathing, dim light. Repeated every evening, this wind-down routine naturally sets up a gentle drift to sleep.",
+      "tag": "Ritual"
+    },
+    {
+      "id": "som_lumiere_matin",
+      "trigger": {},
+      "titre": "Morning light, your ally",
+      "body": "Getting natural light as soon as you wake up sets your internal clock and improves your sleep quality that evening. A few minutes outside or near a window upon waking, and your circadian rhythm thanks you.",
+      "tag": "Rhythm"
+    },
+    {
+      "id": "som_repas_soir",
+      "trigger": {},
+      "titre": "A light dinner, not too late",
+      "body": "A meal that's too heavy or too late forces your body to digest when it should be resting. Favor a lighter dinner, ideally 2 to 3 hours before bed, for more restorative sleep.",
+      "tag": "Nutrition"
+    },
+    {
+      "id": "som_respiration",
+      "trigger": { "sleep_below": 7.0 },
+      "titre": "Breathe your way to sleep",
+      "body": "Slow breathing is a natural calm switch. Try coherent breathing at bedtime: inhale 4 seconds, exhale 6 seconds, for a few minutes. This simple exercise calms the nervous system and eases you into sleep.",
+      "tag": "Technique"
+    },
+    {
+      "id": "som_sieste",
+      "trigger": { "sleep_below": 6.0 },
+      "titre": "The restorative micro-nap",
+      "body": "If your night was short, a 10-to-20-minute nap in early afternoon can restore your alertness without hurting the following night. The key: keep it short, so you don't sink into deep sleep that's hard to leave.",
+      "tag": "Recovery"
+    },
+    {
+      "id": "som_bon",
+      "trigger": { "sleep_above": 7.5 },
+      "titre": "Great sleep, keep it up!",
+      "body": "Your sleep is showing up, and that's a precious foundation: it's during these nights that your body recovers, consolidates your memory and regulates your hormones. Keep protecting this pillar, it carries all your other efforts.",
+      "tag": "Reinforcement"
+    },
+    {
+      "id": "som_magnesium",
+      "trigger": { "sleep_below": 7.0 },
+      "titre": "Evening magnesium",
+      "body": "Magnesium supports nerve and muscle relaxation, useful for good sleep. A dinner including leafy greens, nuts, or a bit of dark chocolate can naturally support more restful sleep.",
+      "tag": "Nutrition"
+    },
+    {
+      "id": "som_alcool",
+      "trigger": {},
+      "titre": "Alcohol degrades your sleep",
+      "body": "It makes falling asleep easier but fragments the second half of the night and reduces deep sleep, the kind that truly restores you. Even moderate evening drinking costs you recovery quality.",
+      "tag": "Hygiene"
+    },
+    {
+      "id": "som_cycles",
+      "trigger": {},
+      "titre": "Respect your cycles",
+      "body": "Sleep is organized into cycles of about 90 minutes. Going to bed as soon as fatigue hits, rather than letting it pass, makes it easy to enter the first cycle. Miss that window, and you often wait an extra hour and a half.",
+      "tag": "Rhythm"
+    },
+    {
+      "id": "som_reveil_nuit",
+      "trigger": {},
+      "titre": "Nighttime wake-ups: don't fight them",
+      "body": "Briefly waking at night is physiological. What's a problem is the frustration that follows. If you're not back asleep within twenty minutes, get up, do something calm in dim light, and return to bed with the next wave of sleepiness.",
+      "tag": "Technique"
+    },
+    {
+      "id": "som_sport_soir",
+      "trigger": {},
+      "titre": "Watch out for late-night exercise",
+      "body": "Intense effort late in the evening raises body temperature and nervous activation, two brakes on falling asleep. If you can only train in the evening, favor a gentle finish and a real wind-down period.",
+      "tag": "Hygiene"
+    },
+    {
+      "id": "som_dette",
+      "trigger": {},
+      "titre": "Sleep debt doesn't pay back well",
+      "body": "Sleeping in on weekends partially compensates for a short week, but doesn't reset everything: regularity still beats catch-up. Better to gain thirty minutes every night than five hours on Saturday.",
+      "tag": "Rhythm"
+    },
+    {
+      "id": "som_environnement_sonore",
+      "trigger": {},
+      "titre": "Take care of the silence",
+      "body": "Even without waking you, noise fragments your cycles and reduces the share of deep sleep. Earplugs, a closed window, or constant white noise: protecting your sound environment improves a night quality you weren't measuring.",
+      "tag": "Environment"
+    },
+    {
+      "id": "som_tres_court",
+      "trigger": { "sleep_below": 5.0 },
+      "titre": "A truly too-short night",
+      "body": "Under 5 hours of sleep clearly affects your alertness, emotional regulation and next-day food choices — the body seeks to compensate with quick energy. Prioritize a real early bedtime tonight: it's the best thing you can do for tomorrow.",
+      "tag": "Priority"
+    },
+    {
+      "id": "som_exercice_journee",
+      "trigger": { "sleep_below": 7.0 },
+      "titre": "Physical activity improves sleep",
+      "body": "Regular physical activity during the day, even moderate, favors faster sleep onset and deeper sleep. The effect is even clearer if the effort happens in the morning or afternoon rather than late in the evening.",
+      "tag": "Link"
+    },
+    {
+      "id": "som_literie",
+      "trigger": {},
+      "titre": "Your bedding deserves attention",
+      "body": "An unsuitable mattress or pillow disrupts sleep without you always making the connection. If you regularly wake up sore, that's a signal not to ignore: your sleep quality depends directly on it.",
+      "tag": "Environment"
+    },
+    {
+      "id": "som_horaire_repas",
+      "trigger": {},
+      "titre": "Keep meal times regular too",
+      "body": "Your internal clock syncs not just to light but also to regular meal times. Eating at very different hours from day to day can quietly disrupt your sleep quality.",
+      "tag": "Rhythm"
+    },
+    {
+      "id": "som_reveil_meme_heure",
+      "trigger": {},
+      "titre": "Fix your wake-up time above all",
+      "body": "If you had to stabilize just one schedule, it should be your wake-up time rather than bedtime: it anchors your circadian rhythm more strongly. Getting up at a fixed time, even after a short night, helps you reset faster.",
+      "tag": "Rhythm"
+    },
+    {
+      "id": "som_chambre_travail",
+      "trigger": {},
+      "titre": "Reserve your bedroom for rest",
+      "body": "Working or watching screens from bed blurs the mental association between that place and sleep. Reserving the bedroom for rest and intimacy strengthens, over time, a faster and more automatic drift to sleep.",
+      "tag": "Environment"
+    },
+    {
+      "id": "som_lumiere_soir",
+      "trigger": {},
+      "titre": "Dim the lights from dinner on",
+      "body": "Lowering the light intensity in your home in the evening sends your body a signal to transition toward night, well before bedtime. A warm lamp rather than the main ceiling light can be enough to start the wind-down.",
+      "tag": "Environment"
+    },
+    {
+      "id": "som_grasse_matinee",
+      "trigger": {},
+      "titre": "Sleeping in has its limits",
+      "body": "Sleeping much later on weekends shifts your internal clock, a bit like a mini time change — the well-known \"social jet lag\". Keeping less than an hour's gap from the week better preserves your rhythm.",
+      "tag": "Rhythm"
+    },
+    {
+      "id": "som_stress_ecriture",
+      "trigger": { "sleep_below": 7.0 },
+      "titre": "Clear your mind before sleeping",
+      "body": "If thoughts keep looping at bedtime, writing down what's on your mind or tomorrow's to-do list frees the mind from the load of \"don't forget\". A simple gesture that often eases falling asleep.",
+      "tag": "Technique"
+    },
+    {
+      "id": "som_bain_chaud",
+      "trigger": {},
+      "titre": "A warm bath before bed",
+      "body": "Taking a warm bath or shower about an hour before bed favors falling asleep: the drop in body temperature that follows getting out mimics the natural signal for sleep onset.",
+      "tag": "Ritual"
+    },
+    {
+      "id": "som_glucides_soir",
+      "trigger": { "sleep_below": 7.0 },
+      "titre": "A small portion of carbs in the evening",
+      "body": "Contrary to a common belief, a moderate portion of whole carbs at dinner (rice, sweet potato) can favor tryptophan availability, a precursor of melatonin, and so ease falling asleep.",
+      "tag": "Nutrition"
+    },
+    {
+      "id": "som_bruit_blanc",
+      "trigger": {},
+      "titre": "White noise, a quiet ally",
+      "body": "A constant, neutral background sound (a fan, white noise) can mask the occasional noises that fragment sleep without you realizing it. Especially useful in an urban or noisy environment.",
+      "tag": "Environment"
+    },
+    {
+      "id": "som_reveil_progressif",
+      "trigger": {},
+      "titre": "A gentle wake-up is better",
+      "body": "An abrupt wake-up in the middle of deep sleep leaves a disproportionate feeling of tiredness. A gradually brightening light or a gentle alarm, when possible, noticeably softens the transition to waking.",
+      "tag": "Technique"
+    }
+  ],
+  "stress": [
+    {
+      "id": "str_eleve_resp",
+      "trigger": { "stress_above": 6 },
+      "titre": "Bring the pressure down",
+      "body": "Your stress is high today. The fastest, most effective move: slow breathing. Inhale 4 seconds, exhale 6 seconds, for 3 to 5 minutes. Lengthening the exhale activates your parasympathetic nervous system, the calm one. A free tool, available anywhere, anytime.",
+      "tag": "Calm now"
+    },
+    {
+      "id": "str_eleve_nature",
+      "trigger": { "stress_above": 6 },
+      "titre": "Reconnect with nature",
+      "body": "A few minutes outdoors, in a green space, measurably lower stress levels. Even a short outdoor break, breathing and observing, acts as a reset for your nervous system. Nature calms what the mind stirs up.",
+      "tag": "Calming"
+    },
+    {
+      "id": "str_eleve_mouvement",
+      "trigger": { "stress_above": 6 },
+      "titre": "Move to release it",
+      "body": "Stress is energy that needs an outlet. A brisk walk, some movement, a gentle session: physical activity burns off stress hormones and releases calming endorphins. Moving is how you digest tension.",
+      "tag": "Release"
+    },
+    {
+      "id": "str_digital",
+      "trigger": {},
+      "titre": "Give yourself digital breaks",
+      "body": "Digital overload feeds a background stress you're not always aware of. Giving yourself moments without screens, without notifications, gives your nervous system space to regulate. Mental silence is self-care.",
+      "tag": "Mental hygiene"
+    },
+    {
+      "id": "str_gratitude",
+      "trigger": {},
+      "titre": "Cultivate gratitude",
+      "body": "Taking a moment each day to note three positive things redirects your attention toward the good. This simple, research-backed practice reduces perceived stress and improves mood over time. The mind trains like the body.",
+      "tag": "Practice"
+    },
+    {
+      "id": "str_respiration_quotid",
+      "trigger": {},
+      "titre": "Coherent breathing",
+      "body": "Practicing slow breathing for a few minutes, two to three times a day, regulates your heart rate and your baseline stress level. A 5-minute health appointment, as powerful as it is accessible: inhale 4 seconds, exhale 6.",
+      "tag": "Technique"
+    },
+    {
+      "id": "str_pleine_conscience",
+      "trigger": {},
+      "titre": "Come back to the present moment",
+      "body": "Stress often lives in anticipating the future or ruminating on the past. Bringing your attention back to what you're experiencing right now — a sensation, a breath, a sound — defuses the mental spiral. Mindfulness means living in the present.",
+      "tag": "Grounding"
+    },
+    {
+      "id": "str_sommeil_lien",
+      "trigger": { "stress_above": 6 },
+      "titre": "Stress and sleep: the loop",
+      "body": "Stress and poor sleep feed each other. Breaking this cycle often starts in the evening: a calming ritual, fewer screens, slow breathing at bedtime. Sleeping better already means handling tomorrow's stress better.",
+      "tag": "Link"
+    },
+    {
+      "id": "str_priorites",
+      "trigger": { "stress_above": 6 },
+      "titre": "Lighten your mental load",
+      "body": "Part of stress comes from feeling like you have to handle everything at once. Putting your tasks on paper, then identifying THE priority of the moment, frees the mind. You can't do everything at once: choosing is relief.",
+      "tag": "Organization"
+    },
+    {
+      "id": "str_faible",
+      "trigger": { "stress_below": 4 },
+      "titre": "Nice inner balance",
+      "body": "Your stress level is well under control, and that's a real asset for your overall health. Low stress favors better sleep, calmer digestion and a solid immune system. Keep nurturing what calms you: you're on the right track.",
+      "tag": "Reinforcement"
+    },
+    {
+      "id": "str_rire",
+      "trigger": {},
+      "titre": "Don't forget to laugh",
+      "body": "Laughter and shared moments of joy are real stress regulators: they release endorphins and relax the body. Cultivating lightness and social bonds nourishes your well-being as much as a good meal does.",
+      "tag": "Well-being"
+    },
+    {
+      "id": "str_micro_pause",
+      "trigger": {},
+      "titre": "Micro-breaks that recharge",
+      "body": "Between two tasks, giving yourself 60 seconds to breathe, stretch, or simply look into the distance recharges your attention and prevents tension from building up. These micro-breaks, scattered through the day, prevent mental exhaustion.",
+      "tag": "Daily"
+    },
+    {
+      "id": "str_soleil_matin",
+      "trigger": {},
+      "titre": "Morning light calms too",
+      "body": "Getting natural light early in the day regulates not just sleep but also mood and cortisol production. A few minutes outside in the morning sets a more stable base for the whole day.",
+      "tag": "Rhythm"
+    },
+    {
+      "id": "str_lien_social",
+      "trigger": {},
+      "titre": "Social connection is self-care",
+      "body": "The quality of your relationships is one of the factors most solidly linked to health and longevity, ahead of many biological markers. A sincere conversation, a shared moment: these are real stress regulators.",
+      "tag": "Well-being"
+    },
+    {
+      "id": "str_ecriture",
+      "trigger": {},
+      "titre": "Put your thoughts on paper",
+      "body": "Writing down what's weighing on you, even just a few lines, reduces the emotional intensity and clarifies what's actually in your control. Rumination loops; writing puts a full stop to it.",
+      "tag": "Practice"
+    },
+    {
+      "id": "str_respiration_longue",
+      "trigger": {},
+      "titre": "Lengthen your exhale",
+      "body": "The principle is simple: an exhale longer than the inhale activates the calm nervous pathway. No need for a complicated technique — inhale for four counts, exhale for six, for a few minutes, and it's enough to bring the tension down.",
+      "tag": "Technique"
+    },
+    {
+      "id": "str_froid",
+      "trigger": {},
+      "titre": "The morning contrast",
+      "body": "Ending your shower with thirty seconds of cool water stimulates alertness and stress adaptation. Ease into it gradually, and avoid it if you have a cardiovascular condition — in that case, ask your doctor first.",
+      "tag": "Technique"
+    },
+    {
+      "id": "str_monotache",
+      "trigger": {},
+      "titre": "Do one thing at a time",
+      "body": "Multitasking gives the illusion of efficiency but increases mental load and the feeling of being overwhelmed. Focusing on one task, then the next, reduces stress while also improving the outcome.",
+      "tag": "Organization"
+    },
+    {
+      "id": "str_dire_non",
+      "trigger": {},
+      "titre": "Learn to say no",
+      "body": "A significant share of stress comes from commitments taken on out of difficulty refusing. Protecting your time and energy isn't selfish: it's what lets you truly show up for what matters.",
+      "tag": "Boundaries"
+    },
+    {
+      "id": "str_digestion",
+      "trigger": {},
+      "titre": "Stress and digestion are linked",
+      "body": "Eating under tension genuinely disrupts digestion: the body prioritizes action over absorption. Taking three slow breaths before starting to eat improves digestive comfort as much as food choices do.",
+      "tag": "Link"
+    },
+    {
+      "id": "str_tres_eleve",
+      "trigger": { "stress_above": 8 },
+      "titre": "Stress is really peaking today",
+      "body": "At this level, the priority isn't to solve everything at once, but to bring the physiological pressure down first: slow breathing, a few quiet minutes alone, a glass of water sipped slowly. The rest can wait for your nervous system to settle.",
+      "tag": "Calm now"
+    },
+    {
+      "id": "str_nature_precise",
+      "trigger": { "stress_above": 6 },
+      "titre": "20 minutes outside, a real threshold",
+      "body": "Research puts the outdoor time needed to see a measurable drop in cortisol, the stress hormone, at around 20 minutes. A real break in a park or in nature is worth far more than a coffee break indoors.",
+      "tag": "Calming"
+    },
+    {
+      "id": "str_musique",
+      "trigger": {},
+      "titre": "Music as a regulator",
+      "body": "Listening to music you love, especially at a slow tempo, can measurably reduce heart rate and perceived tension. A dedicated \"calm\" playlist can become a stress management tool within easy reach.",
+      "tag": "Technique"
+    },
+    {
+      "id": "str_toucher",
+      "trigger": {},
+      "titre": "The power of touch",
+      "body": "A long hug, a caring physical contact with a loved one, releases oxytocin, a hormone that directly counters the effects of stress. Don't underestimate this simple, immediately accessible lever.",
+      "tag": "Well-being"
+    },
+    {
+      "id": "str_controle",
+      "trigger": {},
+      "titre": "Tell apart what's up to you",
+      "body": "A large share of stress comes from wanting to control what's outside our influence. Consciously refocusing on what's genuinely within your power to act on, here and now, noticeably lightens the mental load.",
+      "tag": "Grounding"
+    },
+    {
+      "id": "str_perspective",
+      "trigger": {},
+      "titre": "Gain some perspective",
+      "body": "Asking yourself \"will this matter in a year?\" in the face of a daily annoyance often puts things back into perspective. It's not denying the current emotion, it's giving it its right size.",
+      "tag": "Grounding"
+    },
+    {
+      "id": "str_odorat",
+      "trigger": {},
+      "titre": "Calming scents",
+      "body": "Some scents like lavender have shown measurable effects on nervous relaxation. A diffused essential oil or a few drops on a tissue can be part of your anti-stress toolkit.",
+      "tag": "Technique"
+    },
+    {
+      "id": "str_routine_matin",
+      "trigger": {},
+      "titre": "A structured morning defuses the day",
+      "body": "Starting the day in a rush sets a tension that often carries well beyond the morning. Getting up a few minutes earlier for a calm ritual changes the tone of the entire day that follows.",
+      "tag": "Organization"
+    },
+    {
+      "id": "str_devoir_vs_choix",
+      "trigger": {},
+      "titre": "Reframe your obligations",
+      "body": "Mentally replacing \"I have to\" with \"I choose to\" changes the emotional weight of a task, even a required one. A simple shift in wording that restores a sense of agency and reduces the feeling of enduring it.",
+      "tag": "Practice"
+    },
+    {
+      "id": "str_alimentation_stress",
+      "trigger": { "stress_above": 6 },
+      "titre": "Don't skip meals under stress",
+      "body": "Stress sometimes pushes you to neglect meals, which in turn worsens irritability and fatigue through blood sugar swings. Eating normally, even without much appetite, actually helps you get through a tense period better.",
+      "tag": "Link"
+    },
+    {
+      "id": "str_stress_positif",
+      "trigger": {},
+      "titre": "Not all stress is bad",
+      "body": "Moderate, one-off stress — before an important deadline, for example — can improve focus and performance. It's chronic, excessive intensity that's a problem, not stress as such.",
+      "tag": "Philosophy"
+    },
+    {
+      "id": "str_delegation",
+      "trigger": { "stress_above": 6 },
+      "titre": "You don't have to carry it all alone",
+      "body": "Asking for help or delegating a task isn't failure, it's a skill. Part of chronic stress comes from feeling like you have to handle everything alone — sharing the load, when possible, is real self-care.",
+      "tag": "Boundaries"
+    }
+  ],
+  "mindset": [
+    {
+      "id": "min_petit_pas",
+      "trigger": {},
+      "titre": "Small steps make big changes",
+      "body": "Health isn't built on grand resolutions, but on small repeated actions. A glass of water, a walk, one more vegetable: these micro-choices, added up day after day, transform your life far more than any one-off effort.",
+      "tag": "Philosophy"
+    },
+    {
+      "id": "min_identite",
+      "trigger": {},
+      "titre": "Become who you want to be",
+      "body": "Every aligned choice is a vote for the person you want to become. You don't need to be perfect, just to move in the right direction more often than yesterday. Your identity is built action by action.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "min_progres_perfection",
+      "trigger": {},
+      "titre": "Progress, not perfection",
+      "body": "Aiming for perfection often leads to giving up at the first slip. Aim for progress instead: one less balanced meal doesn't undo a week of good choices. What matters is the overall trend, not every single detail. Be patient and consistent.",
+      "tag": "Kindness"
+    },
+    {
+      "id": "min_pourquoi",
+      "trigger": {},
+      "titre": "Reconnect with your why",
+      "body": "In moments of doubt, come back to your deeper motivation: why did you start? To feel more energetic, to age well, to be present for your loved ones... Your \"why\" is the fuel that holds when willpower runs low.",
+      "tag": "Purpose"
+    },
+    {
+      "id": "min_celebrer",
+      "trigger": {},
+      "titre": "Celebrate your wins",
+      "body": "We too often forget to acknowledge our progress. Take a moment to measure how far you've come, even modestly. Celebrating your small wins fuels your motivation and turns effort into positive momentum.",
+      "tag": "Motivation"
+    },
+    {
+      "id": "min_patience",
+      "trigger": {},
+      "titre": "Trust the process, trust time",
+      "body": "Real health changes take time to show, but they take root deeply. Don't get discouraged if results are slow to appear: your body is working behind the scenes. Consistency always pays off in the end.",
+      "tag": "Wisdom"
+    },
+    {
+      "id": "min_holistique",
+      "trigger": {},
+      "titre": "Body, heart and mind together",
+      "body": "True health isn't just about your plate: it includes your sleep, your stress, your movement, your relationships. Taking care of yourself across all these dimensions creates a balance no single element can offer alone. You are a whole.",
+      "tag": "Holistic"
+    },
+    {
+      "id": "min_environnement",
+      "trigger": {},
+      "titre": "Shape your environment",
+      "body": "Willpower is a limited resource; your environment, on the other hand, acts continuously. A visible fruit bowl, cupboards free of temptation, sneakers ready by the door: making the good choice easy is more powerful than forcing yourself.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "min_ecoute",
+      "trigger": {},
+      "titre": "Learn to listen to yourself",
+      "body": "Your body sends you signals: real or emotional hunger, fatigue, tension, fullness. Relearning to listen to them, without judgment, is a precious skill. Food intuition can be cultivated, and it's worth more than any diet.",
+      "tag": "Awareness"
+    },
+    {
+      "id": "min_un_jour",
+      "trigger": {},
+      "titre": "One day at a time",
+      "body": "Don't let yourself get overwhelmed by the end goal. Focus on today: one good choice now, then the next. Health is played out in the present, one day after another. It's by winning your days that you win your transformation.",
+      "tag": "Grounding"
+    },
+    {
+      "id": "min_rechute",
+      "trigger": {},
+      "titre": "A slip isn't a failure",
+      "body": "Everyone drifts off track sometimes. What sets successful people apart isn't never falling, it's getting back up without beating themselves up. A slip doesn't erase anything: just pick back up at the next meal, mind clear.",
+      "tag": "Resilience"
+    },
+    {
+      "id": "min_gentillesse",
+      "trigger": {},
+      "titre": "Speak to yourself with kindness",
+      "body": "How you talk to yourself matters. Replacing inner criticism with encouragement changes your whole relationship with effort. Treat yourself the way you'd treat a dear friend: with patience, respect and kindness. You deserve your own kindness.",
+      "tag": "Kindness"
+    },
+    {
+      "id": "min_systeme",
+      "trigger": {},
+      "titre": "Bet on the system, not just the goal",
+      "body": "A goal says where you want to go; a system says what you do every day. Those who stick with it long term aren't the most motivated, they're the ones who've built habits that no longer depend on their motivation.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "min_deux_minutes",
+      "trigger": {},
+      "titre": "The two-minute rule",
+      "body": "When a habit feels overwhelming, shrink it down to its two-minute version: put your shoes on, prep one vegetable, breathe for a minute. Starting is the real obstacle; the rest almost always follows.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "min_comparaison",
+      "trigger": {},
+      "titre": "Compare yourself to yourself",
+      "body": "The only useful reference point is you three months ago. Everyone's journey, genetics and constraints are too different for comparing yourself to others to teach you anything useful.",
+      "tag": "Kindness"
+    },
+    {
+      "id": "min_energie",
+      "trigger": {},
+      "titre": "Follow your energy, not just the scale",
+      "body": "Weight is a noisy, partial indicator. Your energy upon waking, your sleep quality, your mood, your digestion and your strength say far more about your real health. Those are the ones worth watching.",
+      "tag": "Awareness"
+    },
+    {
+      "id": "min_plaisir",
+      "trigger": {},
+      "titre": "Enjoyment is part of the plan",
+      "body": "A healthy diet that excludes all pleasure never lasts. Eating should remain an enjoyable, social moment. Home cooking with good ingredients is exactly what reconciles pleasure and health.",
+      "tag": "Philosophy"
+    },
+    {
+      "id": "min_long_terme",
+      "trigger": {},
+      "titre": "You're playing a long game",
+      "body": "Health and longevity aren't won in three weeks. Every good choice is a deposit in an account whose interest you'll collect in ten or twenty years. This perspective changes how you experience imperfect days.",
+      "tag": "Wisdom"
+    },
+    {
+      "id": "min_curiosite",
+      "trigger": {},
+      "titre": "Learn one thing a week",
+      "body": "Understanding why a food or a habit does you good turns a constraint into an informed choice. The people who stick with their changes are almost always the ones who understood what they were doing.",
+      "tag": "Education"
+    },
+    {
+      "id": "min_imperfection",
+      "trigger": {},
+      "titre": "Aim for 80/20",
+      "body": "If the bulk of your diet rests on whole, real foods, the remaining margin has little impact. This simple rule frees you from guilt while keeping you on track — and that's exactly what makes it sustainable.",
+      "tag": "Philosophy"
+    },
+    {
+      "id": "min_action_avant_motivation",
+      "trigger": {},
+      "titre": "Action often comes before motivation",
+      "body": "We think we need to be motivated to act, but it's often the reverse: starting a move, even without feeling like it, generates the motivation that follows. Don't wait to feel ready to start, start to feel ready.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "min_controle_perception",
+      "trigger": {},
+      "titre": "You don't control everything, but your reaction, you do",
+      "body": "An outside frustration is often beyond your control; how you respond to it, though, is always yours. That small gap between the event and your response is exactly where your freedom to act is built.",
+      "tag": "Wisdom"
+    },
+    {
+      "id": "min_reussite_definie",
+      "trigger": {},
+      "titre": "Define success on your own terms",
+      "body": "The standards displayed everywhere — physical, social, performance — aren't yours until you've consciously chosen them. Defining your own version of success frees you from endless comparison.",
+      "tag": "Philosophy"
+    },
+    {
+      "id": "min_habitude_identite",
+      "trigger": {},
+      "titre": "Every habit votes for an identity",
+      "body": "It's not just \"I exercise\", it's \"I'm someone who moves\". Framing your habits in terms of identity, rather than mere action, anchors change far more deeply and durably.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "min_erreur_donnee",
+      "trigger": {},
+      "titre": "A mistake is data, not a verdict",
+      "body": "Treating a slip or a setback as information to adjust from, rather than a judgment on your worth, changes your entire relationship with progress. Data isn't judged, it's used to adjust the trajectory.",
+      "tag": "Resilience"
+    },
+    {
+      "id": "min_environnement_social",
+      "trigger": {},
+      "titre": "Your circle shapes your choices",
+      "body": "The habits of the people around you rub off, often without you noticing, on your own. Surrounding yourself, even partially, with people who share your health goals makes long-term consistency far easier.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "min_temps_investissement",
+      "trigger": {},
+      "titre": "Time invested in yourself is never wasted",
+      "body": "Preparing a meal, doing a workout, sleeping enough: these moments can feel \"stolen\" from a to-do list. They're actually what lets you go the distance on everything else, with more energy and clarity.",
+      "tag": "Purpose"
+    },
+    {
+      "id": "min_signal_corps",
+      "trigger": {},
+      "titre": "Your body doesn't lie",
+      "body": "Persistent fatigue, difficult digestion, mood swings: these are messages, not flaws to ignore. Learning to decode them rather than silence them is one of the finest forms of health intelligence.",
+      "tag": "Awareness"
+    },
+    {
+      "id": "min_petit_dej_decision",
+      "trigger": {},
+      "titre": "The first decision sets the tone",
+      "body": "The first healthy choice of the day — drinking a glass of water, taking five minutes for yourself, a balanced breakfast — often creates a ripple effect on the decisions that follow. Starting well makes everything else easier.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "min_ni_bon_ni_mauvais",
+      "trigger": {},
+      "titre": "No food is good or bad",
+      "body": "Sorting foods into \"good\" and \"forbidden\" often feeds an anxious relationship with food. It's frequency and overall context that make the difference, not one isolated food on a given day. Step out of moral judgment on your plate.",
+      "tag": "Kindness"
+    },
+    {
+      "id": "min_vision_long_terme",
+      "trigger": {},
+      "titre": "Picture yourself in ten years",
+      "body": "Everyday health choices can sometimes seem insignificant taken in isolation. Seen over ten or twenty years, they're what largely determine your vitality, your mobility and your independence later in life.",
+      "tag": "Wisdom"
+    },
+    {
+      "id": "min_flexibilite",
+      "trigger": {},
+      "titre": "Rigidity breaks, flexibility holds",
+      "body": "A plan that's too strict shatters at the first curveball — a family meal, a scheduling conflict, fatigue. Building flexibility into your habits from the start makes them far more resilient over time than rigid perfection.",
+      "tag": "Strategy"
+    },
+    {
+      "id": "min_valeurs",
+      "trigger": {},
+      "titre": "Align your actions with your values",
+      "body": "If health and longevity truly matter to you, every choice aligned with that value strengthens your sense of inner coherence — one of the most powerful and lasting drivers of motivation there is.",
+      "tag": "Purpose"
+    },
+    {
+      "id": "min_saisons_vie",
+      "trigger": {},
+      "titre": "There are seasons in a life",
+      "body": "Some periods let you give it your all, others simply ask you to hold the course without stepping back. Recognizing which season you're in, without guilt, is healthier than comparing yourself to your past best.",
+      "tag": "Kindness"
+    },
+    {
+      "id": "min_micro_victoires",
+      "trigger": {},
+      "titre": "Count your micro-wins",
+      "body": "One more glass of water, a flight of stairs climbed, a home-cooked meal: these gestures seem tiny taken in isolation, but their daily accumulation is exactly what builds real, lasting change.",
+      "tag": "Motivation"
+    }
+  ]
+}
