@@ -57,20 +57,34 @@ Widget _subLabel(String text, {String? hint}) {
   );
 }
 
-Widget _settingsScaffold({required String title, required List<Widget> children}) {
-  return Scaffold(
-    backgroundColor: TotumColors.page,
-    appBar: AppBar(
+// Priorité 63 (retour d'Alex, thème sombre encore "collant" dans Compte et
+// paramètres) : ces sous-écrans sont poussés via Navigator.push et ne font
+// PAS partie de l'IndexedStack des 4 onglets (voir main.dart) — le
+// rafraîchissement forcé là-bas ne les atteint pas. `TotumColors` étant de
+// simples getters statiques (pas un InheritedWidget), rien ne les
+// reconstruit automatiquement quand la luminosité change pendant qu'ils
+// sont affichés. `children` passe donc d'une liste figée à une fabrique
+// (`List<Widget> Function()`), réévaluée à chaque changement via ce
+// ValueListenableBuilder — chaque appelant capture déjà ses variables
+// locales (l10n, etc.) dans la closure, aucun autre changement nécessaire
+// aux 5 sites d'appel au-delà de `children: [...]` -> `children: () => [...]`.
+Widget _settingsScaffold({required String title, required List<Widget> Function() children}) {
+  return ValueListenableBuilder<Brightness>(
+    valueListenable: AppSettings.effectiveBrightness,
+    builder: (context, _, __) => Scaffold(
       backgroundColor: TotumColors.page,
-      elevation: 0,
-      surfaceTintColor: Colors.transparent,
-      foregroundColor: TotumColors.textPrimary,
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
-    ),
-    body: SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
-        children: children,
+      appBar: AppBar(
+        backgroundColor: TotumColors.page,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        foregroundColor: TotumColors.textPrimary,
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
+      ),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
+          children: children(),
+        ),
       ),
     ),
   );
@@ -122,6 +136,13 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   void initState() {
     super.initState();
+    // Priorité 63 (retour d'Alex, thème sombre "collant" dans Compte et
+    // paramètres) : cet écran est poussé via Navigator.push, hors de
+    // l'IndexedStack des 4 onglets — TotumColors (simples getters
+    // statiques) ne le fait pas se reconstruire tout seul quand la
+    // luminosité change pendant qu'il est affiché. Voir aussi
+    // _settingsScaffold ci-dessus pour les sous-écrans (Apparence, etc.).
+    AppSettings.effectiveBrightness.addListener(_onAppearanceChanged);
     _loadStatus();
     if (!kIsWeb) {
       _purchaseSub = _iap.purchaseStream.listen(
@@ -144,8 +165,13 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   void dispose() {
+    AppSettings.effectiveBrightness.removeListener(_onAppearanceChanged);
     if (!kIsWeb) _purchaseSub.cancel();
     super.dispose();
+  }
+
+  void _onAppearanceChanged() {
+    if (mounted) setState(() {});
   }
 
   Future<void> _loadStatus() async {
@@ -839,7 +865,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   Widget build(BuildContext context) {
     final email = widget.client.auth.currentUser?.email ?? '';
     final l10n = context.l10n;
-    return _settingsScaffold(title: l10n.accountDetailsScreenTitle, children: [
+    return _settingsScaffold(title: l10n.accountDetailsScreenTitle, children: () => [
       TotumCard(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -892,7 +918,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return _settingsScaffold(title: l10n.appearanceScreenTitle, children: [
+    return _settingsScaffold(title: l10n.appearanceScreenTitle, children: () => [
       TotumCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1015,7 +1041,7 @@ class LanguageUnitsSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return _settingsScaffold(title: l10n.languageUnitsScreenTitle, children: [
+    return _settingsScaffold(title: l10n.languageUnitsScreenTitle, children: () => [
       TotumCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1115,7 +1141,7 @@ class _DataExportScreenState extends State<DataExportScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return _settingsScaffold(title: l10n.dataExportScreenTitle, children: [
+    return _settingsScaffold(title: l10n.dataExportScreenTitle, children: () => [
       TotumCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1169,7 +1195,7 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return _settingsScaffold(title: l10n.aboutScreenTitle, children: [
+    return _settingsScaffold(title: l10n.aboutScreenTitle, children: () => [
       TotumCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

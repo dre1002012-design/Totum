@@ -26,7 +26,7 @@ C:\Users\Alexa\totum_clean\build\app\outputs\flutter-apk
 flutter clean
 flutter pub get
 flutter build appbundle --release
-C:\\Users\\Alexa\\totum\_clean\\build\\app\\outputs\\bundle\\release\\app-release.aab
+C:\Users\Alexa\totum_clean\build\app\outputs\bundle\release
 
 
 * **Logo:**
