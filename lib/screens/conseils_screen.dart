@@ -4918,20 +4918,43 @@ class _ScorePriorityRow extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     if (s != null) ...[
-                      Container(
+                      // Priorité 71 : même anneau radial que la carte de
+                      // score du Bilan (_TotumScoreCard) — un même chiffre
+                      // ne doit jamais se présenter visuellement différemment
+                      // selon l'onglet où on le croise.
+                      SizedBox(
                         width: 60,
                         height: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: s.color.withValues(alpha: 0.12),
-                          border: Border.all(color: s.color, width: 3),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            PieChart(
+                              PieChartData(
+                                sectionsSpace: 3,
+                                centerSpaceRadius: 21,
+                                sections: [
+                                  PieChartSectionData(
+                                    value: (s.global / 100).clamp(0.0001, 1.0),
+                                    color: s.color,
+                                    title: '',
+                                    radius: 9,
+                                  ),
+                                  PieChartSectionData(
+                                    value: (1 - s.global / 100).clamp(0.0001, 1.0),
+                                    color: TotumColors.outlineStrong,
+                                    title: '',
+                                    radius: 9,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(s.global.round().toString(),
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w900,
+                                    color: s.color)),
+                          ],
                         ),
-                        alignment: Alignment.center,
-                        child: Text(s.global.round().toString(),
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w900,
-                                color: s.color)),
                       ),
                       const SizedBox(height: 8),
                       Text(l10n.bilanScoreTitle,

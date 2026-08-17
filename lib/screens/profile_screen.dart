@@ -188,9 +188,23 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   void _refreshCharts() {
     _weightHistoryFuture = CalibrationService.instance.recentHistory(60);
+    _expenditureHistoryFuture = CalibrationService.instance.expenditureHistory(days: 60);
+    _refreshProfileDependentCharts();
+  }
+
+  /// Priorité 71 (audit performance du 17/08/2026) : `initState()` appelait
+  /// `_refreshCharts()` PUIS `_loadProfile()`, qui rappelait
+  /// `_refreshCharts()` en entier une seconde fois à sa fin — les 4 futures
+  /// (dont `expenditureHistory`, un scan glissant ~60×20 jours) partaient
+  /// donc deux fois de suite à chaque ouverture de l'onglet. Seuls
+  /// `_dayTotalsFuture`/`_targetsFuture` dépendent réellement des champs du
+  /// formulaire (poids/taille/âge) que `_loadProfile()` vient de remplir —
+  /// `_weightHistoryFuture`/`_expenditureHistoryFuture` n'en dépendent pas,
+  /// inutile de les relancer. Ce sous-ensemble est donc le seul à
+  /// redéclencher une fois le profil chargé.
+  void _refreshProfileDependentCharts() {
     _dayTotalsFuture = computeTodayTotals();
     _targetsFuture = _computeAutoTargets();
-    _expenditureHistoryFuture = CalibrationService.instance.expenditureHistory(days: 60);
   }
 
   /// Recharge les données pouvant avoir changé depuis un autre onglet
@@ -714,7 +728,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       await sp.setInt('profile_body_fat_range', _bodyFatRange!.index);
     }
 
-    _refreshCharts();
+    _refreshProfileDependentCharts();
     // Déclenche un rebuild pour que les FutureBuilder (poids, totaux du
     // jour, cibles) affichent les futures fraîchement réassignées ci-dessus.
     if (mounted) setState(() {});
@@ -1963,7 +1977,12 @@ class ProfileScreenState extends State<ProfileScreen> {
           Builder(builder: (context) {
             final warning = _checkManualCoherence();
             if (warning == null) return const SizedBox.shrink();
-            final color = warning.tooHigh ? const Color(0xFFEF6C00) : const Color(0xFF1E88E5);
+            // Priorité 71 (homogénéité) : ce n'est pas un delta "bon/mauvais"
+            // (positive/negative) ni un 2e accent de marque — juste "tes
+            // chiffres ne s'additionnent pas", même sens dans les 2 sens.
+            // La direction (trop haut/trop bas) est déjà portée par l'icône
+            // flèche, pas besoin d'une 2e couleur inventée pour la répéter.
+            const color = TotumColors.accent;
             return Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Container(
@@ -1974,7 +1993,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Icon(warning.tooHigh ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded, color: color, size: 18),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(warning.text, style: TextStyle(fontSize: 12, color: color, height: 1.4))),
+                    Expanded(child: Text(warning.text, style: const TextStyle(fontSize: 12, color: color, height: 1.4))),
                   ],
                 ),
               ),

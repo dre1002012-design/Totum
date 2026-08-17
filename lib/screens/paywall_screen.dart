@@ -7,6 +7,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../l10n/l10n_ext.dart';
+import '../theme/totum_style.dart';
 import 'account_screen.dart';
 
 class PaywallScreen extends StatefulWidget {
@@ -136,9 +137,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l10n = context.l10n;
-    const Color primaryColor = Color(0xFFFF7A00);
 
     final String priceText = kIsWeb
         ? '14,99 €/an'
@@ -160,6 +159,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         kIsWeb ? l10n.paywallFooterWeb : l10n.paywallFooterNative;
 
     return Scaffold(
+      backgroundColor: TotumColors.page,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -194,31 +194,24 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 const SizedBox(height: 16),
 
                 // ==== Bénéfices ====
-                Card(
-                  elevation: 0,
-                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.paywallBenefitsTitle,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
+                TotumCard(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.paywallBenefitsTitle,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
                         ),
-                        const SizedBox(height: 8),
-                        _BenefitRow(text: l10n.paywallBenefit1),
-                        _BenefitRow(text: l10n.paywallBenefit2),
-                        _BenefitRow(text: l10n.paywallBenefit3),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 8),
+                      _BenefitRow(text: l10n.paywallBenefit1),
+                      _BenefitRow(text: l10n.paywallBenefit2),
+                      _BenefitRow(text: l10n.paywallBenefit3),
+                    ],
                   ),
                 ),
 
@@ -230,7 +223,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Text(
                       _priceError,
-                      style: const TextStyle(color: Colors.red),
+                      style: TextStyle(color: TotumColors.negative),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -249,11 +242,11 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 // ==== Bouton principal ====
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: FilledButton(
                     onPressed: _handlePremiumButton,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      foregroundColor: Colors.black,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: TotumColors.accent,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(999),
@@ -269,7 +262,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 Text(
                   footerText,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(fontSize: 12, color: TotumColors.textMuted),
                 ),
 
                 const SizedBox(height: 24),
@@ -302,7 +295,7 @@ class _BenefitRow extends StatelessWidget {
           const Icon(
             Icons.check_circle_rounded,
             size: 18,
-            color: Color(0xFFFF7A00),
+            color: TotumColors.accent,
           ),
           const SizedBox(width: 8),
           Expanded(

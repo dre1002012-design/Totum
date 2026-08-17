@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../l10n/l10n_ext.dart';
+import '../theme/totum_style.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -30,14 +31,17 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   /// Affiche un message stylé (couleur selon le type) avec une durée adaptée.
-  void _showMessage(String text,
-      {Color color = const Color(0xFF2E7D32), int seconds = 4}) {
+  /// Priorité 71 (homogénéité) : `color` ne peut pas prendre `TotumColors.x`
+  /// comme valeur par défaut (ce sont des `get`, pas des constantes) — d'où
+  /// `Color?` résolu dans le corps plutôt qu'en valeur par défaut du
+  /// paramètre.
+  void _showMessage(String text, {Color? color, int seconds = 4}) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(text, style: const TextStyle(fontSize: 14)),
-        backgroundColor: color,
+        backgroundColor: color ?? TotumColors.positive,
         behavior: SnackBarBehavior.floating,
         duration: Duration(seconds: seconds),
         shape: RoundedRectangleBorder(
@@ -88,12 +92,12 @@ class _AuthScreenState extends State<AuthScreen> {
       if (!mounted) return;
       _showMessage(
         context.l10n.authSignUpWelcome,
-        color: const Color(0xFFEF6C00), // orange : action requise
+        color: TotumColors.accent, // orange : action requise
         seconds: 8,
       );
     } catch (e) {
       if (!mounted) return;
-      _showMessage(_friendlyError(e), color: const Color(0xFFC62828));
+      _showMessage(_friendlyError(e), color: TotumColors.negative);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -121,7 +125,7 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      _showMessage(_friendlyError(e), color: const Color(0xFFC62828));
+      _showMessage(_friendlyError(e), color: TotumColors.negative);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -132,7 +136,7 @@ class _AuthScreenState extends State<AuthScreen> {
     if (email.isEmpty || !email.contains('@')) {
       _showMessage(
         context.l10n.authEnterEmailFirst,
-        color: const Color(0xFFEF6C00),
+        color: TotumColors.accent,
       );
       return;
     }
@@ -142,12 +146,12 @@ class _AuthScreenState extends State<AuthScreen> {
       if (!mounted) return;
       _showMessage(
         context.l10n.authResetPasswordSent,
-        color: const Color(0xFFEF6C00),
+        color: TotumColors.accent,
         seconds: 7,
       );
     } catch (e) {
       if (!mounted) return;
-      _showMessage(_friendlyError(e), color: const Color(0xFFC62828));
+      _showMessage(_friendlyError(e), color: TotumColors.negative);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -166,18 +170,18 @@ class _AuthScreenState extends State<AuthScreen> {
       if (!mounted) return;
       _showMessage(
         context.l10n.authGoogleSignInFailed,
-        color: const Color(0xFFC62828),
+        color: TotumColors.negative,
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    const color = Color(0xFFFF7A00);
     final l10n = context.l10n;
     final String pricingText = l10n.authPricingText;
 
     return Scaffold(
+      backgroundColor: TotumColors.page,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -277,13 +281,15 @@ class _AuthScreenState extends State<AuthScreen> {
                       children: [
                         SizedBox(
                           width: double.infinity,
-                          child: ElevatedButton(
+                          child: FilledButton(
                             onPressed: _signIn,
-                            style: ElevatedButton.styleFrom(
+                            style: FilledButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 14),
-                              backgroundColor: color,
-                              foregroundColor: Colors.black,
+                              backgroundColor: TotumColors.accent,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(l10n.authSignInButton),
                           ),
@@ -331,7 +337,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   Text(
                     l10n.authTermsNotice,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                    style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
                   ),
                 ],
               ),

@@ -1628,31 +1628,56 @@ class _TotumScoreCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              // Cercle score + lettre
-              Container(
+              // Priorité 71 (modernisation de la carte de score, demande
+              // d'Alex) : anneau radial plutôt qu'un simple cercle bordé —
+              // même traitement exact que l'anneau "kcal restant" de l'onglet
+              // Profil (_kpiRemainingCard, PieChart sectionsSpace/centerSpace)
+              // pour une cohérence visuelle immédiate entre les deux écrans,
+              // au lieu d'inventer un nouveau motif.
+              SizedBox(
                 width: 78,
                 height: 78,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: s.color.withValues(alpha: 0.15),
-                  border: Border.all(color: s.color, width: 3),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Text(
-                      s.global.round().toString(),
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w900,
-                        color: s.color,
-                        height: 1,
+                    PieChart(
+                      PieChartData(
+                        sectionsSpace: 3,
+                        centerSpaceRadius: 28,
+                        sections: [
+                          PieChartSectionData(
+                            value: (s.global / 100).clamp(0.0001, 1.0),
+                            color: s.color,
+                            title: '',
+                            radius: 11,
+                          ),
+                          PieChartSectionData(
+                            value: (1 - s.global / 100).clamp(0.0001, 1.0),
+                            color: TotumColors.outlineStrong,
+                            title: '',
+                            radius: 11,
+                          ),
+                        ],
                       ),
                     ),
-                    Text('/ 100',
-                        style: TextStyle(
-                            fontSize: 10,
-                            color: s.color.withValues(alpha: 0.8))),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          s.global.round().toString(),
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                            color: s.color,
+                            height: 1,
+                          ),
+                        ),
+                        Text('/ 100',
+                            style: TextStyle(
+                                fontSize: 9,
+                                color: s.color.withValues(alpha: 0.8))),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -1778,7 +1803,8 @@ class _TotumScoreCard extends StatelessWidget {
                     SizedBox(
                       width: 96,
                       child: Text(p.label,
-                          style: const TextStyle(fontSize: 12.5)),
+                          style: const TextStyle(fontSize: 12.5),
+                          overflow: TextOverflow.ellipsis),
                     ),
                     Expanded(
                       child: ClipRRect(
@@ -3051,7 +3077,9 @@ void showSunVitDSheet(
   required bool isAverage,
   required String periodeLabel,
 }) {
-  const sunColor = Color(0xFFF9A825);
+  // Priorité 71 : plus de couleur jaune propre a cet écran — même accent
+  // unique que le reste de l'app, cohérent avec sun_vitamin_d_screen.dart.
+  const sunColor = TotumColors.accent;
   final l10n = context.l10n;
   showModalBottomSheet(
     context: context,
@@ -3485,12 +3513,30 @@ Widget _contributorRow(
 }
 
 /// Écran affichant le bilan complet d'un jour passé (ouvert au tap sur une barre).
-class DayBilanScreen extends StatelessWidget {
+class DayBilanScreen extends StatefulWidget {
   final DateTime day;
   const DayBilanScreen({super.key, required this.day});
 
   @override
+  State<DayBilanScreen> createState() => _DayBilanScreenState();
+}
+
+class _DayBilanScreenState extends State<DayBilanScreen> {
+  // Priorité 71 (audit performance du 17/08/2026) : cet écran était un
+  // StatelessWidget appelant _computeBilanForSpan (requêtes Supabase
+  // food_entries/water_intake/sun_vitamin_d + fusion des repères d'objectif)
+  // directement dans build() — tout rebuild d'un ancêtre (bascule thème/
+  // langue/taille de texte, tous pilotés par des ValueListenableBuilder plus
+  // haut dans l'arbre) relançait donc ces requêtes réseau pour un écran que
+  // l'utilisateur ne fait que consulter. Même correctif déjà appliqué cette
+  // session à ExpenditureScreen/WeightTrendScreen : la Future est calculée
+  // UNE fois, mémorisée dans le State, jamais recalculée par un rebuild.
+  late final Future<BilanData> _future =
+      _computeBilanForSpan(ReportSpan.day, specificDay: widget.day);
+
+  @override
   Widget build(BuildContext context) {
+    final day = widget.day;
     final fmt = MaterialLocalizations.of(context);
     final l10n = context.l10n;
     final onDateLabel = l10n.bilanPeriodOnDate(fmt.formatMediumDate(day));
@@ -3499,7 +3545,7 @@ class DayBilanScreen extends StatelessWidget {
         title: Text(l10n.bilanDayTitle(fmt.formatMediumDate(day))),
       ),
       body: FutureBuilder<BilanData>(
-        future: _computeBilanForSpan(ReportSpan.day, specificDay: day),
+        future: _future,
         builder: (context, snap) {
           if (snap.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
@@ -4908,7 +4954,7 @@ class _Section extends StatelessWidget {
                           padding: EdgeInsets.symmetric(horizontal: 4),
                           child: Icon(Icons.wb_sunny,
                               size: 16,
-                              color: Color(0xFFF9A825)),
+                              color: TotumColors.accent),
                         ),
                       ),
                     if (m.ficheKey != null)

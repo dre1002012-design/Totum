@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../l10n/app_localizations.dart';
 import '../l10n/l10n_ext.dart';
+import '../theme/totum_style.dart';
 
 /// ═══════════════════════════════════════════════════════════════════════
 ///  SOLEIL & VITAMINE D — page dédiée, autonome.
@@ -21,8 +22,6 @@ import '../l10n/l10n_ext.dart';
 ///
 ///  IMPORTANT : estimation PÉDAGOGIQUE, jamais une mesure médicale.
 /// ═══════════════════════════════════════════════════════════════════════
-
-const Color _kSun = Color(0xFFF9A825);
 
 /// Clé de stockage de la vitamine D solaire pour une date donnée.
 String sunVitDKey(DateTime d) =>
@@ -265,7 +264,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.sunValidateSnackbar(vitD.toStringAsFixed(1))),
-          backgroundColor: const Color(0xFF2E7D32),
+          backgroundColor: TotumColors.positive,
           duration: const Duration(seconds: 3),
         ),
       );
@@ -283,12 +282,14 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F6F2),
+      backgroundColor: TotumColors.page,
       appBar: AppBar(
-        title: Text(context.l10n.sunScreenTitle),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: TotumColors.page,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        foregroundColor: TotumColors.textPrimary,
+        title: Text(context.l10n.sunScreenTitle,
+            style: TextStyle(fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
       ),
       body: _skinIndex == null ? _buildSkinPicker() : _buildMain(),
     );
@@ -304,7 +305,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [_kSun.withValues(alpha: 0.14), _kSun.withValues(alpha: 0.04)],
+              colors: [TotumColors.accent.withValues(alpha: 0.14), TotumColors.accent.withValues(alpha: 0.04)],
             ),
             borderRadius: BorderRadius.circular(16),
           ),
@@ -316,7 +317,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
               const SizedBox(height: 6),
               Text(
                 l10n.sunSkinPickerSubtitle,
-                style: const TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+                style: TextStyle(fontSize: 13, height: 1.5, color: TotumColors.textPrimary),
               ),
             ],
           ),
@@ -331,44 +332,37 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
   }
 
   Widget _skinCard(SkinType s) {
-    return GestureDetector(
+    return TotumCard(
       onTap: () => _saveSkin(s.index),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.black12),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: _skinToneColor(s.index),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.black12),
-              ),
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: _skinToneColor(s.index),
+              shape: BoxShape.circle,
+              border: Border.all(color: TotumColors.outline),
             ),
-            const SizedBox(width: 13),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(s.label,
-                      style: const TextStyle(
-                          fontSize: 14.5, fontWeight: FontWeight.w800)),
-                  const SizedBox(height: 3),
-                  Text(s.desc,
-                      style: const TextStyle(
-                          fontSize: 12, height: 1.4, color: Colors.black54)),
-                ],
-              ),
+          ),
+          const SizedBox(width: 13),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(s.label,
+                    style: const TextStyle(
+                        fontSize: 14.5, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 3),
+                Text(s.desc,
+                    style: TextStyle(
+                        fontSize: 12, height: 1.4, color: TotumColors.textSecondary)),
+              ],
             ),
-            const Icon(Icons.chevron_right, color: Colors.black38),
-          ],
-        ),
+          ),
+          Icon(Icons.chevron_right, color: TotumColors.textMuted),
+        ],
       ),
     );
   }
@@ -401,15 +395,19 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [_kSun, Color(0xFFFFB74D)],
+            // Même dégradé de héros que _CoachHeroCard/_todayAnalysisHero
+            // (conseils_screen.dart) — un seul vocabulaire de "vignette
+            // héroïque" dans toute l'app, jamais un dégradé propre à cet
+            // écran.
+            gradient: LinearGradient(
+              colors: [TotumColors.accent, TotumProgress.stop75],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: _kSun.withValues(alpha: 0.3),
+                color: TotumColors.accent.withValues(alpha: 0.3),
                 blurRadius: 16,
                 offset: const Offset(0, 6),
               ),
@@ -455,7 +453,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.wb_twilight, color: _kSun, size: 20),
+                  const Icon(Icons.wb_twilight, color: TotumColors.accent, size: 20),
                   const SizedBox(width: 8),
                   Text(l10n.sunUvCurrentTitle,
                       style: const TextStyle(
@@ -499,7 +497,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                 ],
               ] else ...[
                 Text(_uvError ?? l10n.sunUvUnknown,
-                    style: const TextStyle(fontSize: 13, color: Colors.black54)),
+                    style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
                 const SizedBox(height: 10),
                 // Saisie manuelle de secours
                 Row(
@@ -512,7 +510,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                         min: 0,
                         max: 11,
                         divisions: 11,
-                        activeColor: _kSun,
+                        activeColor: TotumColors.accent,
                         label: (_uvIndex ?? 5).toStringAsFixed(0),
                         onChanged: (v) => setState(() => _uvIndex = v),
                       ),
@@ -536,7 +534,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                       style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
                   Expanded(
                     child: Text(skin.label,
-                        style: const TextStyle(fontSize: 13, color: Colors.black54)),
+                        style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
                   ),
                   TextButton(
                     onPressed: () => setState(() => _skinIndex = null),
@@ -558,27 +556,27 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                       label: Text(exposureLevels[i].label),
                       selected: _exposureIndex == i,
                       onSelected: (_) => setState(() => _exposureIndex = i),
-                      selectedColor: _kSun,
+                      selectedColor: TotumColors.accent,
                       labelStyle: TextStyle(
                         fontSize: 12.5,
-                        color: _exposureIndex == i ? Colors.white : Colors.black87,
+                        color: _exposureIndex == i ? Colors.white : TotumColors.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),
-                      backgroundColor: Colors.white,
+                      backgroundColor: TotumColors.surface,
                     ),
                 ],
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
-                  const Icon(Icons.timer_outlined, size: 18, color: Colors.black54),
+                  Icon(Icons.timer_outlined, size: 18, color: TotumColors.textSecondary),
                   const SizedBox(width: 8),
                   Text(l10n.sunSunDuration,
                       style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
                   const Spacer(),
                   Text(l10n.sunMinutesShort(_minutes),
                       style: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w900, color: _kSun)),
+                          fontSize: 15, fontWeight: FontWeight.w900, color: TotumColors.accent)),
                 ],
               ),
               Slider(
@@ -586,14 +584,14 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
                 min: 5,
                 max: 60,
                 divisions: 11,
-                activeColor: _kSun,
+                activeColor: TotumColors.accent,
                 label: l10n.sunMinutesShort(_minutes),
                 onChanged: (v) => setState(() => _minutes = v.round()),
               ),
               SwitchListTile(
                 value: _usedSunscreen,
                 onChanged: (v) => setState(() => _usedSunscreen = v),
-                activeThumbColor: _kSun,
+                activeThumbColor: TotumColors.accent,
                 contentPadding: EdgeInsets.zero,
                 title: Text(l10n.sunSunscreenSwitchTitle,
                     style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
@@ -611,22 +609,22 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: _kSun.withValues(alpha: 0.08),
+              color: TotumColors.accent.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: _kSun.withValues(alpha: 0.3)),
+              border: Border.all(color: TotumColors.accent.withValues(alpha: 0.3)),
             ),
             child: Column(
               children: [
                 Text(l10n.sunEstimatedAmount(vitD.toStringAsFixed(1)),
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w900, color: _kSun)),
+                        fontSize: 20, fontWeight: FontWeight.w900, color: TotumColors.accent)),
                 const SizedBox(height: 4),
                 Text(
                   l10n.sunEstimateDetail(_minutes,
                       skin.label.split('—').last.trim().toLowerCase(),
                       exposureLevels[_exposureIndex].label.toLowerCase()),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 12, color: Colors.black54),
+                  style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
                 ),
               ],
             ),
@@ -636,7 +634,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
             width: double.infinity,
             child: FilledButton.icon(
               style: FilledButton.styleFrom(
-                backgroundColor: _kSun,
+                backgroundColor: TotumColors.accent,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
@@ -669,7 +667,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
         const SizedBox(height: 14),
         Text(
           l10n.sunDisclaimer,
-          style: const TextStyle(fontSize: 11, color: Colors.black45),
+          style: TextStyle(fontSize: 11, color: TotumColors.textMuted),
           textAlign: TextAlign.center,
         ),
       ],
@@ -677,27 +675,19 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
   }
 
   // ── Petits helpers UI ──────────────────────────────────────────────────
-  Widget _card({required Widget child}) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
-        ),
-        child: child,
-      );
+  Widget _card({required Widget child}) => TotumCard(child: child);
 
   Widget _infoLine(IconData icon, String text) => Padding(
         padding: const EdgeInsets.only(top: 4),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 15, color: Colors.black45),
+            Icon(icon, size: 15, color: TotumColors.textMuted),
             const SizedBox(width: 7),
             Expanded(
               child: Text(text,
-                  style: const TextStyle(
-                      fontSize: 12, height: 1.4, color: Colors.black54)),
+                  style: TextStyle(
+                      fontSize: 12, height: 1.4, color: TotumColors.textSecondary)),
             ),
           ],
         ),
@@ -708,12 +698,12 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 17, color: _kSun),
+            Icon(icon, size: 17, color: TotumColors.accent),
             const SizedBox(width: 9),
             Expanded(
               child: Text(text,
-                  style: const TextStyle(
-                      fontSize: 12.5, height: 1.45, color: Colors.black87)),
+                  style: TextStyle(
+                      fontSize: 12.5, height: 1.45, color: TotumColors.textPrimary)),
             ),
           ],
         ),
