@@ -1034,9 +1034,28 @@ Future<void> _appendGoalsSnapshot(SharedPreferences sp, NutritionTargets t) asyn
 /// pesées ou moins de 8 jours de journal alimentaire dans la fenêtre), les
 /// cibles formule pure sont retournées telles quelles, inchangées.
 Future<NutritionTargets> computeCalibratedTargets(UserProfile profile) async {
-  final formulaTargets = computeNutritionTargets(profile);
-
   final calib = await CalibrationService.instance.computeCalibration();
+  return blendCalibratedTargets(profile, calib);
+}
+
+/// Priorité 71 (audit du 17/08/2026) : cœur SYNCHRONE du blend de
+/// calibration, extrait de [computeCalibratedTargets] pour être partagé avec
+/// l'aperçu écran (Profil, `_recomputePreview`). Avant ce correctif,
+/// l'aperçu affiché pendant qu'on modifie un réglage (objectif, activité,
+/// mesures...) utilisait `computeGoals` — la formule PURE, sans calibration
+/// — alors que la sauvegarde effective passait par `computeCalibratedGoals`
+/// (avec le blend). Résultat pour tout utilisateur ayant assez d'historique
+/// pour que la calibration soit active (3+ semaines) : l'aperçu affichait un
+/// chiffre, puis "Confirmer mes objectifs" en affichait un AUTRE, sans
+/// explication — et le drapeau "modifications non enregistrées" se
+/// déclenchait à tort en comparant ces deux bases différentes. En exposant
+/// ce cœur en fonction PURE (le `CalibrationResult` est déjà en mémoire,
+/// chargé une fois par `_computeAutoGoals`/`_refreshCharts` — jamais besoin
+/// de le réinterroger en réseau à chaque interaction), l'aperçu peut
+/// désormais appliquer EXACTEMENT le même blend de façon synchrone, sans
+/// perdre la réactivité instantanée de l'écran de réglages.
+NutritionTargets blendCalibratedTargets(UserProfile profile, CalibrationResult calib) {
+  final formulaTargets = computeNutritionTargets(profile);
   if (!calib.hasEnoughData || calib.empiricalTdee == null) return formulaTargets;
 
   final bmr = _computeBmr(profile);
@@ -1074,6 +1093,71 @@ Future<Goals> computeCalibratedGoals(UserProfile profile) async {
   return targets.goals;
 }
 
+/// Reconstruit un jeu de cibles cohérent à partir de macros saisies
+/// manuellement — sous-cibles lipidiques et B1/B3/sucres RECALCULÉES sur
+/// les valeurs MANUELLES (pas laissées sur l'ancien calcul automatique) —
+/// sinon elles restent figées sur des calories qui ne sont plus les
+/// tiennes. Même architecture v3 que le calcul auto : ALA/LA = planchers
+/// ANSES fixes, oméga-9 = 35% du budget lipides (cible réaliste, atteignable
+/// via une quantité normale d'huile d'olive/oléagineux).
+///
+/// Priorité 71 (audit du 17/08/2026) : extrait de
+/// [computeAndSaveTargetsFromStoredProfile] pour être réutilisable par
+/// l'aperçu écran (Profil) — la carte "Micronutriments en vedette"
+/// ignorait totalement le mode manuel, affichant des pourcentages calculés
+/// sur les cibles AUTO même quand l'utilisateur avait défini ses propres
+/// macros, en désaccord visible avec le Bilan (qui, lui, applique déjà
+/// cette reconstruction). Une seule implémentation partagée : aperçu et
+/// Bilan ne peuvent plus diverger.
+NutritionTargets applyManualMacros(
+  NutritionTargets formulaTargets, {
+  required double kcal,
+  required double prot,
+  required double carb,
+  required double fat,
+  required double fiber,
+}) {
+  final manualEnergyMJ = kcal * 0.004184;
+  final manualO6 = _roundTo(kcal * 0.04 / 9.0, 0.1);
+  final manualO3 = _roundTo(kcal * 0.01 / 9.0, 0.1);
+  final manualO9 = _roundTo(fat * 0.35, 0.1);
+  return NutritionTargets(
+    goals: Goals(kcal: kcal, prot: prot, carb: carb, fat: fat, fiber: fiber),
+    sat: _roundTo(kcal * 0.10 / 9.0, 0.1),
+    o9: manualO9,
+    o6: manualO6,
+    o3: manualO3,
+    epa: formulaTargets.epa,
+    dha: formulaTargets.dha,
+    sugars: _roundTo(kcal * 0.10 / 4.0, 0.5),
+    salt: formulaTargets.salt,
+    caMg: formulaTargets.caMg,
+    cuMg: formulaTargets.cuMg,
+    feMg: formulaTargets.feMg,
+    iUg: formulaTargets.iUg,
+    mgMg: formulaTargets.mgMg,
+    mnMg: formulaTargets.mnMg,
+    pMg: formulaTargets.pMg,
+    kMg: formulaTargets.kMg,
+    seUg: formulaTargets.seUg,
+    naMg: formulaTargets.naMg,
+    znMg: formulaTargets.znMg,
+    vitAUg: formulaTargets.vitAUg,
+    vitBetacarUg: formulaTargets.vitBetacarUg,
+    vitDUg: formulaTargets.vitDUg,
+    vitEMg: formulaTargets.vitEMg,
+    vitKUg: formulaTargets.vitKUg,
+    vitCMg: formulaTargets.vitCMg,
+    b1Mg: _roundTo((0.1 * manualEnergyMJ).clamp(1.0, double.infinity), 0.1),
+    b2Mg: formulaTargets.b2Mg,
+    b3Mg: _roundTo((1.6 * manualEnergyMJ).clamp(11.0, double.infinity), 0.5),
+    b5Mg: formulaTargets.b5Mg,
+    b6Mg: formulaTargets.b6Mg,
+    b9Ug: formulaTargets.b9Ug,
+    b12Ug: formulaTargets.b12Ug,
+  );
+}
+
 Future<NutritionTargets> computeAndSaveTargetsFromStoredProfile() async {
   final profile = await ProfileStore.instance.load();
   var targets = computeNutritionTargets(profile);
@@ -1093,57 +1177,8 @@ Future<NutritionTargets> computeAndSaveTargetsFromStoredProfile() async {
         manualCarb != null &&
         manualFat != null &&
         manualFiber != null) {
-      // Sous-cibles lipidiques et B1/B3/sucres RECALCULÉES sur les valeurs
-      // MANUELLES (pas laissées sur l'ancien calcul automatique) — sinon
-      // elles restent figées sur des calories qui ne sont plus les tiennes.
-      // Même architecture v3 que le calcul auto : ALA/LA = planchers ANSES
-      // fixes, oméga-9 = 35% du budget lipides (cible réaliste, atteignable
-      // via une quantité normale d'huile d'olive/oléagineux).
-      final manualEnergyMJ = manualKcal * 0.004184;
-      final manualO6 = _roundTo(manualKcal * 0.04 / 9.0, 0.1);
-      final manualO3 = _roundTo(manualKcal * 0.01 / 9.0, 0.1);
-      final manualO9 = _roundTo(manualFat * 0.35, 0.1);
-      targets = NutritionTargets(
-        goals: Goals(
-          kcal: manualKcal,
-          prot: manualProt,
-          carb: manualCarb,
-          fat: manualFat,
-          fiber: manualFiber,
-        ),
-        sat: _roundTo(manualKcal * 0.10 / 9.0, 0.1),
-        o9: manualO9,
-        o6: manualO6,
-        o3: manualO3,
-        epa: targets.epa,
-        dha: targets.dha,
-        sugars: _roundTo(manualKcal * 0.10 / 4.0, 0.5),
-        salt: targets.salt,
-        caMg: targets.caMg,
-        cuMg: targets.cuMg,
-        feMg: targets.feMg,
-        iUg: targets.iUg,
-        mgMg: targets.mgMg,
-        mnMg: targets.mnMg,
-        pMg: targets.pMg,
-        kMg: targets.kMg,
-        seUg: targets.seUg,
-        naMg: targets.naMg,
-        znMg: targets.znMg,
-        vitAUg: targets.vitAUg,
-        vitBetacarUg: targets.vitBetacarUg,
-        vitDUg: targets.vitDUg,
-        vitEMg: targets.vitEMg,
-        vitKUg: targets.vitKUg,
-        vitCMg: targets.vitCMg,
-        b1Mg: _roundTo((0.1 * manualEnergyMJ).clamp(1.0, double.infinity), 0.1),
-        b2Mg: targets.b2Mg,
-        b3Mg: _roundTo((1.6 * manualEnergyMJ).clamp(11.0, double.infinity), 0.5),
-        b5Mg: targets.b5Mg,
-        b6Mg: targets.b6Mg,
-        b9Ug: targets.b9Ug,
-        b12Ug: targets.b12Ug,
-      );
+      targets = applyManualMacros(targets,
+          kcal: manualKcal, prot: manualProt, carb: manualCarb, fat: manualFat, fiber: manualFiber);
     }
   } else {
     // Mode auto (l'immense majorité des utilisateurs) : applique la

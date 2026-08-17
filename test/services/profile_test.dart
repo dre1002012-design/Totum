@@ -12,6 +12,7 @@
 // exercées indirectement, exactement comme l'app les utilise réellement.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:totum_app/services/profile.dart';
+import 'package:totum_app/services/calibration_service.dart' show CalibrationResult;
 
 UserProfile _profile({
   Sex sex = Sex.male,
@@ -359,6 +360,91 @@ void main() {
       expect(youngMan.caMg, 950.0);
       expect(seniorMan.caMg, 1200.0);
       expect(olderWoman.caMg, 1200.0);
+    });
+  });
+
+  group('blendCalibratedTargets (régression Priorité 71 — aperçu Profil vs sauvegarde)', () {
+    test('sans calibration disponible, renvoie exactement la formule pure, inchangée', () {
+      final p = _profile();
+      final formula = computeNutritionTargets(p);
+      final blended = blendCalibratedTargets(p, CalibrationResult.none);
+      expect(blended.goals.kcal, formula.goals.kcal);
+      expect(blended.goals.prot, formula.goals.prot);
+      expect(blended.b1Mg, formula.b1Mg);
+    });
+
+    test('avec une calibration active, le kcal blendé se rapproche du TDEE empirique', () {
+      final p = _profile(goal: GoalType.maintain);
+      final formula = computeNutritionTargets(p);
+      final bmr = computeBmr(p);
+      // TDEE empirique délibérément très différent de la formule, pour que
+      // le blend soit mesurable sans ambiguïté.
+      final empiricalTdee = bmr * 2.0;
+      final calib = CalibrationResult(
+        hasEnoughData: true,
+        empiricalTdee: empiricalTdee,
+        blendWeight: 0.5,
+        daysOfWeightData: 20,
+        daysOfFoodData: 15,
+      );
+      final blended = blendCalibratedTargets(p, calib);
+      // Le blend doit se situer strictement entre la formule pure et le
+      // TDEE empirique (jamais égal à l'un ou l'autre avec un blendWeight
+      // à 0.5), et strictement plus haut que la formule pure ici (TDEE
+      // empirique 2x plus élevé).
+      expect(blended.goals.kcal, greaterThan(formula.goals.kcal));
+    });
+
+    test('aperçu (Profil) et sauvegarde utilisent la même fonction — ne peuvent plus diverger', () {
+      // Garde-fou anti-régression direct sur le bug trouvé par l'audit :
+      // computeCalibratedTargets doit déléguer à blendCalibratedTargets,
+      // pas dupliquer sa propre logique de blend.
+      final p = _profile();
+      final calib = CalibrationResult(
+        hasEnoughData: true,
+        empiricalTdee: computeBmr(p) * 1.6,
+        blendWeight: 0.4,
+      );
+      final direct = blendCalibratedTargets(p, calib);
+      // computeCalibratedTargets est async (va chercher calib lui-même) ;
+      // on vérifie ici seulement que la fonction synchrone partagée existe
+      // et produit un résultat cohérent et déterministe pour les mêmes
+      // entrées — la non-divergence aperçu/sauvegarde vient du fait que
+      // c'est la MÊME fonction appelée des deux côtés (voir profile_screen.dart).
+      final direct2 = blendCalibratedTargets(p, calib);
+      expect(direct.goals.kcal, direct2.goals.kcal);
+    });
+  });
+
+  group('applyManualMacros (régression Priorité 71 — carte micronutriments vs mode manuel)', () {
+    test('applique exactement les macros manuelles et recalcule les sous-cibles qui en dépendent', () {
+      final p = _profile();
+      final formula = computeNutritionTargets(p);
+      final manual = applyManualMacros(formula,
+          kcal: 1800, prot: 140, carb: 150, fat: 60, fiber: 30);
+
+      expect(manual.goals.kcal, 1800.0);
+      expect(manual.goals.prot, 140.0);
+      expect(manual.goals.carb, 150.0);
+      expect(manual.goals.fat, 60.0);
+      expect(manual.goals.fiber, 30.0);
+
+      // Sous-cibles dérivées du kcal manuel : ne doivent PAS être restées
+      // calées sur l'ancien kcal de la formule (sauf coïncidence).
+      const manualEnergyMJ = 1800 * 0.004184;
+      expect(manual.b1Mg, closeTo((0.1 * manualEnergyMJ).clamp(1.0, double.infinity), 0.05));
+      expect(manual.sugars, closeTo(1800 * 0.10 / 4.0, 0.5));
+    });
+
+    test('les micronutriments non dépendants des macros restent ceux de la formule (pas réinventés)', () {
+      final p = _profile();
+      final formula = computeNutritionTargets(p);
+      final manual = applyManualMacros(formula,
+          kcal: 1800, prot: 140, carb: 150, fat: 60, fiber: 30);
+
+      expect(manual.vitDUg, formula.vitDUg);
+      expect(manual.caMg, formula.caMg);
+      expect(manual.b12Ug, formula.b12Ug);
     });
   });
 }

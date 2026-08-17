@@ -221,12 +221,31 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// Cibles complètes (macros + micronutriments) pour la carte
   /// "Micronutriments en vedette" — même profil que [_computeAutoGoals],
   /// mais renvoie l'objet complet plutôt que juste kcal/macros.
+  ///
+  /// Priorité 71 (audit du 17/08/2026) : ignorait totalement le mode
+  /// manuel — un utilisateur avec des macros manuelles voyait cette carte
+  /// calculer ses pourcentages sur les cibles AUTO (formule/calibration),
+  /// en désaccord visible avec le Bilan pour la même journée. Même
+  /// fallback exact que `_computeAndSave` (valeur manuelle si renseignée
+  /// et > 0, sinon la valeur auto) pour que l'aperçu ne diverge jamais de
+  /// ce qui sera réellement enregistré.
   Future<nutri.NutritionTargets> _computeAutoTargets() async {
     final kg = _num(_weightCtrl);
     final cm = _num(_heightCtrl);
     final age = _num(_ageCtrl).round();
     final profile = _buildCurrentProfile(kg, cm, age);
-    return nutri.computeCalibratedTargets(profile);
+    final autoTargets = await nutri.computeCalibratedTargets(profile);
+    if (!_manualMode) return autoTargets;
+
+    final autoGoals = autoTargets.goals;
+    return nutri.applyManualMacros(
+      autoTargets,
+      kcal: _num(_manualKcalCtrl) > 0 ? _num(_manualKcalCtrl) : autoGoals.kcal,
+      prot: _num(_manualProtCtrl) > 0 ? _num(_manualProtCtrl) : autoGoals.prot,
+      carb: _num(_manualCarbCtrl) > 0 ? _num(_manualCarbCtrl) : autoGoals.carb,
+      fat: _num(_manualFatCtrl) > 0 ? _num(_manualFatCtrl) : autoGoals.fat,
+      fiber: _num(_manualFibCtrl) > 0 ? _num(_manualFibCtrl) : autoGoals.fiber,
+    );
   }
 
   String get _measuresSummary {
@@ -260,11 +279,23 @@ class ProfileScreenState extends State<ProfileScreen> {
     return v > 0 ? v : null;
   }
 
-  /// Recalcule IMMÉDIATEMENT l'aperçu des objectifs (formule pure, sans la
-  /// pondération de calibration adaptative qui n'a de sens qu'à la
-  /// sauvegarde). Appelé depuis TOUS les réglages, pour que l'effet soit
-  /// visible tout de suite — c'était le bug racine du round précédent
-  /// ("les valeurs ne bougent pas").
+  /// Recalcule IMMÉDIATEMENT l'aperçu des objectifs. Appelé depuis TOUS les
+  /// réglages, pour que l'effet soit visible tout de suite — c'était le bug
+  /// racine du round précédent ("les valeurs ne bougent pas").
+  ///
+  /// Priorité 71 (audit du 17/08/2026) : appliquait la formule PURE
+  /// (`computeGoals`, sans calibration adaptative), alors que la sauvegarde
+  /// effective (`_computeAndSave` → `_computeAutoGoals` →
+  /// `computeCalibratedGoals`) applique le blend de calibration dès que 3+
+  /// semaines de données réelles sont disponibles. Pour ces utilisateurs,
+  /// l'aperçu affiché en modifiant un réglage divergeait du chiffre qui
+  /// apparaissait ensuite après "Confirmer mes objectifs" — sans aucune
+  /// explication — et `_dirty` se déclenchait à tort en comparant deux bases
+  /// de calcul différentes. `blendCalibratedTargets` applique EXACTEMENT le
+  /// même blend que la sauvegarde, en réutilisant la calibration déjà
+  /// chargée en mémoire (`_calibration`, résultat de poids/journal — ne
+  /// dépend d'aucun réglage de cet écran) : aucun aller-retour réseau
+  /// nécessaire, l'aperçu reste instantané.
   void _recomputePreview() {
     final kg = _num(_weightCtrl);
     final cm = _num(_heightCtrl);
@@ -272,7 +303,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     if (kg <= 0 || cm <= 0 || age <= 0) return;
 
     final profile = _buildCurrentProfile(kg, cm, age);
-    final g = nutri.computeGoals(profile);
+    final g = nutri.blendCalibratedTargets(profile, _calibration).goals;
     setState(() {
       _kcal = g.kcal;
       _prot = g.prot;
@@ -1949,6 +1980,18 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   // ─── Mode manuel ────────────────────────────────────────────────────
 
+  /// Priorité 71 (audit du 17/08/2026) : les champs manuels ne faisaient
+  /// qu'un `setState(() {})` nu — l'anneau "Reste", les anneaux macro et la
+  /// carte micronutriments au-dessus continuaient d'afficher l'ancienne
+  /// cible enregistrée pendant la saisie, comme s'il n'y avait rien à
+  /// enregistrer. Recalcule `_targetsFuture` (et `_dayTotalsFuture`, sans
+  /// coût significatif) à chaque frappe pour que ces cartes suivent
+  /// vraiment la saisie en cours, cohérent avec ce que "Appliquer" va
+  /// réellement enregistrer.
+  void _onManualFieldChanged() {
+    setState(_refreshProfileDependentCharts);
+  }
+
   Widget _manualGoalsCard() {
     final l10n = context.l10n;
     return TotumCard(
@@ -1962,18 +2005,18 @@ class ProfileScreenState extends State<ProfileScreen> {
           Text(l10n.profileCustomGoalsSubtitle, style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
           const SizedBox(height: 14),
           Row(children: [
-            Expanded(child: _numField(label: l10n.profileEnergyKcal, controller: _manualKcalCtrl, onChanged: (_) => setState(() {}))),
+            Expanded(child: _numField(label: l10n.profileEnergyKcal, controller: _manualKcalCtrl, onChanged: (_) => _onManualFieldChanged())),
             const SizedBox(width: 12),
-            Expanded(child: _numField(label: l10n.profileProteinG, controller: _manualProtCtrl, onChanged: (_) => setState(() {}))),
+            Expanded(child: _numField(label: l10n.profileProteinG, controller: _manualProtCtrl, onChanged: (_) => _onManualFieldChanged())),
           ]),
           const SizedBox(height: 10),
           Row(children: [
-            Expanded(child: _numField(label: l10n.profileCarbG, controller: _manualCarbCtrl, onChanged: (_) => setState(() {}))),
+            Expanded(child: _numField(label: l10n.profileCarbG, controller: _manualCarbCtrl, onChanged: (_) => _onManualFieldChanged())),
             const SizedBox(width: 12),
-            Expanded(child: _numField(label: l10n.profileFatG, controller: _manualFatCtrl, onChanged: (_) => setState(() {}))),
+            Expanded(child: _numField(label: l10n.profileFatG, controller: _manualFatCtrl, onChanged: (_) => _onManualFieldChanged())),
           ]),
           const SizedBox(height: 10),
-          _numField(label: l10n.profileFiberG, controller: _manualFibCtrl, onChanged: (_) => setState(() {})),
+          _numField(label: l10n.profileFiberG, controller: _manualFibCtrl, onChanged: (_) => _onManualFieldChanged()),
           Builder(builder: (context) {
             final warning = _checkManualCoherence();
             if (warning == null) return const SizedBox.shrink();
