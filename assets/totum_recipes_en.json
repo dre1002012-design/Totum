@@ -1,5 +1,5 @@
 {
-  "_comment": "160 TOTUM health-longevity recipes, whole CIQUAL ingredients, computed nutrition. 5 categories (internal keys, translated at display): Petit-dejeuner, Dejeuner, Diner, Collation, Pre-workout. Tags (internal keys, translated at display): vegetarien, vegetalien, sans_gluten, sans_lactose, hyperproteine, faible_calorie, rapide, pre_workout, post_workout.",
+  "_comment": "168 TOTUM health-longevity recipes, whole CIQUAL ingredients, computed nutrition. 5 categories (internal keys, translated at display): Petit-dejeuner, Dejeuner, Diner, Collation, Pre-workout. Tags (internal keys, translated at display): vegetarien, vegetalien, sans_gluten, sans_lactose, hyperproteine, faible_calorie, rapide, pre_workout, post_workout. totum_161-168 (2026-08-17): 8 recipes added to strengthen vegan lunch/dinner coverage.",
   "recipes": [
     {
       "id": "recipe:totum_001",
@@ -557,7 +557,7 @@
     {
       "id": "recipe:totum_008",
       "category": "Petit-déjeuner",
-      "name": "Buckwheat, Pear & Hazelnut Porridge",
+      "name": "Buckwheat, Yogurt & Walnut Porridge",
       "description": "A gentle, fragrant gluten-free twist powered by buckwheat — a great way to change up your morning grains.",
       "ingredients": [
         {
@@ -629,7 +629,7 @@
       "steps": [
         "Cook the buckwheat in simmering water for 10-12 min, until the liquid is absorbed.",
         "Off the heat, stir in the yogurt for a creamy texture.",
-        "Add the diced pear, crushed hazelnuts, and honey."
+        "Stir in the crushed walnuts and honey."
       ]
     },
     {
@@ -1200,7 +1200,7 @@
     {
       "id": "recipe:totum_016",
       "category": "Déjeuner",
-      "name": "Lentil, Beet & Feta Salad",
+      "name": "Lentil & Beet Salad",
       "description": "A salad rich in plant-based iron and fiber, to be served warm or cold depending on the season.",
       "ingredients": [
         {
@@ -2542,7 +2542,7 @@
     {
       "id": "recipe:totum_032",
       "category": "Dîner",
-      "name": "Warm Quinoa, Beet & Goat Cheese Salad",
+      "name": "Warm Quinoa, Beet & Walnut Salad",
       "description": "Colorful and balanced, this warm salad pairs the iron in beets with the healthy fats of rapeseed (canola) oil.",
       "ingredients": [
         {
@@ -3754,7 +3754,7 @@
     {
       "id": "recipe:totum_047",
       "category": "Collation",
-      "name": "Kiwi & a Handful of Hazelnuts",
+      "name": "Kiwi & a Handful of Walnuts",
       "description": "Vitamin C and healthy fats together: kiwi alone covers a good portion of your daily vitamin C needs.",
       "ingredients": [
         {
@@ -12494,6 +12494,707 @@
         "Brown the tempeh in a pan for 4-5 min on each side.",
         "Cook the wild rice in water according to the package instructions.",
         "Serve with the steamed green beans and a drizzle of rapeseed (canola) oil."
+      ]
+    },
+    {
+      "id": "recipe:totum_161",
+      "category": "Déjeuner",
+      "name": "Chickpea, Sweet Potato & Spinach Curry",
+      "description": "A gentle, comforting curry: chickpeas bring fiber and plant protein, sweet potato its beta-carotene, coconut milk a creamy, dairy-free texture.",
+      "ingredients": [
+        {
+          "foodId": "20532",
+          "foodName": "Pois chiche, appertisé, égoutté",
+          "grams": 150.0
+        },
+        {
+          "foodId": "4102",
+          "foodName": "Patate douce, cuite",
+          "grams": 150.0
+        },
+        {
+          "foodId": "20027",
+          "foodName": "Épinard, cuit",
+          "grams": 80.0
+        },
+        {
+          "foodId": "18041",
+          "foodName": "Lait de coco",
+          "grams": 60.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 8.0
+        },
+        {
+          "foodId": "11089",
+          "foodName": "Curcuma, poudre",
+          "grams": 2.0
+        }
+      ],
+      "total_weight_g": 450.0,
+      "kcal100": 114.33,
+      "prot100": 3.69,
+      "carb100": 11.25,
+      "fat100": 5.32,
+      "fiber100": 3.46,
+      "micros100": {
+        "AG_saturés_g_100g": 2.6687,
+        "Acide_oléique_W9_g_100g": 1.3979,
+        "Acide_linoléique_W6_LA_g_100g": 0.4339,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.0249,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 2.5509,
+        "Sel_g_100g": 0.228,
+        "Calcium_mg_100g": 52.6022,
+        "Cuivre_mg_100g": 0.1662,
+        "Fer_mg_100g": 1.6849,
+        "Iode_µg_100g": 1.1333,
+        "Magnésium_mg_100g": 33.3956,
+        "Manganèse_mg_100g": 0.6171,
+        "Phosphore_mg_100g": 63.0733,
+        "Potassium_mg_100g": 271.6444,
+        "Sélénium_µg_100g": 8.1942,
+        "Sodium_mg_100g": 91.1267,
+        "Zinc_mg_100g": 0.6069,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 3793.7889,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 90.7813,
+        "Vitamine_C_mg_100g": 5.9431,
+        "Vitamine_B1_mg_100g": 0.0405,
+        "Vitamine_B2_mg_100g": 0.0491,
+        "Vitamine_B3_mg_100g": 0.5173,
+        "Vitamine_B5_mg_100g": 0.3657,
+        "Vitamine_B6_mg_100g": 0.1882,
+        "Vitamine_B12_µg_100g": 0.0
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose"
+      ],
+      "steps": [
+        "Heat the olive oil, add the turmeric and cook for 30 seconds.",
+        "Add the chickpeas, sweet potato and coconut milk, simmer for 5 minutes.",
+        "Stir in the spinach until wilted, then serve hot."
+      ]
+    },
+    {
+      "id": "recipe:totum_162",
+      "category": "Déjeuner",
+      "name": "Marinated Tempeh, Brown Rice & Broccoli Bowl",
+      "description": "Tempeh is an excellent source of fermented plant protein, easier to digest than plain tofu — paired with brown rice and broccoli for a complete, satisfying bowl.",
+      "ingredients": [
+        {
+          "foodId": "20917",
+          "foodName": "Tempeh",
+          "grams": 100.0
+        },
+        {
+          "foodId": "9103",
+          "foodName": "Riz complet, cuit, sans sel ajouté",
+          "grams": 150.0
+        },
+        {
+          "foodId": "20350",
+          "foodName": "Brocoli, bouilli/cuit à l'eau (aliment moyen)",
+          "grams": 100.0
+        },
+        {
+          "foodId": "20009",
+          "foodName": "Carotte, crue",
+          "grams": 50.0
+        },
+        {
+          "foodId": "11104",
+          "foodName": "Sauce soja, préemballée",
+          "grams": 10.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 6.0
+        }
+      ],
+      "total_weight_g": 416.0,
+      "kcal100": 127.96,
+      "prot100": 6.06,
+      "carb100": 16.36,
+      "fat100": 3.34,
+      "fiber100": 3.34,
+      "micros100": {
+        "AG_saturés_g_100g": 0.545,
+        "Acide_oléique_W9_g_100g": 1.4442,
+        "Acide_linoléique_W6_LA_g_100g": 0.8705,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.1042,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 0.8317,
+        "Sel_g_100g": 0.3734,
+        "Calcium_mg_100g": 46.8486,
+        "Cuivre_mg_100g": 0.1962,
+        "Fer_mg_100g": 0.6971,
+        "Iode_µg_100g": 0.3173,
+        "Magnésium_mg_100g": 41.0072,
+        "Manganèse_mg_100g": 0.8546,
+        "Phosphore_mg_100g": 111.1779,
+        "Potassium_mg_100g": 163.5216,
+        "Sélénium_µg_100g": 0.0769,
+        "Sodium_mg_100g": 149.6394,
+        "Zinc_mg_100g": 0.699,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 1728.0288,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 18.5495,
+        "Vitamine_C_mg_100g": 4.8627,
+        "Vitamine_B1_mg_100g": 0.0139,
+        "Vitamine_B2_mg_100g": 0.0493,
+        "Vitamine_B3_mg_100g": 0.6058,
+        "Vitamine_B5_mg_100g": 0.2981,
+        "Vitamine_B6_mg_100g": 0.0529,
+        "Vitamine_B12_µg_100g": 0.0385
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_lactose",
+        "rapide"
+      ],
+      "steps": [
+        "Slice the tempeh and pan-fry in olive oil, 3-4 minutes per side until golden.",
+        "Drizzle with soy sauce at the end of cooking.",
+        "Serve over the brown rice with steamed broccoli and grated carrot."
+      ]
+    },
+    {
+      "id": "recipe:totum_163",
+      "category": "Déjeuner",
+      "name": "Bulgur, Chickpea & Grilled Vegetable Salad",
+      "description": "A filling Mediterranean salad: bulgur and chickpeas together form a complete plant protein, while the grilled vegetables and lemon add freshness and vitamin C.",
+      "ingredients": [
+        {
+          "foodId": "9691",
+          "foodName": "Boulgour de blé, cuit, sans sel ajouté",
+          "grams": 120.0
+        },
+        {
+          "foodId": "20532",
+          "foodName": "Pois chiche, appertisé, égoutté",
+          "grams": 100.0
+        },
+        {
+          "foodId": "20088",
+          "foodName": "Poivron rouge, cuit",
+          "grams": 80.0
+        },
+        {
+          "foodId": "20021",
+          "foodName": "Courgette, chair et peau, cuite",
+          "grams": 80.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 10.0
+        },
+        {
+          "foodId": "13009",
+          "foodName": "Citron, chair sans peau, sans pépins, cru",
+          "grams": 15.0
+        }
+      ],
+      "total_weight_g": 405.0,
+      "kcal100": 102.58,
+      "prot100": 3.37,
+      "carb100": 12.44,
+      "fat100": 3.56,
+      "fiber100": 3.17,
+      "micros100": {
+        "AG_saturés_g_100g": 0.5363,
+        "Acide_oléique_W9_g_100g": 1.873,
+        "Acide_linoléique_W6_LA_g_100g": 0.4955,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.054,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 1.3383,
+        "Sel_g_100g": 0.1636,
+        "Calcium_mg_100g": 25.3259,
+        "Cuivre_mg_100g": 0.1195,
+        "Fer_mg_100g": 0.5512,
+        "Iode_µg_100g": 0.1975,
+        "Magnésium_mg_100g": 22.6975,
+        "Manganèse_mg_100g": 0.3339,
+        "Phosphore_mg_100g": 62.9975,
+        "Potassium_mg_100g": 140.9679,
+        "Sélénium_µg_100g": 5.7531,
+        "Sodium_mg_100g": 64.8889,
+        "Zinc_mg_100g": 0.5678,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 42.1975,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 3.2519,
+        "Vitamine_C_mg_100g": 18.2642,
+        "Vitamine_B1_mg_100g": 0.011,
+        "Vitamine_B2_mg_100g": 0.0096,
+        "Vitamine_B3_mg_100g": 0.2983,
+        "Vitamine_B5_mg_100g": 0.1237,
+        "Vitamine_B6_mg_100g": 0.1337,
+        "Vitamine_B12_µg_100g": 0.0
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_lactose",
+        "rapide"
+      ],
+      "steps": [
+        "Mix the cooked bulgur with the chickpeas.",
+        "Add the grilled pepper and courgette.",
+        "Drizzle with olive oil and lemon juice, toss and serve."
+      ]
+    },
+    {
+      "id": "recipe:totum_164",
+      "category": "Déjeuner",
+      "name": "Smoked Tofu, Quinoa & Avocado Buddha Bowl",
+      "description": "Quinoa is one of the few plant sources of complete protein — paired with smoked tofu and avocado for healthy fats, this bowl checks every box.",
+      "ingredients": [
+        {
+          "foodId": "20912",
+          "foodName": "Tofu fumé, préemballé",
+          "grams": 100.0
+        },
+        {
+          "foodId": "9341",
+          "foodName": "Quinoa, bouilli/cuit à l'eau, sans sel ajouté",
+          "grams": 120.0
+        },
+        {
+          "foodId": "13004",
+          "foodName": "Avocat, chair sans peau, sans noyau, cru",
+          "grams": 50.0
+        },
+        {
+          "foodId": "20009",
+          "foodName": "Carotte, crue",
+          "grams": 40.0
+        },
+        {
+          "foodId": "20059",
+          "foodName": "Épinard, cru",
+          "grams": 40.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 6.0
+        }
+      ],
+      "total_weight_g": 356.0,
+      "kcal100": 147.09,
+      "prot100": 6.37,
+      "carb100": 11.15,
+      "fat100": 7.66,
+      "fiber100": 2.4,
+      "micros100": {
+        "AG_saturés_g_100g": 1.3737,
+        "Acide_oléique_W9_g_100g": 3.0107,
+        "Acide_linoléique_W6_LA_g_100g": 2.0199,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.2624,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.007,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 1.1848,
+        "Sel_g_100g": 0.251,
+        "Calcium_mg_100g": 41.6798,
+        "Cuivre_mg_100g": 0.1867,
+        "Fer_mg_100g": 1.4534,
+        "Iode_µg_100g": 0.4135,
+        "Magnésium_mg_100g": 76.6124,
+        "Manganèse_mg_100g": 0.6852,
+        "Phosphore_mg_100g": 127.6742,
+        "Potassium_mg_100g": 281.4045,
+        "Sélénium_µg_100g": 0.0742,
+        "Sodium_mg_100g": 100.1685,
+        "Zinc_mg_100g": 0.9177,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 2119.2697,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 61.6674,
+        "Vitamine_C_mg_100g": 3.5764,
+        "Vitamine_B1_mg_100g": 0.0762,
+        "Vitamine_B2_mg_100g": 0.0346,
+        "Vitamine_B3_mg_100g": 0.4444,
+        "Vitamine_B5_mg_100g": 0.4492,
+        "Vitamine_B6_mg_100g": 0.1044,
+        "Vitamine_B12_µg_100g": 0.0053
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose",
+        "rapide"
+      ],
+      "steps": [
+        "Arrange the cooked quinoa at the bottom of the bowl.",
+        "Add the diced smoked tofu, grated carrot and raw spinach.",
+        "Finish with sliced avocado and a drizzle of olive oil."
+      ]
+    },
+    {
+      "id": "recipe:totum_165",
+      "category": "Dîner",
+      "name": "Red Lentil Dahl, Spinach & Coconut Milk",
+      "description": "Red lentils cook quickly and are rich in plant-based iron — turmeric and coconut milk turn this into a comforting dish, with no meat or dairy.",
+      "ingredients": [
+        {
+          "foodId": "20589",
+          "foodName": "Lentille corail, bouillie/cuite à l'eau",
+          "grams": 200.0
+        },
+        {
+          "foodId": "18041",
+          "foodName": "Lait de coco",
+          "grams": 100.0
+        },
+        {
+          "foodId": "20027",
+          "foodName": "Épinard, cuit",
+          "grams": 80.0
+        },
+        {
+          "foodId": "20239",
+          "foodName": "Oignon jaune, cru",
+          "grams": 40.0
+        },
+        {
+          "foodId": "11089",
+          "foodName": "Curcuma, poudre",
+          "grams": 2.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 6.0
+        }
+      ],
+      "total_weight_g": 428.0,
+      "kcal100": 124.95,
+      "prot100": 6.16,
+      "carb100": 8.86,
+      "fat100": 6.16,
+      "fiber100": 4.86,
+      "micros100": {
+        "AG_saturés_g_100g": 4.2458,
+        "Acide_oléique_W9_g_100g": 1.0396,
+        "Acide_linoléique_W6_LA_g_100g": 0.2316,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.0418,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 0.7393,
+        "Sel_g_100g": 0.0291,
+        "Calcium_mg_100g": 42.1869,
+        "Cuivre_mg_100g": 0.2154,
+        "Fer_mg_100g": 2.4654,
+        "Iode_µg_100g": 0.2336,
+        "Magnésium_mg_100g": 34.0748,
+        "Manganèse_mg_100g": 0.5416,
+        "Phosphore_mg_100g": 85.3224,
+        "Potassium_mg_100g": 237.9439,
+        "Sélénium_µg_100g": 0.7299,
+        "Sodium_mg_100g": 11.5935,
+        "Zinc_mg_100g": 0.8902,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 309.7196,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 94.4098,
+        "Vitamine_C_mg_100g": 0.8238,
+        "Vitamine_B1_mg_100g": 0.0639,
+        "Vitamine_B2_mg_100g": 0.0194,
+        "Vitamine_B3_mg_100g": 0.4325,
+        "Vitamine_B5_mg_100g": 0.1628,
+        "Vitamine_B6_mg_100g": 0.0626,
+        "Vitamine_B12_µg_100g": 0.0
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose"
+      ],
+      "steps": [
+        "Sauté the sliced onion in olive oil with the turmeric.",
+        "Add the lentils and coconut milk, simmer for 5 minutes.",
+        "Stir in the spinach until wilted, then serve."
+      ]
+    },
+    {
+      "id": "recipe:totum_166",
+      "category": "Dîner",
+      "name": "Chili Sin Carne, Kidney Beans & Peppers",
+      "description": "A plant-based take on classic chili: red kidney beans bring fiber and protein, without losing any of the heartiness.",
+      "ingredients": [
+        {
+          "foodId": "20524",
+          "foodName": "Haricot rouge, appertisé, égoutté",
+          "grams": 180.0
+        },
+        {
+          "foodId": "20137",
+          "foodName": "Tomate, pelée, appertisée, au jus, non égouttée",
+          "grams": 120.0
+        },
+        {
+          "foodId": "20088",
+          "foodName": "Poivron rouge, cuit",
+          "grams": 80.0
+        },
+        {
+          "foodId": "20239",
+          "foodName": "Oignon jaune, cru",
+          "grams": 40.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 8.0
+        }
+      ],
+      "total_weight_g": 428.0,
+      "kcal100": 78.78,
+      "prot100": 4.05,
+      "carb100": 8.15,
+      "fat100": 2.41,
+      "fiber100": 4.13,
+      "micros100": {
+        "AG_saturés_g_100g": 0.4848,
+        "Acide_oléique_W9_g_100g": 1.3265,
+        "Acide_linoléique_W6_LA_g_100g": 0.1723,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.1089,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 2.2757,
+        "Sel_g_100g": 0.294,
+        "Calcium_mg_100g": 36.5421,
+        "Cuivre_mg_100g": 0.1379,
+        "Fer_mg_100g": 0.8,
+        "Iode_µg_100g": 0.1869,
+        "Magnésium_mg_100g": 18.1215,
+        "Manganèse_mg_100g": 0.2041,
+        "Phosphore_mg_100g": 61.8692,
+        "Potassium_mg_100g": 206.3551,
+        "Sélénium_µg_100g": 0.1682,
+        "Sodium_mg_100g": 115.9346,
+        "Zinc_mg_100g": 0.3916,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 78.2243,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 1.8991,
+        "Vitamine_C_mg_100g": 18.9514,
+        "Vitamine_B1_mg_100g": 0.1921,
+        "Vitamine_B2_mg_100g": 0.0273,
+        "Vitamine_B3_mg_100g": 0.5561,
+        "Vitamine_B5_mg_100g": 0.0579,
+        "Vitamine_B6_mg_100g": 0.0948,
+        "Vitamine_B12_µg_100g": 0.0
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose",
+        "rapide"
+      ],
+      "steps": [
+        "Sauté the onion in olive oil.",
+        "Add the kidney beans, tomato and pepper, simmer for 10 minutes.",
+        "Season and serve hot."
+      ]
+    },
+    {
+      "id": "recipe:totum_167",
+      "category": "Dîner",
+      "name": "Tofu, Mushroom & Brown Rice Stir-Fry",
+      "description": "Tofu soaks up the flavors of garlic and ginger as it cooks — a simple stir-fry, rich in plant protein and fiber thanks to the brown rice.",
+      "ingredients": [
+        {
+          "foodId": "20904",
+          "foodName": "Tofu nature, préemballé",
+          "grams": 120.0
+        },
+        {
+          "foodId": "20125",
+          "foodName": "Champignon de Paris ou champignon de couche, sauté/poêlé, sans matière grasse",
+          "grams": 100.0
+        },
+        {
+          "foodId": "9103",
+          "foodName": "Riz complet, cuit, sans sel ajouté",
+          "grams": 130.0
+        },
+        {
+          "foodId": "11000",
+          "foodName": "Ail, cru",
+          "grams": 5.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 8.0
+        },
+        {
+          "foodId": "11074",
+          "foodName": "Gingembre, racine fraîche",
+          "grams": 5.0
+        }
+      ],
+      "total_weight_g": 368.0,
+      "kcal100": 145.91,
+      "prot100": 7.04,
+      "carb100": 15.75,
+      "fat100": 5.76,
+      "fiber100": 1.1,
+      "micros100": {
+        "AG_saturés_g_100g": 0.9727,
+        "Acide_oléique_W9_g_100g": 2.3109,
+        "Acide_linoléique_W6_LA_g_100g": 1.737,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.2016,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 0.2617,
+        "Sel_g_100g": 0.0287,
+        "Calcium_mg_100g": 43.7446,
+        "Cuivre_mg_100g": 0.2299,
+        "Fer_mg_100g": 1.0363,
+        "Iode_µg_100g": 0.0,
+        "Magnésium_mg_100g": 57.4565,
+        "Manganèse_mg_100g": 0.8739,
+        "Phosphore_mg_100g": 157.3913,
+        "Potassium_mg_100g": 228.8451,
+        "Sélénium_µg_100g": 0.0,
+        "Sodium_mg_100g": 11.4035,
+        "Zinc_mg_100g": 0.9754,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 5.1495,
+        "Vitamine_D_µg_100g": 0.0543,
+        "Vitamine_K1_µg_100g": 5.4043,
+        "Vitamine_C_mg_100g": 0.0,
+        "Vitamine_B1_mg_100g": 0.0276,
+        "Vitamine_B2_mg_100g": 0.0978,
+        "Vitamine_B3_mg_100g": 1.4747,
+        "Vitamine_B5_mg_100g": 0.7526,
+        "Vitamine_B6_mg_100g": 0.0333,
+        "Vitamine_B12_µg_100g": 0.0332
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose"
+      ],
+      "steps": [
+        "Brown the diced tofu in olive oil.",
+        "Add the mushrooms, garlic and ginger, stir-fry for 5 minutes.",
+        "Serve over the hot brown rice."
+      ]
+    },
+    {
+      "id": "recipe:totum_168",
+      "category": "Dîner",
+      "name": "Roasted Eggplant, Chickpea & Coconut Curry",
+      "description": "Roasted eggplant turns tender and soaks up the spices — paired with chickpeas and coconut milk for a creamy, nourishing curry.",
+      "ingredients": [
+        {
+          "foodId": "20300",
+          "foodName": "Aubergine, chair et peau, rôtie/cuite au four",
+          "grams": 150.0
+        },
+        {
+          "foodId": "20532",
+          "foodName": "Pois chiche, appertisé, égoutté",
+          "grams": 100.0
+        },
+        {
+          "foodId": "18041",
+          "foodName": "Lait de coco",
+          "grams": 80.0
+        },
+        {
+          "foodId": "20239",
+          "foodName": "Oignon jaune, cru",
+          "grams": 40.0
+        },
+        {
+          "foodId": "11089",
+          "foodName": "Curcuma, poudre",
+          "grams": 2.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 6.0
+        }
+      ],
+      "total_weight_g": 378.0,
+      "kcal100": 106.34,
+      "prot100": 2.89,
+      "carb100": 7.31,
+      "fat100": 6.38,
+      "fiber100": 2.75,
+      "micros100": {
+        "AG_saturés_g_100g": 3.9283,
+        "Acide_oléique_W9_g_100g": 1.2327,
+        "Acide_linoléique_W6_LA_g_100g": 0.3728,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.023,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 2.0487,
+        "Sel_g_100g": 0.1576,
+        "Calcium_mg_100g": 22.1323,
+        "Cuivre_mg_100g": 0.145,
+        "Fer_mg_100g": 1.5384,
+        "Iode_µg_100g": 0.2116,
+        "Magnésium_mg_100g": 26.619,
+        "Manganèse_mg_100g": 0.5119,
+        "Phosphore_mg_100g": 58.9894,
+        "Potassium_mg_100g": 232.1693,
+        "Sélénium_µg_100g": 6.8317,
+        "Sodium_mg_100g": 63.0,
+        "Zinc_mg_100g": 0.4545,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 30.2646,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 1.8926,
+        "Vitamine_C_mg_100g": 0.4619,
+        "Vitamine_B1_mg_100g": 0.0157,
+        "Vitamine_B2_mg_100g": 0.0048,
+        "Vitamine_B3_mg_100g": 0.3601,
+        "Vitamine_B5_mg_100g": 0.3351,
+        "Vitamine_B6_mg_100g": 0.111,
+        "Vitamine_B12_µg_100g": 0.0
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose"
+      ],
+      "steps": [
+        "Sauté the onion in olive oil with the turmeric.",
+        "Add the roasted eggplant, chickpeas and coconut milk, simmer for 5 minutes.",
+        "Season and serve hot."
       ]
     }
   ]

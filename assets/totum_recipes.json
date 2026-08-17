@@ -1,5 +1,5 @@
 {
-  "_comment": "160 recettes santé-longévité TOTUM, ingrédients bruts CIQUAL, bilan calculé. 5 catégories : Petit-déjeuner, Déjeuner, Dîner, Collation, Pré-workout. Tags : vegetarien, vegetalien, sans_gluten, sans_lactose, hyperproteine, faible_calorie, rapide, pre_workout, post_workout.",
+  "_comment": "168 recettes santé-longévité TOTUM, ingrédients bruts CIQUAL, bilan calculé. 5 catégories : Petit-déjeuner, Déjeuner, Dîner, Collation, Pré-workout. Tags : vegetarien, vegetalien, sans_gluten, sans_lactose, hyperproteine, faible_calorie, rapide, pre_workout, post_workout. totum_161-168 (17/08/2026) : 8 recettes ajoutées pour renforcer la couverture végane au déjeuner/dîner.",
   "recipes": [
     {
       "id": "recipe:totum_001",
@@ -557,7 +557,7 @@
     {
       "id": "recipe:totum_008",
       "category": "Petit-déjeuner",
-      "name": "Porridge sarrasin, poire & noisette",
+      "name": "Porridge sarrasin, yaourt & noix",
       "description": "Une variante sans gluten, douce et parfumée, portée par le sarrasin — une bonne option pour varier les céréales du matin.",
       "ingredients": [
         {
@@ -629,7 +629,7 @@
       "steps": [
         "Fais cuire le sarrasin dans de l'eau frémissante 10-12 min, jusqu'à absorption.",
         "Incorpore le yaourt hors du feu pour une texture crémeuse.",
-        "Ajoute la poire coupée en dés, les noisettes concassées et le miel."
+        "Incorpore les noix concassées et le miel."
       ]
     },
     {
@@ -1200,7 +1200,7 @@
     {
       "id": "recipe:totum_016",
       "category": "Déjeuner",
-      "name": "Salade de lentilles, betterave & feta",
+      "name": "Salade de lentilles & betterave",
       "description": "Une salade riche en fer végétal et en fibres, à servir tiède ou froide selon la saison.",
       "ingredients": [
         {
@@ -2542,7 +2542,7 @@
     {
       "id": "recipe:totum_032",
       "category": "Dîner",
-      "name": "Salade tiède de quinoa, betterave & chèvre",
+      "name": "Salade tiède de quinoa, betterave & noix",
       "description": "Colorée et équilibrée, cette salade tiède associe le fer de la betterave aux bons acides gras de l'huile de colza.",
       "ingredients": [
         {
@@ -3754,7 +3754,7 @@
     {
       "id": "recipe:totum_047",
       "category": "Collation",
-      "name": "Kiwi & poignée de noisettes",
+      "name": "Kiwi & poignée de noix",
       "description": "Vitamine C et bons gras réunis : le kiwi couvre à lui seul une bonne partie des besoins quotidiens en vitamine C.",
       "ingredients": [
         {
@@ -12494,6 +12494,707 @@
         "Fais dorer le tempeh à la poêle 4-5 min de chaque côté.",
         "Fais cuire le riz sauvage à l'eau selon le temps indiqué.",
         "Sers avec les haricots verts vapeur et un filet d'huile de colza."
+      ]
+    },
+    {
+      "id": "recipe:totum_161",
+      "category": "Déjeuner",
+      "name": "Curry de pois chiches, patate douce & épinards",
+      "description": "Un curry doux et réconfortant : les pois chiches apportent fibres et protéines végétales, la patate douce son bêta-carotène, le lait de coco une texture onctueuse sans lactose.",
+      "ingredients": [
+        {
+          "foodId": "20532",
+          "foodName": "Pois chiche, appertisé, égoutté",
+          "grams": 150.0
+        },
+        {
+          "foodId": "4102",
+          "foodName": "Patate douce, cuite",
+          "grams": 150.0
+        },
+        {
+          "foodId": "20027",
+          "foodName": "Épinard, cuit",
+          "grams": 80.0
+        },
+        {
+          "foodId": "18041",
+          "foodName": "Lait de coco",
+          "grams": 60.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 8.0
+        },
+        {
+          "foodId": "11089",
+          "foodName": "Curcuma, poudre",
+          "grams": 2.0
+        }
+      ],
+      "total_weight_g": 450.0,
+      "kcal100": 114.33,
+      "prot100": 3.69,
+      "carb100": 11.25,
+      "fat100": 5.32,
+      "fiber100": 3.46,
+      "micros100": {
+        "AG_saturés_g_100g": 2.6687,
+        "Acide_oléique_W9_g_100g": 1.3979,
+        "Acide_linoléique_W6_LA_g_100g": 0.4339,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.0249,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 2.5509,
+        "Sel_g_100g": 0.228,
+        "Calcium_mg_100g": 52.6022,
+        "Cuivre_mg_100g": 0.1662,
+        "Fer_mg_100g": 1.6849,
+        "Iode_µg_100g": 1.1333,
+        "Magnésium_mg_100g": 33.3956,
+        "Manganèse_mg_100g": 0.6171,
+        "Phosphore_mg_100g": 63.0733,
+        "Potassium_mg_100g": 271.6444,
+        "Sélénium_µg_100g": 8.1942,
+        "Sodium_mg_100g": 91.1267,
+        "Zinc_mg_100g": 0.6069,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 3793.7889,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 90.7813,
+        "Vitamine_C_mg_100g": 5.9431,
+        "Vitamine_B1_mg_100g": 0.0405,
+        "Vitamine_B2_mg_100g": 0.0491,
+        "Vitamine_B3_mg_100g": 0.5173,
+        "Vitamine_B5_mg_100g": 0.3657,
+        "Vitamine_B6_mg_100g": 0.1882,
+        "Vitamine_B12_µg_100g": 0.0
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose"
+      ],
+      "steps": [
+        "Fais chauffer l'huile d'olive, ajoute le curcuma et fais revenir 30 secondes.",
+        "Ajoute les pois chiches, la patate douce et le lait de coco, laisse mijoter 5 minutes.",
+        "Incorpore les épinards jusqu'à ce qu'ils tombent, puis sers chaud."
+      ]
+    },
+    {
+      "id": "recipe:totum_162",
+      "category": "Déjeuner",
+      "name": "Bol de tempeh mariné, riz complet & brocoli",
+      "description": "Le tempeh est une excellente source de protéines végétales fermentées, plus digeste que le tofu classique — associé au riz complet et au brocoli pour un bol complet et rassasiant.",
+      "ingredients": [
+        {
+          "foodId": "20917",
+          "foodName": "Tempeh",
+          "grams": 100.0
+        },
+        {
+          "foodId": "9103",
+          "foodName": "Riz complet, cuit, sans sel ajouté",
+          "grams": 150.0
+        },
+        {
+          "foodId": "20350",
+          "foodName": "Brocoli, bouilli/cuit à l'eau (aliment moyen)",
+          "grams": 100.0
+        },
+        {
+          "foodId": "20009",
+          "foodName": "Carotte, crue",
+          "grams": 50.0
+        },
+        {
+          "foodId": "11104",
+          "foodName": "Sauce soja, préemballée",
+          "grams": 10.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 6.0
+        }
+      ],
+      "total_weight_g": 416.0,
+      "kcal100": 127.96,
+      "prot100": 6.06,
+      "carb100": 16.36,
+      "fat100": 3.34,
+      "fiber100": 3.34,
+      "micros100": {
+        "AG_saturés_g_100g": 0.545,
+        "Acide_oléique_W9_g_100g": 1.4442,
+        "Acide_linoléique_W6_LA_g_100g": 0.8705,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.1042,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 0.8317,
+        "Sel_g_100g": 0.3734,
+        "Calcium_mg_100g": 46.8486,
+        "Cuivre_mg_100g": 0.1962,
+        "Fer_mg_100g": 0.6971,
+        "Iode_µg_100g": 0.3173,
+        "Magnésium_mg_100g": 41.0072,
+        "Manganèse_mg_100g": 0.8546,
+        "Phosphore_mg_100g": 111.1779,
+        "Potassium_mg_100g": 163.5216,
+        "Sélénium_µg_100g": 0.0769,
+        "Sodium_mg_100g": 149.6394,
+        "Zinc_mg_100g": 0.699,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 1728.0288,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 18.5495,
+        "Vitamine_C_mg_100g": 4.8627,
+        "Vitamine_B1_mg_100g": 0.0139,
+        "Vitamine_B2_mg_100g": 0.0493,
+        "Vitamine_B3_mg_100g": 0.6058,
+        "Vitamine_B5_mg_100g": 0.2981,
+        "Vitamine_B6_mg_100g": 0.0529,
+        "Vitamine_B12_µg_100g": 0.0385
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_lactose",
+        "rapide"
+      ],
+      "steps": [
+        "Coupe le tempeh en tranches et fais-le dorer à la poêle avec l'huile d'olive, 3-4 minutes de chaque côté.",
+        "Arrose de sauce soja en fin de cuisson.",
+        "Sers sur le riz complet avec le brocoli vapeur et la carotte râpée."
+      ]
+    },
+    {
+      "id": "recipe:totum_163",
+      "category": "Déjeuner",
+      "name": "Salade de boulgour, pois chiches & légumes grillés",
+      "description": "Une salade méditerranéenne rassasiante : le boulgour et les pois chiches forment une protéine complète végétale, les légumes grillés et le citron apportent fraîcheur et vitamine C.",
+      "ingredients": [
+        {
+          "foodId": "9691",
+          "foodName": "Boulgour de blé, cuit, sans sel ajouté",
+          "grams": 120.0
+        },
+        {
+          "foodId": "20532",
+          "foodName": "Pois chiche, appertisé, égoutté",
+          "grams": 100.0
+        },
+        {
+          "foodId": "20088",
+          "foodName": "Poivron rouge, cuit",
+          "grams": 80.0
+        },
+        {
+          "foodId": "20021",
+          "foodName": "Courgette, chair et peau, cuite",
+          "grams": 80.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 10.0
+        },
+        {
+          "foodId": "13009",
+          "foodName": "Citron, chair sans peau, sans pépins, cru",
+          "grams": 15.0
+        }
+      ],
+      "total_weight_g": 405.0,
+      "kcal100": 102.58,
+      "prot100": 3.37,
+      "carb100": 12.44,
+      "fat100": 3.56,
+      "fiber100": 3.17,
+      "micros100": {
+        "AG_saturés_g_100g": 0.5363,
+        "Acide_oléique_W9_g_100g": 1.873,
+        "Acide_linoléique_W6_LA_g_100g": 0.4955,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.054,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 1.3383,
+        "Sel_g_100g": 0.1636,
+        "Calcium_mg_100g": 25.3259,
+        "Cuivre_mg_100g": 0.1195,
+        "Fer_mg_100g": 0.5512,
+        "Iode_µg_100g": 0.1975,
+        "Magnésium_mg_100g": 22.6975,
+        "Manganèse_mg_100g": 0.3339,
+        "Phosphore_mg_100g": 62.9975,
+        "Potassium_mg_100g": 140.9679,
+        "Sélénium_µg_100g": 5.7531,
+        "Sodium_mg_100g": 64.8889,
+        "Zinc_mg_100g": 0.5678,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 42.1975,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 3.2519,
+        "Vitamine_C_mg_100g": 18.2642,
+        "Vitamine_B1_mg_100g": 0.011,
+        "Vitamine_B2_mg_100g": 0.0096,
+        "Vitamine_B3_mg_100g": 0.2983,
+        "Vitamine_B5_mg_100g": 0.1237,
+        "Vitamine_B6_mg_100g": 0.1337,
+        "Vitamine_B12_µg_100g": 0.0
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_lactose",
+        "rapide"
+      ],
+      "steps": [
+        "Mélange le boulgour cuit avec les pois chiches.",
+        "Ajoute le poivron et la courgette grillés.",
+        "Arrose d'huile d'olive et de jus de citron, mélange et sers."
+      ]
+    },
+    {
+      "id": "recipe:totum_164",
+      "category": "Déjeuner",
+      "name": "Buddha bowl tofu fumé, quinoa & avocat",
+      "description": "Le quinoa est l'une des rares sources végétales de protéine complète — associé au tofu fumé et à l'avocat pour de bons acides gras, ce bol coche toutes les cases.",
+      "ingredients": [
+        {
+          "foodId": "20912",
+          "foodName": "Tofu fumé, préemballé",
+          "grams": 100.0
+        },
+        {
+          "foodId": "9341",
+          "foodName": "Quinoa, bouilli/cuit à l'eau, sans sel ajouté",
+          "grams": 120.0
+        },
+        {
+          "foodId": "13004",
+          "foodName": "Avocat, chair sans peau, sans noyau, cru",
+          "grams": 50.0
+        },
+        {
+          "foodId": "20009",
+          "foodName": "Carotte, crue",
+          "grams": 40.0
+        },
+        {
+          "foodId": "20059",
+          "foodName": "Épinard, cru",
+          "grams": 40.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 6.0
+        }
+      ],
+      "total_weight_g": 356.0,
+      "kcal100": 147.09,
+      "prot100": 6.37,
+      "carb100": 11.15,
+      "fat100": 7.66,
+      "fiber100": 2.4,
+      "micros100": {
+        "AG_saturés_g_100g": 1.3737,
+        "Acide_oléique_W9_g_100g": 3.0107,
+        "Acide_linoléique_W6_LA_g_100g": 2.0199,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.2624,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.007,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 1.1848,
+        "Sel_g_100g": 0.251,
+        "Calcium_mg_100g": 41.6798,
+        "Cuivre_mg_100g": 0.1867,
+        "Fer_mg_100g": 1.4534,
+        "Iode_µg_100g": 0.4135,
+        "Magnésium_mg_100g": 76.6124,
+        "Manganèse_mg_100g": 0.6852,
+        "Phosphore_mg_100g": 127.6742,
+        "Potassium_mg_100g": 281.4045,
+        "Sélénium_µg_100g": 0.0742,
+        "Sodium_mg_100g": 100.1685,
+        "Zinc_mg_100g": 0.9177,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 2119.2697,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 61.6674,
+        "Vitamine_C_mg_100g": 3.5764,
+        "Vitamine_B1_mg_100g": 0.0762,
+        "Vitamine_B2_mg_100g": 0.0346,
+        "Vitamine_B3_mg_100g": 0.4444,
+        "Vitamine_B5_mg_100g": 0.4492,
+        "Vitamine_B6_mg_100g": 0.1044,
+        "Vitamine_B12_µg_100g": 0.0053
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose",
+        "rapide"
+      ],
+      "steps": [
+        "Dispose le quinoa cuit au fond du bol.",
+        "Ajoute le tofu fumé coupé en dés, la carotte râpée et l'épinard cru.",
+        "Termine par l'avocat en tranches et un filet d'huile d'olive."
+      ]
+    },
+    {
+      "id": "recipe:totum_165",
+      "category": "Dîner",
+      "name": "Dahl de lentilles corail, épinards & lait de coco",
+      "description": "Les lentilles corail cuisent vite et sont riches en fer végétal — le curcuma et le lait de coco en font un plat réconfortant, sans viande ni lactose.",
+      "ingredients": [
+        {
+          "foodId": "20589",
+          "foodName": "Lentille corail, bouillie/cuite à l'eau",
+          "grams": 200.0
+        },
+        {
+          "foodId": "18041",
+          "foodName": "Lait de coco",
+          "grams": 100.0
+        },
+        {
+          "foodId": "20027",
+          "foodName": "Épinard, cuit",
+          "grams": 80.0
+        },
+        {
+          "foodId": "20239",
+          "foodName": "Oignon jaune, cru",
+          "grams": 40.0
+        },
+        {
+          "foodId": "11089",
+          "foodName": "Curcuma, poudre",
+          "grams": 2.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 6.0
+        }
+      ],
+      "total_weight_g": 428.0,
+      "kcal100": 124.95,
+      "prot100": 6.16,
+      "carb100": 8.86,
+      "fat100": 6.16,
+      "fiber100": 4.86,
+      "micros100": {
+        "AG_saturés_g_100g": 4.2458,
+        "Acide_oléique_W9_g_100g": 1.0396,
+        "Acide_linoléique_W6_LA_g_100g": 0.2316,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.0418,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 0.7393,
+        "Sel_g_100g": 0.0291,
+        "Calcium_mg_100g": 42.1869,
+        "Cuivre_mg_100g": 0.2154,
+        "Fer_mg_100g": 2.4654,
+        "Iode_µg_100g": 0.2336,
+        "Magnésium_mg_100g": 34.0748,
+        "Manganèse_mg_100g": 0.5416,
+        "Phosphore_mg_100g": 85.3224,
+        "Potassium_mg_100g": 237.9439,
+        "Sélénium_µg_100g": 0.7299,
+        "Sodium_mg_100g": 11.5935,
+        "Zinc_mg_100g": 0.8902,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 309.7196,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 94.4098,
+        "Vitamine_C_mg_100g": 0.8238,
+        "Vitamine_B1_mg_100g": 0.0639,
+        "Vitamine_B2_mg_100g": 0.0194,
+        "Vitamine_B3_mg_100g": 0.4325,
+        "Vitamine_B5_mg_100g": 0.1628,
+        "Vitamine_B6_mg_100g": 0.0626,
+        "Vitamine_B12_µg_100g": 0.0
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose"
+      ],
+      "steps": [
+        "Fais revenir l'oignon émincé dans l'huile d'olive avec le curcuma.",
+        "Ajoute les lentilles et le lait de coco, laisse mijoter 5 minutes.",
+        "Incorpore les épinards jusqu'à ce qu'ils tombent, puis sers."
+      ]
+    },
+    {
+      "id": "recipe:totum_166",
+      "category": "Dîner",
+      "name": "Chili sin carne, haricots rouges & poivrons",
+      "description": "Version végétale du chili classique : les haricots rouges apportent fibres et protéines, sans rien perdre en générosité.",
+      "ingredients": [
+        {
+          "foodId": "20524",
+          "foodName": "Haricot rouge, appertisé, égoutté",
+          "grams": 180.0
+        },
+        {
+          "foodId": "20137",
+          "foodName": "Tomate, pelée, appertisée, au jus, non égouttée",
+          "grams": 120.0
+        },
+        {
+          "foodId": "20088",
+          "foodName": "Poivron rouge, cuit",
+          "grams": 80.0
+        },
+        {
+          "foodId": "20239",
+          "foodName": "Oignon jaune, cru",
+          "grams": 40.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 8.0
+        }
+      ],
+      "total_weight_g": 428.0,
+      "kcal100": 78.78,
+      "prot100": 4.05,
+      "carb100": 8.15,
+      "fat100": 2.41,
+      "fiber100": 4.13,
+      "micros100": {
+        "AG_saturés_g_100g": 0.4848,
+        "Acide_oléique_W9_g_100g": 1.3265,
+        "Acide_linoléique_W6_LA_g_100g": 0.1723,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.1089,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 2.2757,
+        "Sel_g_100g": 0.294,
+        "Calcium_mg_100g": 36.5421,
+        "Cuivre_mg_100g": 0.1379,
+        "Fer_mg_100g": 0.8,
+        "Iode_µg_100g": 0.1869,
+        "Magnésium_mg_100g": 18.1215,
+        "Manganèse_mg_100g": 0.2041,
+        "Phosphore_mg_100g": 61.8692,
+        "Potassium_mg_100g": 206.3551,
+        "Sélénium_µg_100g": 0.1682,
+        "Sodium_mg_100g": 115.9346,
+        "Zinc_mg_100g": 0.3916,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 78.2243,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 1.8991,
+        "Vitamine_C_mg_100g": 18.9514,
+        "Vitamine_B1_mg_100g": 0.1921,
+        "Vitamine_B2_mg_100g": 0.0273,
+        "Vitamine_B3_mg_100g": 0.5561,
+        "Vitamine_B5_mg_100g": 0.0579,
+        "Vitamine_B6_mg_100g": 0.0948,
+        "Vitamine_B12_µg_100g": 0.0
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose",
+        "rapide"
+      ],
+      "steps": [
+        "Fais revenir l'oignon dans l'huile d'olive.",
+        "Ajoute les haricots rouges, la tomate et le poivron, laisse mijoter 10 minutes.",
+        "Assaisonne et sers chaud."
+      ]
+    },
+    {
+      "id": "recipe:totum_167",
+      "category": "Dîner",
+      "name": "Poêlée de tofu, champignons & riz complet",
+      "description": "Le tofu absorbe les saveurs de l'ail et du gingembre pendant la cuisson — une poêlée simple, riche en protéines végétales et en fibres grâce au riz complet.",
+      "ingredients": [
+        {
+          "foodId": "20904",
+          "foodName": "Tofu nature, préemballé",
+          "grams": 120.0
+        },
+        {
+          "foodId": "20125",
+          "foodName": "Champignon de Paris ou champignon de couche, sauté/poêlé, sans matière grasse",
+          "grams": 100.0
+        },
+        {
+          "foodId": "9103",
+          "foodName": "Riz complet, cuit, sans sel ajouté",
+          "grams": 130.0
+        },
+        {
+          "foodId": "11000",
+          "foodName": "Ail, cru",
+          "grams": 5.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 8.0
+        },
+        {
+          "foodId": "11074",
+          "foodName": "Gingembre, racine fraîche",
+          "grams": 5.0
+        }
+      ],
+      "total_weight_g": 368.0,
+      "kcal100": 145.91,
+      "prot100": 7.04,
+      "carb100": 15.75,
+      "fat100": 5.76,
+      "fiber100": 1.1,
+      "micros100": {
+        "AG_saturés_g_100g": 0.9727,
+        "Acide_oléique_W9_g_100g": 2.3109,
+        "Acide_linoléique_W6_LA_g_100g": 1.737,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.2016,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 0.2617,
+        "Sel_g_100g": 0.0287,
+        "Calcium_mg_100g": 43.7446,
+        "Cuivre_mg_100g": 0.2299,
+        "Fer_mg_100g": 1.0363,
+        "Iode_µg_100g": 0.0,
+        "Magnésium_mg_100g": 57.4565,
+        "Manganèse_mg_100g": 0.8739,
+        "Phosphore_mg_100g": 157.3913,
+        "Potassium_mg_100g": 228.8451,
+        "Sélénium_µg_100g": 0.0,
+        "Sodium_mg_100g": 11.4035,
+        "Zinc_mg_100g": 0.9754,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 5.1495,
+        "Vitamine_D_µg_100g": 0.0543,
+        "Vitamine_K1_µg_100g": 5.4043,
+        "Vitamine_C_mg_100g": 0.0,
+        "Vitamine_B1_mg_100g": 0.0276,
+        "Vitamine_B2_mg_100g": 0.0978,
+        "Vitamine_B3_mg_100g": 1.4747,
+        "Vitamine_B5_mg_100g": 0.7526,
+        "Vitamine_B6_mg_100g": 0.0333,
+        "Vitamine_B12_µg_100g": 0.0332
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose"
+      ],
+      "steps": [
+        "Fais dorer le tofu coupé en dés dans l'huile d'olive.",
+        "Ajoute les champignons, l'ail et le gingembre, fais sauter 5 minutes.",
+        "Sers sur le riz complet chaud."
+      ]
+    },
+    {
+      "id": "recipe:totum_168",
+      "category": "Dîner",
+      "name": "Curry d'aubergine, pois chiches & lait de coco",
+      "description": "L'aubergine rôtie devient fondante et absorbe les épices — associée aux pois chiches et au lait de coco pour un curry crémeux et nourrissant.",
+      "ingredients": [
+        {
+          "foodId": "20300",
+          "foodName": "Aubergine, chair et peau, rôtie/cuite au four",
+          "grams": 150.0
+        },
+        {
+          "foodId": "20532",
+          "foodName": "Pois chiche, appertisé, égoutté",
+          "grams": 100.0
+        },
+        {
+          "foodId": "18041",
+          "foodName": "Lait de coco",
+          "grams": 80.0
+        },
+        {
+          "foodId": "20239",
+          "foodName": "Oignon jaune, cru",
+          "grams": 40.0
+        },
+        {
+          "foodId": "11089",
+          "foodName": "Curcuma, poudre",
+          "grams": 2.0
+        },
+        {
+          "foodId": "17270",
+          "foodName": "Huile d'olive vierge extra",
+          "grams": 6.0
+        }
+      ],
+      "total_weight_g": 378.0,
+      "kcal100": 106.34,
+      "prot100": 2.89,
+      "carb100": 7.31,
+      "fat100": 6.38,
+      "fiber100": 2.75,
+      "micros100": {
+        "AG_saturés_g_100g": 3.9283,
+        "Acide_oléique_W9_g_100g": 1.2327,
+        "Acide_linoléique_W6_LA_g_100g": 0.3728,
+        "Acide_alpha-linolénique_W3_ALA_g_100g": 0.023,
+        "EPA_g_100g": 0.0,
+        "DHA_g_100g": 0.0,
+        "Cholestérol_mg_100g": 0.0,
+        "Sucres_g_100g": 2.0487,
+        "Sel_g_100g": 0.1576,
+        "Calcium_mg_100g": 22.1323,
+        "Cuivre_mg_100g": 0.145,
+        "Fer_mg_100g": 1.5384,
+        "Iode_µg_100g": 0.2116,
+        "Magnésium_mg_100g": 26.619,
+        "Manganèse_mg_100g": 0.5119,
+        "Phosphore_mg_100g": 58.9894,
+        "Potassium_mg_100g": 232.1693,
+        "Sélénium_µg_100g": 6.8317,
+        "Sodium_mg_100g": 63.0,
+        "Zinc_mg_100g": 0.4545,
+        "Rétinol_µg_100g": 0.0,
+        "Beta-Carotène_µg_100g": 30.2646,
+        "Vitamine_D_µg_100g": 0.0,
+        "Vitamine_K1_µg_100g": 1.8926,
+        "Vitamine_C_mg_100g": 0.4619,
+        "Vitamine_B1_mg_100g": 0.0157,
+        "Vitamine_B2_mg_100g": 0.0048,
+        "Vitamine_B3_mg_100g": 0.3601,
+        "Vitamine_B5_mg_100g": 0.3351,
+        "Vitamine_B6_mg_100g": 0.111,
+        "Vitamine_B12_µg_100g": 0.0
+      },
+      "tags": [
+        "vegetarien",
+        "vegetalien",
+        "sans_gluten",
+        "sans_lactose"
+      ],
+      "steps": [
+        "Fais revenir l'oignon dans l'huile d'olive avec le curcuma.",
+        "Ajoute l'aubergine rôtie, les pois chiches et le lait de coco, laisse mijoter 5 minutes.",
+        "Assaisonne et sers chaud."
       ]
     }
   ]
