@@ -4291,11 +4291,31 @@ class ConseilsScreenState extends State<ConseilsScreen>
   // 3 sections scrollables indépendamment (Coaching / Vitalité / Recettes),
   // même pattern que l'onglet "Ajouter un aliment" du Journal.
   late final TabController _tab = TabController(length: 3, vsync: this);
+  bool _didInitialLoad = false;
 
   @override
   void initState() {
     super.initState();
-    _future = _initAndLoad(context.l10n);
+    // Priorité 70 (crash confirmé en debug web : "dependOnInheritedWidgetOf
+    // ExactType<_LocalizationsScope>() ... called before initState()
+    // completed") — `context.l10n` (AppLocalizations.of(context)) établit
+    // une dépendance à un InheritedWidget, ce que Flutter interdit
+    // explicitement depuis initState() (le widget n'est pas encore
+    // pleinement raccordé à l'arbre). Ça "marchait" en release Android
+    // parce que ce garde-fou est un assert(), retiré du binaire release —
+    // silencieusement risqué plutôt que silencieusement sûr. Déplacé dans
+    // didChangeDependencies(), le point du cycle de vie prévu pour ça,
+    // protégé pour ne s'exécuter qu'une fois (didChangeDependencies peut
+    // être rappelée, ex. changement de langue).
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_didInitialLoad) {
+      _didInitialLoad = true;
+      _future = _initAndLoad(context.l10n);
+    }
   }
 
   Future<AdviceScript> _initAndLoad(AppLocalizations l10n) async {
