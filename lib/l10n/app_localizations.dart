@@ -7589,6 +7589,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Repas'**
   String get jrnlFilterMeals;
+
+  /// No description provided for @jrnlSyncFailedWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de connexion : cette modification n\'a pas pu être synchronisée et pourrait être perdue. Réessaie dès que possible.'**
+  String get jrnlSyncFailedWarning;
+
+  /// No description provided for @jrnlSyncFailedRetry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réessayer'**
+  String get jrnlSyncFailedRetry;
+
+  /// No description provided for @jrnlUnknownFoodFallback.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliment'**
+  String get jrnlUnknownFoodFallback;
 }
 
 class _AppLocalizationsDelegate

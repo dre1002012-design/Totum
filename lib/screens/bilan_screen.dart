@@ -3396,6 +3396,7 @@ class BilanScreenState extends State<BilanScreen> {
   void _onSpanChanged(ReportSpan span) async {
     final sp = await SharedPreferences.getInstance();
     await sp.setInt(_kSpanKey, span.index);
+    if (!mounted) return;
     setState(() {
       _span   = span;
       _future = _computeBilanForSpan(span);

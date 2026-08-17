@@ -132,6 +132,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
 
   Future<void> _init() async {
     final sp = await SharedPreferences.getInstance();
+    if (!mounted) return;
     setState(() {
       final s = sp.getInt('profile_skin_type');
       _skinIndex = s;
@@ -145,6 +146,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
   Future<void> _saveSkin(int i) async {
     final sp = await SharedPreferences.getInstance();
     await sp.setInt('profile_skin_type', i);
+    if (!mounted) return;
     setState(() => _skinIndex = i);
   }
 
@@ -158,6 +160,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
     try {
       // 1) Le service de localisation est-il activé sur l'appareil ?
       final serviceOn = await Geolocator.isLocationServiceEnabled();
+      if (!mounted) return;
       if (!serviceOn) {
         setState(() {
           _uvError = l10n.sunLocationDisabled;
@@ -165,11 +168,14 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
         });
         return;
       }
-      // 2) Permission (demande explicite, indispensable sur Android)
+      // 2) Permission (demande explicite, indispensable sur Android) — la
+      // boîte de dialogue système peut rester ouverte longtemps si
+      // l'utilisateur quitte l'écran pendant ce temps.
       LocationPermission perm = await Geolocator.checkPermission();
       if (perm == LocationPermission.denied) {
         perm = await Geolocator.requestPermission();
       }
+      if (!mounted) return;
       if (perm == LocationPermission.denied ||
           perm == LocationPermission.deniedForever) {
         setState(() {
@@ -181,6 +187,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
       final pos = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(accuracy: LocationAccuracy.low),
       ).timeout(const Duration(seconds: 12));
+      if (!mounted) return;
       // 2) Appel Open-Meteo (UV index courant, gratuit, sans clé)
       final url = Uri.parse(
         'https://api.open-meteo.com/v1/forecast'
@@ -188,6 +195,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
         '&current=uv_index',
       );
       final resp = await http.get(url).timeout(const Duration(seconds: 10));
+      if (!mounted) return;
       if (resp.statusCode == 200) {
         final data = jsonDecode(resp.body) as Map<String, dynamic>;
         final uv = (data['current']?['uv_index'] as num?)?.toDouble();
@@ -202,6 +210,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
         });
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _uvError = l10n.sunLocationUnavailable;
         _loadingUv = false;
@@ -250,6 +259,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
     final total = (current + vitD).clamp(0.0, 100.0);
     await _saveSunVitD(DateTime.now(), total);
     await sp.setInt('sun_exposure_pref', _exposureIndex);
+    if (!mounted) return;
     setState(() => _todaySunVitD = total);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -266,6 +276,7 @@ class _SunVitaminDScreenState extends State<SunVitaminDScreen> {
     final sp = await SharedPreferences.getInstance();
     await sp.remove(sunVitDKey(DateTime.now()));
     await _saveSunVitD(DateTime.now(), 0.0);
+    if (!mounted) return;
     setState(() => _todaySunVitD = 0.0);
   }
 

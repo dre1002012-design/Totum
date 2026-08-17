@@ -475,52 +475,113 @@ Future<_AdviceDayTotals> _computeDayTotalsForAdviceDate(
   await _ensureFoodsLoadedForAdvice();
   final repo = foods_loader.FoodsRepository.instance;
 
-  final raw = sp.getString(_journalKeyForDate(day));
-  if (raw == null || raw.isEmpty) return _AdviceDayTotals.empty();
-
-  Map<String, dynamic> decoded;
-  try {
-    decoded = jsonDecode(raw) as Map<String, dynamic>;
-  } catch (_) {
-    return _AdviceDayTotals.empty();
-  }
-
-  double kcal = 0, prot = 0, carb = 0, fat = 0, fiber = 0;
-  final microTotals = <String, double>{};
-  double waterMl = 0;
-  final waterNames = <String>{};
-
   // Lookup indexé O(1) (Priorité 31) : reconstruire et scanner linéairement
   // une liste fusionnée de ~3500 aliments par entrée journalière rendait ce
   // calcul coûteux, d'autant qu'il est répété pour chaque jour d'un bilan.
   foods_loader.FoodItem? findFood(String id) => repo.findById(id);
 
-  for (final mealList in decoded.values) {
-    if (mealList is! List) continue;
-    for (final entry in mealList) {
-      if (entry is! Map) continue;
-      final m = Map<String, dynamic>.from(entry);
-      final id = (m['id'] ?? '').toString();
-      final name = (m['name'] ?? '').toString();
-      final grams = (m['grams'] as num?)?.toDouble() ?? 0.0;
+  double kcal = 0, prot = 0, carb = 0, fat = 0, fiber = 0;
+  final microTotals = <String, double>{};
+  double waterMl = 0;
+  final waterNames = <String>{};
+  bool gotSupabaseData = false;
 
-      kcal += (m['kcal'] as num?)?.toDouble() ?? 0.0;
-      prot += (m['prot'] as num?)?.toDouble() ?? 0.0;
-      carb += (m['carb'] as num?)?.toDouble() ?? 0.0;
-      fat += (m['fat'] as num?)?.toDouble() ?? 0.0;
-      fiber += (m['fiber'] as num?)?.toDouble() ?? 0.0;
+  // Priorité 65 (audit global) : Supabase d'abord — seule source de vérité
+  // pour un compte connecté (même logique que _computeDayTotalsForDate dans
+  // bilan_screen.dart et journal_screen.dart), repli local uniquement en
+  // l'absence de réseau/compte. Avant, cette fonction ne lisait QUE le
+  // journal local : un aliment logué depuis un autre appareil n'apparaissait
+  // jamais dans le calcul du conseil du jour.
+  try {
+    final ymd = _dateKey(day);
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      final List<Map<String, dynamic>> rows = await Supabase.instance.client
+          .from('food_entries')
+          .select()
+          .eq('user_id', user.id)
+          .eq('entry_date', ymd);
 
-      final food = findFood(id);
-      if (food != null) {
-        final mic = food.microsFor(grams);
-        mic.forEach(
-          (k, v) => microTotals[k] = (microTotals[k] ?? 0) + v,
-        );
+      if (rows.isNotEmpty) {
+        for (final r in rows) {
+          final id = (r['food_id'] ?? '').toString();
+          final name = (r['food_name'] ?? '').toString();
+          final grams = (r['quantity_grams'] as num?)?.toDouble() ?? 0.0;
+
+          kcal += (r['energy_kcal'] as num?)?.toDouble() ?? 0.0;
+          prot += (r['protein_g'] as num?)?.toDouble() ?? 0.0;
+          carb += (r['carbs_g'] as num?)?.toDouble() ?? 0.0;
+          fat  += (r['fat_g'] as num?)?.toDouble() ?? 0.0;
+          fiber += (r['fiber_g'] as num?)?.toDouble() ?? 0.0;
+
+          final snap = r['micros'];
+          if (snap is Map && snap.isNotEmpty) {
+            snap.forEach((k, v) {
+              final d = (v is num) ? v.toDouble() : 0.0;
+              microTotals[k.toString()] = (microTotals[k.toString()] ?? 0.0) + d;
+            });
+          } else if (id.isNotEmpty) {
+            final food = findFood(id);
+            if (food != null) {
+              food.microsFor(grams).forEach((k, v) => microTotals[k] = (microTotals[k] ?? 0) + v);
+            }
+          }
+
+          if (_looksLikeWaterForAdvice(name)) {
+            waterMl += grams;
+            waterNames.add(name);
+          }
+        }
+        gotSupabaseData = (kcal + prot + carb + fat + fiber) > 0 || microTotals.isNotEmpty;
       }
+    }
+  } catch (_) {
+    // Souci réseau/Supabase → repli local ci-dessous.
+  }
 
-      if (_looksLikeWaterForAdvice(name)) {
-        waterMl += grams;
-        waterNames.add(name);
+  if (!gotSupabaseData) {
+    final raw = sp.getString(_journalKeyForDate(day));
+    if (raw == null || raw.isEmpty) return _AdviceDayTotals.empty();
+
+    Map<String, dynamic> decoded;
+    try {
+      decoded = jsonDecode(raw) as Map<String, dynamic>;
+    } catch (_) {
+      return _AdviceDayTotals.empty();
+    }
+
+    kcal = 0; prot = 0; carb = 0; fat = 0; fiber = 0;
+    microTotals.clear();
+    waterMl = 0;
+    waterNames.clear();
+
+    for (final mealList in decoded.values) {
+      if (mealList is! List) continue;
+      for (final entry in mealList) {
+        if (entry is! Map) continue;
+        final m = Map<String, dynamic>.from(entry);
+        final id = (m['id'] ?? '').toString();
+        final name = (m['name'] ?? '').toString();
+        final grams = (m['grams'] as num?)?.toDouble() ?? 0.0;
+
+        kcal += (m['kcal'] as num?)?.toDouble() ?? 0.0;
+        prot += (m['prot'] as num?)?.toDouble() ?? 0.0;
+        carb += (m['carb'] as num?)?.toDouble() ?? 0.0;
+        fat += (m['fat'] as num?)?.toDouble() ?? 0.0;
+        fiber += (m['fiber'] as num?)?.toDouble() ?? 0.0;
+
+        final food = findFood(id);
+        if (food != null) {
+          final mic = food.microsFor(grams);
+          mic.forEach(
+            (k, v) => microTotals[k] = (microTotals[k] ?? 0) + v,
+          );
+        }
+
+        if (_looksLikeWaterForAdvice(name)) {
+          waterMl += grams;
+          waterNames.add(name);
+        }
       }
     }
   }
@@ -588,12 +649,34 @@ Future<_AdviceHydration> _computeHydrationForAdviceToday(
   // linéaire des aliments, était une des causes de la latence perçue sur cet
   // onglet.
   dayTotals ??= await _computeDayTotalsForAdviceDate(now, sp);
-  final manual = sp.getDouble(_hydrationManualKeyForDate(now)) ?? 0.0;
+
+  // Priorité 65 (audit global) : ne lisait qu'un ancien apport manuel local
+  // (legacy) — jamais les verres réellement loggés via le compteur
+  // "Boissons" (table Supabase water_intake), pourtant seule source utilisée
+  // par le Bilan (_computeHydrationForToday) pour ce même calcul "aujourd'hui".
+  // Un utilisateur ayant loggé son eau via les verres voyait une hydratation
+  // correcte dans Bilan mais artificiellement basse dans Conseils.
+  double glassesMl = 0.0;
+  try {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      final ymd = _dateKey(now);
+      final row = await Supabase.instance.client
+          .from('water_intake')
+          .select('total_ml')
+          .eq('user_id', user.id)
+          .eq('intake_date', ymd)
+          .maybeSingle();
+      glassesMl = ((row?['total_ml'] as num?) ?? 0).toDouble();
+    }
+  } catch (_) {}
+
+  final legacyManual = sp.getDouble(_hydrationManualKeyForDate(now)) ?? 0.0;
   final target = sp.getDouble('goals_water_ml') ??
       _hydrationTargetForAdvice(goals.weightKg, goals.activityIdx);
   return _AdviceHydration(
     journalMl: dayTotals.waterMlFromJournal,
-    manualMl: manual,
+    manualMl: glassesMl + legacyManual,
     targetMl: target,
     sources: dayTotals.waterSources,
   );
@@ -608,8 +691,16 @@ Future<_AdviceTargets> _buildAdviceTargets(_AdviceGoalsRaw goals) async {
 
   final goalKcal = goals.kcal <= 0 ? 2000.0 : goals.kcal;
   final goalProt = goals.prot <= 0 ? 120.0 : goals.prot;
-  final goalCarb = (goalKcal * 0.55) / 4.0;
-  final goalFat = (goalKcal * 0.35) / 9.0;
+  // Priorité 65 (audit global) : lisait un split 55%/35% recalculé à partir
+  // des seules calories, en ignorant totalement les cibles glucides/lipides
+  // RÉELLEMENT sauvegardées (donc le style alimentaire — kéto, riche en
+  // glucides... — choisi dans le Profil). Un profil kéto voyait ici une
+  // cible glucides ~9x trop haute (55% des kcal au lieu de la cible kéto
+  // réelle), faussant le "reste à consommer" et le score de pertinence des
+  // recettes suggérées. Mêmes clés + même repli que bilan_screen.dart
+  // (_readGoalsRaw) pour rester strictement alignés.
+  final goalCarb = sp.getDouble('goals_carb') ?? (goalKcal * 0.55) / 4.0;
+  final goalFat = sp.getDouble('goals_fat') ?? (goalKcal * 0.35) / 9.0;
   final goalFiber = sp.getDouble('goals_fiber') ?? 30.0;
 
   final goalO9 = sp.getDouble('goals_o9') ?? 15.0;
@@ -5607,6 +5698,7 @@ class _RespirationScreenState extends State<RespirationScreen>
 
   Future<void> _loadPrefs() async {
     final sp = await SharedPreferences.getInstance();
+    if (!mounted) return;
     setState(() {
       _cycles = sp.getInt('breath_cycles') ?? 30;
       _soundOn = sp.getBool('breath_sound') ?? true;
@@ -5666,6 +5758,7 @@ class _RespirationScreenState extends State<RespirationScreen>
   Future<void> _selectTech(int i) async {
     final sp = await SharedPreferences.getInstance();
     final saved = sp.getStringList('breath_sec_${kBreathTechs[i].key}');
+    if (!mounted) return;
     setState(() {
       _techIndex = i;
       _seconds = saved != null

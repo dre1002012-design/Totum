@@ -1389,5 +1389,8 @@
   "jrnlMealItemCount": "{count, plural, =1{({count} item)} other{({count} items)}}",
   "jrnlFilterPersonalFoods": "Personal foods",
   "jrnlFilterRecipes": "Recipes",
-  "jrnlFilterMeals": "Meals"
+  "jrnlFilterMeals": "Meals",
+  "jrnlSyncFailedWarning": "No connection: this change couldn't be synced and may be lost. Please try again when you're back online.",
+  "jrnlSyncFailedRetry": "Retry",
+  "jrnlUnknownFoodFallback": "Food item"
 }

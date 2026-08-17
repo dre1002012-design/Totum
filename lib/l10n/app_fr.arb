@@ -1573,5 +1573,8 @@
   "@jrnlMealItemCount": { "placeholders": { "count": {"type": "int"} } },
   "jrnlFilterPersonalFoods": "Aliments perso",
   "jrnlFilterRecipes": "Recettes",
-  "jrnlFilterMeals": "Repas"
+  "jrnlFilterMeals": "Repas",
+  "jrnlSyncFailedWarning": "Pas de connexion : cette modification n'a pas pu être synchronisée et pourrait être perdue. Réessaie dès que possible.",
+  "jrnlSyncFailedRetry": "Réessayer",
+  "jrnlUnknownFoodFallback": "Aliment"
 }

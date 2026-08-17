@@ -11,6 +11,7 @@ import 'screens/conseils_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/paywall_screen.dart';
 import 'services/app_settings.dart';
+import 'services/premium_status.dart';
 import 'services/profile.dart' show computeAndSaveTargetsFromStoredProfile;
 import 'theme/totum_style.dart';
 
@@ -175,6 +176,16 @@ class _PremiumGateState extends State<PremiumGate> {
   void initState() {
     super.initState();
     _loadStatus();
+    // Priorité 65 : voir services/premium_status.dart — permet à
+    // AccountScreen/PaywallScreen de nous dire "réévalue le statut" (après
+    // un achat, une activation) sans jamais avoir à recréer cette route.
+    PremiumStatus.refreshTrigger.addListener(_loadStatus);
+  }
+
+  @override
+  void dispose() {
+    PremiumStatus.refreshTrigger.removeListener(_loadStatus);
+    super.dispose();
   }
 
   /// S'assure qu'une ligne user_status existe pour cet utilisateur.

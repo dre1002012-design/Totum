@@ -836,7 +836,13 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// pictogrammes) puisque c'est la vignette la plus vue de tout l'onglet.
   Widget _kpiRemainingCard(DayTotals today) {
     final l10n = context.l10n;
-    final remaining = _kcal - today.kcal;
+    // Priorité 65 (audit global) : calculé à partir des valeurs déjà
+    // arrondies (mêmes que "Objectif"/"Aliments" juste à droite), pour que
+    // les 3 nombres affichés se recoupent toujours exactement (avant : un
+    // écart d'affichage de ±1 kcal possible entre les deux calculs indépendants).
+    final goalRounded = _kcal.round();
+    final consumedRounded = today.kcal.round();
+    final remaining = (goalRounded - consumedRounded).toDouble();
     final isOver = _kcal > 0 && today.kcal > _kcal;
     final fraction = _kcal > 0 ? (today.kcal / _kcal).clamp(0.0, 1.0) : 0.0;
     final ringColor = isOver ? TotumColors.negative : TotumColors.accent;

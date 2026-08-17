@@ -22,6 +22,13 @@ class _AuthScreenState extends State<AuthScreen> {
 
   SupabaseClient get _client => Supabase.instance.client;
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   /// Affiche un message stylé (couleur selon le type) avec une durée adaptée.
   void _showMessage(String text,
       {Color color = const Color(0xFF2E7D32), int seconds = 4}) {

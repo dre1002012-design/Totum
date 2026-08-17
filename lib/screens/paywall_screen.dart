@@ -7,7 +7,6 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../l10n/l10n_ext.dart';
-import 'auth_screen.dart';
 import 'account_screen.dart';
 
 class PaywallScreen extends StatefulWidget {
@@ -41,6 +40,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Future<void> _initStoreInfo() async {
     try {
       final available = await _iap.isAvailable();
+      if (!mounted) return;
       if (!available) {
         setState(() {
           _storeAvailable = false;
@@ -51,6 +51,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
       const ids = {_kSubProductId};
       final response = await _iap.queryProductDetails(ids);
+      if (!mounted) return;
 
       if (response.error != null) {
         setState(() {
@@ -62,7 +63,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
       }
 
       if (response.productDetails.isEmpty) {
-        if (!mounted) return;
         setState(() {
           _storeAvailable = false;
           _priceError = context.l10n.paywallSubscriptionNotFound;
@@ -77,6 +77,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         _loadingPrice = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _storeAvailable = false;
         _priceError = e.toString();
@@ -86,15 +87,15 @@ class _PaywallScreenState extends State<PaywallScreen> {
   }
 
   // ===== Changer de compte =====
+  // Priorité 65 (audit global) : ne pousse plus AuthScreen "à la main" en
+  // vidant toute la pile — ça supprimait AUSSI la route racine (AuthGate),
+  // laissant l'utilisateur bloqué sur cet écran de connexion sans aucun
+  // moyen d'atteindre l'app même après une connexion réussie (bug confirmé).
+  // AuthGate écoute déjà `onAuthStateChange` (StreamBuilder, main.dart) : se
+  // déconnecter suffit, il affichera lui-même l'écran de connexion.
   Future<void> _changeAccount() async {
     try {
       await Supabase.instance.client.auth.signOut();
-      await Future.delayed(const Duration(milliseconds: 50));
-      if (!mounted) return;
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const AuthScreen()),
-        (route) => false,
-      );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -121,9 +122,14 @@ class _PaywallScreenState extends State<PaywallScreen> {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       }
     } else {
-      Navigator.of(context).pushAndRemoveUntil(
+      // Priorité 65 : un simple push, pas pushAndRemoveUntil — même raison
+      // que _changeAccount ci-dessus. AccountScreen déclenche lui-même
+      // PremiumStatus.requestRefresh() une fois l'achat activé (voir
+      // account_screen.dart, _activatePremium/_activateSubscription), ce qui
+      // fait réévaluer PremiumGate (resté monté sous cet écran) et bascule
+      // automatiquement sur l'app principale dès qu'on revient en arrière.
+      Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => const AccountScreen()),
-        (route) => false,
       );
     }
   }

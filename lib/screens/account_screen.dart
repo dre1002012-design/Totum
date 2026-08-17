@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../l10n/l10n_ext.dart';
 import '../services/app_settings.dart';
+import '../services/premium_status.dart';
 import '../services/units.dart';
 import '../services/export/journal_export.dart';
 import '../theme/totum_style.dart';
@@ -221,12 +222,14 @@ class _AccountScreenState extends State<AccountScreen> {
 
   Future<void> _initStoreInfo() async {
     final available = await _iap.isAvailable();
+    if (!mounted) return;
     if (!available) {
       setState(() => _storeAvailable = false);
       return;
     }
     const ids = {_kPremiumProductId, _kSubProductId};
     final resp = await _iap.queryProductDetails(ids);
+    if (!mounted) return;
     if (resp.error != null) {
       setState(() {
         _storeAvailable = false;
@@ -235,7 +238,6 @@ class _AccountScreenState extends State<AccountScreen> {
       return;
     }
     if (resp.productDetails.isEmpty) {
-      if (!mounted) return;
       setState(() {
         _storeAvailable = false;
         _purchaseError = context.l10n.accountProductNotFound;
@@ -272,6 +274,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   Future<void> _onPurchaseUpdated(List<PurchaseDetails> purchases) async {
     for (final p in purchases) {
+      if (!mounted) return;
       if (p.status == PurchaseStatus.pending) {
         setState(() => _purchasePending = true);
       } else {
@@ -300,12 +303,13 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               );
             }
-          } else {
+          } else if (mounted) {
             setState(() => _purchaseError =
                 msg.isEmpty ? context.l10n.accountUnknownError : msg);
           }
         }
         if (p.pendingCompletePurchase) await _iap.completePurchase(p);
+        if (!mounted) return;
         setState(() => _purchasePending = false);
       }
     }
@@ -319,6 +323,13 @@ class _AccountScreenState extends State<AccountScreen> {
           .from('user_status')
           .update({'is_premium': true}).eq('id', user.id);
       await _loadStatus();
+      // Priorité 65 (audit global) : sans ça, PremiumGate (main.dart) — qui
+      // décide d'afficher l'app ou le Paywall — ne réévaluait jamais son
+      // propre statut après un achat réussi ici, malgré `_loadStatus()`
+      // ci-dessus qui ne met à jour que L'AFFICHAGE de CET écran. Combiné à
+      // l'ancien `pushAndRemoveUntil` déjà corrigé côté Paywall, l'utilisateur
+      // restait bloqué sur Compte même après avoir payé.
+      PremiumStatus.requestRefresh();
       if (!mounted) return;
       if (showMessage) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -361,6 +372,7 @@ class _AccountScreenState extends State<AccountScreen> {
       }).eq('id', user.id);
 
       await _loadStatus();
+      PremiumStatus.requestRefresh(); // voir _activatePremium ci-dessus
       if (!mounted) return;
       if (showMessage) {
         ScaffoldMessenger.of(context).showSnackBar(

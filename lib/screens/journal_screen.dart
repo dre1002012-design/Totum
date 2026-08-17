@@ -1277,6 +1277,24 @@ class JournalScreenState extends State<JournalScreen> {
     }
   }
 
+  /// Priorité 65 (audit global) : jusqu'ici, un échec réseau sur un
+  /// INSERT/UPDATE/DELETE `food_entries` était juste `debugPrint`é — invisible
+  /// en build release. La modification restait affichée localement (donc
+  /// l'utilisateur croyait que c'était enregistré), mais Supabase étant la
+  /// seule source de vérité pour un compte connecté, elle disparaissait
+  /// silencieusement au prochain rechargement (retour sur l'onglet, relance
+  /// de l'app...). On prévient maintenant explicitement.
+  void _notifySyncFailure() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(context.l10n.jrnlSyncFailedWarning),
+        backgroundColor: TotumColors.negative,
+        duration: const Duration(seconds: 5),
+      ),
+    );
+  }
+
   Future<void> _addToJournal(String meal, dynamic it, double grams) async {
     double getD(dynamic v) => (v is num) ? v.toDouble() : 0.0;
     final f = grams / 100.0;
@@ -1315,7 +1333,10 @@ class JournalScreenState extends State<JournalScreen> {
           }
         } catch (_) {}
       }
-    } catch (e) { debugPrint('Erreur ajout food_entries: $e'); }
+    } catch (e) {
+      debugPrint('Erreur ajout food_entries: $e');
+      _notifySyncFailure();
+    }
     _recomputeTotals();
     await _saveDailySnapshot();
     // Rafraîchit la vue quotidienne pour que l'aliment ajouté apparaisse
@@ -1350,7 +1371,10 @@ class JournalScreenState extends State<JournalScreen> {
           'micros': micros,
         });
       }
-    } catch (e) { debugPrint('Erreur ajout entrée date passée: $e'); }
+    } catch (e) {
+      debugPrint('Erreur ajout entrée date passée: $e');
+      _notifySyncFailure();
+    }
 
     await _stats.bump(id);
 
@@ -1446,6 +1470,12 @@ class JournalScreenState extends State<JournalScreen> {
     double grams = 100;
     String meal = presetMeal ?? 'Déjeuner';
     final qtyCtrl = TextEditingController(text: '100');
+    // Priorité 65 (audit global) : garde-fou anti double-tap — sans ça, un
+    // double-tap sur "Ajouter" (fréquent sur connexion lente, exactement
+    // quand l'utilisateur retape en pensant que rien ne s'est passé) déclenche
+    // deux INSERT food_entries pour le même aliment, doublant silencieusement
+    // les calories du jour.
+    bool submitting = false;
 
     double getD(dynamic v) => (v is num) ? v.toDouble() : 0.0;
     double micro(String key) {
@@ -1861,10 +1891,13 @@ class JournalScreenState extends State<JournalScreen> {
                         foregroundColor: Colors.white,
                         minimumSize: const Size.fromHeight(48),
                       ),
-                      onPressed: () async {
-                        await _addToJournal(meal, it, grams);
-                        if (ctx.mounted) Navigator.of(ctx).pop();
-                      },
+                      onPressed: submitting
+                          ? null
+                          : () async {
+                              setSheetState(() => submitting = true);
+                              await _addToJournal(meal, it, grams);
+                              if (ctx.mounted) Navigator.of(ctx).pop();
+                            },
                       label: Text(ctx.l10n.jrnlAddToJournal),
                     ),
                   ),
@@ -1947,7 +1980,10 @@ class JournalScreenState extends State<JournalScreen> {
         }
         await query;
       }
-    } catch (e) { debugPrint('Erreur suppression Supabase: $e'); }
+    } catch (e) {
+      debugPrint('Erreur suppression Supabase: $e');
+      _notifySyncFailure();
+    }
 
     if (_ymd(date) == _ymd(DateTime.now())) {
       // index == -1 : la ligne a déjà été retirée localement par l'appelant,
@@ -2008,7 +2044,10 @@ class JournalScreenState extends State<JournalScreen> {
           }).eq('id', entryId).eq('user_id', user.id);
         }
       }
-    } catch (e) { debugPrint('Erreur modification Supabase: $e'); }
+    } catch (e) {
+      debugPrint('Erreur modification Supabase: $e');
+      _notifySyncFailure();
+    }
 
     if (_ymd(date) == _ymd(DateTime.now())) {
       final oldList = _journal[oldMeal];
@@ -2052,7 +2091,10 @@ class JournalScreenState extends State<JournalScreen> {
           });
         }
       }
-    } catch (e) { debugPrint('Erreur copie repas Supabase: $e'); }
+    } catch (e) {
+      debugPrint('Erreur copie repas Supabase: $e');
+      _notifySyncFailure();
+    }
 
     if (ymd == _ymd(DateTime.now())) {
       for (final item in items) {
@@ -2097,7 +2139,10 @@ class JournalScreenState extends State<JournalScreen> {
             .eq('entry_date', _ymd(date))
             .eq('meal_type', meal);
       }
-    } catch (e) { debugPrint('Erreur clear meal: $e'); }
+    } catch (e) {
+      debugPrint('Erreur clear meal: $e');
+      _notifySyncFailure();
+    }
 
     if (_ymd(date) == _ymd(DateTime.now())) {
       setState(() { _journal[meal] = []; });
@@ -5848,7 +5893,8 @@ class _DayJournalViewState extends State<_DayJournalView> {
                 children: [
                   Expanded(
                     child: Text(
-                      displayNameOf(food, (entry['name'] ?? 'Aliment').toString()),
+                      displayNameOf(food,
+                          (entry['name'] ?? ctx.l10n.jrnlUnknownFoodFallback).toString()),
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                       overflow: TextOverflow.ellipsis,
                     ),

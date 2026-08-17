@@ -4500,4 +4500,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jrnlFilterMeals => 'Meals';
+
+  @override
+  String get jrnlSyncFailedWarning =>
+      'No connection: this change couldn\'t be synced and may be lost. Please try again when you\'re back online.';
+
+  @override
+  String get jrnlSyncFailedRetry => 'Retry';
+
+  @override
+  String get jrnlUnknownFoodFallback => 'Food item';
 }
