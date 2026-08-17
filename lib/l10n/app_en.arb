@@ -1392,5 +1392,7 @@
   "jrnlFilterMeals": "Meals",
   "jrnlSyncFailedWarning": "No connection: this change couldn't be synced and may be lost. Please try again when you're back online.",
   "jrnlSyncFailedRetry": "Retry",
-  "jrnlUnknownFoodFallback": "Food item"
+  "jrnlUnknownFoodFallback": "Food item",
+  "bilanGoalRefLegend": "That day's goal",
+  "bilanGoalRefHint": "Each thin bar shows the goal that was yours that day — tap a bar for details."
 }

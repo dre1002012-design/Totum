@@ -4510,4 +4510,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jrnlUnknownFoodFallback => 'Food item';
+
+  @override
+  String get bilanGoalRefLegend => 'That day\'s goal';
+
+  @override
+  String get bilanGoalRefHint =>
+      'Each thin bar shows the goal that was yours that day — tap a bar for details.';
 }

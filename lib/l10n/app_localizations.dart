@@ -7607,6 +7607,18 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Aliment'**
   String get jrnlUnknownFoodFallback;
+
+  /// No description provided for @bilanGoalRefLegend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif de ce jour-là'**
+  String get bilanGoalRefLegend;
+
+  /// No description provided for @bilanGoalRefHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque barre fine montre l\'objectif qui était le tien ce jour-là — touche une barre pour le détail.'**
+  String get bilanGoalRefHint;
 }
 
 class _AppLocalizationsDelegate

@@ -4548,4 +4548,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get jrnlUnknownFoodFallback => 'Aliment';
+
+  @override
+  String get bilanGoalRefLegend => 'Objectif de ce jour-là';
+
+  @override
+  String get bilanGoalRefHint =>
+      'Chaque barre fine montre l\'objectif qui était le tien ce jour-là — touche une barre pour le détail.';
 }

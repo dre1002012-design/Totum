@@ -1576,5 +1576,7 @@
   "jrnlFilterMeals": "Repas",
   "jrnlSyncFailedWarning": "Pas de connexion : cette modification n'a pas pu être synchronisée et pourrait être perdue. Réessaie dès que possible.",
   "jrnlSyncFailedRetry": "Réessayer",
-  "jrnlUnknownFoodFallback": "Aliment"
+  "jrnlUnknownFoodFallback": "Aliment",
+  "bilanGoalRefLegend": "Objectif de ce jour-là",
+  "bilanGoalRefHint": "Chaque barre fine montre l'objectif qui était le tien ce jour-là — touche une barre pour le détail."
 }

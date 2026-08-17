@@ -3921,30 +3921,55 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
                 100)
             .round();
 
-    // Groupes de barres
+    // Priorité 68 (retour répété d'Alex : "il faut que ça suive les
+    // objectifs, ils sont différents chaque jour") — l'ancienne ligne
+    // pointillée horizontale UNIQUE se cachait entièrement dès que
+    // l'objectif changeait pendant la période (au-delà d'un seul point fixe,
+    // elle aurait été fausse pour les jours antérieurs au changement). Les
+    // données et l'infobulle étaient déjà correctes jour par jour (refs[i]
+    // vient de l'objectif RÉELLEMENT en vigueur ce jour-là, voir
+    // _goalsRawForDay) — il manquait juste une représentation visuelle qui
+    // suive cette variation. Remplacée par une barre de référence fine,
+    // accolée à chaque barre réelle : chaque jour montre SON PROPRE objectif
+    // (paire actual/cible), sans ligne continue qui suggérerait à tort une
+    // transition progressive entre deux objectifs (un changement d'objectif
+    // est un saut net, jamais une pente). Choisi plutôt qu'une ligne
+    // superposée en Stack (deux graphiques fl_chart alignés au pixel près)
+    // pour rester entièrement dans le système de coordonnées natif de
+    // BarChart — aucun risque de désalignement.
+    final barWidth = widget.span == ReportSpan.d7 ? 18.0 : (widget.span == ReportSpan.d30 ? 8.0 : 4.0);
+    final refWidth = (barWidth * 0.4).clamp(1.5, 8.0);
+
     final barGroups = List.generate(points.length, (index) {
       final p = points[index];
+      final ref = refs[index];
+      final barColor = _barColorFor(p.kcal, ref);
       return BarChartGroupData(
         x: index,
+        barsSpace: 3,
         barRods: [
           BarChartRodData(
             toY: p.kcal,
-            width: widget.span == ReportSpan.d7 ? 18 : (widget.span == ReportSpan.d30 ? 8 : 4),
-            borderRadius: BorderRadius.circular(4),
-            color: _barColorFor(p.kcal, refs[index]),
+            width: barWidth,
+            borderRadius: BorderRadius.vertical(top: Radius.circular((barWidth / 3).clamp(2.0, 6.0))),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [barColor, barColor.withValues(alpha: 0.55)],
+            ),
           ),
+          if (ref != null && ref > 0)
+            BarChartRodData(
+              toY: ref,
+              width: refWidth,
+              borderRadius: BorderRadius.vertical(top: Radius.circular((refWidth / 2).clamp(1.0, 3.0))),
+              color: vsExpenditure
+                  ? TotumColors.textSecondary.withValues(alpha: 0.45)
+                  : kTotumOrange.withValues(alpha: 0.55),
+            ),
         ],
       );
     });
-
-    // Ligne pointillée : uniquement en mode "Objectif" ET si l'objectif est
-    // resté constant sur la période (sinon trompeur pour les jours
-    // antérieurs à un changement). En mode "Dépense estimée", pas de ligne
-    // unique : la dépense réelle varie chaque jour, une ligne plate serait
-    // fausse — la couleur des barres et l'infobulle suffisent.
-    final goalChangedDuringPeriod = points.any(
-        (p) => p.goalKcal > 0 && widget.goalKcal > 0 && (p.goalKcal - widget.goalKcal).abs() > 1);
-    final showDashedLine = !vsExpenditure && widget.goalKcal > 0 && !goalChangedDuringPeriod;
 
     final lastIndex = points.length - 1;
     final desiredLabels = () {
@@ -4032,6 +4057,11 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: maxY / 4,
+                  // Priorité 68 : sans ceci, fl_chart utilise sa couleur de
+                  // grille par défaut (fixe, pas alignée sur la charte) —
+                  // invisible ou trop marquée selon le thème clair/sombre.
+                  getDrawingHorizontalLine: (_) =>
+                      FlLine(color: TotumColors.outline, strokeWidth: 1),
                 ),
                 // Axes visibles (baseline gauche + bas)
                 borderData: FlBorderData(
@@ -4056,7 +4086,8 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
                         final text = value.round().toString();
                         return Padding(
                           padding: const EdgeInsets.only(right: 4),
-                          child: Text(text, style: const TextStyle(fontSize: 10)),
+                          child: Text(text,
+                              style: TextStyle(fontSize: 10, color: TotumColors.textMuted)),
                         );
                       },
                     ),
@@ -4076,25 +4107,14 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
                         final label = _formatShortDate(points[index].date, l10n);
                         return Padding(
                           padding: const EdgeInsets.only(top: 4),
-                          child: Text(label, style: const TextStyle(fontSize: 9)),
+                          child: Text(label,
+                              style: TextStyle(fontSize: 9, color: TotumColors.textMuted)),
                         );
                       },
                     ),
                   ),
                   rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                ),
-                // Ligne horizontale = objectif kcal (mode Objectif seulement)
-                extraLinesData: ExtraLinesData(
-                  horizontalLines: [
-                    if (showDashedLine)
-                      HorizontalLine(
-                        y: widget.goalKcal,
-                        color: kTotumOrange.withValues(alpha: 0.7),
-                        strokeWidth: 1.5,
-                        dashArray: [6, 4],
-                      ),
-                  ],
                 ),
                 barTouchData: BarTouchData(
                   enabled: true,
@@ -4189,7 +4209,10 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
           if (widget.span != ReportSpan.day) ...[
             const SizedBox(height: 10),
             // Légende — mêmes 3 couleurs que partout ailleurs dans l'app
-            // (règle 5 de la charte), jamais une teinte propre à ce graphique.
+            // (règle 5 de la charte), jamais une teinte propre à ce graphique
+            // + la barre fine de référence (objectif du jour), toujours
+            // affichée désormais (elle suit chaque jour son propre objectif,
+            // ce n'est plus un cas particulier "objectif qui a changé").
             Wrap(
               spacing: 12,
               runSpacing: 4,
@@ -4197,13 +4220,17 @@ class _EnergyChartCardState extends State<_EnergyChartCard> {
                 _LegendDot(color: TotumColors.positive, label: l10n.bilanInTargetLegend),
                 _LegendDot(color: TotumColors.accent, label: l10n.bilanModerateDeltaLegend),
                 _LegendDot(color: TotumColors.negative, label: l10n.bilanLargeDeltaLegend),
+                _LegendDot(
+                  color: vsExpenditure
+                      ? TotumColors.textSecondary.withValues(alpha: 0.45)
+                      : kTotumOrange.withValues(alpha: 0.55),
+                  label: l10n.bilanGoalRefLegend,
+                ),
               ],
             ),
             const SizedBox(height: 6),
             Text(
-              goalChangedDuringPeriod && !vsExpenditure
-                  ? l10n.bilanGoalChangedHint
-                  : l10n.bilanTapBarHint,
+              l10n.bilanGoalRefHint,
               style: TextStyle(fontSize: 10.5, color: TotumColors.textMuted, fontStyle: FontStyle.italic),
             ),
           ],
