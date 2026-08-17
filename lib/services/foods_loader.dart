@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_settings.dart';
@@ -249,8 +250,13 @@ class FoodsRepository {
           novaEstime: row['novaEstime'] == true,
         ));
       }
-    } catch (_) {
-      // on ignore une corruption éventuelle
+    } catch (e) {
+      // Priorité 66 (audit global) : une corruption ici faisait disparaître
+      // silencieusement TOUS les aliments perso (et leurs micronutriments
+      // dans tout calcul les référençant) sans aucune trace. On garde le
+      // même comportement non-bloquant (jamais de crash pour une entrée
+      // corrompue), mais on laisse au moins une trace en debug.
+      debugPrint('Erreur chargement aliments perso (JSON corrompu ?): $e');
     } finally {
       _idIndex = null;
     }
