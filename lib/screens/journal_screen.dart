@@ -3579,11 +3579,25 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
   final TextEditingController _ingSearchCtrl = TextEditingController();
   String _ingQuery = '';
   bool _saving = false;
+  // Priorité 71 (audit performance) : même cause et même correctif que la
+  // recherche principale (Priorité 50, `_AddFoodPageState._searchDebounce`)
+  // — cette recherche ingrédient scanne toute la base combinée CIQUAL/USDA
+  // (~11 000 items) à CHAQUE frappe sans être débouncée, contrairement à la
+  // recherche principale. Le texte tapé reste instantané (contrôlé par
+  // `_ingSearchCtrl`), seule la mise à jour des RÉSULTATS est différée.
+  Timer? _searchDebounce;
 
   @override
   void initState() {
     super.initState();
     _ingredients = List.from(widget.ingredients);
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    _ingSearchCtrl.dispose();
+    super.dispose();
   }
 
   /// Retrouve un aliment dans la base en gérant les formats d'id hérités
@@ -3839,14 +3853,23 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                   ? null
                   : IconButton(
                       icon: const Icon(Icons.close, size: 18),
-                      onPressed: () => setState(() {
-                        _ingSearchCtrl.clear();
-                        _ingQuery = '';
-                      }),
+                      onPressed: () {
+                        _searchDebounce?.cancel();
+                        setState(() {
+                          _ingSearchCtrl.clear();
+                          _ingQuery = '';
+                        });
+                      },
                     ),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            onChanged: (s) => setState(() => _ingQuery = s),
+            onChanged: (s) {
+              _searchDebounce?.cancel();
+              _searchDebounce = Timer(const Duration(milliseconds: 220), () {
+                if (!mounted) return;
+                setState(() => _ingQuery = s);
+              });
+            },
           ),
           const SizedBox(height: 4),
 
@@ -4037,11 +4060,22 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
   final TextEditingController _ingSearchCtrl = TextEditingController();
   String _ingQuery = '';
   bool _saving = false;
+  // Priorité 71 (audit performance) — même correctif que
+  // _RecipeEditorScreenState : recherche ingrédient débouncée 220ms au lieu
+  // de rescanner ~11 000 aliments à chaque frappe.
+  Timer? _searchDebounce;
 
   @override
   void initState() {
     super.initState();
     _items = widget.items.map((e) => Map<String, dynamic>.from(e)).toList();
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    _ingSearchCtrl.dispose();
+    super.dispose();
   }
 
   double get _totalKcal =>
@@ -4203,14 +4237,23 @@ class _MealEditorScreenState extends State<_MealEditorScreen> {
                   ? null
                   : IconButton(
                       icon: const Icon(Icons.close, size: 18),
-                      onPressed: () => setState(() {
-                        _ingSearchCtrl.clear();
-                        _ingQuery = '';
-                      }),
+                      onPressed: () {
+                        _searchDebounce?.cancel();
+                        setState(() {
+                          _ingSearchCtrl.clear();
+                          _ingQuery = '';
+                        });
+                      },
                     ),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            onChanged: (s) => setState(() => _ingQuery = s),
+            onChanged: (s) {
+              _searchDebounce?.cancel();
+              _searchDebounce = Timer(const Duration(milliseconds: 220), () {
+                if (!mounted) return;
+                setState(() => _ingQuery = s);
+              });
+            },
           ),
           const SizedBox(height: 4),
 

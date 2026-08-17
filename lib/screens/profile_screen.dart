@@ -348,6 +348,27 @@ class ProfileScreenState extends State<ProfileScreen> {
     return null;
   }
 
+  /// Priorité 71 (audit scientifique du 17/08/2026) — le mode manuel laisse
+  /// l'utilisateur saisir n'importe quel chiffre : un objectif sain calculé
+  /// automatiquement respecte désormais un plancher de sécurité
+  /// ([nutri.minSafeKcalFor]), mais une saisie manuelle peut toujours passer
+  /// en dessous. On ne bloque pas la saisie (un suivi médical/diététique
+  /// encadré peut légitimement justifier un objectif bas), mais on informe
+  /// clairement — jamais silencieux.
+  String? _checkLowCalorieSafety() {
+    final kcal = _num(_manualKcalCtrl);
+    if (kcal <= 0) return null;
+    final kg = _num(_weightCtrl);
+    final cm = _num(_heightCtrl);
+    final age = _num(_ageCtrl).round();
+    final profile = _buildCurrentProfile(kg, cm, age);
+    final bmr = nutri.computeBmr(profile);
+    final floor = nutri.minSafeKcalFor(_sex, bmr);
+    if (kcal >= floor) return null;
+    return context.l10n
+        .profileLowCalorieWarning(kcal.toStringAsFixed(0), floor.toStringAsFixed(0));
+  }
+
   /// Objectifs auto (formule + calibration adaptative si assez de données)
   /// — délègue à [nutri.computeCalibratedGoals], EXACTEMENT la même
   /// fonction que celle appliquée à la sauvegarde
@@ -1939,6 +1960,26 @@ class ProfileScreenState extends State<ProfileScreen> {
                     Icon(warning.tooHigh ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded, color: color, size: 18),
                     const SizedBox(width: 8),
                     Expanded(child: Text(warning.text, style: TextStyle(fontSize: 12, color: color, height: 1.4))),
+                  ],
+                ),
+              ),
+            );
+          }),
+          Builder(builder: (context) {
+            final text = _checkLowCalorieSafety();
+            if (text == null) return const SizedBox.shrink();
+            final color = TotumColors.negative;
+            return Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8), border: Border.all(color: color.withValues(alpha: 0.4))),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.health_and_safety_outlined, color: color, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(text, style: TextStyle(fontSize: 12, color: color, height: 1.4))),
                   ],
                 ),
               ),

@@ -295,6 +295,8 @@
   "profileMacroCoherenceOver": "Your macros add up to {computed} kcal — {diff} kcal ({pct} %) MORE than the {kcal} kcal shown.",
   "profileMacroCoherenceUnder": "Your macros add up to {computed} kcal — {diff} kcal ({pct} %) LESS than the {kcal} kcal shown.",
 
+  "profileLowCalorieWarning": "{kcal} kcal is below the safety threshold generally recommended ({floor} kcal for your profile). Sustaining an intake this low can disrupt hormonal cycles, metabolism and bone density. Only appropriate under medical supervision.",
+
   "profileGoalsUpdatedSnackbar": "Goals updated · {kcal} kcal per day",
 
   "profileConfirmGoals": "Confirm my goals",
@@ -653,6 +655,7 @@
   "consRecipesTotumTitle": "TOTUM Recipes",
   "consRecipesCountSorted": "{count} recipes sorted by goal",
   "consForYouChip": "For you",
+  "consForYouExplainer": "Matched to your diet type, macro split style, and what's left for you to eat today",
   "consListView": "List view",
   "consGridView": "Grid view",
   "consResetFilters": "Reset filters",
@@ -724,6 +727,8 @@
   "consSunVitDCardTitle": "Sun & vitamin D",
   "consSunVitDCardIntro": "A good part of your vitamin D comes from sun exposure, not just diet. Estimate today's synthesis to know where you stand.",
   "consEstimateMySynthesis": "Estimate my synthesis",
+  "consSunLoggedToday": "Already done today",
+  "consSunNotLoggedToday": "Not yet today",
 
   "breathPhaseInhale": "Inhale",
   "breathPhaseHold": "Hold",

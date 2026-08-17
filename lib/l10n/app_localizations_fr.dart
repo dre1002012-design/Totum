@@ -966,6 +966,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String profileLowCalorieWarning(String kcal, String floor) {
+    return '$kcal kcal est en dessous du seuil de sécurité généralement recommandé ($floor kcal pour ton profil). Un apport aussi bas de façon prolongée peut perturber le cycle hormonal, le métabolisme et la densité osseuse. Adapté uniquement si tu es suivi(e) médicalement.';
+  }
+
+  @override
   String profileGoalsUpdatedSnackbar(int kcal) {
     return 'Objectifs mis à jour · $kcal kcal par jour';
   }
@@ -2050,6 +2055,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get consForYouChip => 'Pour toi';
 
   @override
+  String get consForYouExplainer =>
+      'Adapté à ton régime alimentaire, ton style de répartition macro et ce qu\'il te reste à consommer aujourd\'hui';
+
+  @override
   String get consListView => 'Affichage liste';
 
   @override
@@ -2272,6 +2281,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get consEstimateMySynthesis => 'Estimer ma synthèse';
+
+  @override
+  String get consSunLoggedToday => 'Déjà fait aujourd\'hui';
+
+  @override
+  String get consSunNotLoggedToday => 'Pas encore aujourd\'hui';
 
   @override
   String get breathPhaseInhale => 'Inspire';

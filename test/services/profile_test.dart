@@ -224,6 +224,32 @@ void main() {
         }
       }
     });
+
+    test(
+        'kcal ne descend jamais sous le plancher de sécurité (RED-S/dérèglement hormonal — Priorité 71)',
+        () {
+      // Petit gabarit + déficit "lose" : sans garde-fou, atterrit sous les
+      // 1000 kcal/jour (cas réel repéré par l\'audit du 17/08/2026).
+      final p = _profile(
+        sex: Sex.female,
+        age: 25,
+        heightCm: 155,
+        weightKg: 48,
+        activity: ActivityLevel.sedentary,
+        goal: GoalType.lose,
+      );
+      final g = computeGoals(p);
+      final bmr = computeBmr(p);
+      expect(g.kcal, greaterThanOrEqualTo(minSafeKcalFor(Sex.female, bmr)));
+      expect(g.kcal, greaterThanOrEqualTo(1200.0));
+    });
+
+    test(
+        'minSafeKcalFor retient le plus élevé entre le plancher absolu par sexe et 90% du BMR',
+        () {
+      expect(minSafeKcalFor(Sex.female, 1000), 1200.0); // plancher absolu domine
+      expect(minSafeKcalFor(Sex.male, 2000), 1800.0); // 90% du BMR domine
+    });
   });
 
   group('nearestActivityLevel', () {

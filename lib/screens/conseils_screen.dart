@@ -811,15 +811,29 @@ Future<_AdviceTargets> _buildAdviceTargets(_AdviceGoalsRaw goals) async {
 /// Reste-à-consommer aujourd'hui — base du Smart Match Score des recettes.
 /// Réutilise l'infrastructure déjà en place pour les Conseils (mêmes
 /// fonctions que le coach), aucune nouvelle source de données.
+///
+/// Priorité 71 (retour d'Alex : "je veux obligatoirement que le bouton
+/// 'pour toi' soit ultra pertinent... en fonction du profil de la personne,
+/// est-ce qu'elle est omnivore, végétarienne ou végétalienne, [...] riche en
+/// glucides, riche en lipides ou cétogène") — porte aussi le régime
+/// alimentaire (`dietIndex`, même convention que `profile_diet` ailleurs
+/// dans ce fichier : 0 omnivore, 1 végétarien, 2 végétalien) et le style de
+/// répartition macro (`dietStyleIndex`, même convention que `DietStyle` de
+/// services/profile.dart) jusqu'au filtre de recettes, qui jusqu'ici
+/// ignorait totalement ces deux réglages du profil.
 class RemainingToday {
   final double kcal, prot, carb, fat;
   final bool hasTargets;
+  final int dietIndex; // 0 omnivore, 1 végétarien, 2 végétalien
+  final int dietStyleIndex; // 0 équilibré, 1 riche glucides, 2 riche lipides, 3 cétogène
   const RemainingToday({
     required this.kcal,
     required this.prot,
     required this.carb,
     required this.fat,
     required this.hasTargets,
+    this.dietIndex = 0,
+    this.dietStyleIndex = 0,
   });
 }
 
@@ -836,11 +850,51 @@ Future<RemainingToday> computeRemainingToday() async {
       carb: (targets.goalCarb - today.carb).clamp(0, double.infinity),
       fat: (targets.goalFat - today.fat).clamp(0, double.infinity),
       hasTargets: true,
+      dietIndex: (sp.getInt('profile_diet') ?? 0).clamp(0, 2),
+      dietStyleIndex: (sp.getInt('profile_diet_style') ?? 0).clamp(0, 3),
     );
   } catch (_) {
     return const RemainingToday(
         kcal: 0, prot: 0, carb: 0, fat: 0, hasTargets: false);
   }
+}
+
+/// Une recette respecte-t-elle le régime alimentaire du profil ? Contrainte
+/// dure (pas une histoire de score) — un végétalien ne doit jamais voir une
+/// recette à base de viande/poisson/produits laitiers remonter dans "Pour
+/// toi", quel que soit par ailleurs son ajustement calorique/macro.
+bool _matchesDiet(TotumRecipe r, int dietIndex) {
+  switch (dietIndex) {
+    case 2: // Végétalien
+      return r.tags.contains('vegetalien');
+    case 1: // Végétarien (le végétalien est un sous-ensemble du végétarien)
+      return r.tags.contains('vegetarien') || r.tags.contains('vegetalien');
+    default: // Omnivore
+      return true;
+  }
+}
+
+/// Une recette respecte-t-elle le style de répartition macro du profil ?
+/// Cétogène est traité en contrainte dure (les glucides nets par portion ne
+/// se négocient pas, contrairement à un simple écart de calories/protéines) :
+/// les recettes de la bibliothèque n'étant pas taguées "cétogène" au niveau
+/// ingrédient, on calcule le glucide net réel par portion plutôt que de se
+/// fier au seul score de proximité macro (qui ne pondère les glucides qu'à
+/// 15% — insuffisant pour exclure un plat très sucré/féculent d'un profil
+/// cétogène). Les 3 autres styles (équilibré/riche glucides/riche lipides)
+/// restent gérés par la proximité macro seule : ce sont des nuances de
+/// répartition, pas des exclusions binaires.
+bool _matchesDietStyle(TotumRecipe r, int dietStyleIndex) {
+  if (dietStyleIndex != 3) return true; // seul le cétogène (3) est une contrainte dure
+  final carb100 = r.carb100 ?? 0;
+  final fiber100 = r.fiber100 ?? 0;
+  final netCarbPortion = (carb100 - fiber100).clamp(0, double.infinity) * r.totalWeightG / 100;
+  // Seuil généreux (encas/pré-training ≤ 15g, repas ≤ 25g) — objectif : ne
+  // jamais montrer un plat qui ferait à lui seul dépasser le budget
+  // glucidique cétogène (~30g nets/jour), sans être trop restrictif au
+  // point de vider la liste.
+  final ceiling = (r.category == 'Collation' || r.category == 'Pré-workout') ? 15.0 : 25.0;
+  return netCarbPortion <= ceiling;
 }
 
 /// Normalise une chaîne pour la recherche par ingrédient (minuscules, sans
@@ -1284,7 +1338,7 @@ List<String> _buildRecipesFromAsset(
 }
 
 // === GENERATION PRINCIPALE ========================================
-Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
+Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n, {_HolisticLog? hol}) async {
   final now = DateTime.now();
   final sp = await SharedPreferences.getInstance();
 
@@ -1304,9 +1358,21 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
 
   final goals = await _readGoalsForAdvice();
   final targets = await _buildAdviceTargets(goals);
-  final day = await _computeDayTotalsForAdviceDate(now, sp);
+
+  // Priorité 71 (audit performance) : `day` (food_entries) et `hol`
+  // (holistic_log) sont deux requêtes Supabase totalement indépendantes,
+  // jusqu'ici enchaînées en série — démarrées ensemble ici, l'hydratation
+  // (qui a elle-même sa propre requête réseau sur `water_intake`) se
+  // superpose au moins partiellement à la résolution de `hol` plutôt que
+  // d'attendre chaque appel l'un après l'autre. `hol` peut aussi arriver
+  // déjà résolu depuis l'appelant (voir `_initAndLoad`), qui en avait de
+  // toute façon besoin en premier pour préremplir les champs sommeil/stress
+  // — sinon la même table était interrogée deux fois à chaque ouverture.
+  final dayFuture = _computeDayTotalsForAdviceDate(now, sp);
+  final holFuture = hol != null ? Future.value(hol) : _readHolisticLog(sp, now);
+  final day = await dayFuture;
   final hyd = await _computeHydrationForAdviceToday(goals, sp, dayTotals: day);
-  final hol = await _readHolisticLog(sp, now);
+  hol = await holFuture;
   final hist = await _readHistory(sp, _adviceHistoryKey);
   final packHist = await _readHistory(sp, _packHistoryKey);
 
@@ -3777,6 +3843,19 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
         .where(_matchesIngredientQuery)
         .toList();
     final remaining = _remaining;
+    // Priorité 71 : "Pour toi" doit s'adapter au régime alimentaire
+    // (omnivore/végétarien/végétalien — contrainte dure, jamais négociable)
+    // et au style macro (cétogène — contrainte dure sur les glucides nets ;
+    // équilibré/riche glucides/riche lipides — déjà couverts par la
+    // proximité macro ci-dessous, pas de filtre dur nécessaire). Indépendant
+    // de `hasTargets` : même sans objectif calorique connu, le régime
+    // alimentaire du profil reste une contrainte à respecter.
+    if (_smartFitOn && remaining != null) {
+      filtered = filtered
+          .where((r) => _matchesDiet(r, remaining.dietIndex))
+          .where((r) => _matchesDietStyle(r, remaining.dietStyleIndex))
+          .toList();
+    }
     final smartFitActive = _smartFitOn && remaining != null && remaining.hasTargets;
     if (smartFitActive) {
       filtered.sort((a, b) =>
@@ -3903,6 +3982,28 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                     ),
                   ),
                 ),
+                // Priorité 71 : rendre visible ce que "Pour toi" change
+                // vraiment (régime + style macro + reste du jour) — sinon la
+                // personnalisation reste invisible et ne "se sent" pas.
+                if (_smartFitOn) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.auto_awesome, size: 14, color: kTotumOrange),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          l10n.consForYouExplainer,
+                          style: TextStyle(
+                              fontSize: 11.5,
+                              color: TotumColors.textSecondary,
+                              height: 1.3),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 4),
                 // Filtres de catégorie
                 SizedBox(
@@ -4328,7 +4429,7 @@ class ConseilsScreenState extends State<ConseilsScreen>
     if (hol.stress != null) {
       _stressCtrl.text = hol.stress!.toString();
     }
-    return _buildAdviceScript(l10n);
+    return _buildAdviceScript(l10n, hol: hol);
   }
 
   /// Recharge le contenu — appelé par main.dart à chaque retour sur cet
@@ -4954,6 +5055,12 @@ class _WellbeingCardState extends State<_WellbeingCard> {
   late double _sleep;
   late double _stress;
 
+  // Priorité 71 (retour d'Alex : "une toute petite distinction quand le
+  // soleil n'est pas renseigné ... sans mettre de pression") — juste un
+  // repère "déjà fait / pas encore" sur la carte, pas un score ni une
+  // pénalité. null = en cours de chargement (aucun badge affiché).
+  double? _todaySunVitD;
+
   // Un seul accent de marque (règle 1) — Sommeil/Stress se différencient par
   // l'icône et le titre, cohérent avec ConseilsDuJourScreen (même 2 piliers).
   static const _sleepColor = TotumColors.accent;
@@ -4964,6 +5071,12 @@ class _WellbeingCardState extends State<_WellbeingCard> {
     super.initState();
     _sleep = double.tryParse(widget.sleepCtrl.text.replaceAll(',', '.')) ?? 7.5;
     _stress = double.tryParse(widget.stressCtrl.text.replaceAll(',', '.')) ?? 4;
+    _loadTodaySun();
+  }
+
+  Future<void> _loadTodaySun() async {
+    final v = await readSunVitD(DateTime.now());
+    if (mounted) setState(() => _todaySunVitD = v);
   }
 
   void _syncControllers() {
@@ -5345,10 +5458,14 @@ class _WellbeingCardState extends State<_WellbeingCard> {
   Widget _sunCard(BuildContext context) {
     final l10n = context.l10n;
     const color = TotumColors.accent;
+    final loggedToday = (_todaySunVitD ?? 0) > 0;
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const SunVitaminDScreen()),
-      ),
+      onTap: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const SunVitaminDScreen()),
+        );
+        _loadTodaySun();
+      },
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: _cardDeco(),
@@ -5374,6 +5491,43 @@ class _WellbeingCardState extends State<_WellbeingCard> {
                           fontWeight: FontWeight.w800,
                           color: color)),
                 ),
+                // Repère discret "déjà fait / pas encore" — jamais rouge ni
+                // alarmant, juste de quoi se repérer dans sa journée.
+                if (_todaySunVitD != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: loggedToday
+                          ? TotumColors.positive.withValues(alpha: 0.12)
+                          : TotumColors.textMuted.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          loggedToday ? Icons.check_circle : Icons.circle_outlined,
+                          size: 12,
+                          color: loggedToday
+                              ? TotumColors.positive
+                              : TotumColors.textMuted,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          loggedToday
+                              ? l10n.consSunLoggedToday
+                              : l10n.consSunNotLoggedToday,
+                          style: TextStyle(
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w700,
+                            color: loggedToday
+                                ? TotumColors.positive
+                                : TotumColors.textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
             const SizedBox(height: 10),

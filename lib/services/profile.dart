@@ -527,6 +527,26 @@ double _goalEnergyAdjustmentKcal(
   return (rate * weightKg * density) / 7.0;
 }
 
+/// Plancher calorique absolu de sécurité — jusqu'ici ABSENT du calcul (audit
+/// du 17/08/2026) : un profil de petit gabarit + objectif "lose" pouvait
+/// atterrir sous les 1000 kcal/jour sans aucun garde-fou, un territoire
+/// associé au RED-S (Mountjoy et al., consensus CIO 2014/2018 : dérèglement
+/// menstruel, ralentissement thyroïdien, perte de densité osseuse) —
+/// exactement le risque d'effet yoyo/dérèglement endocrinien qu'Alex a
+/// demandé à éliminer. Double plancher, on garde le plus élevé des deux :
+/// - un minimum absolu par sexe, valeurs cliniques usuelles (Academy of
+///   Nutrition and Dietetics / NIH Body Weight Planner) : 1200 kcal femme,
+///   1500 kcal homme ;
+/// - 90% du BMR, pour ne jamais descendre sous le métabolisme de repos même
+///   chez un profil déjà atypique par rapport à ces seuils génériques.
+/// Exposée publiquement pour que l'écran Profil affiche le même seuil en
+/// mode manuel (avertissement, pas un blocage — voir profile_screen.dart).
+double minSafeKcalFor(Sex sex, double bmr) {
+  final sexFloor = sex == Sex.female ? 1200.0 : 1500.0;
+  final bmrFloor = bmr * 0.9;
+  return sexFloor > bmrFloor ? sexFloor : bmrFloor;
+}
+
 /// CALCUL CENTRAL DES MACRONUTRIMENTS (100% PHYSIOLOGIQUE)
 Goals computeGoals(UserProfile p) {
   // Palier le plus proche (persistance/ajustements par palier) — voir
@@ -539,9 +559,12 @@ Goals computeGoals(UserProfile p) {
 
   // 2. Calories Cibles — écart additif (%poids/semaine → kcal), pas un
   // multiplicateur du TDEE (voir _goalEnergyAdjustmentKcal).
-  final kcal = tdee +
+  final rawKcal = tdee +
       _goalEnergyAdjustmentKcal(p.goal, p.weightKg, p.age,
           sex: p.sex, bodyFatPercent: p.bodyFatPercent, targetWeightKg: p.targetWeightKg);
+
+  final kcalFloor = minSafeKcalFor(p.sex, bmr);
+  final kcal = rawKcal < kcalFloor ? kcalFloor : rawKcal;
 
   // 3. Masse Maigre (LBM) pour calcul précis des besoins structurels
   final lbmKg = _getLeanMassKg(p);
@@ -837,9 +860,14 @@ class EnergyBreakdown {
 EnergyBreakdown computeEnergyBreakdown(UserProfile p) {
   final bmr = _computeBmr(p);
   final tdee = bmr * _effectivePal(p);
-  final kcal = tdee +
+  final rawKcal = tdee +
       _goalEnergyAdjustmentKcal(p.goal, p.weightKg, p.age,
           sex: p.sex, bodyFatPercent: p.bodyFatPercent, targetWeightKg: p.targetWeightKg);
+  // Même plancher de sécurité que [computeGoals] — sinon ce détail
+  // BMR/mouvement/ajustement afficherait un total qui ne correspond plus
+  // aux calories/macros réellement calculées et sauvegardées.
+  final kcalFloor = minSafeKcalFor(p.sex, bmr);
+  final kcal = rawKcal < kcalFloor ? kcalFloor : rawKcal;
   return EnergyBreakdown(bmr: bmr, tdee: tdee, kcal: kcal);
 }
 

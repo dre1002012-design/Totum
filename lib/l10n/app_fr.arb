@@ -330,6 +330,9 @@
   "profileMacroCoherenceUnder": "Tes macros représentent {computed} kcal — {diff} kcal ({pct} %) DE MOINS que les {kcal} kcal indiquées.",
   "@profileMacroCoherenceUnder": { "placeholders": { "computed": {"type": "String"}, "diff": {"type": "String"}, "pct": {"type": "String"}, "kcal": {"type": "String"} } },
 
+  "profileLowCalorieWarning": "{kcal} kcal est en dessous du seuil de sécurité généralement recommandé ({floor} kcal pour ton profil). Un apport aussi bas de façon prolongée peut perturber le cycle hormonal, le métabolisme et la densité osseuse. Adapté uniquement si tu es suivi(e) médicalement.",
+  "@profileLowCalorieWarning": { "placeholders": { "kcal": {"type": "String"}, "floor": {"type": "String"} } },
+
   "profileGoalsUpdatedSnackbar": "Objectifs mis à jour · {kcal} kcal par jour",
   "@profileGoalsUpdatedSnackbar": { "placeholders": { "kcal": {"type": "int"} } },
 
@@ -725,6 +728,7 @@
   "consRecipesCountSorted": "{count} recettes triées par objectif",
   "@consRecipesCountSorted": { "placeholders": { "count": {"type": "int"} } },
   "consForYouChip": "Pour toi",
+  "consForYouExplainer": "Adapté à ton régime alimentaire, ton style de répartition macro et ce qu'il te reste à consommer aujourd'hui",
   "consListView": "Affichage liste",
   "consGridView": "Affichage grille",
   "consResetFilters": "Réinitialiser les filtres",
@@ -800,6 +804,8 @@
   "consSunVitDCardTitle": "Soleil & vitamine D",
   "consSunVitDCardIntro": "Une bonne partie de ta vitamine D vient de l'exposition au soleil, pas seulement de l'alimentation. Estime ta synthèse du jour pour savoir où tu en es.",
   "consEstimateMySynthesis": "Estimer ma synthèse",
+  "consSunLoggedToday": "Déjà fait aujourd'hui",
+  "consSunNotLoggedToday": "Pas encore aujourd'hui",
 
   "breathPhaseInhale": "Inspire",
   "breathPhaseHold": "Retiens",

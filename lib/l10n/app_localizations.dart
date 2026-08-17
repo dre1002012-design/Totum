@@ -1732,6 +1732,12 @@ abstract class AppLocalizations {
   String profileMacroCoherenceUnder(
       String computed, String diff, String pct, String kcal);
 
+  /// No description provided for @profileLowCalorieWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'{kcal} kcal est en dessous du seuil de sécurité généralement recommandé ({floor} kcal pour ton profil). Un apport aussi bas de façon prolongée peut perturber le cycle hormonal, le métabolisme et la densité osseuse. Adapté uniquement si tu es suivi(e) médicalement.'**
+  String profileLowCalorieWarning(String kcal, String floor);
+
   /// No description provided for @profileGoalsUpdatedSnackbar.
   ///
   /// In fr, this message translates to:
@@ -3630,6 +3636,12 @@ abstract class AppLocalizations {
   /// **'Pour toi'**
   String get consForYouChip;
 
+  /// No description provided for @consForYouExplainer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adapté à ton régime alimentaire, ton style de répartition macro et ce qu\'il te reste à consommer aujourd\'hui'**
+  String get consForYouExplainer;
+
   /// No description provided for @consListView.
   ///
   /// In fr, this message translates to:
@@ -4001,6 +4013,18 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Estimer ma synthèse'**
   String get consEstimateMySynthesis;
+
+  /// No description provided for @consSunLoggedToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà fait aujourd\'hui'**
+  String get consSunLoggedToday;
+
+  /// No description provided for @consSunNotLoggedToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore aujourd\'hui'**
+  String get consSunNotLoggedToday;
 
   /// No description provided for @breathPhaseInhale.
   ///
