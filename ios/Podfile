@@ -1,0 +1,58 @@
+# Priorité 66 (audit global, préparation App Store) : ce fichier n'existait
+# pas du tout — sans lui, `pod install`/`flutter build ios` ne peut pas
+# fonctionner (aucun moyen de résoudre les dépendances CocoaPods natives des
+# plugins utilisés : supabase_flutter, geolocator, mobile_scanner,
+# in_app_purchase, url_launcher, share_plus, path_provider, flutter_soloud,
+# flutter_foreground_task, audio_session...). Modèle standard généré par
+# `flutter create` (délègue toute la logique à packages/flutter_tools/bin/
+# podhelper.rb du SDK Flutter lui-même — jamais dupliquée à la main ici),
+# adapté uniquement sur la ligne `platform :ios` pour matcher
+# IPHONEOS_DEPLOYMENT_TARGET déjà fixé à 13.0 dans le projet Xcode.
+#
+# Si `pod install` échoue sur une contrainte de version minimum d'un plugin
+# (message explicite de CocoaPods, ex. "requires a higher deployment target"),
+# monter ce chiffre ET les 3 occurrences de IPHONEOS_DEPLOYMENT_TARGET dans
+# Runner.xcodeproj/project.pbxproj à la même valeur.
+platform :ios, '13.0'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end

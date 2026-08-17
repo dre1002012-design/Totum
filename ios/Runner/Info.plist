@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Totum Clean</string>
+	<string>Totum</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>totum_clean</string>
+	<string>Totum</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -52,5 +52,15 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<!-- Priorité 66 (audit global, préparation App Store) : ces deux clés
+	     étaient absentes alors que geolocator (écran Vitamine D solaire) et
+	     mobile_scanner (scan de code-barres) appellent bien ces API — sans
+	     elles, l'appel plante immédiatement sur iOS (crash, pas juste un
+	     refus de permission) et App Review rejette systématiquement un
+	     binaire qui utilise ces capteurs sans texte d'explication. -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Totum uses your location to estimate the local UV index and help you track your sun-based vitamin D intake.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Totum uses the camera to scan a product's barcode so you can quickly log it in your food journal.</string>
 </dict>
 </plist>
