@@ -112,6 +112,20 @@ class CalibrationService {
 
   SupabaseClient get _client => Supabase.instance.client;
 
+  // Priorité 66 (audit global — "3 à 5 fois la même requête weight_log au
+  // chargement du Tableau de bord") : recentHistory(), expenditureHistory()
+  // et computeCalibration() appellent chacune _readHistory() indépendamment,
+  // et ProfileScreenState._refreshCharts() lance les trois en parallèle au
+  // chargement de l'onglet — donc jusqu'à 3 allers-retours Supabase
+  // identiques quasi simultanés (5 en comptant un "Confirmer mes objectifs"
+  // qui recalcule aussi les objectifs). Cache mémoire très court (quelques
+  // secondes) : sert exactement ce cas — plusieurs appels dans la même
+  // "vague" de chargement — sans jamais risquer d'afficher une pesée
+  // vieille de plusieurs minutes.
+  List<WeighIn>? _cachedHistory;
+  DateTime? _cachedHistoryAt;
+  static const _historyCacheTtl = Duration(seconds: 5);
+
   /// Enregistre une pesée (à appeler à chaque sauvegarde de profil).
   /// N'ajoute pas de doublon si une pesée existe déjà pour aujourd'hui —
   /// la remplace, pour ne pas polluer l'historique si l'utilisateur
@@ -140,6 +154,11 @@ class CalibrationService {
           .map((w) => {'date': _dateKey(w.date), 'weight': w.weightKg})
           .toList()),
     );
+    // Le cache mémoire doit refléter cette pesée immédiatement (pas
+    // attendre expiration du TTL), sinon un `recentHistory()` appelé juste
+    // après ce `logWeighIn()` pourrait renvoyer l'ancienne liste.
+    _cachedHistory = history;
+    _cachedHistoryAt = DateTime.now();
 
     try {
       final user = _client.auth.currentUser;
@@ -158,6 +177,14 @@ class CalibrationService {
   /// ne doit jamais disparaître. Repli silencieux (local uniquement) si la
   /// table n'existe pas encore côté projet ou hors-ligne.
   Future<List<WeighIn>> _readHistory(SharedPreferences sp) async {
+    final cached = _cachedHistory;
+    final cachedAt = _cachedHistoryAt;
+    if (cached != null &&
+        cachedAt != null &&
+        DateTime.now().difference(cachedAt) < _historyCacheTtl) {
+      return cached;
+    }
+
     final raw = sp.getString(_historyKey);
     List<WeighIn> local = [];
     if (raw != null && raw.isNotEmpty) {
@@ -175,9 +202,26 @@ class CalibrationService {
 
     try {
       final user = _client.auth.currentUser;
-      if (user == null) return local;
-      final List<dynamic> rows =
-          await _client.from('weight_log').select().eq('user_id', user.id);
+      if (user == null) {
+        _cachedHistory = local;
+        _cachedHistoryAt = DateTime.now();
+        return local;
+      }
+      // Priorité 66 (audit global) : un échec réseau ponctuel ici fait
+      // silencieusement retomber le calcul sur "pas assez de données" —
+      // indiscernable pour l'utilisateur d'un compte réellement neuf, alors
+      // que la calibration adaptative peut représenter un écart de
+      // centaines de kcal vs la formule générique. Un essai supplémentaire
+      // après un court délai absorbe l'immense majorité des ratés
+      // transitoires (blip réseau, coupure Wi-Fi/4G) sans complexifier
+      // l'appelant.
+      List<dynamic> rows;
+      try {
+        rows = await _client.from('weight_log').select().eq('user_id', user.id);
+      } catch (_) {
+        await Future.delayed(const Duration(milliseconds: 800));
+        rows = await _client.from('weight_log').select().eq('user_id', user.id);
+      }
       final remote = rows.map((r) {
         final m = Map<String, dynamic>.from(r);
         final parts = (m['date'] as String).split('-');
@@ -206,8 +250,14 @@ class CalibrationService {
           });
         } catch (_) {}
       }
+      _cachedHistory = merged;
+      _cachedHistoryAt = DateTime.now();
       return merged;
     } catch (e) {
+      // Ne met PAS en cache un résultat issu d'un échec réseau : la
+      // prochaine tentative doit vraiment réessayer plutôt que resservir un
+      // repli obsolète pendant le TTL (voir finding audit #4 — distinguer
+      // "pas de données" d'un "échec de lecture" transitoire).
       return local;
     }
   }
