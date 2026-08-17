@@ -7619,6 +7619,30 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Chaque barre fine montre l\'objectif qui était le tien ce jour-là — touche une barre pour le détail.'**
   String get bilanGoalRefHint;
+
+  /// No description provided for @consWellbeingTrendTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évolution'**
+  String get consWellbeingTrendTitle;
+
+  /// No description provided for @consWellbeingTrendSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur les {days} derniers jours'**
+  String consWellbeingTrendSubtitle(int days);
+
+  /// No description provided for @consWellbeingAverage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyenne'**
+  String get consWellbeingAverage;
+
+  /// No description provided for @consWellbeingNoDataYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore assez de données sur cette période.'**
+  String get consWellbeingNoDataYet;
 }
 
 class _AppLocalizationsDelegate

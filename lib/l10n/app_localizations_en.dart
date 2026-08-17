@@ -4517,4 +4517,18 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get bilanGoalRefHint =>
       'Each thin bar shows the goal that was yours that day — tap a bar for details.';
+
+  @override
+  String get consWellbeingTrendTitle => 'Trend';
+
+  @override
+  String consWellbeingTrendSubtitle(int days) {
+    return 'Over the last $days days';
+  }
+
+  @override
+  String get consWellbeingAverage => 'Average';
+
+  @override
+  String get consWellbeingNoDataYet => 'Not enough data yet for this period.';
 }

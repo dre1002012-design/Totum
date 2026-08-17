@@ -13,7 +13,8 @@ class BarcodeScanScreen extends StatefulWidget {
   State<BarcodeScanScreen> createState() => _BarcodeScanScreenState();
 }
 
-class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
+class _BarcodeScanScreenState extends State<BarcodeScanScreen>
+    with WidgetsBindingObserver {
   bool _scanProcessed = false;
 
   // ── Nouveau : stabilisation du code avant validation ─────────────────
@@ -43,9 +44,50 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
   );
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
   void dispose() {
-    _controller.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    // Priorité 69 (retour d'Alex, crash confirmé : "MobileScannerException...
+    // attempt to invoke virtual method ... on a null object reference") —
+    // bug connu du plugin mobile_scanner : détruire le contrôleur pendant
+    // qu'un callback natif de détection (ML Kit, thread séparé) est encore
+    // "en vol" fait référencer un objet caméra déjà nettoyé côté natif,
+    // d'où le NullPointerException. `dispose()` lui-même peut donc lancer —
+    // jamais laisser planter la fermeture de l'écran pour autant.
+    try {
+      _controller.dispose();
+    } catch (_) {}
     super.dispose();
+  }
+
+  // Priorité 69 : autre déclencheur connu du même crash — l'OS peut
+  // reprendre la caméra pendant que l'app est mise en arrière-plan (appel,
+  // notification, changement d'app) ; sans arrêt explicite ici, l'analyse
+  // continue de tourner sur une caméra que le système a déjà coupée. Arrêt
+  // à la mise en pause, redémarrage au retour — jamais laissé planter
+  // l'écran si le contrôleur est dans un état inattendu à ce moment-là.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_controller.value.isInitialized) return;
+    switch (state) {
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.hidden:
+        _controller.stop().catchError((_) {});
+        break;
+      case AppLifecycleState.resumed:
+        if (!_scanProcessed) {
+          _controller.start().catchError((_) {});
+        }
+        break;
+      case AppLifecycleState.detached:
+        break;
+    }
   }
 
   void _handleDetection(BarcodeCapture capture) {
@@ -69,7 +111,24 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
     if (_confirmCount < _requiredConfirms) return;
 
     // ── Code confirmé → on valide ────────────────────────────────────────
+    // Priorité 69 : `_scanProcessed = true` AVANT tout arrêt caméra —
+    // bloque immédiatement tout appel ré-entrant de ce callback (le flux
+    // caméra peut encore livrer une frame en cours d'analyse pendant qu'on
+    // arrête). On arrête explicitement l'analyse (`stop()`) et on laisse le
+    // temps à la plateforme de vraiment couper la caméra AVANT de fermer
+    // l'écran/détruire le contrôleur — inverse de l'ancien comportement qui
+    // popait immédiatement pendant que le callback natif de détection était
+    // encore en train de "redescendre" côté Kotlin, cause la plus probable
+    // du crash confirmé par Alex.
     setState(() => _scanProcessed = true);
+    _finishScan(value);
+  }
+
+  Future<void> _finishScan(String value) async {
+    try {
+      await _controller.stop();
+    } catch (_) {}
+    if (!mounted) return;
     Navigator.of(context).pop();
     widget.onBarcode(value);
   }
@@ -107,8 +166,7 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
     );
     if (code == null || code.isEmpty || !mounted) return;
     setState(() => _scanProcessed = true);
-    Navigator.of(context).pop();
-    widget.onBarcode(code);
+    await _finishScan(code);
   }
 
 
@@ -136,7 +194,11 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
             IconButton(
               icon: const Icon(Icons.flash_on, color: Colors.white),
               tooltip: context.l10n.barcodeEnableFlash,
-              onPressed: () => _controller.toggleTorch(),
+              onPressed: () {
+                try {
+                  _controller.toggleTorch();
+                } catch (_) {}
+              },
             ),
         ],
       ),

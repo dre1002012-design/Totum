@@ -11,6 +11,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'sun_vitamin_d_screen.dart';
 import '../services/breath_audio_engine.dart';
 import '../services/breath_background_session.dart';
@@ -155,6 +156,56 @@ class _HolisticLog {
   final double? waterLiters;
   final int? stress;
   const _HolisticLog({this.sleepHours, this.waterLiters, this.stress});
+}
+
+class _HolisticPoint {
+  final DateTime date;
+  final double? sleepHours;
+  final int? stress;
+  const _HolisticPoint({required this.date, this.sleepHours, this.stress});
+}
+
+/// Priorité 69 (retour d'Alex : "on pourrait faire évoluer ... avec une
+/// courbe d'évolution ... sur le sommeil et le niveau de stress") — lit les
+/// N derniers jours directement depuis Supabase (holistic_log, même table
+/// que _readHolisticLog/_saveHolisticLog). Silencieux et vide si la table
+/// n'est pas encore migrée ou hors ligne — jamais d'erreur affichée pour un
+/// simple graphique d'accompagnement.
+Future<List<_HolisticPoint>> _fetchHolisticHistory(int days) async {
+  try {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) return const [];
+    final today = DateTime.now();
+    final from = today.subtract(Duration(days: days - 1));
+    final rows = await Supabase.instance.client
+        .from('holistic_log')
+        .select()
+        .eq('user_id', user.id)
+        .gte('date', _dateKey(from))
+        .lte('date', _dateKey(today))
+        .order('date');
+
+    final byDate = <String, Map<String, dynamic>>{};
+    for (final r in (rows as List)) {
+      final m = Map<String, dynamic>.from(r as Map);
+      byDate[(m['date'] as String).substring(0, 10)] = m;
+    }
+
+    return [
+      for (int i = 0; i < days; i++)
+        () {
+          final d = from.add(Duration(days: i));
+          final m = byDate[_dateKey(d)];
+          return _HolisticPoint(
+            date: d,
+            sleepHours: (m?['sleep_hours'] as num?)?.toDouble(),
+            stress: (m?['stress'] as num?)?.toInt(),
+          );
+        }(),
+    ];
+  } catch (_) {
+    return const [];
+  }
 }
 
 class _AdviceGoalsRaw {
@@ -855,14 +906,52 @@ int smartMatchScore(TotumRecipe r, RemainingToday remaining) {
 }
 
 // === HISTO HOLISTIQUE =============================================
+// Priorité 69 (retour d'Alex : le sommeil/stress saisis ne survivaient pas
+// à une réinstallation) — même cause racine et même correctif que
+// goal_snapshots (Priorité 67) : synchronisé avec Supabase (table
+// holistic_log, migration 20260817b_holistic_log.sql), repli local
+// silencieux tant qu'elle n'est pas encore appliquée.
 Future<_HolisticLog> _readHolisticLog(
   SharedPreferences sp,
   DateTime day,
 ) async {
+  double? sleepHours = sp.getDouble(_holisticSleepKey(day));
+  double? waterLiters = sp.getDouble(_holisticWaterKey(day));
+  int? stress = sp.getInt(_holisticStressKey(day));
+
+  try {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      final row = await Supabase.instance.client
+          .from('holistic_log')
+          .select()
+          .eq('user_id', user.id)
+          .eq('date', _dateKey(day))
+          .maybeSingle();
+      if (row != null) {
+        // Le remote fait foi pour un champ qu'il connaît ; un champ jamais
+        // synchronisé (colonne null côté serveur) retombe sur la valeur
+        // locale plutôt que d'effacer une saisie pas encore remontée.
+        final remoteSleep = (row['sleep_hours'] as num?)?.toDouble();
+        final remoteWater = (row['water_liters'] as num?)?.toDouble();
+        final remoteStress = (row['stress'] as num?)?.toInt();
+        if (remoteSleep != null) sleepHours = remoteSleep;
+        if (remoteWater != null) waterLiters = remoteWater;
+        if (remoteStress != null) stress = remoteStress;
+
+        if (remoteSleep != null) await sp.setDouble(_holisticSleepKey(day), remoteSleep);
+        if (remoteWater != null) await sp.setDouble(_holisticWaterKey(day), remoteWater);
+        if (remoteStress != null) await sp.setInt(_holisticStressKey(day), remoteStress);
+      }
+    }
+  } catch (_) {
+    // Table pas encore migrée / hors ligne → repli sur le local ci-dessus.
+  }
+
   return _HolisticLog(
-    sleepHours: sp.getDouble(_holisticSleepKey(day)),
-    waterLiters: sp.getDouble(_holisticWaterKey(day)),
-    stress: sp.getInt(_holisticStressKey(day)),
+    sleepHours: sleepHours,
+    waterLiters: waterLiters,
+    stress: stress,
   );
 }
 
@@ -885,6 +974,26 @@ Future<void> _saveHolisticLog(
   }
   if (stress != null) {
     await sp.setInt(_holisticStressKey(day), stress.clamp(1, 10));
+  }
+
+  if (sleepHours == null && waterLiters == null && stress == null) return;
+  try {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      final payload = <String, dynamic>{
+        'user_id': user.id,
+        'date': _dateKey(day),
+        if (sleepHours != null) 'sleep_hours': sleepHours,
+        if (waterLiters != null) 'water_liters': waterLiters,
+        if (stress != null) 'stress': stress.clamp(1, 10),
+      };
+      await Supabase.instance.client
+          .from('holistic_log')
+          .upsert(payload, onConflict: 'user_id,date');
+    }
+  } catch (_) {
+    // Table pas encore migrée / hors ligne : la saisie locale suffit en
+    // attendant, aucune régression.
   }
 }
 
@@ -4994,6 +5103,11 @@ class _WellbeingCardState extends State<_WellbeingCard> {
           const SizedBox(height: 14),
         ],
 
+        // Priorité 69 (retour d'Alex : "on pourrait faire évoluer ... avec
+        // une courbe d'évolution ... sur le sommeil et le niveau de stress")
+        const _WellbeingTrendChart(),
+        const SizedBox(height: 14),
+
         // Bouton mettre à jour — juste après sommeil/stress, qu'il recalcule
         SizedBox(
           width: double.infinity,
@@ -5182,6 +5296,213 @@ class _WellbeingCardState extends State<_WellbeingCard> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Priorité 69 (retour d'Alex : "on pourrait faire évoluer ... avec une
+/// courbe d'évolution ... sur le sommeil et le niveau de stress ... quelque
+/// chose d'assez simple de compréhension") — 2 mini-graphiques distincts
+/// (jamais un seul graphique à deux échelles superposées : heures de
+/// sommeil et niveau de stress ne partagent pas la même unité) sous la
+/// carte Bien-être. Chaque point est coloré selon la même logique à 3
+/// couleurs que le reste de l'app (positive/accent/negative) pour rester
+/// immédiatement lisible sans légende à réapprendre.
+class _WellbeingTrendChart extends StatefulWidget {
+  const _WellbeingTrendChart();
+
+  @override
+  State<_WellbeingTrendChart> createState() => _WellbeingTrendChartState();
+}
+
+class _WellbeingTrendChartState extends State<_WellbeingTrendChart> {
+  static const _days = 14;
+  late final Future<List<_HolisticPoint>> _future = _fetchHolisticHistory(_days);
+
+  Color _sleepColorFor(double h) {
+    if (h >= 7 && h <= 9) return TotumColors.positive;
+    if ((h >= 6 && h < 7) || (h > 9 && h <= 10)) return TotumColors.accent;
+    return TotumColors.negative;
+  }
+
+  Color _stressColorFor(double s) {
+    if (s <= 4) return TotumColors.positive;
+    if (s <= 7) return TotumColors.accent;
+    return TotumColors.negative;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return FutureBuilder<List<_HolisticPoint>>(
+      future: _future,
+      builder: (context, snap) {
+        final points = snap.data ?? const <_HolisticPoint>[];
+        final hasSleep = points.any((p) => p.sleepHours != null);
+        final hasStress = points.any((p) => p.stress != null);
+        if (snap.connectionState != ConnectionState.done ||
+            (!hasSleep && !hasStress)) {
+          // Rien à montrer (pas encore de données, hors ligne, ou table pas
+          // encore migrée) — silencieux, ce n'est qu'un complément visuel.
+          return const SizedBox.shrink();
+        }
+        return Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: _cardDeco(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.show_chart, size: 17, color: TotumColors.textSecondary),
+                      const SizedBox(width: 8),
+                      Text(l10n.consWellbeingTrendTitle,
+                          style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800)),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(l10n.consWellbeingTrendSubtitle(_days),
+                      style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+                  const SizedBox(height: 14),
+                  if (hasSleep) ...[
+                    _miniTrend(
+                      context: context,
+                      label: l10n.consSleepPillarTitle,
+                      points: points,
+                      maxY: 12,
+                      valueOf: (p) => p.sleepHours,
+                      colorFor: _sleepColorFor,
+                      unit: 'h',
+                    ),
+                    if (hasStress) const SizedBox(height: 16),
+                  ],
+                  if (hasStress)
+                    _miniTrend(
+                      context: context,
+                      label: l10n.consStressPillarTitle,
+                      points: points,
+                      maxY: 10,
+                      valueOf: (p) => p.stress?.toDouble(),
+                      colorFor: _stressColorFor,
+                      unit: '/10',
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 14),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _miniTrend({
+    required BuildContext context,
+    required String label,
+    required List<_HolisticPoint> points,
+    required double maxY,
+    required double? Function(_HolisticPoint) valueOf,
+    required Color Function(double) colorFor,
+    required String unit,
+  }) {
+    final l10n = context.l10n;
+    final spots = <FlSpot>[];
+    for (int i = 0; i < points.length; i++) {
+      final v = valueOf(points[i]);
+      if (v != null) spots.add(FlSpot(i.toDouble(), v));
+    }
+    final avg = spots.isEmpty
+        ? null
+        : spots.map((s) => s.y).reduce((a, b) => a + b) / spots.length;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label,
+                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700)),
+            if (avg != null)
+              Text('${l10n.consWellbeingAverage} : ${avg.toStringAsFixed(1)}$unit',
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: TotumColors.textSecondary,
+                      fontWeight: FontWeight.w600)),
+          ],
+        ),
+        const SizedBox(height: 6),
+        SizedBox(
+          height: 64,
+          child: spots.length < 2
+              ? Center(
+                  child: Text(l10n.consWellbeingNoDataYet,
+                      style: TextStyle(fontSize: 11, color: TotumColors.textMuted)),
+                )
+              : LineChart(
+                  LineChartData(
+                    minY: 0,
+                    maxY: maxY,
+                    minX: 0,
+                    maxX: (points.length - 1).toDouble(),
+                    gridData: const FlGridData(show: false),
+                    borderData: FlBorderData(show: false),
+                    titlesData: const FlTitlesData(
+                      leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    ),
+                    lineTouchData: LineTouchData(
+                      touchTooltipData: LineTouchTooltipData(
+                        tooltipBgColor: Colors.black87,
+                        tooltipRoundedRadius: 8,
+                        getTooltipItems: (touched) => touched.map((s) {
+                          final idx = s.x.round();
+                          if (idx < 0 || idx >= points.length) return null;
+                          final d = points[idx].date;
+                          return LineTooltipItem(
+                            '${d.day}/${d.month} · ${s.y.toStringAsFixed(1)}$unit',
+                            const TextStyle(
+                                color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: spots,
+                        isCurved: true,
+                        curveSmoothness: 0.2,
+                        barWidth: 2,
+                        color: TotumColors.accent.withValues(alpha: 0.7),
+                        dotData: FlDotData(
+                          show: true,
+                          getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(
+                            radius: 3,
+                            color: colorFor(spot.y),
+                            strokeWidth: 0,
+                          ),
+                        ),
+                        belowBarData: BarAreaData(
+                          show: true,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              TotumColors.accent.withValues(alpha: 0.16),
+                              TotumColors.accent.withValues(alpha: 0.0),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+        ),
+      ],
     );
   }
 }

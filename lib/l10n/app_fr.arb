@@ -1578,5 +1578,10 @@
   "jrnlSyncFailedRetry": "Réessayer",
   "jrnlUnknownFoodFallback": "Aliment",
   "bilanGoalRefLegend": "Objectif de ce jour-là",
-  "bilanGoalRefHint": "Chaque barre fine montre l'objectif qui était le tien ce jour-là — touche une barre pour le détail."
+  "bilanGoalRefHint": "Chaque barre fine montre l'objectif qui était le tien ce jour-là — touche une barre pour le détail.",
+  "consWellbeingTrendTitle": "Évolution",
+  "consWellbeingTrendSubtitle": "Sur les {days} derniers jours",
+  "@consWellbeingTrendSubtitle": { "placeholders": { "days": {"type": "int"} } },
+  "consWellbeingAverage": "Moyenne",
+  "consWellbeingNoDataYet": "Pas encore assez de données sur cette période."
 }

@@ -1394,5 +1394,9 @@
   "jrnlSyncFailedRetry": "Retry",
   "jrnlUnknownFoodFallback": "Food item",
   "bilanGoalRefLegend": "That day's goal",
-  "bilanGoalRefHint": "Each thin bar shows the goal that was yours that day — tap a bar for details."
+  "bilanGoalRefHint": "Each thin bar shows the goal that was yours that day — tap a bar for details.",
+  "consWellbeingTrendTitle": "Trend",
+  "consWellbeingTrendSubtitle": "Over the last {days} days",
+  "consWellbeingAverage": "Average",
+  "consWellbeingNoDataYet": "Not enough data yet for this period."
 }
