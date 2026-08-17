@@ -7,6 +7,7 @@ import 'account_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/profile.dart' as nutri;
 import '../services/calibration_service.dart';
+import '../services/pause_service.dart';
 import '../services/day_totals.dart';
 import '../services/priority_nutrients.dart';
 import '../services/nutrient_labels.dart';
@@ -421,6 +422,18 @@ class ProfileScreenState extends State<ProfileScreen> {
     await sp.setInt('profile_activity', declarativeActivity.index);
 
     await sp.setInt('profile_diet', _diet.index);
+    // Priorité 71 (retour d'Alex : "prévenir la personne des périodes de
+    // maintien qu'elle peut inclure si elle a une période de restriction
+    // trop longue") — pour proposer une pause de maintien après un déficit
+    // prolongé, il faut savoir DEPUIS QUAND l'objectif courant est actif.
+    // Repart de zéro uniquement quand l'objectif change réellement (pas à
+    // chaque sauvegarde de routine, sinon la date ne représenterait plus
+    // rien) — voir [DietBreakSuggestion] dans conseils_screen.dart.
+    final previousGoalIndex = sp.getInt('profile_goal');
+    if (previousGoalIndex != _goal.index) {
+      await sp.setString('goal_start_date_v1',
+          DateTime.now().toIso8601String().split('T').first);
+    }
     await sp.setInt('profile_goal', _goal.index);
     await sp.setDouble('profile_age', age.toDouble());
     await sp.setDouble('profile_height', cm.toDouble());
@@ -1847,6 +1860,8 @@ class ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(l10n.profileYourEvolution, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
         const SizedBox(height: 10),
+        const _PauseBanner(),
+        const SizedBox(height: 14),
         _evolutionTapCard(
           title: l10n.weightScreenTitle,
           subtitle: l10n.profileLast60Days,
@@ -1997,6 +2012,105 @@ class ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Priorité 71 (retour d'Alex : "la personne part en vacances... est-ce
+/// qu'on peut rajouter cette souplesse-là... sans culpabiliser la
+/// personne") — bandeau "pause" au-dessus des courbes d'évolution : quand
+/// il n'y a pas de pause en cours, un simple bouton discret pour en
+/// démarrer une ; une fois active, un message neutre (jamais alarmant,
+/// jamais culpabilisant) expliquant que la calibration adaptative ignorera
+/// cette période. Widget autonome — gère son propre état, ne dépend
+/// d'aucun champ de _ProfileScreenState.
+class _PauseBanner extends StatefulWidget {
+  const _PauseBanner();
+
+  @override
+  State<_PauseBanner> createState() => _PauseBannerState();
+}
+
+class _PauseBannerState extends State<_PauseBanner> {
+  late Future<PausePeriod?> _future = PauseService.instance.activePause();
+
+  Future<void> _start() async {
+    await PauseService.instance.startPause();
+    if (!mounted) return;
+    setState(() => _future = PauseService.instance.activePause());
+  }
+
+  Future<void> _end() async {
+    await PauseService.instance.endActivePause();
+    if (!mounted) return;
+    setState(() => _future = PauseService.instance.activePause());
+  }
+
+  String _shortDate(DateTime d) =>
+      '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}';
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return FutureBuilder<PausePeriod?>(
+      future: _future,
+      builder: (context, snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          return const SizedBox.shrink();
+        }
+        final active = snap.data;
+        if (active == null) {
+          return OutlinedButton.icon(
+            onPressed: _start,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: TotumColors.textSecondary,
+              side: BorderSide(color: TotumColors.outline),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            ),
+            icon: const Icon(Icons.beach_access_outlined, size: 17),
+            label: Text(l10n.profilePauseStartButton, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600)),
+          );
+        }
+        return Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: TotumColors.accentSoft,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: TotumColors.accentBorder),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.beach_access_outlined, color: TotumColors.accent, size: 20),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.profilePauseActiveTitle(_shortDate(active.start)),
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.accent)),
+                    const SizedBox(height: 3),
+                    Text(l10n.profilePauseActiveBody,
+                        style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary, height: 1.35)),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: _end,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(l10n.profilePauseEndButton,
+                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.accent)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

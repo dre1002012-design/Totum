@@ -2,7 +2,10 @@
 // Service partagé du Score TOTUM, utilisé par le Bilan ET les Conseils.
 // Ne dépend d'aucun écran : il reçoit les 5 sous-scores déjà calculés.
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/totum_style.dart';
 import 'nutrient_labels.dart';
@@ -159,4 +162,122 @@ TotumScore computeTotumScoreFromValues({
     warnings: warnings,
     capReason: capReason,
   );
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  HISTORIQUE DU SCORE — Priorité 71 (retour d'Alex : "je veux avoir la
+//  puissance de calcul de MacroFactor... [et] être encore plus moderne en
+//  termes de score Totum, sans aller jusqu'à la gamification")
+//
+//  Le score lui-même (adéquation nutritionnelle : vitamines/minéraux/AG
+//  essentiels/hydratation/éléments à surveiller, plafonds de sécurité —
+//  voir plus haut) était déjà proche de l'esprit "complétude nutritionnelle"
+//  de Cronometer plutôt qu'une notation de discipline façon jeu. Ce qui
+//  manquait pour être au niveau de la "puissance de calcul" façon
+//  MacroFactor : ne montrer qu'un chiffre du jour, sans aucune tendance —
+//  exactement le point que MacroFactor pousse le plus loin (raisonner sur
+//  une moyenne glissante plutôt qu'un instantané). Un historique glissant
+//  (7/30 jours) permet d'afficher CETTE tendance-là — jamais un score
+//  quotidien affiché comme une note à obtenir, jamais de série à ne pas
+//  casser (voir feedback_no_gamification en mémoire) : seulement "est-ce
+//  que mon adéquation nutritionnelle progresse dans le temps".
+//
+//  Stockage : un seul point par jour, écrit quand le score du jour est déjà
+//  calculé ailleurs (jamais recalculé rétroactivement — un score "d'hier"
+//  recalculé aujourd'hui avec des données différentes n'aurait plus de
+//  sens). Local + Supabase (table score_history), même schéma que
+//  goal_snapshots/holistic_log cette session : repli local silencieux si la
+//  table n'existe pas encore.
+
+String _scoreHistoryDateKey(DateTime d) =>
+    '${d.year.toString().padLeft(4, '0')}-'
+    '${d.month.toString().padLeft(2, '0')}-'
+    '${d.day.toString().padLeft(2, '0')}';
+
+const String _scoreHistoryLocalKey = 'score_history_v1';
+
+/// Enregistre le score du jour dans l'historique glissant — n'écrit jamais
+/// un score encore provisoire (journée incomplète), pour ne garder que des
+/// points comparables entre eux.
+Future<void> recordScoreHistory(TotumScore score) async {
+  if (score.isProvisional) return;
+  final sp = await SharedPreferences.getInstance();
+  final today = _scoreHistoryDateKey(DateTime.now());
+
+  Map<String, dynamic> hist = {};
+  final raw = sp.getString(_scoreHistoryLocalKey);
+  if (raw != null && raw.isNotEmpty) {
+    try { hist = Map<String, dynamic>.from(jsonDecode(raw) as Map); } catch (_) {}
+  }
+  hist[today] = score.global;
+  // Purge au-delà de 90 jours — largement assez pour une vue 30 jours, sans
+  // grossir indéfiniment.
+  final cutoff = DateTime.now().subtract(const Duration(days: 90));
+  hist.removeWhere((k, _) {
+    final d = DateTime.tryParse(k);
+    return d != null && d.isBefore(cutoff);
+  });
+  await sp.setString(_scoreHistoryLocalKey, jsonEncode(hist));
+
+  try {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      await Supabase.instance.client.from('score_history').upsert({
+        'user_id': user.id,
+        'date': today,
+        'score': score.global,
+      }, onConflict: 'user_id,date');
+    }
+  } catch (_) {}
+}
+
+/// Un point de l'historique du score, pour affichage en courbe.
+class ScoreHistoryPoint {
+  final DateTime date;
+  final double? score; // null = pas de donnée ce jour-là (trou dans le tracé)
+  const ScoreHistoryPoint(this.date, this.score);
+}
+
+/// Historique du score sur les `days` derniers jours — fusionne local et
+/// Supabase (distant prioritaire, jamais d'écrasement d'un point local pas
+/// encore synchronisé), complète les jours manquants avec `score: null`
+/// pour que l'appelant puisse tracer une courbe avec des trous visibles
+/// plutôt que de fausser la moyenne.
+Future<List<ScoreHistoryPoint>> fetchScoreHistory(int days) async {
+  final sp = await SharedPreferences.getInstance();
+  Map<String, double> merged = {};
+
+  final raw = sp.getString(_scoreHistoryLocalKey);
+  if (raw != null && raw.isNotEmpty) {
+    try {
+      final m = Map<String, dynamic>.from(jsonDecode(raw) as Map);
+      merged = m.map((k, v) => MapEntry(k, (v as num).toDouble()));
+    } catch (_) {}
+  }
+
+  try {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      final start = DateTime.now().subtract(Duration(days: days));
+      final rows = await Supabase.instance.client
+          .from('score_history')
+          .select()
+          .eq('user_id', user.id)
+          .gte('date', _scoreHistoryDateKey(start));
+      for (final row in (rows as List)) {
+        final r = Map<String, dynamic>.from(row as Map);
+        final date = (r['date'] ?? '').toString();
+        final score = (r['score'] as num?)?.toDouble();
+        if (date.isNotEmpty && score != null) merged[date] = score;
+      }
+    }
+  } catch (_) {}
+
+  final now = DateTime.now();
+  final points = <ScoreHistoryPoint>[];
+  for (int i = days - 1; i >= 0; i--) {
+    final d = DateTime(now.year, now.month, now.day).subtract(Duration(days: i));
+    points.add(ScoreHistoryPoint(d, merged[_scoreHistoryDateKey(d)]));
+  }
+  return points;
 }

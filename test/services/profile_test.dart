@@ -330,5 +330,35 @@ void main() {
       expect(high.b1Mg, greaterThanOrEqualTo(low.b1Mg));
       expect(high.b3Mg, greaterThanOrEqualTo(low.b3Mg));
     });
+
+    test('B2 augmente avec les calories, comme B1/B3 (régression Priorité 71 — restait figée à 1,6mg)',
+        () {
+      final low = computeNutritionTargets(
+          _profile(weightKg: 45, activity: ActivityLevel.sedentary, goal: GoalType.lose));
+      final high = computeNutritionTargets(
+          _profile(weightKg: 100, activity: ActivityLevel.extreme, goal: GoalType.gain));
+      expect(high.b2Mg, greaterThan(low.b2Mg));
+      expect(low.b2Mg, greaterThanOrEqualTo(1.6)); // plancher toujours respecté
+    });
+
+    test('la vitamine K augmente avec le poids corporel (régression Priorité 71 — restait figée à 79µg)',
+        () {
+      final light = computeNutritionTargets(_profile(weightKg: 50));
+      final heavy = computeNutritionTargets(_profile(weightKg: 110));
+      expect(heavy.vitKUg, greaterThan(light.vitKUg));
+      expect(light.vitKUg, closeTo(50.0, 0.5));
+      expect(heavy.vitKUg, closeTo(110.0, 0.5));
+    });
+
+    test(
+        'le calcium se relève aussi pour un homme senior (65+), pas seulement une femme 50+ (régression Priorité 71)',
+        () {
+      final youngMan = computeNutritionTargets(_profile(sex: Sex.male, age: 30));
+      final seniorMan = computeNutritionTargets(_profile(sex: Sex.male, age: 70));
+      final olderWoman = computeNutritionTargets(_profile(sex: Sex.female, age: 55));
+      expect(youngMan.caMg, 950.0);
+      expect(seniorMan.caMg, 1200.0);
+      expect(olderWoman.caMg, 1200.0);
+    });
   });
 }

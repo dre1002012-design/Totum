@@ -404,6 +404,11 @@
   "profileInvalidNumber": "Nombre invalide",
 
   "profileYourEvolution": "Ton évolution",
+  "profilePauseStartButton": "Je pars en pause (vacances, week-end...)",
+  "profilePauseActiveTitle": "En pause depuis le {date}",
+  "@profilePauseActiveTitle": { "placeholders": { "date": {"type": "String"} } },
+  "profilePauseActiveBody": "Pas de pesée ni de journal pendant cette période ? Aucun souci — on ne s'en servira pas pour calculer tes besoins.",
+  "profilePauseEndButton": "Je suis de retour",
   "profileLast60Days": "60 derniers jours",
   "profileAdaptiveEstimate": "estimation adaptative",
 
@@ -745,6 +750,10 @@
   "consTabVitality": "Vitalité",
   "consTabRecipes": "Recettes",
   "consMedicalDisclaimer": "Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.",
+  "consDietBreakTitle": "{weeks} semaines en déficit — envie d'une pause ?",
+  "@consDietBreakTitle": { "placeholders": { "weeks": {"type": "int"} } },
+  "consDietBreakBody": "Une semaine de maintien de temps en temps aide à tenir sur la durée et limite le risque d'effet yoyo. Rien d'obligatoire — juste une option si tu la sens.",
+  "consDietBreakDismiss": "Plus tard",
 
   "consGreetingNight": "Belle nuit",
   "consGreetingMorning": "Bonjour",
@@ -1590,5 +1599,6 @@
   "@consWellbeingTrendSubtitle": { "placeholders": { "days": {"type": "int"} } },
   "consWellbeingAverage": "Moyenne",
   "consWellbeingNoDataYet": "Pas encore assez de données sur cette période.",
-  "consTodayAnalysisSubtitle": "Sommeil, stress & vitalité"
+  "consTodayAnalysisSubtitle": "Sommeil, stress & vitalité",
+  "bilanScoreTrendTitle": "Évolution du score"
 }

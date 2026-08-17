@@ -1140,6 +1140,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileYourEvolution => 'Ton évolution';
 
   @override
+  String get profilePauseStartButton =>
+      'Je pars en pause (vacances, week-end...)';
+
+  @override
+  String profilePauseActiveTitle(String date) {
+    return 'En pause depuis le $date';
+  }
+
+  @override
+  String get profilePauseActiveBody =>
+      'Pas de pesée ni de journal pendant cette période ? Aucun souci — on ne s\'en servira pas pour calculer tes besoins.';
+
+  @override
+  String get profilePauseEndButton => 'Je suis de retour';
+
+  @override
   String get profileLast60Days => '60 derniers jours';
 
   @override
@@ -2114,6 +2130,18 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get consMedicalDisclaimer =>
       'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.';
+
+  @override
+  String consDietBreakTitle(int weeks) {
+    return '$weeks semaines en déficit — envie d\'une pause ?';
+  }
+
+  @override
+  String get consDietBreakBody =>
+      'Une semaine de maintien de temps en temps aide à tenir sur la durée et limite le risque d\'effet yoyo. Rien d\'obligatoire — juste une option si tu la sens.';
+
+  @override
+  String get consDietBreakDismiss => 'Plus tard';
 
   @override
   String get consGreetingNight => 'Belle nuit';
@@ -4588,4 +4616,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get consTodayAnalysisSubtitle => 'Sommeil, stress & vitalité';
+
+  @override
+  String get bilanScoreTrendTitle => 'Évolution du score';
 }

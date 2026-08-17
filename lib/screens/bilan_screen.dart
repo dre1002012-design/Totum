@@ -2851,6 +2851,8 @@ void showTotumScoreExplainerSheet(BuildContext context) {
           pillarRow(l10n.bilanPillarFattyAcidsFull, '18%', l10n.bilanPillarFattyAcidsDetail),
           pillarRow(l10n.scorePillarHydration, '13%', l10n.bilanPillarHydrationDetail),
           pillarRow(l10n.scorePillarWatch, '25%', l10n.bilanPillarWatchDetail),
+          const SizedBox(height: 4),
+          const _ScoreTrendMini(),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.all(12),
@@ -2901,6 +2903,144 @@ void showTotumScoreExplainerSheet(BuildContext context) {
       ),
     ),
   );
+}
+
+/// Priorité 71 — tendance du Score Totum sur 30 jours, dans la fiche
+/// explicative du score. Même langage visuel que _WellbeingTrendChart
+/// (conseils_screen.dart) : un seul trait accent, points colorés selon les
+/// mêmes seuils que TotumScore.color (jamais une nouvelle échelle de
+/// couleur inventée), grille discrète, aucun double axe. Volontairement
+/// PAS un objectif à atteindre ni une série à ne pas casser — juste "est-ce
+/// que mon adéquation nutritionnelle progresse", dans l'esprit
+/// "tendance plutôt qu'instantané" de MacroFactor.
+class _ScoreTrendMini extends StatefulWidget {
+  const _ScoreTrendMini();
+
+  @override
+  State<_ScoreTrendMini> createState() => _ScoreTrendMiniState();
+}
+
+class _ScoreTrendMiniState extends State<_ScoreTrendMini> {
+  static const _days = 30;
+  late final Future<List<ScoreHistoryPoint>> _future = fetchScoreHistory(_days);
+
+  Color _colorFor(double v) {
+    if (v >= 70) return TotumColors.positive;
+    if (v >= 40) return TotumColors.accent;
+    return TotumColors.negative;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return FutureBuilder<List<ScoreHistoryPoint>>(
+      future: _future,
+      builder: (context, snap) {
+        final points = snap.data ?? const <ScoreHistoryPoint>[];
+        final withData = points.where((p) => p.score != null).toList();
+        if (snap.connectionState != ConnectionState.done || withData.length < 3) {
+          // Pas encore assez de recul pour qu'une courbe soit lisible/utile
+          // (moins de 3 jours) — silencieux, juste un complément visuel.
+          return const SizedBox.shrink();
+        }
+
+        final avg = withData.fold<double>(0, (a, p) => a + p.score!) / withData.length;
+        final spots = <FlSpot>[];
+        for (int i = 0; i < points.length; i++) {
+          final s = points[i].score;
+          if (s != null) spots.add(FlSpot(i.toDouble(), s));
+        }
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 4),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: TotumColors.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: TotumColors.outline),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(l10n.bilanScoreTrendTitle,
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
+                  ),
+                  Text('${l10n.consWellbeingAverage} ${avg.round()}',
+                      style: TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w700,
+                          color: _colorFor(avg))),
+                ],
+              ),
+              Text(l10n.consWellbeingTrendSubtitle(_days),
+                  style: TextStyle(fontSize: 11, color: TotumColors.textMuted)),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 90,
+                child: LineChart(
+                  LineChartData(
+                    minY: 0,
+                    maxY: 100,
+                    gridData: FlGridData(
+                      show: true,
+                      drawVerticalLine: false,
+                      horizontalInterval: 25,
+                      getDrawingHorizontalLine: (_) =>
+                          FlLine(color: TotumColors.outline, strokeWidth: 1),
+                    ),
+                    titlesData: const FlTitlesData(show: false),
+                    borderData: FlBorderData(show: false),
+                    lineTouchData: LineTouchData(
+                      touchTooltipData: LineTouchTooltipData(
+                        getTooltipItems: (spots) => spots.map((s) {
+                          final d = points[s.x.round().clamp(0, points.length - 1)].date;
+                          return LineTooltipItem(
+                            '${d.day}/${d.month} · ${s.y.round()}',
+                            const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: spots,
+                        isCurved: true,
+                        curveSmoothness: 0.25,
+                        color: TotumColors.accent,
+                        barWidth: 2,
+                        dotData: FlDotData(
+                          show: true,
+                          getDotPainter: (spot, _, __, ___) => FlDotCirclePainter(
+                            radius: 2.6,
+                            color: _colorFor(spot.y),
+                            strokeWidth: 0,
+                          ),
+                        ),
+                        belowBarData: BarAreaData(
+                          show: true,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              TotumColors.accent.withValues(alpha: 0.16),
+                              TotumColors.accent.withValues(alpha: 0.0),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
 void showSunVitDSheet(

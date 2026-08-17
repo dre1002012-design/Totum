@@ -1128,6 +1128,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileYourEvolution => 'Your evolution';
 
   @override
+  String get profilePauseStartButton =>
+      'I\'m taking a break (vacation, weekend...)';
+
+  @override
+  String profilePauseActiveTitle(String date) {
+    return 'On a break since $date';
+  }
+
+  @override
+  String get profilePauseActiveBody =>
+      'No weigh-in or logging during this time? No worries — we won\'t use it to calculate your needs.';
+
+  @override
+  String get profilePauseEndButton => 'I\'m back';
+
+  @override
   String get profileLast60Days => 'last 60 days';
 
   @override
@@ -2099,6 +2115,18 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get consMedicalDisclaimer =>
       'This advice doesn\'t replace medical advice. If you have a medical condition or any doubt, consult your healthcare professional.';
+
+  @override
+  String consDietBreakTitle(int weeks) {
+    return '$weeks weeks in a deficit — fancy a break?';
+  }
+
+  @override
+  String get consDietBreakBody =>
+      'A maintenance week now and then helps you stick with it long-term and limits yo-yo risk. Nothing mandatory — just an option if it feels right.';
+
+  @override
+  String get consDietBreakDismiss => 'Later';
 
   @override
   String get consGreetingNight => 'Good night';
@@ -4549,4 +4577,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get consTodayAnalysisSubtitle => 'Sleep, stress & vitality';
+
+  @override
+  String get bilanScoreTrendTitle => 'Score trend';
 }

@@ -699,7 +699,13 @@ NutritionTargets computeNutritionTargets(UserProfile p) {
   final isHighActivity = _isHighActivity(effActivity);
   final isSeniorPlus = p.age >= 65;
 
-  final caMg = isOlderWoman ? 1200.0 : 950.0;
+  // Priorité 71 (audit micronutriments du 17/08/2026) : ne relevait le
+  // plancher calcique qu'aux femmes 50+ (post-ménopause), alors que
+  // `isSeniorPlus` (65+, déjà calculé ci-dessous pour vitamine E/sélénium)
+  // s'applique tout autant aux hommes — la perte de densité osseuse liée à
+  // l'âge touche aussi les hommes, plus tardivement. Un homme senior
+  // recevait jusqu'ici 950mg au lieu des 1200mg recommandés.
+  final caMg = (isOlderWoman || isSeniorPlus) ? 1200.0 : 950.0;
   final cuMg = isF ? 1.5 : 1.9;
   final feMg = isYoungWoman ? 16.0 : 11.0;
   const iUg = 150.0;
@@ -728,14 +734,20 @@ NutritionTargets computeNutritionTargets(UserProfile p) {
   var viteMg = isF ? 9.0 : 10.0;
   if (isSeniorPlus) viteMg *= 1.10;
 
-  const vitkUg = 79.0;
+  // Priorité 71 (audit micronutriments) : ANSES exprime la vitamine K en
+  // ~1µg/kg de poids corporel/jour, pas en valeur fixe — l'ancienne
+  // constante (79µg) était de fait ce calcul figé pour un adulte de
+  // référence ~79kg, appliqué tel quel à tout le monde.
+  final vitkUg = _roundTo(p.weightKg * 1.0, 1.0);
   const vitcMg = 110.0;
-  // B1 et B3 : l'ANSES les exprime en mg PAR MÉGAJOULE d'énergie consommée
-  // (0,1 mg/MJ pour B1 ; 1,6 mg EN/MJ pour B3, non genré), pas en valeur
-  // fixe. 1 kcal = 0,004184 MJ.
+  // B1, B2 et B3 : l'ANSES les exprime en mg PAR MÉGAJOULE d'énergie
+  // consommée (0,1 mg/MJ pour B1 ; ~0,14 mg/MJ pour B2 ; 1,6 mg EN/MJ pour
+  // B3, non genré), pas en valeur fixe. 1 kcal = 0,004184 MJ. B2 restait
+  // figée à 1,6mg (le plancher, conservé comme borne basse) alors que B1 et
+  // B3 appliquaient déjà correctement ce même principe — écart corrigé.
   final energyMJ = kcal * 0.004184;
   final b1Mg = _roundTo((0.1 * energyMJ).clamp(1.0, double.infinity), 0.1);
-  const b2Mg = 1.6;
+  final b2Mg = _roundTo((0.14 * energyMJ).clamp(1.6, double.infinity), 0.1);
   final b3Mg = _roundTo((1.6 * energyMJ).clamp(11.0, double.infinity), 0.5);
   final b5Mg = isF ? 5.0 : 6.0;
   final b6Mg = isF ? 1.6 : 1.7;

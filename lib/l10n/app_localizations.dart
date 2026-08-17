@@ -2044,6 +2044,30 @@ abstract class AppLocalizations {
   /// **'Ton évolution'**
   String get profileYourEvolution;
 
+  /// No description provided for @profilePauseStartButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je pars en pause (vacances, week-end...)'**
+  String get profilePauseStartButton;
+
+  /// No description provided for @profilePauseActiveTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'En pause depuis le {date}'**
+  String profilePauseActiveTitle(String date);
+
+  /// No description provided for @profilePauseActiveBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de pesée ni de journal pendant cette période ? Aucun souci — on ne s\'en servira pas pour calculer tes besoins.'**
+  String get profilePauseActiveBody;
+
+  /// No description provided for @profilePauseEndButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je suis de retour'**
+  String get profilePauseEndButton;
+
   /// No description provided for @profileLast60Days.
   ///
   /// In fr, this message translates to:
@@ -3719,6 +3743,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Ces conseils ne remplacent pas un avis médical. En cas de pathologie ou de doute, rapprochez-vous de votre professionnel de santé.'**
   String get consMedicalDisclaimer;
+
+  /// No description provided for @consDietBreakTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{weeks} semaines en déficit — envie d\'une pause ?'**
+  String consDietBreakTitle(int weeks);
+
+  /// No description provided for @consDietBreakBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une semaine de maintien de temps en temps aide à tenir sur la durée et limite le risque d\'effet yoyo. Rien d\'obligatoire — juste une option si tu la sens.'**
+  String get consDietBreakBody;
+
+  /// No description provided for @consDietBreakDismiss.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus tard'**
+  String get consDietBreakDismiss;
 
   /// No description provided for @consGreetingNight.
   ///
@@ -7673,6 +7715,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Sommeil, stress & vitalité'**
   String get consTodayAnalysisSubtitle;
+
+  /// No description provided for @bilanScoreTrendTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Évolution du score'**
+  String get bilanScoreTrendTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -14,6 +14,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'pause_service.dart';
 
 const double _kKcalPerKgFat = 7700.0;
 
@@ -262,6 +263,14 @@ class CalibrationService {
     }
   }
 
+  /// Retire de l'historique toute pesée prise pendant une période de pause
+  /// déclarée — voir [computeCalibration] pour le raisonnement.
+  Future<List<WeighIn>> _excludePaused(List<WeighIn> history) async {
+    final pauses = await PauseService.instance.load();
+    if (pauses.isEmpty) return history;
+    return history.where((w) => !pauses.any((p) => p.contains(w.date))).toList();
+  }
+
   /// Lit les calories loguées un jour donné.
   ///
   /// Bug corrigé (retour d'Alex, 13/08/2026 : "j'ai un gros doute sur les
@@ -370,13 +379,38 @@ class CalibrationService {
   /// Calcule la calibration à partir de l'historique disponible.
   /// Ne modifie rien : renvoie juste le résultat, à combiner avec la
   /// formule par l'appelant (profile_screen.dart).
+  ///
+  /// Priorité 71 (retour d'Alex : "la personne part en vacances... est-ce
+  /// que ça n'impacte pas le calcul global") — les jours déclarés en pause
+  /// ([PauseService]) sont exclus de l'analyse : ni les pesées prises
+  /// pendant une pause (souvent gonflées par le sel/l'hydratation/les
+  /// horaires de voyage, pas représentatives de la masse grasse réelle), ni
+  /// les jours eux-mêmes dans le calcul de calories moyennes. Une simple
+  /// absence de repas loguée pendant ces jours était déjà silencieusement
+  /// ignorée par la boucle ci-dessous (`if (k > 0)`) — mais si l'utilisateur
+  /// avait malgré tout loggé un jour de vacances avec une alimentation
+  /// atypique, ce jour polluait la moyenne "vie normale" sans qu'on le
+  /// sache. Le fenêtre d'analyse est élargie en arrière d'autant de jours
+  /// que la pause en a "mangé", pour ne pas perdre des semaines de
+  /// calibration à cause d'une coupure ponctuelle.
   Future<CalibrationResult> computeCalibration() async {
     final sp = await SharedPreferences.getInstance();
     final history = await _readHistory(sp);
     final now = DateTime.now();
-    final windowStart = now.subtract(const Duration(days: _windowDays));
+    final baseWindowStart = now.subtract(const Duration(days: _windowDays));
+    // Élargissement borné à 60 jours de plus : une pause ponctuelle (week-end,
+    // vacances de 1-3 semaines) doit être totalement absorbée, sans pour
+    // autant faire remonter indéfiniment dans le passé si l'utilisateur a été
+    // en pause très longtemps (l'ancienneté des données redevient alors elle-
+    // même une raison légitime de retomber sur "pas assez de données").
+    final pausedInBaseWindow =
+        await PauseService.instance.pausedDaysInRange(baseWindowStart, now);
+    final windowStart = baseWindowStart
+        .subtract(Duration(days: pausedInBaseWindow.clamp(0, 60)));
 
-    final inWindow = history.where((w) => !w.date.isBefore(windowStart)).toList()
+    final inWindow = (await _excludePaused(history))
+        .where((w) => !w.date.isBefore(windowStart))
+        .toList()
       ..sort((a, b) => a.date.compareTo(b.date));
 
     if (inWindow.length < 2) {
@@ -423,11 +457,15 @@ class CalibrationService {
       return CalibrationResult(hasEnoughData: false, daysOfWeightData: rawSpanDays);
     }
 
-    // Moyenne des calories loguées sur la période couverte par les pesées.
+    // Moyenne des calories loguées sur la période couverte par les pesées —
+    // les jours de pause sont exclus même si, exceptionnellement, quelque
+    // chose a été loggé ce jour-là (voyage/repas de fête atypiques, pas
+    // représentatifs de l'alimentation "normale" qu'on cherche à mesurer).
     double totalKcal = 0;
     int daysWithFood = 0;
     for (int i = 0; i <= rawSpanDays; i++) {
       final d = rawFirst.date.add(Duration(days: i));
+      if (await PauseService.instance.isPausedOn(d)) continue;
       final k = await _kcalForDate(sp, d);
       if (k > 0) {
         totalKcal += k;
@@ -488,7 +526,15 @@ class CalibrationService {
   /// par défaut aligné sur les 20 jours du Change Rate (voir _windowDays).
   Future<List<ExpenditurePoint>> expenditureHistory({int days = 60, int windowDays = 20}) async {
     final sp = await SharedPreferences.getInstance();
-    final history = await _readHistory(sp);
+    final rawHistory = await _readHistory(sp);
+    if (rawHistory.length < 2) return const [];
+    // Priorité 71 : même exclusion des jours de pause que [computeCalibration]
+    // (pesées ET calories), une fois pour toute la fenêtre plutôt qu'à
+    // chaque itération de la boucle glissante ci-dessous.
+    final pauses = await PauseService.instance.load();
+    final history = pauses.isEmpty
+        ? rawHistory
+        : rawHistory.where((w) => !pauses.any((p) => p.contains(w.date))).toList();
     if (history.length < 2) return const [];
 
     final now = DateTime.now();
@@ -520,6 +566,7 @@ class CalibrationService {
       int daysWithFood = 0;
       for (int j = 0; j <= spanDays; j++) {
         final d = inWindow.first.date.add(Duration(days: j));
+        if (pauses.any((p) => p.contains(d))) continue;
         final k = kcalByDay[_dateKey(d)] ?? 0.0;
         if (k > 0) {
           totalKcal += k;

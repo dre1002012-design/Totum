@@ -959,6 +959,51 @@ int smartMatchScore(TotumRecipe r, RemainingToday remaining) {
   return score.round().clamp(0, 100);
 }
 
+// === PAUSE DE MAINTIEN (garde-fou anti-yoyo) =======================
+// Priorité 71 (retour d'Alex : "prévenir la personne des périodes de
+// maintien qu'elle peut inclure si elle a une période de restriction trop
+// longue") — l'audit scientifique du 17/08/2026 notait qu'aucun mécanisme
+// ne suggérait de pause après un déficit prolongé : le rythme de perte
+// lui-même est validé (0,5-1%/semaine, voir profile.dart), mais rien
+// n'empêchait de le maintenir des mois d'affilée sans interruption, un
+// facteur de risque connu d'adaptation métabolique/effet yoyo. Purement
+// informatif — jamais bloquant, jamais culpabilisant, ignorable — voir
+// _DietBreakCard.
+const int _kDietBreakThresholdWeeks = 12;
+const int _kDietBreakSnoozeDays = 14;
+
+class DietBreakSuggestion {
+  final int weeksInDeficit;
+  const DietBreakSuggestion(this.weeksInDeficit);
+}
+
+Future<DietBreakSuggestion?> _checkDietBreakSuggestion(SharedPreferences sp) async {
+  final goalIndex = sp.getInt('profile_goal') ?? 1;
+  final isDeficit = goalIndex == 0 || goalIndex == 3; // GoalType.lose / loseMild
+  if (!isDeficit) return null;
+  final startRaw = sp.getString('goal_start_date_v1');
+  if (startRaw == null) return null;
+  final start = DateTime.tryParse(startRaw);
+  if (start == null) return null;
+  final weeks = DateTime.now().difference(start).inDays ~/ 7;
+  if (weeks < _kDietBreakThresholdWeeks) return null;
+
+  final dismissedRaw = sp.getString('diet_break_dismissed_at');
+  if (dismissedRaw != null) {
+    final dismissedAt = DateTime.tryParse(dismissedRaw);
+    if (dismissedAt != null &&
+        DateTime.now().difference(dismissedAt).inDays < _kDietBreakSnoozeDays) {
+      return null;
+    }
+  }
+  return DietBreakSuggestion(weeks);
+}
+
+Future<void> _dismissDietBreakSuggestion() async {
+  final sp = await SharedPreferences.getInstance();
+  await sp.setString('diet_break_dismissed_at', DateTime.now().toIso8601String());
+}
+
 // === HISTO HOLISTIQUE =============================================
 // Priorité 69 (retour d'Alex : le sommeil/stress saisis ne survivaient pas
 // à une réinstallation) — même cause racine et même correctif que
@@ -2239,6 +2284,7 @@ String _coachDailyMessage(CoachContext ctx, TotumScore? score,
 double? _coachYesterdayScore;
 Future<void> _updateCoachScoreHistory(TotumScore? score) async {
   if (score == null) return;
+  await recordScoreHistory(score);
   final sp = await SharedPreferences.getInstance();
   final today = '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
   final lastDate = sp.getString('coach_last_score_date');
@@ -4581,6 +4627,7 @@ class ConseilsScreenState extends State<ConseilsScreen>
                       children: [
                         _AnimatedAppear(index: 0, child: _CoachHeroCard(data: data)),
                         const SizedBox(height: 14),
+                        const _DietBreakCard(),
                         _AnimatedAppear(index: 1, child: _ScorePriorityRow(data: data)),
                         const SizedBox(height: 14),
                         _AnimatedAppear(index: 2, child: _DailyAdviceEntryCard(data: data)),
@@ -4636,6 +4683,90 @@ class ConseilsScreenState extends State<ConseilsScreen>
 // ═══════════════════════════════════════════════════════════════════════
 //  CARTES UI — Conseils 2.0
 // ═══════════════════════════════════════════════════════════════════════
+
+/// Priorité 71 — suggestion de pause de maintien après un déficit prolongé
+/// (voir _checkDietBreakSuggestion). Ton neutre/positif, jamais alarmant :
+/// c'est une option, pas un avertissement. Ne s'affiche que si pertinente ;
+/// se masque d'elle-même quand ignorée (voir _kDietBreakSnoozeDays).
+class _DietBreakCard extends StatefulWidget {
+  const _DietBreakCard();
+
+  @override
+  State<_DietBreakCard> createState() => _DietBreakCardState();
+}
+
+class _DietBreakCardState extends State<_DietBreakCard> {
+  Future<DietBreakSuggestion?>? _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final sp = await SharedPreferences.getInstance();
+    final result = _checkDietBreakSuggestion(sp);
+    setState(() => _future = result);
+  }
+
+  Future<void> _dismiss() async {
+    await _dismissDietBreakSuggestion();
+    if (!mounted) return;
+    setState(() => _future = Future.value(null));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return FutureBuilder<DietBreakSuggestion?>(
+      future: _future,
+      builder: (context, snap) {
+        final suggestion = snap.data;
+        if (suggestion == null) return const SizedBox.shrink();
+        return Container(
+          margin: const EdgeInsets.only(bottom: 14),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: TotumColors.accentSoft,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: TotumColors.accentBorder),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.self_improvement, color: TotumColors.accent, size: 20),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.consDietBreakTitle(suggestion.weeksInDeficit),
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.accent)),
+                    const SizedBox(height: 3),
+                    Text(l10n.consDietBreakBody,
+                        style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary, height: 1.35)),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: _dismiss,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(l10n.consDietBreakDismiss,
+                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.accent)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
 
 /// Bandeau "Coach du jour" — accueil + message coach personnalisé.
 class _CoachHeroCard extends StatelessWidget {

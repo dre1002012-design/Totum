@@ -363,6 +363,10 @@
   "profileInvalidNumber": "Invalid number",
 
   "profileYourEvolution": "Your evolution",
+  "profilePauseStartButton": "I'm taking a break (vacation, weekend...)",
+  "profilePauseActiveTitle": "On a break since {date}",
+  "profilePauseActiveBody": "No weigh-in or logging during this time? No worries — we won't use it to calculate your needs.",
+  "profilePauseEndButton": "I'm back",
   "profileLast60Days": "last 60 days",
   "profileAdaptiveEstimate": "adaptive estimate",
 
@@ -670,6 +674,9 @@
   "consTabVitality": "Vitality",
   "consTabRecipes": "Recipes",
   "consMedicalDisclaimer": "This advice doesn't replace medical advice. If you have a medical condition or any doubt, consult your healthcare professional.",
+  "consDietBreakTitle": "{weeks} weeks in a deficit — fancy a break?",
+  "consDietBreakBody": "A maintenance week now and then helps you stick with it long-term and limits yo-yo risk. Nothing mandatory — just an option if it feels right.",
+  "consDietBreakDismiss": "Later",
 
   "consGreetingNight": "Good night",
   "consGreetingMorning": "Good morning",
@@ -1404,5 +1411,6 @@
   "consWellbeingTrendSubtitle": "Over the last {days} days",
   "consWellbeingAverage": "Average",
   "consWellbeingNoDataYet": "Not enough data yet for this period.",
-  "consTodayAnalysisSubtitle": "Sleep, stress & vitality"
+  "consTodayAnalysisSubtitle": "Sleep, stress & vitality",
+  "bilanScoreTrendTitle": "Score trend"
 }
