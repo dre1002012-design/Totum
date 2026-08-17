@@ -15,13 +15,6 @@ Ce fichier recense les bugs connus, les limitations acceptées (comportement vol
 
 ## 🐞 Bugs actifs
 
-### Incohérences cru/cuit dans les recettes existantes
-- **Où** : `totum_recipes.json` (111 recettes actuelles)
-- **Quoi** : riz, poulet, saumon et épinards utilisent des entrées CIQUAL **crues** ("Riz complet, cru", "Poulet blanc, viande et peau crues", "Saumon argenté du Pacifique (coho), cru", "Épinard, cru") alors qu'ils sont vraisemblablement consommés cuits dans les recettes concernées.
-- **Impact** : surestimation calorique, la plus sévère sur le riz (cru ≈350 kcal/100g vs cuit ≈130 kcal/100g, écart ~3x).
-- **Pourquoi ce n'est pas encore corrigé** : découvert en fin de session précédente pendant l'audit du CDC V2 externe ; nécessitait de recevoir `foods.csv` pour identifier les bonnes entrées cuites. Fichier désormais disponible.
-- **Statut** : fix planifié — voir `TODO.md`, Priorité 1.
-
 ### Icône PWA absente sur l'écran d'accueil iPhone/Safari
 - **Où** : configuration PWA (manifest / meta tags iOS)
 - **Quoi** : lorsqu'un utilisateur ajoute TOTUM à l'écran d'accueil depuis Safari iOS, l'icône ne s'affiche pas correctement.
@@ -92,3 +85,7 @@ Ce fichier recense les bugs connus, les limitations acceptées (comportement vol
 ### Bilan 30/60/90 jours comparant aux objectifs actuels au lieu des objectifs historiques du jour
 - **Résolu par** : mise en place de l'historisation par snapshot journalier (37 champs) — voir `CURRENT_STATE.md` § Bilan.
 - **Pourquoi c'est noté ici** : pour comprendre a posteriori pourquoi le système d'historisation snapshot a été conçu ainsi (c'est la réponse directe à ce bug), et éviter de le simplifier par erreur en pensant que c'est une sur-ingénierie.
+
+### Incohérences cru/cuit dans les recettes existantes
+- **Résolu** (vérifié le 17/08/2026, audit pré-Play-Store) : plus aucune entrée "Riz ... cru", "Poulet ... crue" ou "Saumon ... cru" dans les 168 recettes actuelles (`totum_recipes.json`) — corrigé dans une session intermédiaire, non documenté ici jusqu'à cette vérification.
+- Seuls restants avec un mot-clé "cru" : "Épinard, cru" (3 recettes — smoothie et bowls, où le cru est le bon choix culinaire) et "Oeuf cru" (2 recettes d'omelette, avec l'huile de cuisson listée séparément le cas échéant) — vérifiés non problématiques : l'écart cru/cuit sur l'œuf entier est ~4% (140 vs 134 kcal/100g), sans commune mesure avec l'écart ~3x du riz qui motivait cette entrée.
