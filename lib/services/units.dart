@@ -45,9 +45,14 @@ class Units {
   /// saisie qui reste un nombre simple en pouces, plus simple à éditer).
   static String formatHeight(double cm, UnitSystem s) {
     if (s == UnitSystem.imperial) {
-      final totalIn = cmToIn(cm);
-      final ft = (totalIn / 12).floor();
-      final inch = (totalIn - ft * 12).round();
+      // Priorité 66 (audit global, test unitaire) : arrondir le total de
+      // pouces D'ABORD, puis en dériver pieds/pouces, jamais l'inverse —
+      // sinon un total comme 71.5 po (5 pi 11.5 po) affichait "5'12"" au
+      // lieu de "6'0"" (pieds tronqués puis pouces arrondis SÉPARÉMENT,
+      // chacun pouvant déborder sur l'autre).
+      final totalInRounded = cmToIn(cm).round();
+      final ft = totalInRounded ~/ 12;
+      final inch = totalInRounded % 12;
       return '$ft\'$inch"';
     }
     return '${cm.round()} cm';
