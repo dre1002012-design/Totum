@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../l10n/app_localizations.dart';
 import 'calibration_service.dart';
 
@@ -942,6 +943,40 @@ Future<void> _appendGoalsSnapshot(SharedPreferences sp, NutritionTargets t) asyn
   }
 
   await sp.setString(key, jsonEncode(list));
+
+  // Priorité 67 (retour répété d'Alex : le Bilan 7/30/90j retombe toujours
+  // sur l'objectif du jour) — cause racine trouvée : cet historique
+  // n'existait qu'en local (SharedPreferences), donc disparaissait à
+  // chaque réinstallation de l'app, EXACTEMENT le même bug déjà identifié
+  // et corrigé pour weight_log (voir calibration_service.dart). Synchronisé
+  // ici avec Supabase (table goal_snapshots, migration
+  // 20260817_goal_snapshots.sql) pour survivre à une réinstallation ou un
+  // changement d'appareil. Échec silencieux tant que la migration n'a pas
+  // encore été appliquée côté Supabase — comportement local inchangé.
+  try {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      await Supabase.instance.client.from('goal_snapshots').upsert({
+        'user_id': user.id,
+        'date': todayKey,
+        'kcal': t.goals.kcal, 'prot': t.goals.prot, 'carb': t.goals.carb,
+        'fat': t.goals.fat, 'fiber': t.goals.fiber,
+        'sat': t.sat, 'o9': t.o9, 'o6': t.o6, 'o3': t.o3,
+        'epa': t.epa, 'dha': t.dha, 'sugars': t.sugars, 'salt': t.salt,
+        'ca_mg': t.caMg, 'cu_mg': t.cuMg, 'fe_mg': t.feMg, 'i_ug': t.iUg,
+        'mg_mg': t.mgMg, 'mn_mg': t.mnMg, 'p_mg': t.pMg, 'k_mg': t.kMg,
+        'se_ug': t.seUg, 'na_mg': t.naMg, 'zn_mg': t.znMg,
+        'vit_a_ug': t.vitAUg, 'vit_betacar_ug': t.vitBetacarUg,
+        'vit_d_ug': t.vitDUg, 'vit_e_mg': t.vitEMg, 'vit_k_ug': t.vitKUg,
+        'vit_c_mg': t.vitCMg,
+        'b1_mg': t.b1Mg, 'b2_mg': t.b2Mg, 'b3_mg': t.b3Mg, 'b5_mg': t.b5Mg,
+        'b6_mg': t.b6Mg, 'b9_ug': t.b9Ug, 'b12_ug': t.b12Ug,
+      }, onConflict: 'user_id,date');
+    }
+  } catch (_) {
+    // Table pas encore migrée / hors ligne : l'historique local suffit en
+    // attendant, aucune régression.
+  }
 }
 
 /// Calibration adaptative (façon MacroFactor) : si assez de données de poids

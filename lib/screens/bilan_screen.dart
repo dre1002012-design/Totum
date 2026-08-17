@@ -444,66 +444,170 @@ class _GoalsSnapshot {
 
 /// Lit l'historique des objectifs macro enregistré par profile.dart à
 /// chaque sauvegarde de profil. Triés du plus ancien au plus récent.
+///
+/// Priorité 67 (retour répété d'Alex : le Bilan 7/30/90j retombe toujours
+/// sur l'objectif du jour, même après le correctif Priorité 64) — cause
+/// racine trouvée : cet historique n'existait qu'en local
+/// (SharedPreferences `goals_snapshots_v1`), donc disparaissait à chaque
+/// réinstallation de l'app (fréquent en phase de test) — exactement le même
+/// bug déjà identifié et corrigé pour `weight_log`. Synchronisé ici avec
+/// Supabase (table `goal_snapshots`, migration
+/// 20260817_goal_snapshots.sql) : fusion remote+local comme pour
+/// `_readHistory` dans calibration_service.dart (le remote fait foi pour
+/// une date présente des deux côtés, un instantané local pas encore
+/// synchronisé n'est jamais perdu), et réécriture du cache local au passage
+/// (auto-réparation, fonctionne hors ligne au prochain appel).
 Future<List<_GoalsSnapshot>> _readGoalsSnapshots() async {
   final sp = await SharedPreferences.getInstance();
-  final raw = sp.getString('goals_snapshots_v1');
-  if (raw == null || raw.isEmpty) return const [];
-  // Repli sur les objectifs actuels pour les instantanés plus anciens qui
-  // n'auraient que les 5 macros (créés avant l'extension aux micros) —
-  // aucune casse sur l'historique déjà constitué.
   final fallback = await _readGoalsRaw();
   double d(Map<String, dynamic> m, String key, double fb) {
     final v = m[key];
     return v is num ? v.toDouble() : fb;
   }
+
+  List<_GoalsSnapshot> parseLocal() {
+    final raw = sp.getString('goals_snapshots_v1');
+    if (raw == null || raw.isEmpty) return const [];
+    try {
+      final list = jsonDecode(raw) as List;
+      return list.map((e) {
+        final m = e as Map<String, dynamic>;
+        return _GoalsSnapshot(
+          date: m['date'] as String,
+          kcal: d(m, 'kcal', fallback.kcal),
+          prot: d(m, 'prot', fallback.prot),
+          carb: d(m, 'carb', fallback.carb),
+          fat: d(m, 'fat', fallback.fat),
+          fiber: d(m, 'fiber', fallback.fiber),
+          sat: d(m, 'sat', fallback.sat),
+          o9: d(m, 'o9', fallback.o9),
+          o6: d(m, 'o6', fallback.o6),
+          o3: d(m, 'o3', fallback.o3),
+          epa: d(m, 'epa', fallback.epa),
+          dha: d(m, 'dha', fallback.dha),
+          sugars: d(m, 'sugars', fallback.sugars),
+          salt: d(m, 'salt', fallback.salt),
+          caMg: d(m, 'caMg', fallback.caMg),
+          cuMg: d(m, 'cuMg', fallback.cuMg),
+          feMg: d(m, 'feMg', fallback.feMg),
+          iUg: d(m, 'iUg', fallback.iUg),
+          mgMg: d(m, 'mgMg', fallback.mgMg),
+          mnMg: d(m, 'mnMg', fallback.mnMg),
+          pMg: d(m, 'pMg', fallback.pMg),
+          kMg: d(m, 'kMg', fallback.kMg),
+          seUg: d(m, 'seUg', fallback.seUg),
+          naMg: d(m, 'naMg', fallback.naMg),
+          znMg: d(m, 'znMg', fallback.znMg),
+          vitAUg: d(m, 'vitAUg', fallback.vitAUg),
+          vitBetacarUg: d(m, 'vitBetacarUg', fallback.vitBetacarUg),
+          vitDUg: d(m, 'vitDUg', fallback.vitDUg),
+          vitEMg: d(m, 'vitEMg', fallback.vitEMg),
+          vitKUg: d(m, 'vitKUg', fallback.vitKUg),
+          vitCMg: d(m, 'vitCMg', fallback.vitCMg),
+          b1Mg: d(m, 'b1Mg', fallback.b1Mg),
+          b2Mg: d(m, 'b2Mg', fallback.b2Mg),
+          b3Mg: d(m, 'b3Mg', fallback.b3Mg),
+          b5Mg: d(m, 'b5Mg', fallback.b5Mg),
+          b6Mg: d(m, 'b6Mg', fallback.b6Mg),
+          b9Ug: d(m, 'b9Ug', fallback.b9Ug),
+          b12Ug: d(m, 'b12Ug', fallback.b12Ug),
+        );
+      }).toList();
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  final local = parseLocal();
+
   try {
-    final list = jsonDecode(raw) as List;
-    return list.map((e) {
-      final m = e as Map<String, dynamic>;
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      return local..sort((a, b) => a.date.compareTo(b.date));
+    }
+    final List<dynamic> rows = await _client
+        .from('goal_snapshots')
+        .select()
+        .eq('user_id', user.id);
+
+    double dr(Map<String, dynamic> m, String key, double fb) {
+      final v = m[key];
+      return v is num ? v.toDouble() : fb;
+    }
+    final remote = rows.map((r) {
+      final m = Map<String, dynamic>.from(r as Map);
       return _GoalsSnapshot(
-        date: m['date'] as String,
-        kcal: d(m, 'kcal', fallback.kcal),
-        prot: d(m, 'prot', fallback.prot),
-        carb: d(m, 'carb', fallback.carb),
-        fat: d(m, 'fat', fallback.fat),
-        fiber: d(m, 'fiber', fallback.fiber),
-        sat: d(m, 'sat', fallback.sat),
-        o9: d(m, 'o9', fallback.o9),
-        o6: d(m, 'o6', fallback.o6),
-        o3: d(m, 'o3', fallback.o3),
-        epa: d(m, 'epa', fallback.epa),
-        dha: d(m, 'dha', fallback.dha),
-        sugars: d(m, 'sugars', fallback.sugars),
-        salt: d(m, 'salt', fallback.salt),
-        caMg: d(m, 'caMg', fallback.caMg),
-        cuMg: d(m, 'cuMg', fallback.cuMg),
-        feMg: d(m, 'feMg', fallback.feMg),
-        iUg: d(m, 'iUg', fallback.iUg),
-        mgMg: d(m, 'mgMg', fallback.mgMg),
-        mnMg: d(m, 'mnMg', fallback.mnMg),
-        pMg: d(m, 'pMg', fallback.pMg),
-        kMg: d(m, 'kMg', fallback.kMg),
-        seUg: d(m, 'seUg', fallback.seUg),
-        naMg: d(m, 'naMg', fallback.naMg),
-        znMg: d(m, 'znMg', fallback.znMg),
-        vitAUg: d(m, 'vitAUg', fallback.vitAUg),
-        vitBetacarUg: d(m, 'vitBetacarUg', fallback.vitBetacarUg),
-        vitDUg: d(m, 'vitDUg', fallback.vitDUg),
-        vitEMg: d(m, 'vitEMg', fallback.vitEMg),
-        vitKUg: d(m, 'vitKUg', fallback.vitKUg),
-        vitCMg: d(m, 'vitCMg', fallback.vitCMg),
-        b1Mg: d(m, 'b1Mg', fallback.b1Mg),
-        b2Mg: d(m, 'b2Mg', fallback.b2Mg),
-        b3Mg: d(m, 'b3Mg', fallback.b3Mg),
-        b5Mg: d(m, 'b5Mg', fallback.b5Mg),
-        b6Mg: d(m, 'b6Mg', fallback.b6Mg),
-        b9Ug: d(m, 'b9Ug', fallback.b9Ug),
-        b12Ug: d(m, 'b12Ug', fallback.b12Ug),
+        date: (m['date'] as String).substring(0, 10), // 'YYYY-MM-DD'
+        kcal: dr(m, 'kcal', fallback.kcal),
+        prot: dr(m, 'prot', fallback.prot),
+        carb: dr(m, 'carb', fallback.carb),
+        fat: dr(m, 'fat', fallback.fat),
+        fiber: dr(m, 'fiber', fallback.fiber),
+        sat: dr(m, 'sat', fallback.sat),
+        o9: dr(m, 'o9', fallback.o9),
+        o6: dr(m, 'o6', fallback.o6),
+        o3: dr(m, 'o3', fallback.o3),
+        epa: dr(m, 'epa', fallback.epa),
+        dha: dr(m, 'dha', fallback.dha),
+        sugars: dr(m, 'sugars', fallback.sugars),
+        salt: dr(m, 'salt', fallback.salt),
+        caMg: dr(m, 'ca_mg', fallback.caMg),
+        cuMg: dr(m, 'cu_mg', fallback.cuMg),
+        feMg: dr(m, 'fe_mg', fallback.feMg),
+        iUg: dr(m, 'i_ug', fallback.iUg),
+        mgMg: dr(m, 'mg_mg', fallback.mgMg),
+        mnMg: dr(m, 'mn_mg', fallback.mnMg),
+        pMg: dr(m, 'p_mg', fallback.pMg),
+        kMg: dr(m, 'k_mg', fallback.kMg),
+        seUg: dr(m, 'se_ug', fallback.seUg),
+        naMg: dr(m, 'na_mg', fallback.naMg),
+        znMg: dr(m, 'zn_mg', fallback.znMg),
+        vitAUg: dr(m, 'vit_a_ug', fallback.vitAUg),
+        vitBetacarUg: dr(m, 'vit_betacar_ug', fallback.vitBetacarUg),
+        vitDUg: dr(m, 'vit_d_ug', fallback.vitDUg),
+        vitEMg: dr(m, 'vit_e_mg', fallback.vitEMg),
+        vitKUg: dr(m, 'vit_k_ug', fallback.vitKUg),
+        vitCMg: dr(m, 'vit_c_mg', fallback.vitCMg),
+        b1Mg: dr(m, 'b1_mg', fallback.b1Mg),
+        b2Mg: dr(m, 'b2_mg', fallback.b2Mg),
+        b3Mg: dr(m, 'b3_mg', fallback.b3Mg),
+        b5Mg: dr(m, 'b5_mg', fallback.b5Mg),
+        b6Mg: dr(m, 'b6_mg', fallback.b6Mg),
+        b9Ug: dr(m, 'b9_ug', fallback.b9Ug),
+        b12Ug: dr(m, 'b12_ug', fallback.b12Ug),
       );
-    }).toList()
+    }).toList();
+
+    final remoteDates = remote.map((s) => s.date).toSet();
+    final localOnly = local.where((s) => !remoteDates.contains(s.date)).toList();
+    final merged = [...remote, ...localOnly]
       ..sort((a, b) => a.date.compareTo(b.date));
+
+    // Réécrit le cache local avec la vue fusionnée — auto-réparation, et
+    // fonctionne hors ligne au prochain appel sans re-solliciter Supabase.
+    await sp.setString(
+      'goals_snapshots_v1',
+      jsonEncode(merged.map((s) => {
+            'date': s.date,
+            'kcal': s.kcal, 'prot': s.prot, 'carb': s.carb, 'fat': s.fat,
+            'fiber': s.fiber, 'sat': s.sat, 'o9': s.o9, 'o6': s.o6,
+            'o3': s.o3, 'epa': s.epa, 'dha': s.dha, 'sugars': s.sugars,
+            'salt': s.salt, 'caMg': s.caMg, 'cuMg': s.cuMg, 'feMg': s.feMg,
+            'iUg': s.iUg, 'mgMg': s.mgMg, 'mnMg': s.mnMg, 'pMg': s.pMg,
+            'kMg': s.kMg, 'seUg': s.seUg, 'naMg': s.naMg, 'znMg': s.znMg,
+            'vitAUg': s.vitAUg, 'vitBetacarUg': s.vitBetacarUg,
+            'vitDUg': s.vitDUg, 'vitEMg': s.vitEMg, 'vitKUg': s.vitKUg,
+            'vitCMg': s.vitCMg, 'b1Mg': s.b1Mg, 'b2Mg': s.b2Mg,
+            'b3Mg': s.b3Mg, 'b5Mg': s.b5Mg, 'b6Mg': s.b6Mg, 'b9Ug': s.b9Ug,
+            'b12Ug': s.b12Ug,
+          }).toList()),
+    );
+
+    return merged;
   } catch (_) {
-    return const [];
+    // Table pas encore migrée / hors ligne → repli sur l'historique local
+    // (comportement identique à avant cette Priorité 67).
+    return local..sort((a, b) => a.date.compareTo(b.date));
   }
 }
 
@@ -941,11 +1045,17 @@ _DayTotals _computeDayTotalsFromPrefetchedRows(
 
 Future<BilanData> _computeBilanForSpan(ReportSpan span,
     {DateTime? specificDay}) async {
-  final currentGoals = await _readGoalsRaw();
-  final goalsSnapshots = await _readGoalsSnapshots();
+  // Priorité 67 : _readGoalsSnapshots() interroge maintenant aussi Supabase
+  // (voir plus haut) — démarré en parallèle du reste plutôt qu'attendu en
+  // série, même logique que les 4 lectures ci-dessous.
+  final currentGoalsFuture = _readGoalsRaw();
+  final goalsSnapshotsFuture = _readGoalsSnapshots();
+  final ensureFoodsFuture = _ensureFoodsLoaded();
   final sp    = await SharedPreferences.getInstance();
   final repo  = foods_loader.FoodsRepository.instance;
-  await _ensureFoodsLoaded();
+  final currentGoals = await currentGoalsFuture;
+  final goalsSnapshots = await goalsSnapshotsFuture;
+  await ensureFoodsFuture;
 
   // Si une date précise est fournie (tap sur une barre), on calcule ce jour.
   final _SpanInfo info;
