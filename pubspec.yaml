@@ -33,7 +33,7 @@ dependencies:
   http: ^1.2.0           # pour appeler les API USDA + Open Food Facts
   geolocator: ^13.0.1    # pour la localisation (UV index vitamine D soleil, gère elle-même la permission runtime)
   url_launcher: ^6.2.0
-  mobile_scanner: ^5.0.0 # pour scanner les codes-barres avec la caméra
+  mobile_scanner: ^7.4.0 # pour scanner les codes-barres avec la caméra — 5.2.3->7.4.0 (Priorité 71, crash caméra confirmé) : le rework CameraX/Impeller (7.0.0) + les correctifs de race dispose/stop (7.2.0/7.3.0) couvrent exactement la classe de crash observée
   flutter_soloud: ^3.5.4
   flutter_foreground_task: ^10.0.0
   audio_session: ^0.2.4

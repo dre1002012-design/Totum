@@ -52,16 +52,20 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    // Priorité 69 (retour d'Alex, crash confirmé : "MobileScannerException...
+    // Priorité 69/71 (retour d'Alex, crash confirmé à 2 reprises : "...
     // attempt to invoke virtual method ... on a null object reference") —
-    // bug connu du plugin mobile_scanner : détruire le contrôleur pendant
-    // qu'un callback natif de détection (ML Kit, thread séparé) est encore
-    // "en vol" fait référencer un objet caméra déjà nettoyé côté natif,
-    // d'où le NullPointerException. `dispose()` lui-même peut donc lancer —
-    // jamais laisser planter la fermeture de l'écran pour autant.
-    try {
-      _controller.dispose();
-    } catch (_) {}
+    // classe de bug connue du plugin mobile_scanner (callback natif de
+    // détection encore "en vol" au moment où le contrôleur est arrêté/
+    // détruit). Le passage à mobile_scanner 7.4.0 (Priorité 71) apporte
+    // plusieurs correctifs directement sur cette classe de crash (rework
+    // CameraX/Impeller, correction de la race start/stop, correction du
+    // dispose croisé entre contrôleurs) — gardé en plus, en ceinture et
+    // bretelles, ce garde-fou applicatif. `dispose()` du contrôleur est
+    // devenu asynchrone depuis mobile_scanner 6 ; `State.dispose()` doit
+    // rester synchrone (contrat du framework), donc on ne l'attend pas mais
+    // on ne laisse jamais une erreur dedans remonter et faire planter la
+    // fermeture de l'écran.
+    _controller.dispose().catchError((_) {});
     super.dispose();
   }
 
@@ -209,7 +213,7 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen>
             controller: _controller,
             scanWindow: kIsWeb ? null : scanWindow,
             onDetect: _handleDetection,
-            errorBuilder: (context, error, child) {
+            errorBuilder: (context, error) {
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),

@@ -2385,16 +2385,29 @@ class TotumRecipe {
     // sur un micronutriment garde une part de ses points au lieu de perdre
     // le crédit entier — évite qu'un plat globalement riche mais juste
     // sous un seuil soit noté comme s'il ne contenait rien.
+    //
+    // Priorité 71 (audit du 17/08/2026) : la bibliothèque de recettes a été
+    // constituée au fil de plusieurs sessions, avec un jeu de micronutriments
+    // renseignés qui a varié dans le temps (jusqu'à 23 schémas différents
+    // constatés sur 168 recettes — certaines ont la vitamine B9/E, d'autres
+    // non). `m(k) ?? 0.0` traitait jusqu'ici "non mesuré pour cette recette"
+    // exactement comme "mesuré à zéro" : une recette sans clé B9 perdait
+    // silencieusement 1/8 de la moyenne micro, quelle que soit sa vraie
+    // qualité nutritionnelle. On ne moyenne désormais que sur les
+    // micronutriments RÉELLEMENT présents dans les données de cette recette.
     const microChecks = [
       ('Vitamine_C_mg_100g', 15.0), ('Fer_mg_100g', 1.5),
       ('Magnésium_mg_100g', 40.0), ('Potassium_mg_100g', 300.0),
       ('Calcium_mg_100g', 80.0), ('Zinc_mg_100g', 1.0),
       ('Vitamine_B9_µg_100g', 40.0), ('Beta-Carotène_µg_100g', 300.0),
     ];
-    final ratios =
-        microChecks.map((e) => (m(e.$1) / e.$2).clamp(0, 1)).toList();
-    final sMicro =
-        (ratios.reduce((a, b) => a + b) / ratios.length * 20).clamp(0, 20);
+    final ratios = microChecks
+        .where((e) => micros100.containsKey(e.$1))
+        .map((e) => (m(e.$1) / e.$2).clamp(0, 1))
+        .toList();
+    final sMicro = ratios.isEmpty
+        ? 10.0 // aucun micronutriment renseigné : score neutre, ni pénalisé ni avantagé
+        : (ratios.reduce((a, b) => a + b) / ratios.length * 20).clamp(0, 20);
 
     final unsat = m('Acide_oléique_W9_g_100g') +
         m('Acide_linoléique_W6_LA_g_100g') +
