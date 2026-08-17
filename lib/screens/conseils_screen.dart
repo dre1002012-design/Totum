@@ -1088,14 +1088,19 @@ Future<AdviceScript> _buildAdviceScript(AppLocalizations l10n) async {
   final now = DateTime.now();
   final sp = await SharedPreferences.getInstance();
 
-  // charge l’asset au premier appel (idempotent)
-  if (!AdviceContentRepo.instance.isLoaded) {
-    await AdviceContentRepo.instance
-        .loadFromAsset('assets/advices.json', l10n);
-  }
-  await CoachAdvicesRepo.instance.load();
-  await TotumRecipesRepo.instance.load();
-  await NutrientFicheRepo.instance.load();
+  // Priorité 64 (retour d'Alex : lenteur perçue à l'ouverture des Conseils) :
+  // ces 4 chargements (chacun déjà idempotent, "isLoaded" court-circuite les
+  // appels suivants) portent sur 4 fichiers JSON totalement indépendants —
+  // enchaînés en série jusqu'ici alors qu'ils peuvent se charger en
+  // parallèle, ce qui compte surtout au tout premier accès à cet onglet
+  // (totum_recipes.json à lui seul pèse ~400 Ko à parser).
+  await Future.wait([
+    if (!AdviceContentRepo.instance.isLoaded)
+      AdviceContentRepo.instance.loadFromAsset('assets/advices.json', l10n),
+    CoachAdvicesRepo.instance.load(),
+    TotumRecipesRepo.instance.load(),
+    NutrientFicheRepo.instance.load(),
+  ]);
 
   final goals = await _readGoalsForAdvice();
   final targets = await _buildAdviceTargets(goals);

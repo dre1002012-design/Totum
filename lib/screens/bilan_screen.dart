@@ -947,19 +947,6 @@ Future<BilanData> _computeBilanForSpan(ReportSpan span,
   final repo  = foods_loader.FoodsRepository.instance;
   await _ensureFoodsLoaded();
 
-  // Dépense énergétique estimée par jour (moteur adaptatif) — permet à la
-  // vignette "Équilibre énergétique" de comparer l'apport à la dépense
-  // réelle estimée, pas seulement à l'objectif (même logique que la vue
-  // "Expenditure" de MacroFactor). Vide/silencieux tant que la calibration
-  // n'a pas assez de données — aucune régression, juste un enrichissement.
-  final Map<String, double> expenditureByDate = {};
-  try {
-    final expPoints = await CalibrationService.instance.expenditureHistory(days: 95);
-    for (final p in expPoints) {
-      expenditureByDate[_dateKey(p.date)] = p.estimateKcal;
-    }
-  } catch (_) {}
-
   // Si une date précise est fournie (tap sur une barre), on calcule ce jour.
   final _SpanInfo info;
   if (specificDay != null) {
@@ -972,30 +959,55 @@ Future<BilanData> _computeBilanForSpan(ReportSpan span,
   final to   = info.to;
   final isAvg = info.isAverage;
 
+  // Priorité 64 (retour d'Alex : latence perçue en changeant de période
+  // 7/30/90j) : ces 4 lectures (dépense énergétique, aliments, boissons,
+  // vitamine D solaire) sont totalement indépendantes les unes des autres,
+  // mais étaient enchaînées en série (4 allers-retours réseau l'un après
+  // l'autre) — chacune attend maintenant en parallèle, ramenant le temps
+  // total au plus lent des 4 au lieu de leur somme. Comportement et
+  // isolation des erreurs strictement identiques (chaque bloc garde son
+  // propre try/catch, une panne sur l'une n'affecte pas les autres).
+
+  // Dépense énergétique estimée par jour (moteur adaptatif) — permet à la
+  // vignette "Équilibre énergétique" de comparer l'apport à la dépense
+  // réelle estimée, pas seulement à l'objectif (même logique que la vue
+  // "Expenditure" de MacroFactor). Vide/silencieux tant que la calibration
+  // n'a pas assez de données — aucune régression, juste un enrichissement.
+  final Map<String, double> expenditureByDate = {};
+  Future<void> fetchExpenditure() async {
+    try {
+      final expPoints = await CalibrationService.instance.expenditureHistory(days: 95);
+      for (final p in expPoints) {
+        expenditureByDate[_dateKey(p.date)] = p.estimateKcal;
+      }
+    } catch (_) {}
+  }
+
   // ── Bulk fetch : 1 seule requête Supabase pour toute la période ───────
   final Map<String, List<Map<String, dynamic>>> rowsByDate = {};
   bool supabaseSuccess = false;
+  Future<void> fetchFoodEntries() async {
+    try {
+      final user = _client.auth.currentUser;
+      if (user != null) {
+        final List<Map<String, dynamic>> allRows = await _client
+            .from('food_entries')
+            .select()
+            .eq('user_id', user.id)
+            .gte('entry_date', _dateKey(from))
+            .lte('entry_date', _dateKey(to));
 
-  try {
-    final user = _client.auth.currentUser;
-    if (user != null) {
-      final List<Map<String, dynamic>> allRows = await _client
-          .from('food_entries')
-          .select()
-          .eq('user_id', user.id)
-          .gte('entry_date', _dateKey(from))
-          .lte('entry_date', _dateKey(to));
-
-      for (final row in allRows) {
-        final date = (row['entry_date'] as String?) ?? '';
-        if (date.isNotEmpty) {
-          rowsByDate.putIfAbsent(date, () => []).add(row);
+        for (final row in allRows) {
+          final date = (row['entry_date'] as String?) ?? '';
+          if (date.isNotEmpty) {
+            rowsByDate.putIfAbsent(date, () => []).add(row);
+          }
         }
+        supabaseSuccess = true;
       }
-      supabaseSuccess = true;
+    } catch (e) {
+      debugPrint('Erreur bulk fetch bilan: $e');
     }
-  } catch (e) {
-    debugPrint('Erreur bulk fetch bilan: $e');
   }
 
   // ── Bulk fetch "Boissons" (verres d'eau, table water_intake) ──────────
@@ -1007,23 +1019,25 @@ Future<BilanData> _computeBilanForSpan(ReportSpan span,
   // même (_computeHydrationForToday). D'où des moyennes historiques bien en
   // dessous de la réalité (ex. 34 % au lieu de 100 %+).
   final Map<String, double> waterByDate = {};
-  try {
-    final user = _client.auth.currentUser;
-    if (user != null) {
-      final List<Map<String, dynamic>> waterRows = await _client
-          .from('water_intake')
-          .select('intake_date, total_ml')
-          .eq('user_id', user.id)
-          .gte('intake_date', _dateKey(from))
-          .lte('intake_date', _dateKey(to));
-      for (final row in waterRows) {
-        final date = (row['intake_date'] as String?) ?? '';
-        if (date.isEmpty) continue;
-        waterByDate[date] = ((row['total_ml'] as num?) ?? 0).toDouble();
+  Future<void> fetchWater() async {
+    try {
+      final user = _client.auth.currentUser;
+      if (user != null) {
+        final List<Map<String, dynamic>> waterRows = await _client
+            .from('water_intake')
+            .select('intake_date, total_ml')
+            .eq('user_id', user.id)
+            .gte('intake_date', _dateKey(from))
+            .lte('intake_date', _dateKey(to));
+        for (final row in waterRows) {
+          final date = (row['intake_date'] as String?) ?? '';
+          if (date.isEmpty) continue;
+          waterByDate[date] = ((row['total_ml'] as num?) ?? 0).toDouble();
+        }
       }
+    } catch (e) {
+      debugPrint('Erreur bulk fetch boissons bilan: $e');
     }
-  } catch (e) {
-    debugPrint('Erreur bulk fetch boissons bilan: $e');
   }
 
   // ── Bulk fetch vitamine D solaire (table sun_vitamin_d) ────────────────
@@ -1032,24 +1046,33 @@ Future<BilanData> _computeBilanForSpan(ReportSpan span,
   // ou une moyenne 7/30/90j, ignorait silencieusement l'apport solaire réel
   // de cette période, pourtant historisé côté Supabase depuis la Priorité 17).
   final Map<String, double> sunVitDByDate = {};
-  try {
-    final user = _client.auth.currentUser;
-    if (user != null) {
-      final List<Map<String, dynamic>> sunRows = await _client
-          .from('sun_vitamin_d')
-          .select('date, vit_d_ug')
-          .eq('user_id', user.id)
-          .gte('date', _dateKey(from))
-          .lte('date', _dateKey(to));
-      for (final row in sunRows) {
-        final date = (row['date'] as String?) ?? '';
-        if (date.isEmpty) continue;
-        sunVitDByDate[date] = ((row['vit_d_ug'] as num?) ?? 0).toDouble();
+  Future<void> fetchSunVitD() async {
+    try {
+      final user = _client.auth.currentUser;
+      if (user != null) {
+        final List<Map<String, dynamic>> sunRows = await _client
+            .from('sun_vitamin_d')
+            .select('date, vit_d_ug')
+            .eq('user_id', user.id)
+            .gte('date', _dateKey(from))
+            .lte('date', _dateKey(to));
+        for (final row in sunRows) {
+          final date = (row['date'] as String?) ?? '';
+          if (date.isEmpty) continue;
+          sunVitDByDate[date] = ((row['vit_d_ug'] as num?) ?? 0).toDouble();
+        }
       }
+    } catch (e) {
+      debugPrint('Erreur bulk fetch vitamine D solaire bilan: $e');
     }
-  } catch (e) {
-    debugPrint('Erreur bulk fetch vitamine D solaire bilan: $e');
   }
+
+  await Future.wait([
+    fetchExpenditure(),
+    fetchFoodEntries(),
+    fetchWater(),
+    fetchSunVitD(),
+  ]);
 
   double sumKcal = 0, sumProt = 0, sumCarb = 0, sumFat = 0, sumFib = 0;
   double sumSunVitD = 0;

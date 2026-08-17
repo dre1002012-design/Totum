@@ -11,6 +11,7 @@ import 'screens/conseils_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/paywall_screen.dart';
 import 'services/app_settings.dart';
+import 'services/profile.dart' show computeAndSaveTargetsFromStoredProfile;
 import 'theme/totum_style.dart';
 
 
@@ -351,6 +352,23 @@ class _RootShellState extends State<_RootShell> {
     // d'onglet, le rafraîchissement de la coque ET des 4 onglets.
     AppSettings.effectiveBrightness.addListener(_onAppearanceChanged);
     AppSettings.language.addListener(_onAppearanceChanged);
+
+    // Priorité 64 (retour d'Alex : le Bilan 7/30/90j retombe sur l'objectif
+    // du jour pour les jours passés) : l'historique des objectifs
+    // (goals_snapshots_v1, voir bilan_screen.dart/_goalsRawForDay) n'était
+    // écrit que depuis le Journal (au chargement/retour sur cet onglet) ou
+    // une sauvegarde explicite du profil — un jour où l'utilisateur ouvre
+    // seulement le Tableau de bord/Bilan/Conseils ne laissait donc AUCUNE
+    // trace de l'objectif réellement en vigueur ce jour-là, et le Bilan
+    // retombait alors, à raison, sur l'objectif courant (repli documenté,
+    // non-régressif — pas un calcul faux, un trou dans l'historique).
+    // Un seul appel ici, une fois par lancement d'app, garantit un
+    // instantané du jour quel que soit l'onglet réellement visité.
+    () async {
+      try {
+        await computeAndSaveTargetsFromStoredProfile();
+      } catch (_) {}
+    }();
   }
 
   @override
