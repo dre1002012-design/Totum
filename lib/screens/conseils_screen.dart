@@ -5021,6 +5021,15 @@ class _WellbeingCardState extends State<_WellbeingCard> {
         ),
         const SizedBox(height: 16),
 
+        // Priorité 71 (retour d'Alex : réorganisation de la page Vitalité)
+        // — "Ton analyse du jour" remonte en haut de page, même principe
+        // visuel que _CoachHeroCard de l'onglet Coaching (bandeau dégradé,
+        // même geste de marque partout dans l'app), avec le bouton "Mettre
+        // à jour mes conseils" intégré DANS la vignette plutôt que séparé
+        // plus bas — un seul geste, un seul endroit.
+        _todayAnalysisHero(l10n),
+        const SizedBox(height: 16),
+
         // ── CARTE SOMMEIL (↔ Rituel du soir) ──────────────────────────
         _pillarCard(
           color: _sleepColor,
@@ -5077,81 +5086,159 @@ class _WellbeingCardState extends State<_WellbeingCard> {
         ),
         const SizedBox(height: 14),
 
-        // Conseil personnalisé (si présent) — reflète directement sommeil/stress
-        if (widget.data.chronoAnalyse.isNotEmpty) ...[
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: _cardDeco(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: TotumColors.accentSoft,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(Icons.psychology_alt,
-                          size: 17, color: TotumColors.accent),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(l10n.consTodayAnalysisTitle,
-                          style: const TextStyle(
-                              fontSize: 13.5, fontWeight: FontWeight.w800)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Text(widget.data.chronoAnalyse,
-                    style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        height: 1.4)),
-                if (widget.data.actionLifestyle.isNotEmpty) ...[
-                  const SizedBox(height: 6),
-                  Text(widget.data.actionLifestyle,
-                      style: TextStyle(
-                          fontSize: 13, color: TotumColors.textPrimary, height: 1.45)),
-                ],
-              ],
-            ),
-          ),
-          const SizedBox(height: 14),
-        ],
-
-        // Priorité 69 (retour d'Alex : "on pourrait faire évoluer ... avec
-        // une courbe d'évolution ... sur le sommeil et le niveau de stress")
-        const _WellbeingTrendChart(),
-        const SizedBox(height: 14),
-
-        // Bouton mettre à jour — juste après sommeil/stress, qu'il recalcule
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: TotumColors.accent,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14)),
-            ),
-            onPressed: () {
-              _syncControllers();
-              widget.onSave();
-            },
-            icon: const Icon(Icons.refresh, size: 18),
-            label: Text(l10n.consUpdateMyAdviceButton),
-          ),
-        ),
+        // ── CARTE SOLEIL & VITAMINE D — 3e pilier, juste à la suite de
+        // sommeil/stress désormais (avant : tout en bas de page, isolée).
+        _sunCard(context),
         const SizedBox(height: 20),
 
-        // ── CARTE SOLEIL & VITAMINE D — pilier séparé, page dédiée ─────
-        _sunCard(context),
+        // Priorité 69/71 : évolution sommeil/stress — descendue tout en bas
+        // de la page (avant : entre le conseil du jour et le bouton
+        // "mettre à jour", au milieu des 3 piliers).
+        const _WellbeingTrendChart(),
       ],
+    );
+  }
+
+  /// Priorité 71 — vignette héroïque "Ton analyse du jour", même langage
+  /// visuel que _CoachHeroCard (dégradé accent, coins arrondis, ombre,
+  /// bulle de message translucide) pour que les 2 onglets Coaching/Vitalité
+  /// se sentent comme UNE seule app cohérente plutôt que 2 styles
+  /// différents. Le bouton de mise à jour est un bouton blanc plein
+  /// (jamais l'accent plein habituel, qui disparaîtrait sur ce fond
+  /// dégradé de la même couleur).
+  Widget _todayAnalysisHero(AppLocalizations l10n) {
+    final data = widget.data;
+    final hasAnalysis = data.chronoAnalyse.isNotEmpty;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [TotumColors.accent, TotumProgress.stop75],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: TotumColors.accent.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          // Élément décoratif : cercle lumineux en fond — même détail que
+          // _CoachHeroCard.
+          Positioned(
+            right: -20,
+            top: -20,
+            child: Container(
+              width: 90,
+              height: 90,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.08),
+              ),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 6,
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.psychology_alt,
+                        color: TotumColors.accent, size: 25),
+                  ),
+                  const SizedBox(width: 13),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(l10n.consTodayAnalysisTitle,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900)),
+                        Text(l10n.consTodayAnalysisSubtitle,
+                            style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      hasAnalysis ? data.chronoAnalyse : l10n.consWellbeingIntro,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.5,
+                          height: 1.5,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    if (hasAnalysis && data.actionLifestyle.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        data.actionLifestyle,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13.5,
+                            height: 1.45,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(height: 14),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: TotumColors.accent,
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                  ),
+                  onPressed: () {
+                    _syncControllers();
+                    widget.onSave();
+                  },
+                  icon: const Icon(Icons.refresh, size: 18),
+                  label: Text(l10n.consUpdateMyAdviceButton,
+                      style: const TextStyle(fontWeight: FontWeight.w800)),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

@@ -1398,5 +1398,6 @@
   "consWellbeingTrendTitle": "Trend",
   "consWellbeingTrendSubtitle": "Over the last {days} days",
   "consWellbeingAverage": "Average",
-  "consWellbeingNoDataYet": "Not enough data yet for this period."
+  "consWellbeingNoDataYet": "Not enough data yet for this period.",
+  "consTodayAnalysisSubtitle": "Sleep, stress & vitality"
 }

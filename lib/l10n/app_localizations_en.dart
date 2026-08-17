@@ -4531,4 +4531,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get consWellbeingNoDataYet => 'Not enough data yet for this period.';
+
+  @override
+  String get consTodayAnalysisSubtitle => 'Sleep, stress & vitality';
 }

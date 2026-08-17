@@ -7643,6 +7643,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Pas encore assez de données sur cette période.'**
   String get consWellbeingNoDataYet;
+
+  /// No description provided for @consTodayAnalysisSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sommeil, stress & vitalité'**
+  String get consTodayAnalysisSubtitle;
 }
 
 class _AppLocalizationsDelegate

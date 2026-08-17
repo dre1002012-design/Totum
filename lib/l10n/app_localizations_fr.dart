@@ -4570,4 +4570,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get consWellbeingNoDataYet =>
       'Pas encore assez de données sur cette période.';
+
+  @override
+  String get consTodayAnalysisSubtitle => 'Sommeil, stress & vitalité';
 }

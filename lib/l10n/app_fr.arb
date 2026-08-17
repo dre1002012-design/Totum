@@ -1583,5 +1583,6 @@
   "consWellbeingTrendSubtitle": "Sur les {days} derniers jours",
   "@consWellbeingTrendSubtitle": { "placeholders": { "days": {"type": "int"} } },
   "consWellbeingAverage": "Moyenne",
-  "consWellbeingNoDataYet": "Pas encore assez de données sur cette période."
+  "consWellbeingNoDataYet": "Pas encore assez de données sur cette période.",
+  "consTodayAnalysisSubtitle": "Sommeil, stress & vitalité"
 }
