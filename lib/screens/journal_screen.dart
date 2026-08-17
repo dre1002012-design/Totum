@@ -8,6 +8,7 @@ import '../services/profile.dart'
     show NutritionTargets, Goals, computeAndSaveTargetsFromStoredProfile;
 import '../services/foods_loader.dart' as foods_loader;
 import '../services/app_settings.dart';
+import '../services/pending_food_ops.dart';
 import 'account_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -1318,23 +1319,42 @@ class JournalScreenState extends State<JournalScreen> {
       final user = _client.auth.currentUser;
       if (user != null) {
         final ymd = _ymd(DateTime.now());
-        final inserted = await _client.from('food_entries').insert({
+        final row = {
           'user_id': user.id, 'entry_date': ymd, 'meal_type': meal,
           'food_id': id, 'food_name': name, 'quantity_grams': grams,
           'energy_kcal': kcal, 'protein_g': prot, 'carbs_g': carb,
           'fat_g': fat, 'fiber_g': fiber,
           'micros': micros,
-        }).select('id').single();
+        };
         try {
+          final inserted = await _client
+              .from('food_entries')
+              .insert(row)
+              .select('id')
+              .single();
           final entryId = inserted['id'];
           final list = _journal[meal];
           if (entryId != null && list != null && list.isNotEmpty) {
             list.last['entry_id'] = entryId;
           }
-        } catch (_) {}
+        } catch (e) {
+          // Priorité 66 (fiabilité hors ligne) : plutôt que de perdre
+          // l'ajout, on le met en attente pour un rejeu automatique dès
+          // que la connexion revient (voir PendingFoodOps.flush()), et on
+          // mémorise l'id de la file sur l'entrée locale pour pouvoir
+          // annuler proprement cet ajout si l'utilisateur le supprime ou
+          // le modifie avant qu'il ait pu se synchroniser.
+          debugPrint('Erreur ajout food_entries: $e');
+          final opId = await PendingFoodOps.instance.enqueue('insert', row);
+          final list = _journal[meal];
+          if (list != null && list.isNotEmpty) {
+            list.last['pending_op_id'] = opId;
+          }
+          _notifySyncFailure();
+        }
       }
     } catch (e) {
-      debugPrint('Erreur ajout food_entries: $e');
+      debugPrint('Erreur ajout food_entries (hors essai réseau): $e');
       _notifySyncFailure();
     }
     _recomputeTotals();
@@ -1363,16 +1383,23 @@ class JournalScreenState extends State<JournalScreen> {
     try {
       final user = _client.auth.currentUser;
       if (user != null) {
-        await _client.from('food_entries').insert({
+        final row = {
           'user_id': user.id, 'entry_date': ymd, 'meal_type': meal,
           'food_id': id, 'food_name': name, 'quantity_grams': grams,
           'energy_kcal': kcal, 'protein_g': prot, 'carbs_g': carb,
           'fat_g': fat, 'fiber_g': fiber,
           'micros': micros,
-        });
+        };
+        try {
+          await _client.from('food_entries').insert(row);
+        } catch (e) {
+          debugPrint('Erreur ajout entrée date passée: $e');
+          await PendingFoodOps.instance.enqueue('insert', row);
+          _notifySyncFailure();
+        }
       }
     } catch (e) {
-      debugPrint('Erreur ajout entrée date passée: $e');
+      debugPrint('Erreur ajout entrée date passée (hors essai réseau): $e');
       _notifySyncFailure();
     }
 
@@ -1462,6 +1489,18 @@ class JournalScreenState extends State<JournalScreen> {
       _targets = t;
       _goals = t.goals;
     });
+    // Priorité 66 (fiabilité hors ligne) : à chaque retour sur cet onglet,
+    // on retente les écritures qui avaient échoué (voir PendingFoodOps) —
+    // c'est le déclencheur naturel le plus fréquent pour "la connexion est
+    // probablement revenue". Recharge le jour courant depuis Supabase
+    // uniquement si quelque chose a effectivement été synchronisé, pour
+    // récupérer les vrais entry_id et ne pas faire un aller-retour réseau
+    // inutile sinon.
+    final synced = await PendingFoodOps.instance.flush();
+    if (synced > 0 && mounted) {
+      await _loadJournalForToday();
+      if (mounted) setState(() {});
+    }
   }
 
   Future<void> _openFoodSheet(dynamic it, {String? presetMeal}) async {
@@ -1963,26 +2002,39 @@ class JournalScreenState extends State<JournalScreen> {
 
   Future<void> _removeEntry(String meal, int index,
       Map<String, dynamic> entry, DateTime date) async {
-    try {
-      final user = _client.auth.currentUser;
-      if (user != null) {
-        final ymd = _ymd(date);
-        var query = _client.from('food_entries').delete()
-            .eq('user_id', user.id).eq('entry_date', ymd).eq('meal_type', meal);
-        final dynamic entryId = entry['entry_id'];
-        if (entryId != null) {
-          query = query.eq('id', entryId);
-        } else {
-          // Sécurité : sans entry_id fiable, on ne supprime rien plutôt
-          // que de risquer d'effacer la mauvaise ligne.
-          debugPrint('Suppression annulée : entry_id manquant.');
-          return;
-        }
-        await query;
+    final dynamic entryId = entry['entry_id'];
+    final String? pendingOpId = entry['pending_op_id'] as String?;
+
+    if (entryId == null) {
+      // Priorité 66 (fiabilité hors ligne) : cet aliment a été ajouté hors
+      // ligne et attend toujours sa synchronisation initiale — pas la peine
+      // (et dangereux) d'essayer un DELETE sur un id qui n'existe pas
+      // encore côté serveur. On annule simplement l'ajout en attente pour
+      // qu'il ne "ressuscite" jamais une fois la connexion revenue.
+      if (pendingOpId != null) {
+        await PendingFoodOps.instance.cancel(pendingOpId);
+      } else {
+        // Sécurité : sans entry_id ni opération en attente reconnue, on ne
+        // supprime rien plutôt que de risquer d'effacer la mauvaise ligne.
+        debugPrint('Suppression annulée : entry_id manquant.');
       }
-    } catch (e) {
-      debugPrint('Erreur suppression Supabase: $e');
-      _notifySyncFailure();
+    } else {
+      try {
+        final user = _client.auth.currentUser;
+        if (user != null) {
+          final ymd = _ymd(date);
+          await _client.from('food_entries').delete()
+              .eq('user_id', user.id).eq('entry_date', ymd)
+              .eq('meal_type', meal).eq('id', entryId);
+        }
+      } catch (e) {
+        debugPrint('Erreur suppression Supabase: $e');
+        await PendingFoodOps.instance.enqueue('delete_by_id', {
+          'entry_id': entryId,
+          'user_id': _client.auth.currentUser?.id,
+        });
+        _notifySyncFailure();
+      }
     }
 
     if (_ymd(date) == _ymd(DateTime.now())) {
@@ -2012,11 +2064,15 @@ class JournalScreenState extends State<JournalScreen> {
     Map<String, double>? newMicros =
         _microsSnapshot(_findFoodInAll(foodId), newGrams);
 
-    try {
-      final user = _client.auth.currentUser;
-      if (user != null) {
-        final dynamic entryId = entry['entry_id'];
-        if (entryId != null) {
+    final dynamic entryId = entry['entry_id'];
+    final String? oldPendingOpId = entry['pending_op_id'] as String?;
+    String? newPendingOpId;
+
+    if (entryId != null) {
+      // Aliment déjà synchronisé : on tente la mise à jour normalement.
+      try {
+        final user = _client.auth.currentUser;
+        if (user != null) {
           // Si l'aliment n'existe plus (ex: recette supprimée), on met à
           // l'échelle le snapshot déjà stocké en base pour le préserver.
           if (newMicros == null) {
@@ -2036,17 +2092,48 @@ class JournalScreenState extends State<JournalScreen> {
               }
             } catch (_) {}
           }
-          await _client.from('food_entries').update({
+          final fields = {
             'meal_type': newMeal, 'quantity_grams': newGrams,
             'energy_kcal': newKcal, 'protein_g': newProt,
             'carbs_g': newCarb, 'fat_g': newFat, 'fiber_g': newFiber,
             'micros': newMicros,
-          }).eq('id', entryId).eq('user_id', user.id);
+          };
+          try {
+            await _client.from('food_entries').update(fields)
+                .eq('id', entryId).eq('user_id', user.id);
+          } catch (e) {
+            debugPrint('Erreur modification Supabase: $e');
+            await PendingFoodOps.instance.enqueue('update_by_id', {
+              'entry_id': entryId,
+              'user_id': user.id,
+              'fields': fields,
+            });
+            _notifySyncFailure();
+          }
         }
+      } catch (e) {
+        debugPrint('Erreur modification Supabase (hors essai réseau): $e');
+        _notifySyncFailure();
       }
-    } catch (e) {
-      debugPrint('Erreur modification Supabase: $e');
-      _notifySyncFailure();
+    } else if (oldPendingOpId != null) {
+      // Priorité 66 (fiabilité hors ligne) : cet aliment n'a jamais été
+      // synchronisé (ajout en attente). Éditer la quantité annule l'ancien
+      // ajout en attente et en met un nouveau, corrigé, à sa place —
+      // rejoué comme un ajout normal dès que la connexion revient.
+      await PendingFoodOps.instance.cancel(oldPendingOpId);
+      final user = _client.auth.currentUser;
+      if (user != null) {
+        final row = {
+          'user_id': user.id, 'entry_date': _ymd(date), 'meal_type': newMeal,
+          'food_id': foodId, 'food_name': entry['name'] ?? 'Aliment',
+          'quantity_grams': newGrams,
+          'energy_kcal': newKcal, 'protein_g': newProt, 'carbs_g': newCarb,
+          'fat_g': newFat, 'fiber_g': newFiber,
+          'micros': newMicros,
+        };
+        newPendingOpId = await PendingFoodOps.instance.enqueue('insert', row);
+        _notifySyncFailure();
+      }
     }
 
     if (_ymd(date) == _ymd(DateTime.now())) {
@@ -2055,12 +2142,16 @@ class JournalScreenState extends State<JournalScreen> {
         final idx = oldList.indexWhere((e) => e['entry_id'] == entry['entry_id']);
         if (idx >= 0) oldList.removeAt(idx);
       }
-      _journal[newMeal]!.add({
+      final updatedEntry = {
         ...entry,
         'meal_type': newMeal, 'grams': newGrams,
         'kcal': newKcal, 'prot': newProt, 'carb': newCarb,
         'fat': newFat, 'fiber': newFiber,
-      });
+      };
+      if (newPendingOpId != null) {
+        updatedEntry['pending_op_id'] = newPendingOpId;
+      }
+      _journal[newMeal]!.add(updatedEntry);
       _recomputeTotals();
       await _saveDailySnapshot();
     }
@@ -2073,11 +2164,12 @@ class JournalScreenState extends State<JournalScreen> {
     try {
       final user = _client.auth.currentUser;
       if (user != null) {
+        var anyFailed = false;
         for (final item in items) {
           final fid = (item['id'] ?? '').toString();
           final g = (item['grams'] as num?)?.toDouble() ?? 0.0;
           final micros = _microsSnapshot(_findFoodInAll(fid), g);
-          await _client.from('food_entries').insert({
+          final row = {
             'user_id': user.id, 'entry_date': ymd, 'meal_type': targetMeal,
             'food_id': item['id'] ?? '',
             'food_name': item['name'] ?? 'Aliment',
@@ -2088,11 +2180,19 @@ class JournalScreenState extends State<JournalScreen> {
             'fat_g': item['fat'] ?? 0,
             'fiber_g': item['fiber'] ?? 0,
             'micros': micros,
-          });
+          };
+          try {
+            await _client.from('food_entries').insert(row);
+          } catch (e) {
+            debugPrint('Erreur copie repas Supabase: $e');
+            await PendingFoodOps.instance.enqueue('insert', row);
+            anyFailed = true;
+          }
         }
+        if (anyFailed) _notifySyncFailure();
       }
     } catch (e) {
-      debugPrint('Erreur copie repas Supabase: $e');
+      debugPrint('Erreur copie repas Supabase (hors essai réseau): $e');
       _notifySyncFailure();
     }
 
@@ -2131,16 +2231,36 @@ class JournalScreenState extends State<JournalScreen> {
   }
 
   Future<void> _clearMeal(String meal, DateTime date) async {
+    // Priorité 66 (fiabilité hors ligne) : annule d'abord tout ajout de ce
+    // repas encore en attente de synchronisation (sinon il "ressusciterait"
+    // plus tard dans ce repas qu'on vient pourtant de vider).
+    if (_ymd(date) == _ymd(DateTime.now())) {
+      for (final e in _journal[meal] ?? const <Map<String, dynamic>>[]) {
+        final opId = e['pending_op_id'] as String?;
+        if (opId != null) await PendingFoodOps.instance.cancel(opId);
+      }
+    }
+
     try {
       final user = _client.auth.currentUser;
       if (user != null) {
-        await _client.from('food_entries').delete()
-            .eq('user_id', user.id)
-            .eq('entry_date', _ymd(date))
-            .eq('meal_type', meal);
+        try {
+          await _client.from('food_entries').delete()
+              .eq('user_id', user.id)
+              .eq('entry_date', _ymd(date))
+              .eq('meal_type', meal);
+        } catch (e) {
+          debugPrint('Erreur clear meal: $e');
+          await PendingFoodOps.instance.enqueue('delete_by_criteria', {
+            'user_id': user.id,
+            'entry_date': _ymd(date),
+            'meal_type': meal,
+          });
+          _notifySyncFailure();
+        }
       }
     } catch (e) {
-      debugPrint('Erreur clear meal: $e');
+      debugPrint('Erreur clear meal (hors essai réseau): $e');
       _notifySyncFailure();
     }
 

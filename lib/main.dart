@@ -11,6 +11,7 @@ import 'screens/conseils_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/paywall_screen.dart';
 import 'services/app_settings.dart';
+import 'services/pending_food_ops.dart';
 import 'services/premium_status.dart';
 import 'services/profile.dart' show computeAndSaveTargetsFromStoredProfile;
 import 'theme/totum_style.dart';
@@ -378,6 +379,17 @@ class _RootShellState extends State<_RootShell> {
     () async {
       try {
         await computeAndSaveTargetsFromStoredProfile();
+      } catch (_) {}
+    }();
+
+    // Priorité 66 (fiabilité hors ligne) : retente au lancement les
+    // écritures Journal qui avaient échoué lors de la session précédente
+    // (voir services/pending_food_ops.dart) — l'autre déclencheur, plus
+    // fréquent, est le retour sur l'onglet Journal (JournalScreenState
+    // .refresh()).
+    () async {
+      try {
+        await PendingFoodOps.instance.flush();
       } catch (_) {}
     }();
   }
