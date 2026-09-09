@@ -264,6 +264,25 @@ void main() {
     });
   });
 
+  group(
+      'effectiveEnergyDensityKcalPerKg (exposée publiquement le 19/08/2026 — '
+      'réutilisée par calibration_service.dart pour rester cohérente avec '
+      'le reste du moteur, au lieu d\'une constante 7700 kcal/kg fixe)', () {
+    test('reste bornée entre 7000 (rythme rapide) et 8400 (rythme lent) kcal/kg', () {
+      expect(effectiveEnergyDensityKcalPerKg(0.0), 8400.0);
+      expect(effectiveEnergyDensityKcalPerKg(0.02), 7000.0); // rythme très rapide
+      final mid = effectiveEnergyDensityKcalPerKg(0.006);
+      expect(mid, greaterThan(7000.0));
+      expect(mid, lessThan(8400.0));
+    });
+
+    test('décroît (jamais croissant) quand le rythme de changement de poids augmente', () {
+      final slow = effectiveEnergyDensityKcalPerKg(0.001);
+      final fast = effectiveEnergyDensityKcalPerKg(0.01);
+      expect(fast, lessThan(slow));
+    });
+  });
+
   group('goalRateBwPerWeekFor', () {
     test('lose est toujours négatif, gain toujours positif, maintain nul', () {
       expect(goalRateBwPerWeekFor(GoalType.lose, 30), lessThan(0));
@@ -413,6 +432,46 @@ void main() {
       // c'est la MÊME fonction appelée des deux côtés (voir profile_screen.dart).
       final direct2 = blendCalibratedTargets(p, calib);
       expect(direct.goals.kcal, direct2.goals.kcal);
+    });
+  });
+
+  group(
+      'blendCalibratedTargets — protéines/micronutriments isolés du bruit du '
+      'PAL calibré (régression 19/08/2026, retour d\'Alex : 153g → 115g de '
+      'protéines après une simple fluctuation de poids)', () {
+    test(
+        'un PAL calibré fortement abaissé (ex. rétention d\'eau, TDEE '
+        'empirique bas) ne doit JAMAIS faire baisser les protéines : elles '
+        'restent celles du palier d\'entraînement DÉCLARÉ (Actif), pas '
+        'reconstruites depuis les calories', () {
+      final p = _profile(
+        sex: Sex.male,
+        age: 41,
+        heightCm: 181,
+        weightKg: 72.7,
+        bodyFatPercent: 12.0,
+        activity: ActivityLevel.active,
+        goal: GoalType.maintain,
+      );
+      final formula = computeNutritionTargets(p);
+
+      // TDEE empirique artificiellement bas (cas réel : pic de rétention
+      // d'eau en fin de fenêtre lu à tort comme un vrai gain de poids).
+      const calib = CalibrationResult(
+        hasEnoughData: true,
+        empiricalTdee: 850.0,
+        blendWeight: 0.25,
+        daysOfWeightData: 10,
+        daysOfFoodData: 18,
+      );
+      final blended = blendCalibratedTargets(p, calib);
+
+      // Les calories PEUVENT baisser (c'est le but de la calibration)...
+      expect(blended.goals.kcal, lessThan(formula.goals.kcal));
+      // ...mais les protéines ne doivent JAMAIS suivre ce même mouvement :
+      // le palier "Actif" déclaré reste la seule source pour les protéines,
+      // quel que soit le PAL calibré.
+      expect(blended.goals.prot, closeTo(formula.goals.prot, 0.5));
     });
   });
 

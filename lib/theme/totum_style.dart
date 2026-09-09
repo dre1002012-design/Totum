@@ -32,6 +32,7 @@
 //    de la progression (pas "combien j'ai avancé", mais "dans quel sens").
 //    Ne jamais les utiliser comme accent de section ou de catégorie.
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../services/app_settings.dart';
 
@@ -135,6 +136,52 @@ class TotumRadius {
   static const card = 20.0;
   static const tile = 16.0;
   static const chip = 999.0;
+}
+
+/// Anneau de progression + pourcentage — composant partagé (extrait le
+/// 21/08/2026 de `expenditure_screen.dart` vers ce fichier, demande d'Alex :
+/// "je veux qu'elles aient exactement la même logique de représentation"
+/// entre la vignette Poids et la vignette Dépense énergétique). Même
+/// composant "donut" que le reste de l'app (`PieChart` 2 sections +
+/// `TotumProgress.forFraction`) — aucun nouveau vocabulaire visuel, et plus
+/// aucun risque que les 2 vignettes dérivent visuellement l'une de l'autre
+/// puisqu'elles partagent maintenant EXACTEMENT le même widget.
+class TotumReadinessRing extends StatelessWidget {
+  final double fraction;
+  final bool compact;
+  const TotumReadinessRing({super.key, required this.fraction, this.compact = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final f = fraction.clamp(0.0, 1.0);
+    final size = compact ? 64.0 : 88.0;
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          PieChart(
+            PieChartData(
+              sectionsSpace: 2,
+              centerSpaceRadius: size * 0.32,
+              sections: [
+                PieChartSectionData(
+                    value: f > 0 ? f : 0.0001, color: TotumProgress.forFraction(f), title: '', radius: size * 0.15),
+                PieChartSectionData(
+                    value: (1 - f) > 0 ? (1 - f) : 0.0001, color: TotumColors.outline, title: '', radius: size * 0.15),
+              ],
+            ),
+          ),
+          Text('${(f * 100).round()}%',
+              style: TextStyle(
+                  fontSize: compact ? 14 : 18,
+                  fontWeight: FontWeight.w900,
+                  color: TotumColors.textPrimary)),
+        ],
+      ),
+    );
+  }
 }
 
 /// Carte neutre à contour fin — le composant de base de tout l'onglet

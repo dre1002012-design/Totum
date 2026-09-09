@@ -52,3 +52,8 @@ scripts/usda_raw/
 # Cache local Firebase CLI (régénéré à chaque déploiement, pas du code).
 .firebase/
 flutter_log.txt
+
+# Captures d'écran / exports de vérification — contiennent des données
+# personnelles réelles d'utilisateurs (ex. food_entries_rows*.csv, export
+# brut du journal alimentaire), jamais dans l'historique git.
+verification/

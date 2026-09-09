@@ -2,7 +2,7 @@ name: totum_app
 description: Application Totum – Suivi nutrition et bien-être
 publish_to: 'none'
 
-version: 1.2.2+43
+version: 1.2.8+49
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -53,8 +53,18 @@ dev_dependencies:
 
 flutter_launcher_icons:
   android: true
-  ios: false
-  image_path: "assets/Logo_vierge.jpg"
+  # Activé le 30/08/2026 (retour d'Alex — "tout doit être prêt pour l'App
+  # Store si on développe sur iOS demain") : jusqu'ici seul l'icône Android
+  # était régénérée par cet outil ; le jeu d'icônes iOS
+  # (ios/Runner/Assets.xcassets/AppIcon.appiconset) avait été déposé
+  # manuellement une fois et n'était plus connecté à aucun pipeline — une
+  # future mise à jour du logo l'aurait laissé périmé sans qu'on s'en
+  # aperçoive. `remove_alpha_ios` : Apple REJETTE tout icône 1024×1024 avec
+  # canal alpha (exigence App Store) — filet de sécurité même si la source
+  # est déjà opaque.
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/app_icon_source.png"
   min_sdk_android: 26
 
 flutter:
@@ -66,6 +76,7 @@ flutter:
     - assets/usda_portions.csv
     - assets/logo.png
     - assets/logo_wordmark.png
+    - assets/logo_wordmark_dark.png
     - assets/icons/google.png
     - assets/icons/apple.png
     - assets/icons/apple_white.png

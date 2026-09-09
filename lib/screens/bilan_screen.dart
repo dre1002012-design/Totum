@@ -1100,12 +1100,24 @@ Future<BilanData> _computeBilanForSpan(ReportSpan span,
     try {
       final user = _client.auth.currentUser;
       if (user != null) {
+        // BUG CORRIGÉ (21/08/2026, même cause que calibration_service.dart
+        // ce jour-là) : sans `.order()`/`.limit()` explicite, un utilisateur
+        // qui logue chaque aliment séparément (20-30 lignes food_entries/jour
+        // d'après un export SQL réel d'Alex) peut dépasser le plafond de
+        // lignes par défaut de PostgREST/Supabase sur une période de 30-90
+        // jours (jusqu'à ~2700 lignes) — les lignes conservées après
+        // troncature n'étant alors pas garanties être les plus récentes,
+        // faussant silencieusement les moyennes du Bilan pour les gros
+        // utilisateurs. `.order(DESC)` garantit qu'une éventuelle troncature
+        // conserve les jours les plus récents en priorité.
         final List<Map<String, dynamic>> allRows = await _client
             .from('food_entries')
             .select()
             .eq('user_id', user.id)
             .gte('entry_date', _dateKey(from))
-            .lte('entry_date', _dateKey(to));
+            .lte('entry_date', _dateKey(to))
+            .order('entry_date', ascending: false)
+            .limit(10000);
 
         for (final row in allRows) {
           final date = (row['entry_date'] as String?) ?? '';
@@ -2080,12 +2092,18 @@ Future<List<_FoodContribution>> _contributorsForRange(
   try {
     final user = _client.auth.currentUser;
     if (user != null) {
+      // Même correctif que le bulk fetch ci-dessus (21/08/2026) : `.order()`
+      // + `.limit()` garantissent qu'une éventuelle troncature côté serveur
+      // conserve les jours les plus récents plutôt qu'un sous-ensemble
+      // arbitraire.
       final List<Map<String, dynamic>> rows = await _client
           .from('food_entries')
           .select()
           .eq('user_id', user.id)
           .gte('entry_date', ymd(from))
-          .lte('entry_date', ymd(to));
+          .lte('entry_date', ymd(to))
+          .order('entry_date', ascending: false)
+          .limit(10000);
       for (final r in rows) {
         final id = (r['food_id'] ?? '').toString();
         final name = (r['food_name'] ?? l10n.bilanUnnamedFood).toString();
@@ -4799,7 +4817,15 @@ class _MacroOverview extends StatelessWidget {
                         final t         = m.target ?? 0.0;
                         final remaining = (t - m.value).clamp(0.0, double.infinity);
                         final excess    = (m.value - t).clamp(0.0, double.infinity);
-                        final overshot  = t > 0 && m.value > t;
+                        // BUG CORRIGÉ (19/08/2026, retour d'Alex — pile à sa
+                        // cible marqué "dépassé" à tort) : compare les
+                        // valeurs ARRONDIES à la précision réellement
+                        // affichée (`m.decimals`), pas les doubles bruts
+                        // (sensibles au bruit de calcul en virgule
+                        // flottante) — même correctif que journal_screen.dart.
+                        final overshot  = t > 0 &&
+                            double.parse(m.value.toStringAsFixed(m.decimals)) >
+                                double.parse(t.toStringAsFixed(m.decimals));
                         return Text(
                           overshot
                               ? l10n.bilanMacroProgressOvershot(

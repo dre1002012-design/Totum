@@ -5,7 +5,8 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/profile.dart'
-    show NutritionTargets, Goals, computeAndSaveTargetsFromStoredProfile;
+    show NutritionTargets, Goals, computeAndSaveTargetsFromStoredProfile,
+        readGoalsSnapshotForDate;
 import '../services/foods_loader.dart' as foods_loader;
 import '../services/app_settings.dart';
 import '../services/pending_food_ops.dart';
@@ -18,6 +19,7 @@ import '../theme/totum_style.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/l10n_ext.dart';
 import '../services/nutrient_labels.dart';
+import '../widgets/word_safe_text.dart';
 
 SupabaseClient get _supabaseClient => Supabase.instance.client;
 
@@ -802,6 +804,26 @@ class JournalScreenState extends State<JournalScreen> {
   NutritionTargets? _targets;
 
   static List<dynamic>? _cacheAll;
+  static DateTime? _cacheAllAt;
+  // Bug corrigé (20/08/2026, retour d'Alex — "l'aliment scanné... des fois
+  // il y a de la latence, des fois l'image n'apparaît pas, c'est aléatoire") :
+  // ce cache est `static`, donc partagé par TOUTE la session (toutes les
+  // instances de cet écran, tous les onglets qui listent des aliments). Un
+  // scan réussi rafraîchit bien ce cache immédiatement dans l'écran qui a
+  // fait le scan (`force: true` juste après upsert), mais toute photo
+  // ajoutée/mise à jour par un autre chemin — l'autre moitié de la logique
+  // retry de `_upsertCustomFood` (upsert "avec photo" échoué → nouvelle
+  // tentative "sans photo", donc la ligne existe un temps sans image_url
+  // avant une resynchro ultérieure), un autre appareil, une réinstallation
+  // partielle — restait invisible pour TOUT LE RESTE de la session, sur
+  // TOUS les écrans, tant que le process n'était pas totalement redémarré.
+  // Exactement le symptôme décrit : "parfois oui, parfois non", selon que le
+  // cache avait déjà été rempli avant ou après la mise à jour réelle côté
+  // Supabase. TTL courte (même principe que le cache 5s de
+  // CalibrationService._historyCacheTtl) : le cache se répare tout seul en
+  // arrière-plan au bout de quelques minutes, sans pour autant refaire un
+  // aller-retour Supabase à chaque changement d'onglet.
+  static const _cacheAllTtl = Duration(minutes: 2);
   List<dynamic> _all = <dynamic>[];
   String _query = '';
   _SortMode _sortMode = _SortMode.frequent;
@@ -993,7 +1015,10 @@ class JournalScreenState extends State<JournalScreen> {
   }
 
   Future<void> _ensureFoodsLoaded({bool force = false}) async {
-    if (!force && _cacheAll != null) {
+    final cacheAt = _cacheAllAt;
+    final cacheFresh =
+        cacheAt != null && DateTime.now().difference(cacheAt) < _cacheAllTtl;
+    if (!force && _cacheAll != null && cacheFresh) {
       setState(() => _all = _cacheAll!);
       return;
     }
@@ -1057,6 +1082,7 @@ class JournalScreenState extends State<JournalScreen> {
       ..._recipes.list.map((r) => r.toFoodItem()),
     ];
     _cacheAll = list;
+    _cacheAllAt = DateTime.now();
     setState(() => _all = list);
   }
 
@@ -1692,7 +1718,14 @@ class JournalScreenState extends State<JournalScreen> {
                             displayNameOf(it, ((it as dynamic).name as String?) ?? ctx.l10n.jrnlGenericFoodFallback),
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w700),
-                            overflow: TextOverflow.ellipsis,
+                            // BUG CORRIGÉ (19/08/2026, retour d'Alex — "on ouvre
+                            // la fiche et on n'a pas le détail, on ne sait pas à
+                            // quoi correspond l'aliment") : la troncature "..."
+                            // est un compromis légitime dans la LISTE de
+                            // recherche (hauteur de ligne prévisible), mais sur
+                            // la fiche détail elle-même, rien ne justifie de
+                            // cacher une partie du nom — plusieurs lignes sont
+                            // possibles ici, contrairement à une ligne de liste.
                           ),
                         ),
                         IconButton(
@@ -3526,8 +3559,7 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
             ),
             child: Text(pictogram ?? '🍽️', style: const TextStyle(fontSize: 19)),
           ),
-          title: Text(displayName,
-              maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 14, height: 1.25)),
+          title: WordSafeText(displayName, maxLines: 2, style: const TextStyle(fontSize: 14, height: 1.25)),
           subtitle: Row(
             children: [
               Flexible(child: Text(_kcalLabel(food.kcal100),
@@ -3587,10 +3619,29 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
   // `_ingSearchCtrl`), seule la mise à jour des RÉSULTATS est différée.
   Timer? _searchDebounce;
 
+  // Retour d'Alex (21/08/2026) : "quand on ajoute des aliments, qu'il
+  // calcule automatiquement le poids total... mais qu'on peut modifier
+  // nous bien évidemment" — le poids total suit automatiquement la somme
+  // des ingrédients TANT QUE l'utilisateur n'a jamais tapé lui-même dans ce
+  // champ. Dès qu'il édite le poids à la main (ex. pour refléter la perte
+  // d'eau à la cuisson), l'auto-calcul s'arrête pour de bon sur cette
+  // recette — jamais d'écrasement silencieux d'une valeur intentionnelle.
+  // Pour une recette déjà existante (édition), le poids enregistré est déjà
+  // une valeur potentiellement affinée par l'utilisateur : on démarre donc
+  // directement en mode "manuel", l'auto-calcul ne reprend que si les
+  // ingrédients sont modifiés à partir de maintenant.
+  late bool _weightManuallyEdited = widget.isEdit;
+
   @override
   void initState() {
     super.initState();
     _ingredients = List.from(widget.ingredients);
+  }
+
+  void _autoSyncWeightIfNeeded() {
+    if (_weightManuallyEdited) return;
+    final sum = _ingredients.fold<double>(0, (a, ing) => a + ing.grams);
+    widget.weightCtl.text = sum > 0 ? sum.toStringAsFixed(0) : '100';
   }
 
   @override
@@ -3800,7 +3851,10 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
               helperText: l10n.jrnlMacrosCalculatedFor100g,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            onChanged: (_) => setState(() {}),
+            // Dès que l'utilisateur tape ici lui-même, l'auto-calcul depuis
+            // les ingrédients s'arrête pour de bon sur cette recette (voir
+            // `_weightManuallyEdited`).
+            onChanged: (_) => setState(() => _weightManuallyEdited = true),
           ),
           const SizedBox(height: 16),
 
@@ -3932,6 +3986,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                                       foodId: fid, foodName: fname, grams: g));
                                   _ingSearchCtrl.clear();
                                   _ingQuery = '';
+                                  _autoSyncWeightIfNeeded();
                                 });
                                 Navigator.pop(ctx);
                               },
@@ -4003,6 +4058,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                                           foodId: ing.foodId,
                                           foodName: ing.foodName,
                                           grams: g);
+                                      _autoSyncWeightIfNeeded();
                                     });
                                     Navigator.pop(ctx);
                                   },
@@ -4016,7 +4072,10 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                       IconButton(
                         icon: Icon(Icons.delete_outline, size: 18, color: TotumColors.textSecondary),
                         tooltip: l10n.jrnlRemoveTooltip,
-                        onPressed: () => setState(() => _ingredients.removeAt(i)),
+                        onPressed: () => setState(() {
+                          _ingredients.removeAt(i);
+                          _autoSyncWeightIfNeeded();
+                        }),
                       ),
                     ],
                   ),
@@ -5307,6 +5366,18 @@ class _DayJournalViewState extends State<_DayJournalView> {
   bool _loadingDate = false;
   final ScrollController _scrollController = ScrollController();
 
+  // Priorité 71bis — objectifs RÉELLEMENT en vigueur le jour consulté
+  // (`_currentDate`), distincts des objectifs courants (`widget.goals`/
+  // `widget.nutritionTargets`) dès qu'on navigue sur un jour passé via les
+  // flèches précédent/suivant. `null` tant que non chargé ou si aucun
+  // instantané n'existe pour cette date — dans ce cas [_effectiveTargets]
+  // se rabat sur les objectifs courants (comportement historique inchangé).
+  NutritionTargets? _targetsForDate;
+
+  NutritionTargets? get _effectiveTargets =>
+      _isToday ? widget.nutritionTargets : (_targetsForDate ?? widget.nutritionTargets);
+  Goals get _effectiveGoals => _effectiveTargets?.goals ?? widget.goals;
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -5331,9 +5402,24 @@ class _DayJournalViewState extends State<_DayJournalView> {
 
   Future<void> _fetchDate(DateTime date, {bool showSpinner = true}) async {
     if (showSpinner) setState(() => _loadingDate = true);
-    final data = await widget.loadJournalForDate(date);
+    final isToday = _ymd(date) == _ymd(DateTime.now());
+    final results = await Future.wait<dynamic>([
+      widget.loadJournalForDate(date),
+      // Aujourd'hui utilise toujours les objectifs courants (déjà à jour,
+      // et un instantané du jour même n'est écrit qu'après une sauvegarde
+      // de profil) — inutile d'aller chercher un instantané pour ce cas.
+      isToday
+          ? Future<NutritionTargets?>.value(null)
+          : readGoalsSnapshotForDate(date),
+    ]);
     if (!mounted) return;
-    setState(() { _journal = data; _loadingDate = false; });
+    final data = results[0] as Map<String, List<Map<String, dynamic>>>;
+    final snapshot = results[1] as NutritionTargets?;
+    setState(() {
+      _journal = data;
+      _targetsForDate = snapshot;
+      _loadingDate = false;
+    });
     _recomputeTotals();
   }
 
@@ -5638,10 +5724,8 @@ class _DayJournalViewState extends State<_DayJournalView> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
-                                      child: Text(displayName,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(fontSize: 14, height: 1.25)),
+                                      child: WordSafeText(displayName,
+                                          maxLines: 2, style: const TextStyle(fontSize: 14, height: 1.25)),
                                     ),
                                     if (isPerso) ...[
                                       const SizedBox(width: 6),
@@ -5762,9 +5846,10 @@ class _DayJournalViewState extends State<_DayJournalView> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDlg) => AlertDialog(
+          // BUG CORRIGÉ (19/08/2026) — même correctif que les fiches détail :
+          // pas de troncature du nom sur ce dialogue non plus.
           title: Text(displayNameOf(entryFood, (entry['name'] ?? ctx.l10n.jrnlGenericFoodFallback).toString()),
-              style: const TextStyle(fontSize: 16),
-              overflow: TextOverflow.ellipsis),
+              style: const TextStyle(fontSize: 16)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -5958,7 +6043,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
 
   // ── Fiche aliment depuis le journal ────────────────────────────────────────
   Future<void> _openEntrySheet(Map<String, dynamic> entry) async {
-    final T = widget.nutritionTargets;
+    final T = _effectiveTargets;
     if (T == null) return;
 
     final foodId = (entry['id'] ?? '').toString();
@@ -6059,7 +6144,9 @@ class _DayJournalViewState extends State<_DayJournalView> {
                       displayNameOf(food,
                           (entry['name'] ?? ctx.l10n.jrnlUnknownFoodFallback).toString()),
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                      overflow: TextOverflow.ellipsis,
+                      // BUG CORRIGÉ (19/08/2026) — même correctif que la fiche
+                      // "ajouter au journal" : pas de troncature sur la fiche
+                      // détail elle-même, contrairement à la ligne de liste.
                     ),
                   ),
                   Text('$grams g',
@@ -6161,7 +6248,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final goals = widget.goals;
+    final goals = _effectiveGoals;
     final double gKcal = goals.kcal <= 0 ? 2000.0 : goals.kcal;
     final weekdays = [
       l10n.jrnlWeekdayMon, l10n.jrnlWeekdayTue, l10n.jrnlWeekdayWed, l10n.jrnlWeekdayThu,
@@ -6265,9 +6352,9 @@ class _DayJournalViewState extends State<_DayJournalView> {
                           ? () => widget.onScanForMeal!(meal)
                           : null,
                       onClearAll: () => _handleClearMeal(meal),
-                      nutritionTargets: widget.nutritionTargets,
+                      nutritionTargets: _effectiveTargets,
                       allFoods: widget.allFoods,
-                      onTapItem: widget.nutritionTargets != null
+                      onTapItem: _effectiveTargets != null
                           ? (entry) => _openEntrySheet(entry)
                           : null,
                     ),
@@ -6417,7 +6504,17 @@ class _MacroBarRow extends StatelessWidget {
     final color = TotumProgress.forFraction(pct > 1 ? 1.0 : pct);
     final remaining = (item.target - item.value).clamp(0.0, double.infinity);
     final excess    = (item.value - item.target).clamp(0.0, double.infinity);
-    final overshot  = item.value > item.target;
+    // BUG CORRIGÉ (19/08/2026, retour d'Alex — "j'étais pile poil à ma
+    // cible protéines et c'est quand même passé en rouge 'dépassé de 0g'")
+    // : comparaison sur les valeurs BRUTES (double), sensible au bruit de
+    // calcul en virgule flottante — un utilisateur exactement à sa cible
+    // peut se retrouver avec `item.value` infinitésimalement supérieur à
+    // `item.target` (ex. 115.00000000001 vs 115.0) et donc marqué "dépassé"
+    // à tort. Compare désormais les valeurs ARRONDIES — exactement ce que
+    // l'utilisateur voit affiché juste en dessous
+    // (`toStringAsFixed(0)`) — jamais "dépassé" tant que les 2 nombres
+    // affichés sont identiques.
+    final overshot  = item.value.round() > item.target.round();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -6889,6 +6986,19 @@ class _MealSectionState extends State<_MealSection> {
                     children: [
                       for (int i = 0; i < widget.items.length; i++) ...[
                         _MealRow(
+                          // BUG CORRIGÉ (31/08/2026, retour d'Alex — après
+                          // suppression d'une ligne, la suivante restait
+                          // "en cours de suppression"/sélectionnée, forçant
+                          // à cliquer "Annuler") : sans Key, Flutter recycle
+                          // l'État (dont `_pendingDelete`) par POSITION dans
+                          // la liste, jamais par entrée réelle — supprimer
+                          // la ligne N fait hériter la ligne qui prend sa
+                          // place de l'état de suppression de l'ancienne
+                          // ligne N. `ObjectKey` (identité de l'objet Map de
+                          // l'entrée, stable tant qu'elle n'est pas
+                          // supprimée) force Flutter à créer/détruire un
+                          // État par entrée réelle, jamais par position.
+                          key: ObjectKey(widget.items[i]),
                           item: widget.items[i],
                           allFoods: widget.allFoods,
                           onRemove: () => widget.onRemove(i),
@@ -6932,6 +7042,7 @@ class _MealRow extends StatefulWidget {
   final VoidCallback? onTapItem;
 
   const _MealRow({
+    super.key,
     required this.item,
     this.allFoods = const [],
     required this.onRemove,
@@ -7490,28 +7601,67 @@ class _FoodListView extends StatelessWidget {
               decoration: BoxDecoration(color: TotumColors.accentSoft, borderRadius: BorderRadius.circular(10)),
               child: const Icon(Icons.bookmark, color: TotumColors.accent, size: 20),
             ),
-            title: Text(meal.name, style: TextStyle(color: TotumColors.textPrimary)),
+            // BUG CRITIQUE CORRIGÉ (21/08/2026, retour d'Alex — "lettres en
+            // vertical, ligne 10x trop haute") : ce `Text` n'avait AUCUNE
+            // limite de lignes, contrairement au même champ côté recettes
+            // (qui a `maxLines: 2`) — avec 4 boutons dans `trailing` (édition,
+            // suppression, favori, ajout rapide ; ~190px à eux seuls sur un
+            // écran de ~360-400px) plus le badge de type ajouté dans ce même
+            // Row, la largeur restante pour le nom pouvait devenir quasi
+            // nulle : Flutter revient alors à la ligne à CHAQUE caractère
+            // plutôt que de tronquer, d'où la ligne géante. `maxLines: 1` +
+            // `overflow: ellipsis` rend ce cas impossible quelle que soit la
+            // largeur disponible — et `trailing` est simplifié en même temps
+            // (édition/suppression regroupées dans un menu, favori + ajout
+            // rapide gardés visibles) pour libérer de la place de façon
+            // durable, pas juste contenir le symptôme.
+            // Retour d'Alex (21/08/2026, revient sur la 1re passe) : "on
+            // enlève la petite mention à côté... on reste comme avant" — la
+            // distinction se fait désormais uniquement via les 3 vignettes
+            // du sélecteur en haut (voir `_PersoFilterCard`), pas un badge
+            // par ligne. `maxLines`/`overflow` restent (garde-fou contre le
+            // bug des lettres verticales, sans rapport avec le badge retiré).
+            title: Text(meal.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: TotumColors.textPrimary)),
             subtitle: Text(
                 meal.description.trim().isNotEmpty
                     ? meal.description
                     : context.l10n.jrnlItemsAndKcal(meal.items.length, meal.totalKcal.toStringAsFixed(0)),
-                maxLines: meal.description.trim().isNotEmpty ? 1 : null,
-                overflow: meal.description.trim().isNotEmpty ? TextOverflow.ellipsis : null,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: TotumColors.textSecondary)),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (onEditMeal != null)
-                  IconButton(
-                    tooltip: context.l10n.sunModifyButton,
-                    icon: Icon(Icons.edit_outlined, color: TotumColors.textSecondary),
-                    onPressed: () => onEditMeal!(meal),
-                  ),
-                if (onDeleteMeal != null)
-                  IconButton(
-                    tooltip: context.l10n.commonDelete,
-                    icon: Icon(Icons.delete_outline, color: TotumColors.textSecondary),
-                    onPressed: () => onDeleteMeal!(meal.id),
+                if (onEditMeal != null || onDeleteMeal != null)
+                  PopupMenuButton<String>(
+                    icon: Icon(Icons.more_vert, color: TotumColors.textSecondary),
+                    onSelected: (v) {
+                      if (v == 'edit') onEditMeal?.call(meal);
+                      if (v == 'delete') onDeleteMeal?.call(meal.id);
+                    },
+                    itemBuilder: (ctx) => [
+                      if (onEditMeal != null)
+                        PopupMenuItem(
+                          value: 'edit',
+                          child: Row(children: [
+                            const Icon(Icons.edit_outlined, size: 18),
+                            const SizedBox(width: 10),
+                            Text(ctx.l10n.sunModifyButton),
+                          ]),
+                        ),
+                      if (onDeleteMeal != null)
+                        PopupMenuItem(
+                          value: 'delete',
+                          child: Row(children: [
+                            Icon(Icons.delete_outline, size: 18, color: TotumColors.negative),
+                            const SizedBox(width: 10),
+                            Text(ctx.l10n.commonDelete, style: TextStyle(color: TotumColors.negative)),
+                          ]),
+                        ),
+                    ],
                   ),
                 IconButton(
                   tooltip: fav ? context.l10n.jrnlRemoveFavorite : context.l10n.jrnlAddFavorite,
@@ -7547,38 +7697,53 @@ class _FoodListView extends StatelessWidget {
               // ── Sélecteur compact : Aliments perso / Recettes ────────
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _PersoFilterCard(
-                        icon: Icons.restaurant_menu,
-                        label: context.l10n.jrnlFilterPersonalFoods,
-                        count: persoCount,
-                        selected: persoFilter == 0,
-                        onTap: () => onPersoFilterChanged!(0),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _PersoFilterCard(
-                        icon: Icons.menu_book_outlined,
-                        label: context.l10n.jrnlFilterRecipes,
-                        count: recipeCount,
-                        selected: persoFilter == 1,
-                        onTap: () => onPersoFilterChanged!(1),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _PersoFilterCard(
-                        icon: Icons.bookmark_outline,
-                        label: context.l10n.jrnlFilterMeals,
-                        count: mealItems.length,
-                        selected: persoFilter == 2,
-                        onTap: () => onPersoFilterChanged!(2),
-                      ),
-                    ),
-                  ],
+                // Retour d'Alex (21/08/2026) : "quand on clique sur une
+                // vignette, elle s'agrandit légèrement pour écrire le mot en
+                // entier, les autres se rétrécissent" — remplace le partage
+                // à parts égales (`Expanded`, flex non-animable) par des
+                // largeurs explicites en pixels (mesurées via LayoutBuilder),
+                // animées : Flutter ne peut pas animer un `flex` entier en
+                // douceur (pas de valeurs intermédiaires), mais anime très
+                // bien une largeur en pixels.
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    const gap = 8.0;
+                    final available = constraints.maxWidth - gap * 2;
+                    // La sélectionnée prend ~44% de la largeur disponible
+                    // (assez pour "Aliments"/"Recettes"/"Repas" en entier +
+                    // le compteur), les 2 autres se partagent le reste à
+                    // parts égales.
+                    double widthFor(int index) {
+                      final selectedWidth = available * 0.44;
+                      if (persoFilter == index) return selectedWidth;
+                      return (available - selectedWidth) / 2;
+                    }
+
+                    Widget animatedCard(int index, IconData icon, String label, int count) {
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 220),
+                        curve: Curves.easeOutCubic,
+                        width: widthFor(index),
+                        child: _PersoFilterCard(
+                          icon: icon,
+                          label: label,
+                          count: count,
+                          selected: persoFilter == index,
+                          onTap: () => onPersoFilterChanged!(index),
+                        ),
+                      );
+                    }
+
+                    return Row(
+                      children: [
+                        animatedCard(0, Icons.restaurant_menu, context.l10n.jrnlFilterPersonalFoods, persoCount),
+                        const SizedBox(width: gap),
+                        animatedCard(1, Icons.menu_book_outlined, context.l10n.jrnlFilterRecipes, recipeCount),
+                        const SizedBox(width: gap),
+                        animatedCard(2, Icons.bookmark_outline, context.l10n.jrnlFilterMeals, mealItems.length),
+                      ],
+                    );
+                  },
                 ),
               ),
             if (showCreateButton && persoFilter == 1 && onOnlyLibraryChanged != null)
@@ -7779,13 +7944,28 @@ class _FoodListView extends StatelessWidget {
                       // "USDA" discrète sur la ligne (en plus du globe déjà
                       // présent en tête) — un utilisateur ne devine pas
                       // forcément ce que représente une icône seule.
+                      // Retour d'Alex (21/08/2026) : "dissocier les aliments
+                      // des recettes et des repas... qu'on comprenne tout de
+                      // suite en une seule vision, sans devoir cliquer" —
+                      // l'icône (menu_book) distinguait déjà une recette,
+                      // mais pas assez explicitement pour une lecture rapide.
+                      // Réutilise `_foodTag`, déjà conçu pour ça (voir son
+                      // commentaire "USDA, Perso, Recette") mais jamais
+                      // appliqué au cas Recette jusqu'ici.
+                      // Retour d'Alex (21/08/2026, revient sur la 1re
+                      // passe) : "on enlève la petite mention à côté... on
+                      // reste comme avant" — la distinction Aliments/
+                      // Recettes/Repas se fait désormais uniquement via les
+                      // 3 vignettes du sélecteur en haut (voir
+                      // `_PersoFilterCard`, qui s'agrandit au tap), pas via
+                      // un badge sur chaque ligne. Le badge "USDA" est
+                      // conservé (pré-existant, jamais remis en cause).
                       title: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: Text(displayName,
+                            child: WordSafeText(displayName,
                                 maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 14, color: TotumColors.textPrimary, fontWeight: FontWeight.w600, height: 1.25)),
                           ),

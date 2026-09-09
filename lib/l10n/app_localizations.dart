@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Sauvegarde ton profil à quelques jours d\'écart pour voir ta courbe apparaître ici.'**
   String get weightTrendEmptyState;
 
+  /// No description provided for @weightTrendDaysRemaining.
+  ///
+  /// In fr, this message translates to:
+  /// **'{days, plural, one{Encore 1 jour de pesée avant ta courbe} other{Encore {days} jours de pesée avant ta courbe}}'**
+  String weightTrendDaysRemaining(int days);
+
   /// No description provided for @weightTrendRangeYear.
   ///
   /// In fr, this message translates to:
@@ -185,13 +191,13 @@ abstract class AppLocalizations {
   /// No description provided for @expenditureSpanBetweenWeighIns.
   ///
   /// In fr, this message translates to:
-  /// **'Écart entre 2 pesées'**
+  /// **'Jours pesés (20 derniers jours)'**
   String get expenditureSpanBetweenWeighIns;
 
   /// No description provided for @expenditureSpanBetweenWeighInsCompact.
   ///
   /// In fr, this message translates to:
-  /// **'Écart pesées'**
+  /// **'Jours pesés'**
   String get expenditureSpanBetweenWeighInsCompact;
 
   /// No description provided for @expenditureMealsLogged.
@@ -211,6 +217,84 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Continue à te peser et à noter tes repas régulièrement — ta dépense apparaîtra automatiquement dès ces deux seuils atteints.'**
   String get expenditureContinueHint;
+
+  /// No description provided for @expenditureDaysRemaining.
+  ///
+  /// In fr, this message translates to:
+  /// **'{days, plural, one{Encore 1 jour de suivi avant ta 1ère estimation} other{Encore {days} jours de suivi avant ta 1ère estimation}}'**
+  String expenditureDaysRemaining(int days);
+
+  /// No description provided for @expenditureAlmostReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Presque prêt — ta 1ère estimation arrive dans les prochains jours'**
+  String get expenditureAlmostReady;
+
+  /// No description provided for @expenditureGoalReadyChartPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton objectif calorique est déjà affiné avec tes résultats réels — le graphique d\'évolution, lui, a besoin d\'encore 1 jour de suivi pour tracer sa première ligne'**
+  String get expenditureGoalReadyChartPending;
+
+  /// No description provided for @expenditureTapForDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touche pour voir le détail'**
+  String get expenditureTapForDetail;
+
+  /// No description provided for @expenditureDetailTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avant ta 1ère estimation'**
+  String get expenditureDetailTitle;
+
+  /// No description provided for @expenditureDetailLead.
+  ///
+  /// In fr, this message translates to:
+  /// **'2 éléments à renseigner régulièrement pour débloquer ton estimation réelle.'**
+  String get expenditureDetailLead;
+
+  /// No description provided for @expenditureFoodAdviceText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note tous tes repas, du petit-déjeuner au dîner, chaque jour — même un jour atypique compte, sauf si tu déclares une pause.'**
+  String get expenditureFoodAdviceText;
+
+  /// No description provided for @expenditureDetailTip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus tu es régulier, plus l\'estimation se resserre — la marge d\'incertitude diminue avec le volume de données, jamais l\'inverse.'**
+  String get expenditureDetailTip;
+
+  /// No description provided for @expenditureDetailWhy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pourquoi ce chiffre ?'**
+  String get expenditureDetailWhy;
+
+  /// No description provided for @expenditureDetailWeightChange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Variation de poids (tendance)'**
+  String get expenditureDetailWeightChange;
+
+  /// No description provided for @expenditureDetailAvgLogged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calories loguées en moyenne'**
+  String get expenditureDetailAvgLogged;
+
+  /// No description provided for @expenditureDetailCoverage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jours de journal couverts'**
+  String get expenditureDetailCoverage;
+
+  /// No description provided for @expenditureDetailUncertainty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marge d\'incertitude'**
+  String get expenditureDetailUncertainty;
 
   /// No description provided for @expenditureEstimatedLegend.
   ///
@@ -235,6 +319,204 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Évolution récente'**
   String get expenditureRecentEvolution;
+
+  /// No description provided for @expenditureInfoTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Qu\'est-ce que ce chiffre ?'**
+  String get expenditureInfoTooltip;
+
+  /// No description provided for @expenditureInfoTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépense énergétique estimée'**
+  String get expenditureInfoTitle;
+
+  /// No description provided for @expenditureInfoWhatItIs.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce chiffre est une MOYENNE réelle sur ~20 jours : à partir de l\'évolution de ton poids et des calories que tu as réellement loguées sur cette période, TOTUM déduit les calories qu\'il t\'a vraiment fallu manger pour aboutir à ce résultat. C\'est le même principe que la calibration adaptative qui affine ton objectif calorique — mais affiché ici jour par jour, comme une courbe de tendance.'**
+  String get expenditureInfoWhatItIs;
+
+  /// No description provided for @expenditureInfoVsToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce n\'est PAS le même chiffre que « Métabolisme de base » + « Mouvement » affichés sur le tableau de bord : ceux-là sont un calcul par formule pour LA JOURNÉE EN COURS (âge, poids, activité déclarée + ton activité physique du jour). Le chiffre ici est une moyenne empirique glissante sur plusieurs semaines — les deux peuvent légitimement diverger, surtout si ton journal alimentaire n\'est pas rempli tous les jours.'**
+  String get expenditureInfoVsToday;
+
+  /// No description provided for @expenditureInfoCoverageWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Attention aux fenêtres peu couvertes (moins de la moitié des jours renseignés) : un jour partiellement loggé (un repas oublié, une sauce ou une boisson non notée) fait paraître ton apport plus bas qu\'il ne l\'était vraiment, ce qui tire cette estimation vers le bas. Plus tu logues régulièrement, plus ce chiffre devient fiable.'**
+  String get expenditureInfoCoverageWarning;
+
+  /// No description provided for @expenditureInfoAutoRefresh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune action de ta part n\'est nécessaire : ce chiffre se recalcule tout seul à chaque ouverture de l\'app, à partir de tes journées TERMINÉES uniquement — les repas du jour même ne comptent jamais tant que la journée n\'est pas finie (sinon un simple petit-déjeuner logué le matin ferait chuter artificiellement l\'estimation). Le bouton \"Confirmer mes objectifs\" du Profil ne sert qu\'à valider un changement de réglage (poids, objectif...), jamais à \"rafraîchir\" ce calcul.'**
+  String get expenditureInfoAutoRefresh;
+
+  /// No description provided for @expenditureLowCoverageBadge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couverture faible sur cette fenêtre — à interpréter avec prudence (repas non loggés = apport sous-estimé).'**
+  String get expenditureLowCoverageBadge;
+
+  /// No description provided for @expenditureInfoSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'En 30 secondes : d\'où vient ce nombre, et pourquoi il peut différer de tes autres chiffres.'**
+  String get expenditureInfoSubtitle;
+
+  /// No description provided for @expenditureInfoEquationTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta dépense totale : le TDEE'**
+  String get expenditureInfoEquationTitle;
+
+  /// No description provided for @expenditureInfoTdeeSpellOut.
+  ///
+  /// In fr, this message translates to:
+  /// **'TDEE, pour Total Daily Energy Expenditure — ta dépense énergétique totale sur une journée. Il se décompose en 4 briques, dans des proportions très inégales :'**
+  String get expenditureInfoTdeeSpellOut;
+
+  /// No description provided for @expenditureInfoEquationBmr.
+  ///
+  /// In fr, this message translates to:
+  /// **'BMR — Métabolisme de base'**
+  String get expenditureInfoEquationBmr;
+
+  /// No description provided for @expenditureInfoEquationBmrDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que ton corps brûle au repos pour fonctionner : respiration, circulation, cerveau, organes. La plus grosse part, ~70 % — très peu de marge de manœuvre dessus au quotidien.'**
+  String get expenditureInfoEquationBmrDesc;
+
+  /// No description provided for @expenditureInfoEquationNeat.
+  ///
+  /// In fr, this message translates to:
+  /// **'NEAT — Mouvement du quotidien'**
+  String get expenditureInfoEquationNeat;
+
+  /// No description provided for @expenditureInfoEquationNeatDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout ce que tu brûles en bougeant sans que ce soit \"du sport\" : marcher, monter des escaliers, être debout, gesticuler. Très variable d\'une personne à l\'autre — ~15 % en moyenne.'**
+  String get expenditureInfoEquationNeatDesc;
+
+  /// No description provided for @expenditureInfoNeatLeverBadge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton levier le plus puissant, pour la grande majorité des gens'**
+  String get expenditureInfoNeatLeverBadge;
+
+  /// No description provided for @expenditureInfoEquationTef.
+  ///
+  /// In fr, this message translates to:
+  /// **'TEF — Effet thermique des aliments'**
+  String get expenditureInfoEquationTef;
+
+  /// No description provided for @expenditureInfoEquationTefDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'énergie que ton corps utilise pour digérer ce que tu manges — ~10 %. Varie selon ce que tu manges : les protéines en demandent le plus, les lipides le moins.'**
+  String get expenditureInfoEquationTefDesc;
+
+  /// No description provided for @expenditureInfoEquationEat.
+  ///
+  /// In fr, this message translates to:
+  /// **'EAT — Activité physique volontaire'**
+  String get expenditureInfoEquationEat;
+
+  /// No description provided for @expenditureInfoEquationEatDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le sport au sens strict, ce que tu ajoutes volontairement à ta journée. La plus petite part en moyenne (~5 %), mais celle qui progresse le plus avec l\'entraînement.'**
+  String get expenditureInfoEquationEatDesc;
+
+  /// No description provided for @expenditureInfoTdeeCaption.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartition moyenne pour un adulte à activité modérée — les proportions réelles varient beaucoup d\'une personne à l\'autre.'**
+  String get expenditureInfoTdeeCaption;
+
+  /// No description provided for @expenditureInfoMethodsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'2 méthodes, combinées'**
+  String get expenditureInfoMethodsTitle;
+
+  /// No description provided for @expenditureInfoMethodFormulaTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'La formule'**
+  String get expenditureInfoMethodFormulaTitle;
+
+  /// No description provided for @expenditureInfoMethodFormulaDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Âge, poids, taille, sexe, niveau d\'activité déclaré → une estimation scientifique de départ (Mifflin-St Jeor / Cunningham). C\'est elle qui fixe ton objectif du jour et le donut du tableau de bord.'**
+  String get expenditureInfoMethodFormulaDesc;
+
+  /// No description provided for @expenditureInfoMethodCalibTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'La calibration'**
+  String get expenditureInfoMethodCalibTitle;
+
+  /// No description provided for @expenditureInfoMethodCalibDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'TON poids réel + TES calories réellement loguées sur ~20 jours → ta dépense déduite de tes résultats concrets. C\'est LE chiffre affiché ici, sur cette courbe.'**
+  String get expenditureInfoMethodCalibDesc;
+
+  /// No description provided for @expenditureInfoMethodsFooter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Totum combine les deux : la formule sert de point de départ et de garde-fou de sécurité, la calibration réelle vient l\'affiner au fil de tes données.'**
+  String get expenditureInfoMethodsFooter;
+
+  /// No description provided for @expenditureInfoBalanceTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le principe, en une phrase'**
+  String get expenditureInfoBalanceTitle;
+
+  /// No description provided for @expenditureInfoBalanceBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Si ton poids ne bouge pas alors que tu manges X kcal/jour, c\'est que tu dépenses environ X kcal/jour aussi. Si ton poids baisse ou monte, Totum ajuste ce chiffre en conséquence — c\'est tout le calcul, littéralement une balance.'**
+  String get expenditureInfoBalanceBody;
+
+  /// No description provided for @expenditureInfoLiveCompareTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton chiffre actuel, en contexte'**
+  String get expenditureInfoLiveCompareTitle;
+
+  /// No description provided for @expenditureInfoBelowBmr.
+  ///
+  /// In fr, this message translates to:
+  /// **'{estimate} kcal/j, c\'est en dessous de ton métabolisme de base théorique ({bmr} kcal/j) — physiologiquement peu probable en continu. Le signe le plus courant : des repas non loggués récemment, pas une vraie baisse de ta dépense. Continue à loguer régulièrement pour que ce chiffre se rapproche de la réalité.'**
+  String expenditureInfoBelowBmr(int estimate, int bmr);
+
+  /// No description provided for @expenditureInfoAboveBmr.
+  ///
+  /// In fr, this message translates to:
+  /// **'{estimate} kcal/j, au-dessus de ton métabolisme de base théorique ({bmr} kcal/j) — cohérent avec un niveau d\'activité « {level} ».'**
+  String expenditureInfoAboveBmr(int estimate, int bmr, String level);
+
+  /// No description provided for @expenditureInfoScienceTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bases scientifiques'**
+  String get expenditureInfoScienceTitle;
+
+  /// No description provided for @expenditureInfoScienceBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Métabolisme de base : équations de Mifflin-St Jeor (1990) ou Cunningham (1980, sur masse maigre). Effet thermique des aliments : Westerterp (2004). Mouvement hors sport (NEAT) : Levine (2002). Principe d\'équilibre énergétique : Hall et al. (2011), modèle repris par le NIH Body Weight Planner. Méthodologie de calibration adaptative inspirée des principes publiés dans la littérature de suivi nutritionnel — jamais une reproduction d\'un algorithme propriétaire tiers.'**
+  String get expenditureInfoScienceBody;
 
   /// No description provided for @kcalPerDay.
   ///
@@ -1160,6 +1442,144 @@ abstract class AppLocalizations {
   /// **'Se déconnecter'**
   String get accountSignOut;
 
+  /// No description provided for @accountSignOutConfirmTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se déconnecter ?'**
+  String get accountSignOutConfirmTitle;
+
+  /// No description provided for @accountSignOutConfirmContent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu pourras te reconnecter à tout moment avec ton adresse courriel.'**
+  String get accountSignOutConfirmContent;
+
+  /// No description provided for @accountSubscriptionSectionLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnement'**
+  String get accountSubscriptionSectionLabel;
+
+  /// No description provided for @accountFullNameLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom complet'**
+  String get accountFullNameLabel;
+
+  /// No description provided for @accountFullNameEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non renseigné'**
+  String get accountFullNameEmpty;
+
+  /// No description provided for @accountPhoneLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléphone'**
+  String get accountPhoneLabel;
+
+  /// No description provided for @accountPhoneEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non renseigné'**
+  String get accountPhoneEmpty;
+
+  /// No description provided for @accountPasswordLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
+  String get accountPasswordLabel;
+
+  /// No description provided for @accountPasswordMasked.
+  ///
+  /// In fr, this message translates to:
+  /// **'••••••••'**
+  String get accountPasswordMasked;
+
+  /// No description provided for @accountEditFieldTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier — {field}'**
+  String accountEditFieldTitle(String field);
+
+  /// No description provided for @accountFieldSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistré'**
+  String get accountFieldSaved;
+
+  /// No description provided for @accountFieldSaveError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur lors de l\'enregistrement : {error}'**
+  String accountFieldSaveError(String error);
+
+  /// No description provided for @accountNewEmailLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle adresse courriel'**
+  String get accountNewEmailLabel;
+
+  /// No description provided for @accountEmailChangeSentMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'E-mail de confirmation envoyé à {email} — le changement prendra effet une fois confirmé.'**
+  String accountEmailChangeSentMessage(String email);
+
+  /// No description provided for @accountNewPasswordLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau mot de passe'**
+  String get accountNewPasswordLabel;
+
+  /// No description provided for @accountConfirmPasswordLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer le mot de passe'**
+  String get accountConfirmPasswordLabel;
+
+  /// No description provided for @accountPasswordTooShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le mot de passe doit contenir au moins 8 caractères.'**
+  String get accountPasswordTooShort;
+
+  /// No description provided for @accountPasswordMismatch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les deux mots de passe ne correspondent pas.'**
+  String get accountPasswordMismatch;
+
+  /// No description provided for @aboutPackageIdLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Identifiant du package'**
+  String get aboutPackageIdLabel;
+
+  /// No description provided for @aboutInfoContent.
+  ///
+  /// In fr, this message translates to:
+  /// **'TOTUM t\'aide à devenir pleinement acteur de ta santé au quotidien, au-delà du simple comptage de calories — une approche holistique qui relie nutrition, mouvement, sommeil et bien-être.\n\nTous nos calculs (besoins caloriques, macronutriments, micronutriments) reposent sur des méthodes validées scientifiquement, et notre base alimentaire s\'appuie sur des données de référence officielles (CIQUAL, USDA) pour une fiabilité maximale.'**
+  String get aboutInfoContent;
+
+  /// No description provided for @accountLifetimeDialogContent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton accès Premium à vie est actif — aucun paiement récurrent, rien à gérer.'**
+  String get accountLifetimeDialogContent;
+
+  /// No description provided for @profileRestingMetabolism.
+  ///
+  /// In fr, this message translates to:
+  /// **'Métabolisme de base'**
+  String get profileRestingMetabolism;
+
+  /// No description provided for @profileMovementExpenditure.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mouvement'**
+  String get profileMovementExpenditure;
+
   /// No description provided for @appearanceScreenTitle.
   ///
   /// In fr, this message translates to:
@@ -1755,6 +2175,18 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Objectifs enregistrés'**
   String get profileGoalsSaved;
+
+  /// No description provided for @profileGoalsSavedCaption.
+  ///
+  /// In fr, this message translates to:
+  /// **'S\'affine automatiquement avec ton poids et ton journal — reviens ici seulement si tu changes un réglage (poids, objectif, activité...).'**
+  String get profileGoalsSavedCaption;
+
+  /// No description provided for @profileConfirmGoalsCaption.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un réglage a changé : confirme pour l\'appliquer à tes objectifs du jour.'**
+  String get profileConfirmGoalsCaption;
 
   /// No description provided for @profileBackToAuto.
   ///

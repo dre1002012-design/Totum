@@ -3978,7 +3978,9 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                     const SizedBox(width: 6),
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        // Bug thème sombre corrigé (21/08/2026, retour
+                        // d'Alex — bouton mosaïque/liste resté blanc).
+                        color: TotumColors.surface,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: TotumColors.outline),
                       ),
@@ -3999,7 +4001,9 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                       const SizedBox(width: 6),
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          // Bug thème sombre corrigé (21/08/2026) — voir la
+                          // barre de recherche juste en dessous.
+                          color: TotumColors.surface,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: TotumColors.outline),
                         ),
@@ -4019,21 +4023,27 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                 TextField(
                   controller: _ingredientSearchCtrl,
                   onChanged: (v) => setState(() => _ingredientQuery = v),
+                  // Bug thème sombre corrigé (21/08/2026, retour d'Alex :
+                  // "tu l'as mis en blanc... on ne voit pas bien") : couleur
+                  // de saisie explicite + fond `TotumColors.surface` (au
+                  // lieu de `Colors.white` en dur) — même logique que le
+                  // gros bouton "+" déjà correct ailleurs dans l'app.
+                  style: TextStyle(color: TotumColors.textPrimary, fontSize: 13.5),
                   decoration: InputDecoration(
                     hintText: l10n.consSearchByIngredient,
-                    hintStyle: const TextStyle(fontSize: 13.5),
-                    prefixIcon: const Icon(Icons.search, size: 20),
+                    hintStyle: TextStyle(fontSize: 13.5, color: TotumColors.textMuted),
+                    prefixIcon: Icon(Icons.search, size: 20, color: TotumColors.textSecondary),
                     suffixIcon: _ingredientQuery.isEmpty
                         ? null
                         : IconButton(
-                            icon: const Icon(Icons.close, size: 18),
+                            icon: Icon(Icons.close, size: 18, color: TotumColors.textSecondary),
                             onPressed: () => setState(() {
                               _ingredientSearchCtrl.clear();
                               _ingredientQuery = '';
                             }),
                           ),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: TotumColors.surface,
                     contentPadding: const EdgeInsets.symmetric(vertical: 0),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -4130,7 +4140,10 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                                     end: Alignment.bottomRight,
                                   )
                                 : null,
-                            color: selected ? null : Colors.white,
+                            // Bug thème sombre corrigé (21/08/2026, retour
+                            // d'Alex — "légers, hyperprotéinés, rapides...
+                            // fond blanc, écriture claire, on ne voit rien").
+                            color: selected ? null : TotumColors.surface,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
                               color: selected ? Colors.transparent : TotumColors.outline,
@@ -6442,7 +6455,17 @@ class _RespirationScreenState extends State<RespirationScreen>
   void initState() {
     super.initState();
     _loadPrefs();
-    _audio.init();
+    // BUG CORRIGÉ (19/08/2026, retour d'Alex — "le son ne marche pas côté
+    // web app") : `_audio.init()` était appelé ICI, à l'ouverture de
+    // l'écran — donc AVANT tout geste utilisateur. Sur le web, c'est
+    // précisément cet appel qui crée l'AudioContext du navigateur ; créé
+    // hors d'un geste utilisateur, les politiques anti-autoplay de Chrome/
+    // Safari/Firefox le laissent "suspendu" en silence (aucune erreur,
+    // aucun son — exactement le symptôme rapporté). Déplacé dans `_start()`
+    // (déclenché par le bouton "Démarrer", donc un vrai geste utilisateur)
+    // — le pattern standard pour débloquer le Web Audio API. Sans impact
+    // sur Android/iOS (le geste ne change rien côté natif, juste plus tôt
+    // avant n'était pas un problème sur ces plateformes).
   }
 
   Future<void> _loadPrefs() async {
@@ -6528,18 +6551,21 @@ class _RespirationScreenState extends State<RespirationScreen>
       _cycle = 0;
       _phaseIndex = 0;
     });
-    // Bug corrigé (14/08/2026, retour d'Alex : "la première inspire n'a
-    // jamais de son") : `startSession()` n'était pas attendu — `_runPhase()`
-    // (donc le tout premier `startPhase()`) s'exécutait quasi aussitôt,
-    // souvent AVANT que `_sessionActive` ne passe à `true` dans
-    // `startSession()` (lui-même `await _soloud.play(...)` en interne).
-    // `startPhase()` voyait donc `_sessionActive == false` et abandonnait
-    // silencieusement — seul le premier carillon était perdu, la nappe de
-    // fond démarrant juste après restait, elle, audible (d'où le symptôme :
-    // "j'entends l'ambiance mais jamais le premier gong").
-    await _audio.startSession(enabled: _soundOn);
+    // BUG CORRIGÉ (19/08/2026, retour d'Alex — "l'écran est figé au
+    // démarrage, il y a un temps de latence sur le web") : `_runPhase()`
+    // (l'animation visuelle) démarre maintenant IMMÉDIATEMENT, sans attendre
+    // l'audio — sur web, `_audio.init()` crée l'AudioContext du navigateur,
+    // ce qui peut prendre un instant perceptible (chargement WASM) ; attendre
+    // ça avant de lancer l'animation donnait l'impression d'un écran figé.
+    // L'audio se prépare maintenant EN PARALLÈLE (pas attendu ici) — le
+    // découplage ne perd plus le tout premier carillon : `startPhase()`
+    // attend en interne le même Future que `startSession()` produit (voir
+    // `BreathAudioEngine._sessionReadyFuture`), donc le son suit avec, au
+    // pire, un léger retard sur le visuel, jamais un abandon silencieux
+    // (cf. bug du 14/08/2026 que ce mécanisme préserve).
     _background.start();
     _runPhase();
+    unawaited(_audio.startSession(enabled: _soundOn));
   }
 
   void _stop() {
@@ -6726,7 +6752,8 @@ class _RespirationScreenState extends State<RespirationScreen>
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        // Bug thème sombre corrigé (21/08/2026) — voir plus bas.
+                        color: TotumColors.surface,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: TotumColors.accentBorder),
                       ),
@@ -6751,7 +6778,12 @@ class _RespirationScreenState extends State<RespirationScreen>
                     duration: const Duration(milliseconds: 150),
                     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     decoration: BoxDecoration(
-                      color: i == _techIndex ? _accent : Colors.white,
+                      // Bug thème sombre corrigé (21/08/2026, retour d'Alex —
+                      // "blanc avec écriture blanche, on ne voit rien") :
+                      // `Colors.white` en dur pour l'état NON sélectionné,
+                      // jamais adapté au thème sombre — l'état sélectionné
+                      // (fond accent + texte blanc) était déjà correct, lui.
+                      color: i == _techIndex ? _accent : TotumColors.surface,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                           color: i == _techIndex ? _accent : TotumColors.outline),
@@ -6775,7 +6807,8 @@ class _RespirationScreenState extends State<RespirationScreen>
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            // Bug thème sombre corrigé (21/08/2026) — voir plus haut.
+            color: TotumColors.surface,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: TotumColors.outline),
           ),
@@ -6984,7 +7017,9 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
     super.initState();
     _totalRounds = widget.tech.defaultRounds;
     _ensureHoldSecondsSize();
-    _audio.init();
+    // BUG CORRIGÉ (19/08/2026) — même correctif que RespirationScreen : pas
+    // d'init audio ici (avant tout geste utilisateur), déplacé dans
+    // `_start()` (voir ce commentaire pour le détail du problème web).
     SharedPreferences.getInstance().then((sp) {
       if (!mounted) return;
       setState(() => _soundOn = sp.getBool('breath_sound') ?? true);
@@ -7006,15 +7041,22 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
       _round = 1;
       _breathIndex = 0;
     });
+    // BUG CORRIGÉ (19/08/2026) : voir le commentaire équivalent dans
+    // RespirationScreen._start() — l'animation démarre immédiatement,
+    // l'audio (et le service de fond) se préparent en parallèle sans
+    // bloquer l'écran (potentiellement lent sur web — chargement WASM de
+    // l'AudioContext). `startPhase()`/`playTick()` attendent en interne la
+    // fin de l'init audio, donc aucun carillon n'est perdu (voir
+    // `BreathAudioEngine._sessionReadyFuture`).
+    _runRapidBreathing();
     // Priorité 55 (retour d'Alex) : pas de nappe de fond pendant les
     // respirations rapides, seulement les carillons inspire/expire —
     // `startAmbient: false` garde la session active (carillons OK) sans
     // démarrer la nappe ; elle ne démarre qu'à l'entrée en rétention (voir
     // `_startHoldRelease()`), et s'arrête au retour en respiration rapide
     // (voir `_endRound()`).
-    await _audio.startSession(enabled: _soundOn, startAmbient: false);
-    await _background.start();
-    _runRapidBreathing();
+    unawaited(_audio.startSession(enabled: _soundOn, startAmbient: false));
+    unawaited(_background.start());
   }
 
   void _runRapidBreathing() {
@@ -7331,14 +7373,41 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
           Text('$current / $total', style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900)),
           const SizedBox(height: 6),
           Text(context.l10n.consAmpleRapidBreaths, style: TextStyle(color: TotumColors.textSecondary)),
+          const SizedBox(height: 32),
+          _hypervStopButton(),
         ],
       ),
     );
   }
 
+  /// BUG CORRIGÉ (19/08/2026, retour d'Alex — "il serait judicieux de mettre
+  /// un bouton arrêter aussi, comme sur les autres respirations") : ce
+  /// module n'avait qu'un petit "X" dans l'AppBar (`_exitEarly`, déjà
+  /// fonctionnellement correct — timer/audio/service de fond bien arrêtés)
+  /// mais nettement moins visible que le bouton "Arrêter" explicite des
+  /// autres techniques (cohérence cardiaque, respiration carrée — voir
+  /// `_RespirationScreenState._buildRunning()`). Même composant, même
+  /// style, réutilise `_exitEarly` (aucune nouvelle logique d'arrêt).
+  Widget _hypervStopButton() {
+    return OutlinedButton.icon(
+      onPressed: _exitEarly,
+      icon: const Icon(Icons.stop, size: 18),
+      label: Text(context.l10n.consStopButton),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: _accent,
+        side: const BorderSide(color: _accent),
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
   Widget _buildHoldRelease() {
-    // Pas de bouton ici (retour d'Alex) : compte à rebours automatique,
-    // aucune action requise — voir le commentaire sur _startHoldRelease.
+    // Pas de bouton "suivant" ici (retour d'Alex) : compte à rebours
+    // automatique, aucune action requise pour progresser — voir le
+    // commentaire sur _startHoldRelease. Le bouton "Arrêter" ajouté plus bas
+    // (19/08/2026) reste néanmoins présent : une sortie d'urgence n'est pas
+    // une "action requise pour progresser", c'est un garde-fou de sécurité.
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -7361,6 +7430,8 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
           Text(context.l10n.consCloseEyesFollowSound,
               textAlign: TextAlign.center,
               style: TextStyle(color: TotumColors.textSecondary)),
+          const SizedBox(height: 32),
+          _hypervStopButton(),
         ],
       ),
     );
@@ -7387,6 +7458,8 @@ class _CyclicHyperventilationScreenState extends State<CyclicHyperventilationScr
           const SizedBox(height: 10),
           Text(context.l10n.consInhaleAndHoldRecovery,
               style: TextStyle(color: TotumColors.textSecondary)),
+          const SizedBox(height: 32),
+          _hypervStopButton(),
         ],
       ),
     );
@@ -7708,7 +7781,12 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          // BUG CORRIGÉ (21/08/2026, thème sombre — retour d'Alex : "fond
+          // blanc, écriture claire, on ne voit rien") : `Colors.white` en
+          // dur, jamais adapté au thème sombre. `TotumColors.surface` suit
+          // déjà le thème (blanc en clair, gris foncé en sombre), comme
+          // toutes les autres cartes de l'app.
+          color: TotumColors.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: complete ? _accent.withValues(alpha: 0.5) : TotumColors.outline,
@@ -7742,8 +7820,8 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
             ),
             const Spacer(),
             Text(pillar.title,
-                style: const TextStyle(
-                    fontSize: 14.5, fontWeight: FontWeight.w900, height: 1.2)),
+                style: TextStyle(
+                    fontSize: 14.5, fontWeight: FontWeight.w900, height: 1.2, color: TotumColors.textPrimary)),
             const SizedBox(height: 4),
             Text(
               pillar.intro,
@@ -7858,7 +7936,7 @@ class _RituelSoirScreenState extends State<RituelSoirScreen> {
               height: 24,
               margin: const EdgeInsets.only(top: 1),
               decoration: BoxDecoration(
-                color: done ? _accent : Colors.white,
+                color: done ? _accent : TotumColors.surface,
                 shape: BoxShape.circle,
                 border: Border.all(
                     color: done ? _accent : TotumColors.outlineStrong, width: 1.5),

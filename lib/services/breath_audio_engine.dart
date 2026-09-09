@@ -62,6 +62,21 @@ class BreathAudioEngine {
   AudioSource? _metronomeTick;
   SoundHandle? _ambientHandle;
 
+  // BUG CORRIGÉ (19/08/2026, retour d'Alex — "l'écran est figé quand on
+  // clique sur démarrer, il y a un temps de latence sur le web") : avant ce
+  // correctif, l'écran attendait `await _audio.init()` (création de
+  // l'AudioContext navigateur, potentiellement long sur web — chargement
+  // WASM) AVANT même de démarrer l'animation visuelle de respiration. Ce
+  // Future partagé permet de DÉCOUPLER les deux : l'écran peut démarrer
+  // `_runPhase()` (le cercle qui respire) immédiatement, pendant que
+  // `startSession()` tourne en parallèle — et `startPhase()`/`playTick()`
+  // attendent CE Future (pas juste un booléen) avant de jouer un son, donc
+  // le tout premier carillon n'est plus jamais perdu (voir le bug du
+  // 14/08/2026 que ce mécanisme ne doit pas réintroduire) : il est juste
+  // éventuellement joué avec un léger retard sur le visuel plutôt que d'être
+  // silencieusement abandonné.
+  Future<void>? _sessionReadyFuture;
+
   bool get isReady => _engineReady;
 
   /// Charge un son optionnel sans faire échouer le reste de l'init si le
@@ -86,7 +101,34 @@ class BreathAudioEngine {
       await _soloud.init();
       _inhaleChime = await _soloud.loadAsset('assets/sounds/breath_inhale_chime.mp3');
       _exhaleChime = await _soloud.loadAsset('assets/sounds/breath_exhale_chime.mp3');
-      _ambientLoop = await _soloud.loadAsset('assets/sounds/breath_ambient_loop.mp3');
+      // Investigation (21/08/2026, retour d'Alex — la nappe de fond
+      // s'atténue puis repart quelques secondes avant la fin d'une séance
+      // de Cohérence Cardiaque, alors que le fichier source dure ~18 min,
+      // bien au-delà de n'importe quelle durée de séance — impossible que
+      // ce soit son propre point de bouclage naturel). Audit complet du
+      // déclenchement app (aucun appel à stopAmbient/duck/fadeVolume
+      // n'existe dans le flux des techniques classiques en dehors de la fin
+      // RÉELLE de séance, déjà vérifié) et du fichier lui-même (aucune
+      // métadonnée de bouclage, ~18 min réels via mutagen) n'ont rien donné
+      // côté app. `LoadMode.memory` (le défaut) décompresse la TOTALITÉ du
+      // fichier en PCM brut en mémoire au chargement — pour ~18 min à
+      // 24kHz stéréo, ça représente ~100 Mo tenus en permanence pendant
+      // toute la session Respiration, gardés "pour éviter tout gap/lag au
+      // démarrage" (doc flutter_soloud) — un besoin réel pour les carillons
+      // courts (`_inhaleChime`/`_exhaleChime`, joués à chaque transition,
+      // latence critique), pas pour une nappe de fond qui démarre UNE fois
+      // en début de séance. Passé en `LoadMode.disk` (streaming, lu au fur
+      // et à mesure) pour ce fichier précis : élimine ~100 Mo de pression
+      // mémoire pendant toute la session — piste la plus solide trouvée
+      // pour un micro-glitch audio en cours de lecture, sans contre-partie
+      // ici (aucun `seek()` n'est jamais appelé sur la nappe de fond, le
+      // seul inconvénient documenté de ce mode). Sur le web, ce mode
+      // retombe de toute façon sur `memory` (limitation navigateur,
+      // documentée par le package) — changement sans effet ni risque là-bas.
+      _ambientLoop = await _soloud.loadAsset(
+        'assets/sounds/breath_ambient_loop.mp3',
+        mode: LoadMode.disk,
+      );
       _hypervInhaleChime = await _loadOptional('assets/sounds/breath_hyperv_inhale_chime.mp3');
       _hypervExhaleChime = await _loadOptional('assets/sounds/breath_hyperv_exhale_chime.mp3');
       _metronomeTick = await _loadOptional('assets/sounds/breath_metronome_tick.wav');
@@ -106,11 +148,29 @@ class BreathAudioEngine {
   /// inchangé) ; l'écran Wim Hof, lui, démarre la session SANS nappe (les
   /// carillons rapides restent actifs via `_sessionActive`) et pilote
   /// lui-même `startAmbient()`/`stopAmbient()` au fil des phases.
-  Future<void> startSession({bool enabled = true, bool startAmbient = true}) async {
-    if (!enabled || !_engineReady) return;
+  Future<void> startSession({bool enabled = true, bool startAmbient = true}) {
+    if (!enabled) return Future.value();
+    final future = _doStartSession(startAmbient: startAmbient);
+    _sessionReadyFuture = future;
+    return future;
+  }
+
+  Future<void> _doStartSession({required bool startAmbient}) async {
+    // Idempotent — si l'écran a déjà appelé `init()` séparément (ou si
+    // c'est un rappel), ce `await` est instantané.
+    await init();
+    // BUG CORRIGÉ (19/08/2026) : sans ce garde, un `dispose()` survenu
+    // PENDANT ce `await init()` (écran quitté juste après avoir appuyé sur
+    // "Démarrer", cas web notamment où l'init peut prendre un instant)
+    // laissait cette continuation ré-activer `_sessionActive` APRÈS que
+    // `dispose()` l'ait mis à `false` — l'audio aurait alors pu démarrer
+    // sur un écran déjà quitté.
+    if (_disposed || !_engineReady) return;
     _sessionActive = true;
     if (startAmbient) await this.startAmbient();
   }
+
+  bool _disposed = false;
 
   /// Lance (ou relance) la nappe de fond en boucle — sans effet si elle
   /// joue déjà ou si la session n'est pas active.
@@ -159,8 +219,14 @@ class BreathAudioEngine {
     required int durationSeconds,
     bool fast = false,
   }) async {
-    if (!_sessionActive) return;
     if (type == BreathPhaseType.holdFull || type == BreathPhaseType.holdEmpty) return;
+    // Attend la session en cours de démarrage (voir `_sessionReadyFuture`)
+    // au lieu de se contenter du booléen `_sessionActive`, qui pourrait
+    // encore être `false` si `startSession()` est toujours en train
+    // d'initialiser l'audio (cas web notamment) — garantit que le tout
+    // premier carillon de la séance n'est jamais silencieusement perdu.
+    await _sessionReadyFuture;
+    if (!_sessionActive) return;
     final source = switch (type) {
       BreathPhaseType.inhale || BreathPhaseType.inhaleTopUp =>
         (fast ? _hypervInhaleChime : null) ?? _inhaleChime,
@@ -187,6 +253,7 @@ class BreathAudioEngine {
   /// uniquement. Volume nettement plus bas que les carillons de transition :
   /// un simple repère de rythme en fond, jamais un événement à part entière.
   Future<void> playTick() async {
+    await _sessionReadyFuture;
     if (!_sessionActive || _metronomeTick == null) return;
     try {
       // Priorité 55 (retour d'Alex : "un peu plus fort, sans être ultra
@@ -198,7 +265,16 @@ class BreathAudioEngine {
   }
 
   /// Fin de session : fondu de la nappe de fond puis arrêt.
+  ///
+  /// BUG CORRIGÉ (19/08/2026) : cas limite introduit par le découplage
+  /// visuel/audio ci-dessus — si l'utilisateur arrête la séance PENDANT que
+  /// `startSession()` est encore en train d'initialiser l'audio (rare mais
+  /// possible sur web), `_sessionActive` est encore `false` à cet instant :
+  /// sans ce garde-fou, ce court-circuit laissait la nappe de fond démarrer
+  /// quand même une fois l'init terminée, sur une séance déjà arrêtée.
+  /// Attend le même Future avant de vérifier l'état.
   Future<void> stopSession() async {
+    await _sessionReadyFuture;
     if (!_sessionActive) return;
     _sessionActive = false;
     await stopAmbient();
@@ -231,6 +307,7 @@ class BreathAudioEngine {
   /// "fire-and-forget" de ~800ms au total pour être sûr que le son s'arrête
   /// vraiment.
   Future<void> dispose() async {
+    _disposed = true;
     _sessionActive = false;
     try {
       if (_ambientHandle != null) {

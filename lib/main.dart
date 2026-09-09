@@ -10,6 +10,7 @@ import 'screens/bilan_screen.dart';
 import 'screens/conseils_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/paywall_screen.dart';
+import 'services/account_guard.dart';
 import 'services/app_settings.dart';
 import 'services/pending_food_ops.dart';
 import 'services/premium_status.dart';
@@ -140,23 +141,51 @@ class AuthGate extends StatelessWidget {
       builder: (context, snapshot) {
         final session = supabase.auth.currentSession;
 
-        // Pas connecté → écran de connexion
+        // Pas connecté → écran de connexion. Purge quand même le cache local
+        // ici (fire-and-forget, ne bloque pas l'affichage) : sans ça, des
+        // données de l'ancien compte resteraient en cache jusqu'à la
+        // prochaine connexion — fenêtre inutile où un accès direct aux
+        // SharedPreferences (peu probable mais pas impossible) verrait
+        // encore les données du compte précédent.
         if (session == null) {
+          ensureLocalDataMatchesAuthenticatedUser();
           return const AuthScreen();
         }
 
-        // Connecté → porte « Premium / Abonnement / Essai »
-        // Priorité 63 (mode sombre/langue instantanés) : PAS de `const` ici.
-        // `home: AuthGate()` (non-const, voir plus bas) permet à AuthGate de
-        // se reconstruire quand le thème/la langue changent, mais si cette
-        // valeur de retour reste `const PremiumGate()`, l'expression const
-        // canonicalisée reste IDENTIQUE d'un build à l'autre : Flutter
-        // détecte `child.widget == newWidget` (identité) et saute la
-        // reconstruction de tout le sous-arbre en dessous — exactement le
-        // bug qui empêchait le thème/la langue de se propager sans changer
-        // d'onglet.
-        // ignore: prefer_const_constructors
-        return PremiumGate();
+        // BUG CRITIQUE CORRIGÉ (21/08/2026 — voir account_guard.dart) : le
+        // cache local (SharedPreferences) n'était scopé par AUCUN
+        // utilisateur — un changement de compte sur le même appareil
+        // laissait les données du compte précédent visibles, et certains
+        // services les réécrivaient même silencieusement vers Supabase sous
+        // la nouvelle identité (poids d'un compte de test dupliqué dans un
+        // autre, reproduit par Alex). `ensureLocalDataMatchesAuthenticatedUser()`
+        // doit impérativement avoir fini AVANT que le moindre écran
+        // n'accède à une donnée locale — d'où le FutureBuilder bloquant ici,
+        // plutôt qu'un fire-and-forget comme ci-dessus (rien à protéger côté
+        // écran de connexion, tout à protéger côté app authentifiée).
+        return FutureBuilder<void>(
+          future: ensureLocalDataMatchesAuthenticatedUser(),
+          builder: (context, guardSnap) {
+            if (guardSnap.connectionState != ConnectionState.done) {
+              return Scaffold(
+                backgroundColor: TotumColors.page,
+                body: const Center(child: CircularProgressIndicator(color: TotumColors.accent)),
+              );
+            }
+            // Connecté → porte « Premium / Abonnement / Essai »
+            // Priorité 63 (mode sombre/langue instantanés) : PAS de `const` ici.
+            // `home: AuthGate()` (non-const, voir plus bas) permet à AuthGate de
+            // se reconstruire quand le thème/la langue changent, mais si cette
+            // valeur de retour reste `const PremiumGate()`, l'expression const
+            // canonicalisée reste IDENTIQUE d'un build à l'autre : Flutter
+            // détecte `child.widget == newWidget` (identité) et saute la
+            // reconstruction de tout le sous-arbre en dessous — exactement le
+            // bug qui empêchait le thème/la langue de se propager sans changer
+            // d'onglet.
+            // ignore: prefer_const_constructors
+            return PremiumGate();
+          },
+        );
       },
     );
   }

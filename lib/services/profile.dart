@@ -143,11 +143,14 @@ extension BodyFatRangeX on BodyFatRange {
 }
 
 /// Reconstruit le palier ActivityLevel le plus proche d'un PAL continu —
-/// utilisé uniquement pour retrouver un palier cohérent (protéines,
-/// ajustements) à partir du PAL calibré (continu) que produit la
-/// calibration adaptative. Le choix direct de l'utilisateur (palier
-/// ActivityLevel) reste la source de vérité tant qu'aucune calibration
-/// n'est encore disponible.
+/// utilisé UNIQUEMENT pour l'affichage/diagnostic (ex. debug de la
+/// calibration). NE JAMAIS l'utiliser pour recalculer les protéines ou les
+/// micronutriments : le PAL empirique est bruité (rétention d'eau) sur les
+/// fenêtres courtes de la calibration adaptative, alors que protéines et
+/// micronutriments doivent rester indexés sur le palier D'ENTRAÎNEMENT
+/// DÉCLARÉ par l'utilisateur (voir le bug corrigé du 19/08/2026 dans
+/// [blendCalibratedTargets]). Le choix direct de l'utilisateur (palier
+/// ActivityLevel) reste la seule source de vérité pour ces besoins.
 ActivityLevel nearestActivityLevel(double pal) {
   if (pal < 1.275) return ActivityLevel.sedentary;
   if (pal < 1.415) return ActivityLevel.light;
@@ -201,7 +204,9 @@ class UserProfile {
   // (computeCalibratedTargets) une fois assez de données réelles
   // disponibles (poids + calories loguées) — null tant qu'aucune
   // calibration n'existe, auquel cas le calcul retombe sur le palier fixe
-  // _activityFactor(activity) choisi par l'utilisateur.
+  // _activityFactor(activity) choisi par l'utilisateur. Ne pilote QUE le
+  // TDEE/les calories (voir _effectivePal) — jamais les protéines ni les
+  // micronutriments, qui restent indexés sur `activity` (palier déclaré).
   final double? activityPalOverride;
 
   const UserProfile({
@@ -357,11 +362,14 @@ double _activityFactor(ActivityLevel a) => switch (a) {
 bool _isHighActivity(ActivityLevel a) =>
     a == ActivityLevel.active || a == ActivityLevel.veryActive || a == ActivityLevel.extreme;
 
-/// PAL réellement utilisé pour le calcul : le PAL continu (Profil 3.0,
-/// pas + entraînements) quand il est fourni par l'appelant, sinon le palier
-/// fixe déclaratif. `p.activity` doit déjà être le palier le plus proche du
-/// PAL continu (via nearestActivityLevel) — les 2 restent donc toujours
-/// cohérents pour les ajustements par palier (protéines, micronutriments).
+/// PAL réellement utilisé pour LE TDEE/LES CALORIES UNIQUEMENT : le PAL
+/// calibré (empirique, poids réel vs calories loguées) quand il est fourni
+/// par l'appelant, sinon le palier fixe déclaratif. `p.activity` (utilisé
+/// séparément pour protéines/micronutriments, voir [computeGoals]) reste
+/// TOUJOURS le palier déclaré par l'utilisateur, jamais dérivé de ce PAL —
+/// les 2 peuvent légitimement diverger (ex. calibration temporairement
+/// abaissée par une rétention d'eau, alors que l'utilisateur s'entraîne
+/// toujours aussi souvent).
 double _effectivePal(UserProfile p) => p.activityPalOverride ?? _activityFactor(p.activity);
 
 double _roundTo(double v, double step) => (v / step).round() * step;
@@ -482,9 +490,19 @@ double goalRateBwPerWeekFor(GoalType goal, int age, {Sex? sex, double? bodyFatPe
 /// ~9440 kcal/kg de tissu adipeux pur). Implémentation propre à TOTUM — les
 /// constantes internes exactes de MacroFactor ne sont pas publiques (l'audit
 /// du 09/08/2026 le confirme explicitement) — interpolation linéaire entre
-/// deux ancrages plausibles au vu de la littérature, pas une reproduction de
-/// leur algorithme propriétaire.
-double _effectiveEnergyDensity(double absRateBwPerWeek) {
+/// deux ancrages plausibles au vu de la littérature (cf. aussi Hall KD,
+/// "What is the required energy deficit per unit weight loss?", Int J Obes
+/// 2008 — la constante classique unique 7700 kcal/kg est elle-même connue
+/// pour être une simplification), pas une reproduction de leur algorithme
+/// propriétaire.
+///
+/// EXPOSÉE PUBLIQUEMENT (19/08/2026, audit "aucune faille") : réutilisée
+/// telle quelle par [CalibrationService] (`calibration_service.dart`) pour
+/// convertir un changement de poids RÉEL observé en TDEE empirique — avant
+/// cet audit, ce second calcul utilisait encore une constante fixe (7700),
+/// une incohérence interne avec le reste du moteur qui applique déjà ce
+/// modèle de densité variable partout ailleurs.
+double effectiveEnergyDensityKcalPerKg(double absRateBwPerWeek) {
   const slowDensity = 8400.0; // rythme lent (≤0,25 %/sem) : proche graisse pure
   const fastDensity = 7000.0; // rythme rapide (≥1,2 %/sem) : mélange eau/glycogène/masse maigre
   const slowThreshold = 0.0025;
@@ -516,14 +534,14 @@ double _goalEnergyAdjustmentKcal(
     final diff = weightKg - targetWeightKg; // > 0 = au-dessus de la cible
     if (diff.abs() <= 0.7) return 0.0;
     final rate = diff > 0 ? -0.0015 : 0.0015; // ±0,15 %/semaine
-    final density = _effectiveEnergyDensity(rate.abs());
+    final density = effectiveEnergyDensityKcalPerKg(rate.abs());
     return (rate * weightKg * density) / 7.0;
   }
 
   final conservative = _isConservativeGoal(age, sex: sex, bodyFatPercent: bodyFatPercent);
   final rate = _goalRateBwPerWeek(goal, conservative: conservative);
   if (rate == 0.0) return 0.0;
-  final density = _effectiveEnergyDensity(rate.abs());
+  final density = effectiveEnergyDensityKcalPerKg(rate.abs());
   return (rate * weightKg * density) / 7.0;
 }
 
@@ -797,26 +815,122 @@ class ProfileStore {
   ProfileStore._();
   static final instance = ProfileStore._();
 
+  // Court cache mémoire (même principe que CalibrationService._readHistory) :
+  // load() est appelé très souvent (lancement de l'app dans main.dart,
+  // Journal à chaque ajout d'aliment, écran Profil...) — évite de refaire un
+  // aller-retour Supabase identique à quelques millisecondes d'intervalle,
+  // sans jamais risquer de servir une valeur vieille de plusieurs minutes.
+  Map<String, dynamic>? _cachedRemote;
+  DateTime? _cachedRemoteAt;
+  static const _remoteCacheTtl = Duration(seconds: 5);
+
+  /// À appeler à chaque changement de compte détecté (voir account_guard.dart),
+  /// même principe que CalibrationService/PauseService.
+  void resetInMemoryCache() {
+    _cachedRemote = null;
+    _cachedRemoteAt = null;
+  }
+
   Future<UserProfile> load() async {
     final sp = await SharedPreferences.getInstance();
 
-    final sexStr = sp.getString('profile_sex');
+    var sexStr = sp.getString('profile_sex');
+    var ageD = sp.getDouble('profile_age') ?? 30.0;
+    var height = sp.getDouble('profile_height') ?? 175.0;
+    var weight = sp.getDouble('profile_weight') ?? 70.0;
+    var actIdx = sp.getInt('profile_activity') ?? 0;
+    var goalIdx = sp.getInt('profile_goal') ?? 1;
+    var bodyFat = sp.getDouble('profile_body_fat_pct');
+    var targetWeight = sp.getDouble('profile_target_weight');
+    var dietStyleIdx = sp.getInt('profile_diet_style') ?? 0;
+
+    // BUG CORRIGÉ (24/08/2026, retour d'Alex — juste après une
+    // réinstallation, la cible recalculée automatiquement au lancement de
+    // l'app, dans main.dart, ne correspondait plus du tout au vrai profil) :
+    // cette méthode ne lisait QUE les clés SharedPreferences locales, sans
+    // AUCUN repli Supabase — contrairement à `_loadProfile()` dans
+    // profile_screen.dart, qui, lui, réhydrate déjà sexe/âge/taille/poids/
+    // objectif/activité/masse grasse/poids cible/style de macros depuis
+    // `user_profile` au chargement de l'onglet Profil. `main.dart` appelle
+    // `computeAndSaveTargetsFromStoredProfile()` (qui passe par CE `load()`)
+    // À CHAQUE LANCEMENT DE L'APP, y compris avant que l'utilisateur ait
+    // jamais ouvert l'onglet Profil — sur un compte fraîchement réinstallé
+    // (SharedPreferences vide), ce load() ne renvoyait donc QUE les
+    // défauts en dur (30 ans, 175 cm, 70 kg, sédentaire, maintien), et le
+    // résultat écrasait silencieusement `goals_kcal` avec la cible d'un
+    // profil fictif — un écart pouvant dépasser 800-900 kcal pour un
+    // profil réel éloigné de ces défauts. Même correctif de principe que
+    // `_readHistory`/`_kcalByDay` dans calibration_service.dart : Supabase
+    // fait foi pour un compte connecté, le local ne sert plus que de repli
+    // hors-ligne. Mapping identique à celui déjà utilisé pour ÉCRIRE ces
+    // champs (voir `_activityToDb`/`_goalToDb`/`_dietStyleToDb` dans
+    // profile_screen.dart) — à garder synchronisé si ces enums évoluent.
+    try {
+      final client = Supabase.instance.client;
+      final user = client.auth.currentUser;
+      if (user != null) {
+        var remote = _cachedRemote;
+        final cachedAt = _cachedRemoteAt;
+        if (remote == null ||
+            cachedAt == null ||
+            DateTime.now().difference(cachedAt) >= _remoteCacheTtl) {
+          remote = await client
+              .from('user_profile')
+              .select()
+              .eq('user_id', user.id)
+              .maybeSingle();
+          _cachedRemote = remote;
+          _cachedRemoteAt = DateTime.now();
+        }
+        if (remote != null) {
+          final remoteSex = remote['sex'] as String?;
+          if (remoteSex != null) sexStr = remoteSex;
+          final remoteAge = (remote['age'] as num?)?.toDouble();
+          if (remoteAge != null) ageD = remoteAge;
+          final remoteHeight = (remote['height_cm'] as num?)?.toDouble();
+          if (remoteHeight != null) height = remoteHeight;
+          final remoteWeight = (remote['weight_kg'] as num?)?.toDouble();
+          if (remoteWeight != null) weight = remoteWeight;
+          final remoteBodyFat = (remote['body_fat_pct'] as num?)?.toDouble();
+          if (remoteBodyFat != null && remoteBodyFat > 0) bodyFat = remoteBodyFat;
+          final remoteGoal = remote['goal'] as String?;
+          if (remoteGoal != null) {
+            const mapGoal = <String, int>{
+              'loss': 0, 'maintain': 1, 'gain': 2, 'loss_mild': 3, 'gain_mild': 4,
+            };
+            goalIdx = mapGoal[remoteGoal] ?? goalIdx;
+          }
+          final remoteActivity = remote['activity_level'] as String?;
+          if (remoteActivity != null) {
+            const mapActivity = <String, int>{
+              'sedentary': 0, 'light': 1, 'moderate': 2,
+              'intense': 3, 'very_intense': 4, 'extreme': 5,
+            };
+            actIdx = mapActivity[remoteActivity] ?? actIdx;
+          }
+          final remoteTargetWeight = (remote['target_weight_kg'] as num?)?.toDouble();
+          if (remoteTargetWeight != null && remoteTargetWeight > 0) {
+            targetWeight = remoteTargetWeight;
+          }
+          final remoteDietStyle = remote['diet_style'] as String?;
+          if (remoteDietStyle != null) {
+            const mapDietStyle = <String, int>{
+              'balanced': 0, 'high_carb': 1, 'high_fat': 2, 'keto': 3,
+            };
+            dietStyleIdx = mapDietStyle[remoteDietStyle] ?? dietStyleIdx;
+          }
+        }
+      }
+    } catch (_) {
+      // Hors-ligne / table pas encore migrée : repli silencieux sur les
+      // valeurs locales déjà lues ci-dessus (même filet de sécurité que
+      // partout ailleurs dans ce fichier/calibration_service.dart).
+    }
+
     final sex = (sexStr == 'female') ? Sex.female : Sex.male;
-
-    final ageD = sp.getDouble('profile_age') ?? 30.0;
-    final height = sp.getDouble('profile_height') ?? 175.0;
-    final weight = sp.getDouble('profile_weight') ?? 70.0;
-
-    final actIdx = sp.getInt('profile_activity') ?? 0;
-    final goalIdx = sp.getInt('profile_goal') ?? 1;
-
     final activity =
         ActivityLevel.values[actIdx.clamp(0, ActivityLevel.values.length - 1)];
     final goal = GoalType.values[goalIdx.clamp(0, GoalType.values.length - 1)];
-
-    final bodyFat = sp.getDouble('profile_body_fat_pct');
-    final targetWeight = sp.getDouble('profile_target_weight');
-    final dietStyleIdx = sp.getInt('profile_diet_style') ?? 0;
 
     // Niveau d'activité : choix unique direct de l'utilisateur (voir
     // ActivityLevel — plus de reconstruction depuis pas + entraînements
@@ -1019,6 +1133,99 @@ Future<void> _appendGoalsSnapshot(SharedPreferences sp, NutritionTargets t) asyn
   }
 }
 
+/// Lit l'instantané des objectifs (macros + AG essentiels + à surveiller +
+/// minéraux + vitamines) réellement en vigueur à une date précise.
+///
+/// Priorité 71bis (20/08/2026, retour d'Alex : "tout est recalqué sur
+/// l'objectif d'aujourd'hui même en remontant dans le journal") — le Bilan
+/// 7/30/90j avait déjà été corrigé (Priorité 67, `goal_snapshots`), mais
+/// l'écran Journal lui-même (navigation jour par jour via les flèches
+/// précédent/suivant) continuait de comparer chaque jour passé aux objectifs
+/// COURANTS (`widget.goals`/`widget.nutritionTargets`, calculés une seule
+/// fois pour "aujourd'hui" et jamais réévalués en changeant de date) — d'où
+/// un "dépassement" apparent dès qu'un recalcul de calibration change
+/// l'objectif du jour, alors que le jour consulté respectait parfaitement
+/// l'objectif qui était le sien. Cette fonction permet à l'écran Journal de
+/// se rebrancher sur le même historique que le Bilan pour une date donnée.
+///
+/// Retourne `null` si aucun instantané n'existe pour cette date (ex. jour
+/// antérieur au déploiement de cette fonctionnalité, ou aucune sauvegarde de
+/// profil ce jour-là) — l'appelant doit alors se rabattre sur les objectifs
+/// courants (comportement inchangé pour ces cas).
+Future<NutritionTargets?> readGoalsSnapshotForDate(DateTime date) async {
+  final ymd = '${date.year.toString().padLeft(4, '0')}-'
+      '${date.month.toString().padLeft(2, '0')}-'
+      '${date.day.toString().padLeft(2, '0')}';
+
+  double d(Map<String, dynamic> m, String key) {
+    final v = m[key];
+    return v is num ? v.toDouble() : 0.0;
+  }
+
+  NutritionTargets build({
+    required double Function(String) get,
+  }) =>
+      NutritionTargets(
+        goals: Goals(
+            kcal: get('kcal'), prot: get('prot'), carb: get('carb'),
+            fat: get('fat'), fiber: get('fiber')),
+        sat: get('sat'), o9: get('o9'), o6: get('o6'), o3: get('o3'),
+        epa: get('epa'), dha: get('dha'), sugars: get('sugars'), salt: get('salt'),
+        caMg: get('caMg'), cuMg: get('cuMg'), feMg: get('feMg'), iUg: get('iUg'),
+        mgMg: get('mgMg'), mnMg: get('mnMg'), pMg: get('pMg'), kMg: get('kMg'),
+        seUg: get('seUg'), naMg: get('naMg'), znMg: get('znMg'),
+        vitAUg: get('vitAUg'), vitBetacarUg: get('vitBetacarUg'), vitDUg: get('vitDUg'),
+        vitEMg: get('vitEMg'), vitKUg: get('vitKUg'), vitCMg: get('vitCMg'),
+        b1Mg: get('b1Mg'), b2Mg: get('b2Mg'), b3Mg: get('b3Mg'), b5Mg: get('b5Mg'),
+        b6Mg: get('b6Mg'), b9Ug: get('b9Ug'), b12Ug: get('b12Ug'),
+      );
+
+  try {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null) {
+      final rows = await Supabase.instance.client
+          .from('goal_snapshots')
+          .select()
+          .eq('user_id', user.id)
+          .eq('date', ymd)
+          .limit(1);
+      if (rows.isNotEmpty) {
+        final m = Map<String, dynamic>.from(rows.first as Map);
+        // Colonnes remote en snake_case pour les minéraux/vitamines, sinon
+        // identiques aux clés locales (voir _appendGoalsSnapshot ci-dessus).
+        const remoteKey = {
+          'caMg': 'ca_mg', 'cuMg': 'cu_mg', 'feMg': 'fe_mg', 'iUg': 'i_ug',
+          'mgMg': 'mg_mg', 'mnMg': 'mn_mg', 'pMg': 'p_mg', 'kMg': 'k_mg',
+          'seUg': 'se_ug', 'naMg': 'na_mg', 'znMg': 'zn_mg',
+          'vitAUg': 'vit_a_ug', 'vitBetacarUg': 'vit_betacar_ug',
+          'vitDUg': 'vit_d_ug', 'vitEMg': 'vit_e_mg', 'vitKUg': 'vit_k_ug',
+          'vitCMg': 'vit_c_mg', 'b1Mg': 'b1_mg', 'b2Mg': 'b2_mg',
+          'b3Mg': 'b3_mg', 'b5Mg': 'b5_mg', 'b6Mg': 'b6_mg', 'b9Ug': 'b9_ug',
+          'b12Ug': 'b12_ug',
+        };
+        return build(get: (k) => d(m, remoteKey[k] ?? k));
+      }
+    }
+  } catch (_) {
+    // Hors ligne / table pas encore migrée : repli sur le cache local.
+  }
+
+  try {
+    final sp = await SharedPreferences.getInstance();
+    final raw = sp.getString('goals_snapshots_v1');
+    if (raw != null && raw.isNotEmpty) {
+      final list = (jsonDecode(raw) as List).cast<Map>();
+      final match = list.firstWhere((e) => e['date'] == ymd, orElse: () => const {});
+      if (match.isNotEmpty) {
+        final m = Map<String, dynamic>.from(match);
+        return build(get: (k) => d(m, k));
+      }
+    }
+  } catch (_) {}
+
+  return null;
+}
+
 /// Calibration adaptative (façon MacroFactor) : si assez de données de poids
 /// réel + calories loguées sont disponibles, déduit un PAL "calibré" tel
 /// que, une fois repassé dans LE MÊME moteur de calcul
@@ -1070,17 +1277,34 @@ NutritionTargets blendCalibratedTargets(UserProfile profile, CalibrationResult c
   final blendedKcal = (formulaTargets.goals.kcal * (1 - calib.blendWeight)) +
       (empiricalGoalAdjusted * calib.blendWeight);
 
-  // PAL "calibré" équivalent : en le repassant dans UserProfile, tout le
-  // reste (protéines par masse maigre, plancher/plafond lipides, glucides en
-  // solde, AG essentiels/sucres en % des calories) se recalcule cohérent
-  // avec ces nouvelles calories, sans aucun correctif à la main. On retire
-  // d'abord l'écart objectif (constant, indépendant du TDEE) avant de
-  // diviser par le BMR pour obtenir le PAL implicite.
+  // PAL "calibré" équivalent : en le repassant dans UserProfile, tout ce qui
+  // dépend des CALORIES (plancher/plafond lipides, glucides en solde, AG
+  // essentiels/sucres en % des calories) se recalcule cohérent avec ces
+  // nouvelles calories, sans aucun correctif à la main. On retire d'abord
+  // l'écart objectif (constant, indépendant du TDEE) avant de diviser par le
+  // BMR pour obtenir le PAL implicite.
   final calibratedPal = ((blendedKcal - adjustmentKcal) / bmr).clamp(1.10, 2.20);
-  final calibratedProfile = profile.copyWith(
-    activityPalOverride: calibratedPal,
-    activity: nearestActivityLevel(calibratedPal),
-  );
+
+  // BUG CORRIGÉ (19/08/2026, retour d'Alex — chute de 3090 à 2530 kcal ET de
+  // 153g à 115g de protéines en quelques jours, sans explication à l'écran) :
+  // `activity` était ICI réécrit sur `nearestActivityLevel(calibratedPal)` —
+  // le palier reconstruit depuis le PAL EMPIRIQUE (poids réel vs calories
+  // loguées). Or ce PAL empirique, calculé sur une fenêtre courte (10-20j),
+  // est extrêmement sensible au bruit de pesée pure (rétention d'eau/sel/
+  // glycogène, ±1-2kg en quelques jours ne représentant AUCUN vrai
+  // changement métabolique) — voir le lissage EMA déjà appliqué en amont
+  // dans calibration_service.dart. `activity` sert pourtant à fixer les
+  // protéines (g/kg de masse maigre) et plusieurs micronutriments — des
+  // besoins qui dépendent de la FRÉQUENCE/INTENSITÉ D'ENTRAÎNEMENT déclarée
+  // (littérature ISSN/Iraki et al. 2021), pas du niveau calorique mesuré.
+  // Faire dépendre les protéines d'un PAL bruité crée exactement le
+  // scénario vécu : un utilisateur qui s'entraîne quotidiennement (palier
+  // "Actif" déclaré) se voyait reclassé "Léger" par une simple fluctuation
+  // de poids, et perdait ~40g de protéines/jour sans le savoir. Le palier
+  // déclaré (`profile.activity`, jamais modifié ici) reste donc désormais la
+  // SEULE source pour protéines/micronutriments ; seul `activityPalOverride`
+  // (qui pilote uniquement le TDEE/les calories) reflète la calibration.
+  final calibratedProfile = profile.copyWith(activityPalOverride: calibratedPal);
   return computeNutritionTargets(calibratedProfile);
 }
 

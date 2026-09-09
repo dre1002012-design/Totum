@@ -38,6 +38,13 @@ class PausePeriod {
 
   bool get isActive => end == null;
 
+  /// `end` antérieur à `start` = intervalle délibérément VIDE (sentinelle
+  /// "pause annulée", voir `PauseService.endActivePause()`) — ne contient
+  /// jamais aucune date. Utilisé au lieu d'une suppression en base
+  /// (`.delete()` non autorisé par la RLS de `pause_periods`, seulement
+  /// select/insert/update) : une mise à jour vers un intervalle vide est
+  /// strictement équivalente à une suppression du point de vue de
+  /// `contains()`, sans nécessiter de nouvelle permission.
   bool contains(DateTime d) {
     final day = _dateOnly(d);
     final s = _dateOnly(start);
@@ -64,6 +71,14 @@ class PauseService {
   List<PausePeriod>? _cached;
   DateTime? _cachedAt;
   static const _cacheTtl = Duration(seconds: 5);
+
+  /// Invalide le cache mémoire — à appeler à chaque changement de compte
+  /// détecté (voir `account_guard.dart`). Même raisonnement que
+  /// `CalibrationService.resetInMemoryCache()`.
+  void resetInMemoryCache() {
+    _cached = null;
+    _cachedAt = null;
+  }
 
   Future<List<PausePeriod>> load() async {
     final cached = _cached;
@@ -170,18 +185,72 @@ class PauseService {
 
   /// Termine la pause en cours (fixe sa date de fin à aujourd'hui). Sans
   /// effet si aucune pause n'est active.
+  ///
+  /// BUG CORRIGÉ (19/08/2026, retour d'Alex — bouton pause activé puis
+  /// désactivé aussitôt, et son compteur "jours pesés" a silencieusement
+  /// perdu 1 jour, faisant retomber son objectif calorique calibré (2660)
+  /// sur la formule pure (3090)) : une pause démarrée ET terminée le MÊME
+  /// jour calendaire produisait `PausePeriod(start: aujourd'hui, end:
+  /// aujourd'hui)`. `PausePeriod.contains()` compare des DATES (pas des
+  /// horodatages précis), donc cette période "contient" la journée entière,
+  /// pour toujours — alors qu'aucune vraie pause n'a eu lieu (quelques
+  /// secondes entre les deux taps). Ce jour se retrouvait donc exclu de
+  /// TOUTE calibration future de façon permanente, silencieuse et
+  /// irréversible pour l'utilisateur (aucun moyen de le "dé-exclure" dans
+  /// l'UI).
+  ///
+  /// BUG CORRIGÉ #2 (19/08/2026, même jour, retour d'Alex — "il me remet
+  /// tout le temps en pause, même après avoir mis 'je suis de retour'") : le
+  /// 1er correctif ci-dessus supprimait la ligne via `.delete()` — mais la
+  /// migration `20260817c_pause_periods.sql` n'accorde AUCUNE politique RLS
+  /// pour DELETE (seulement select/insert/update), donc cet appel échouait
+  /// silencieusement côté serveur (avalé par le `catch` ci-dessous). La
+  /// ligne restait donc active dans Supabase (`end_date` toujours `null`) ;
+  /// au prochain chargement de l'app, `load()` la re-fusionnait depuis le
+  /// serveur et ressuscitait la pause — en boucle à chaque réouverture.
+  /// Corrigé pour de bon : au lieu de supprimer la ligne, on la met à jour
+  /// (`upsert`, une opération déjà autorisée par la RLS existante) avec une
+  /// date de fin ANTÉRIEURE à sa date de début — un intervalle mathématiquement
+  /// vide qu'aucune date ne peut jamais "contenir" (voir `PausePeriod
+  /// .contains()`), sans avoir besoin d'une nouvelle permission ni d'une
+  /// intervention manuelle dans Supabase. Purement local, la ligne aurait pu
+  /// être retirée de la liste ; gardée ici pour que la MÊME logique
+  /// (upsert) s'applique identiquement en local et à distance.
   Future<void> endActivePause() async {
     final periods = await load();
     final idx = periods.indexWhere((p) => p.isActive);
     if (idx == -1) return;
     final sp = await SharedPreferences.getInstance();
     final today = _dateOnly(DateTime.now());
+    final active = periods[idx];
+    final user = _client.auth.currentUser;
+
+    if (_dateOnly(active.start) == today) {
+      final invalidated = active.copyWith(end: today.subtract(const Duration(days: 1)));
+      final updated = List<PausePeriod>.from(periods)..[idx] = invalidated;
+      _cached = updated;
+      _cachedAt = DateTime.now();
+      await _saveLocal(sp, updated);
+      if (user != null) await _upsertRemote(user.id, invalidated);
+      return;
+    }
+
+    // BUG CORRIGÉ (31/08/2026, retour d'Alex — revenu de pause le 31/8 après
+    // une pause du 29 au 30/8, "on a attaqué un nouveau jour, on devrait
+    // être à 19/20 jours") : `end: today` incluait le jour où l'utilisateur
+    // appuie sur "Je suis de retour" DANS la période de pause elle-même
+    // (`PausePeriod.contains` est inclusif des deux bornes) — alors que ce
+    // jour-là est précisément celui où le suivi normal REPREND. Résultat :
+    // peser/loguer le jour du retour n'aurait silencieusement compté pour
+    // rien tant qu'on n'attendait pas le lendemain. La pause doit couvrir
+    // les jours RÉELLEMENT absents (`start` à la veille du retour), jamais
+    // le jour de la reprise.
     final updated = List<PausePeriod>.from(periods);
-    updated[idx] = updated[idx].copyWith(end: today);
+    updated[idx] =
+        updated[idx].copyWith(end: today.subtract(const Duration(days: 1)));
     _cached = updated;
     _cachedAt = DateTime.now();
     await _saveLocal(sp, updated);
-    final user = _client.auth.currentUser;
     if (user != null) await _upsertRemote(user.id, updated[idx]);
   }
 

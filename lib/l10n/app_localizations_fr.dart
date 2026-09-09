@@ -19,6 +19,17 @@ class AppLocalizationsFr extends AppLocalizations {
       'Sauvegarde ton profil à quelques jours d\'écart pour voir ta courbe apparaître ici.';
 
   @override
+  String weightTrendDaysRemaining(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Encore $days jours de pesée avant ta courbe',
+      one: 'Encore 1 jour de pesée avant ta courbe',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get weightTrendRangeYear => '1A';
 
   @override
@@ -59,10 +70,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get expenditureSpanBetweenWeighIns => 'Écart entre 2 pesées';
+  String get expenditureSpanBetweenWeighIns =>
+      'Jours pesés (20 derniers jours)';
 
   @override
-  String get expenditureSpanBetweenWeighInsCompact => 'Écart pesées';
+  String get expenditureSpanBetweenWeighInsCompact => 'Jours pesés';
 
   @override
   String get expenditureMealsLogged => 'Repas renseignés (20 derniers jours)';
@@ -73,6 +85,58 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get expenditureContinueHint =>
       'Continue à te peser et à noter tes repas régulièrement — ta dépense apparaîtra automatiquement dès ces deux seuils atteints.';
+
+  @override
+  String expenditureDaysRemaining(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Encore $days jours de suivi avant ta 1ère estimation',
+      one: 'Encore 1 jour de suivi avant ta 1ère estimation',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get expenditureAlmostReady =>
+      'Presque prêt — ta 1ère estimation arrive dans les prochains jours';
+
+  @override
+  String get expenditureGoalReadyChartPending =>
+      'Ton objectif calorique est déjà affiné avec tes résultats réels — le graphique d\'évolution, lui, a besoin d\'encore 1 jour de suivi pour tracer sa première ligne';
+
+  @override
+  String get expenditureTapForDetail => 'Touche pour voir le détail';
+
+  @override
+  String get expenditureDetailTitle => 'Avant ta 1ère estimation';
+
+  @override
+  String get expenditureDetailLead =>
+      '2 éléments à renseigner régulièrement pour débloquer ton estimation réelle.';
+
+  @override
+  String get expenditureFoodAdviceText =>
+      'Note tous tes repas, du petit-déjeuner au dîner, chaque jour — même un jour atypique compte, sauf si tu déclares une pause.';
+
+  @override
+  String get expenditureDetailTip =>
+      'Plus tu es régulier, plus l\'estimation se resserre — la marge d\'incertitude diminue avec le volume de données, jamais l\'inverse.';
+
+  @override
+  String get expenditureDetailWhy => 'Pourquoi ce chiffre ?';
+
+  @override
+  String get expenditureDetailWeightChange => 'Variation de poids (tendance)';
+
+  @override
+  String get expenditureDetailAvgLogged => 'Calories loguées en moyenne';
+
+  @override
+  String get expenditureDetailCoverage => 'Jours de journal couverts';
+
+  @override
+  String get expenditureDetailUncertainty => 'Marge d\'incertitude';
 
   @override
   String get expenditureEstimatedLegend => 'Dépense estimée';
@@ -86,6 +150,128 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get expenditureRecentEvolution => 'Évolution récente';
+
+  @override
+  String get expenditureInfoTooltip => 'Qu\'est-ce que ce chiffre ?';
+
+  @override
+  String get expenditureInfoTitle => 'Dépense énergétique estimée';
+
+  @override
+  String get expenditureInfoWhatItIs =>
+      'Ce chiffre est une MOYENNE réelle sur ~20 jours : à partir de l\'évolution de ton poids et des calories que tu as réellement loguées sur cette période, TOTUM déduit les calories qu\'il t\'a vraiment fallu manger pour aboutir à ce résultat. C\'est le même principe que la calibration adaptative qui affine ton objectif calorique — mais affiché ici jour par jour, comme une courbe de tendance.';
+
+  @override
+  String get expenditureInfoVsToday =>
+      'Ce n\'est PAS le même chiffre que « Métabolisme de base » + « Mouvement » affichés sur le tableau de bord : ceux-là sont un calcul par formule pour LA JOURNÉE EN COURS (âge, poids, activité déclarée + ton activité physique du jour). Le chiffre ici est une moyenne empirique glissante sur plusieurs semaines — les deux peuvent légitimement diverger, surtout si ton journal alimentaire n\'est pas rempli tous les jours.';
+
+  @override
+  String get expenditureInfoCoverageWarning =>
+      'Attention aux fenêtres peu couvertes (moins de la moitié des jours renseignés) : un jour partiellement loggé (un repas oublié, une sauce ou une boisson non notée) fait paraître ton apport plus bas qu\'il ne l\'était vraiment, ce qui tire cette estimation vers le bas. Plus tu logues régulièrement, plus ce chiffre devient fiable.';
+
+  @override
+  String get expenditureInfoAutoRefresh =>
+      'Aucune action de ta part n\'est nécessaire : ce chiffre se recalcule tout seul à chaque ouverture de l\'app, à partir de tes journées TERMINÉES uniquement — les repas du jour même ne comptent jamais tant que la journée n\'est pas finie (sinon un simple petit-déjeuner logué le matin ferait chuter artificiellement l\'estimation). Le bouton \"Confirmer mes objectifs\" du Profil ne sert qu\'à valider un changement de réglage (poids, objectif...), jamais à \"rafraîchir\" ce calcul.';
+
+  @override
+  String get expenditureLowCoverageBadge =>
+      'Couverture faible sur cette fenêtre — à interpréter avec prudence (repas non loggés = apport sous-estimé).';
+
+  @override
+  String get expenditureInfoSubtitle =>
+      'En 30 secondes : d\'où vient ce nombre, et pourquoi il peut différer de tes autres chiffres.';
+
+  @override
+  String get expenditureInfoEquationTitle => 'Ta dépense totale : le TDEE';
+
+  @override
+  String get expenditureInfoTdeeSpellOut =>
+      'TDEE, pour Total Daily Energy Expenditure — ta dépense énergétique totale sur une journée. Il se décompose en 4 briques, dans des proportions très inégales :';
+
+  @override
+  String get expenditureInfoEquationBmr => 'BMR — Métabolisme de base';
+
+  @override
+  String get expenditureInfoEquationBmrDesc =>
+      'Ce que ton corps brûle au repos pour fonctionner : respiration, circulation, cerveau, organes. La plus grosse part, ~70 % — très peu de marge de manœuvre dessus au quotidien.';
+
+  @override
+  String get expenditureInfoEquationNeat => 'NEAT — Mouvement du quotidien';
+
+  @override
+  String get expenditureInfoEquationNeatDesc =>
+      'Tout ce que tu brûles en bougeant sans que ce soit \"du sport\" : marcher, monter des escaliers, être debout, gesticuler. Très variable d\'une personne à l\'autre — ~15 % en moyenne.';
+
+  @override
+  String get expenditureInfoNeatLeverBadge =>
+      'Ton levier le plus puissant, pour la grande majorité des gens';
+
+  @override
+  String get expenditureInfoEquationTef => 'TEF — Effet thermique des aliments';
+
+  @override
+  String get expenditureInfoEquationTefDesc =>
+      'L\'énergie que ton corps utilise pour digérer ce que tu manges — ~10 %. Varie selon ce que tu manges : les protéines en demandent le plus, les lipides le moins.';
+
+  @override
+  String get expenditureInfoEquationEat => 'EAT — Activité physique volontaire';
+
+  @override
+  String get expenditureInfoEquationEatDesc =>
+      'Le sport au sens strict, ce que tu ajoutes volontairement à ta journée. La plus petite part en moyenne (~5 %), mais celle qui progresse le plus avec l\'entraînement.';
+
+  @override
+  String get expenditureInfoTdeeCaption =>
+      'Répartition moyenne pour un adulte à activité modérée — les proportions réelles varient beaucoup d\'une personne à l\'autre.';
+
+  @override
+  String get expenditureInfoMethodsTitle => '2 méthodes, combinées';
+
+  @override
+  String get expenditureInfoMethodFormulaTitle => 'La formule';
+
+  @override
+  String get expenditureInfoMethodFormulaDesc =>
+      'Âge, poids, taille, sexe, niveau d\'activité déclaré → une estimation scientifique de départ (Mifflin-St Jeor / Cunningham). C\'est elle qui fixe ton objectif du jour et le donut du tableau de bord.';
+
+  @override
+  String get expenditureInfoMethodCalibTitle => 'La calibration';
+
+  @override
+  String get expenditureInfoMethodCalibDesc =>
+      'TON poids réel + TES calories réellement loguées sur ~20 jours → ta dépense déduite de tes résultats concrets. C\'est LE chiffre affiché ici, sur cette courbe.';
+
+  @override
+  String get expenditureInfoMethodsFooter =>
+      'Totum combine les deux : la formule sert de point de départ et de garde-fou de sécurité, la calibration réelle vient l\'affiner au fil de tes données.';
+
+  @override
+  String get expenditureInfoBalanceTitle => 'Le principe, en une phrase';
+
+  @override
+  String get expenditureInfoBalanceBody =>
+      'Si ton poids ne bouge pas alors que tu manges X kcal/jour, c\'est que tu dépenses environ X kcal/jour aussi. Si ton poids baisse ou monte, Totum ajuste ce chiffre en conséquence — c\'est tout le calcul, littéralement une balance.';
+
+  @override
+  String get expenditureInfoLiveCompareTitle =>
+      'Ton chiffre actuel, en contexte';
+
+  @override
+  String expenditureInfoBelowBmr(int estimate, int bmr) {
+    return '$estimate kcal/j, c\'est en dessous de ton métabolisme de base théorique ($bmr kcal/j) — physiologiquement peu probable en continu. Le signe le plus courant : des repas non loggués récemment, pas une vraie baisse de ta dépense. Continue à loguer régulièrement pour que ce chiffre se rapproche de la réalité.';
+  }
+
+  @override
+  String expenditureInfoAboveBmr(int estimate, int bmr, String level) {
+    return '$estimate kcal/j, au-dessus de ton métabolisme de base théorique ($bmr kcal/j) — cohérent avec un niveau d\'activité « $level ».';
+  }
+
+  @override
+  String get expenditureInfoScienceTitle => 'Bases scientifiques';
+
+  @override
+  String get expenditureInfoScienceBody =>
+      'Métabolisme de base : équations de Mifflin-St Jeor (1990) ou Cunningham (1980, sur masse maigre). Effet thermique des aliments : Westerterp (2004). Mouvement hors sport (NEAT) : Levine (2002). Principe d\'équilibre énergétique : Hall et al. (2011), modèle repris par le NIH Body Weight Planner. Méthodologie de calibration adaptative inspirée des principes publiés dans la littérature de suivi nutritionnel — jamais une reproduction d\'un algorithme propriétaire tiers.';
 
   @override
   String get kcalPerDay => 'kcal/j';
@@ -631,6 +817,86 @@ class AppLocalizationsFr extends AppLocalizations {
   String get accountSignOut => 'Se déconnecter';
 
   @override
+  String get accountSignOutConfirmTitle => 'Se déconnecter ?';
+
+  @override
+  String get accountSignOutConfirmContent =>
+      'Tu pourras te reconnecter à tout moment avec ton adresse courriel.';
+
+  @override
+  String get accountSubscriptionSectionLabel => 'Abonnement';
+
+  @override
+  String get accountFullNameLabel => 'Nom complet';
+
+  @override
+  String get accountFullNameEmpty => 'Non renseigné';
+
+  @override
+  String get accountPhoneLabel => 'Téléphone';
+
+  @override
+  String get accountPhoneEmpty => 'Non renseigné';
+
+  @override
+  String get accountPasswordLabel => 'Mot de passe';
+
+  @override
+  String get accountPasswordMasked => '••••••••';
+
+  @override
+  String accountEditFieldTitle(String field) {
+    return 'Modifier — $field';
+  }
+
+  @override
+  String get accountFieldSaved => 'Enregistré';
+
+  @override
+  String accountFieldSaveError(String error) {
+    return 'Erreur lors de l\'enregistrement : $error';
+  }
+
+  @override
+  String get accountNewEmailLabel => 'Nouvelle adresse courriel';
+
+  @override
+  String accountEmailChangeSentMessage(String email) {
+    return 'E-mail de confirmation envoyé à $email — le changement prendra effet une fois confirmé.';
+  }
+
+  @override
+  String get accountNewPasswordLabel => 'Nouveau mot de passe';
+
+  @override
+  String get accountConfirmPasswordLabel => 'Confirmer le mot de passe';
+
+  @override
+  String get accountPasswordTooShort =>
+      'Le mot de passe doit contenir au moins 8 caractères.';
+
+  @override
+  String get accountPasswordMismatch =>
+      'Les deux mots de passe ne correspondent pas.';
+
+  @override
+  String get aboutPackageIdLabel => 'Identifiant du package';
+
+  @override
+  String get aboutInfoContent =>
+      'TOTUM t\'aide à devenir pleinement acteur de ta santé au quotidien, au-delà du simple comptage de calories — une approche holistique qui relie nutrition, mouvement, sommeil et bien-être.\n\nTous nos calculs (besoins caloriques, macronutriments, micronutriments) reposent sur des méthodes validées scientifiquement, et notre base alimentaire s\'appuie sur des données de référence officielles (CIQUAL, USDA) pour une fiabilité maximale.';
+
+  @override
+  String get accountLifetimeDialogContent =>
+      'Ton accès Premium à vie est actif — aucun paiement récurrent, rien à gérer.';
+
+  @override
+  String get profileRestingMetabolism => 'Métabolisme de base';
+
+  @override
+  String get profileMovementExpenditure => 'Mouvement';
+
+  @override
   String get appearanceScreenTitle => 'Apparence';
 
   @override
@@ -980,6 +1246,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get profileGoalsSaved => 'Objectifs enregistrés';
+
+  @override
+  String get profileGoalsSavedCaption =>
+      'S\'affine automatiquement avec ton poids et ton journal — reviens ici seulement si tu changes un réglage (poids, objectif, activité...).';
+
+  @override
+  String get profileConfirmGoalsCaption =>
+      'Un réglage a changé : confirme pour l\'appliquer à tes objectifs du jour.';
 
   @override
   String get profileBackToAuto => 'Revenir au calcul automatique';

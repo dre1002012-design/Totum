@@ -33,11 +33,29 @@ class Units {
   /// Convertit une valeur saisie dans l'unité choisie vers le cm de stockage.
   static double heightToCm(double displayed, UnitSystem s) => s == UnitSystem.imperial ? inToCm(displayed) : displayed;
 
+  /// Trim un nombre à 2 décimales max, sans zéros inutiles (ex. 72.5 reste
+  /// "72.5", jamais "72.50" ; 70.0 devient "70") — PUBLIC et partagé (21/08/2026)
+  /// : avant, 3 implémentations quasi identiques de ce même arrondi vivaient
+  /// séparément (`profile_screen.dart` × 2, `units.dart`), exactement le
+  /// pattern "logique dupliquée qui dérive" déjà documenté ailleurs dans ce
+  /// projet (`docs/KNOWN_ISSUES.md`) — une seule source désormais.
+  static String trimDecimals(double v, {int maxDecimals = 2}) {
+    var s = v.toStringAsFixed(maxDecimals);
+    if (s.contains('.')) {
+      s = s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+    }
+    return s;
+  }
+
   /// Affichage lecture-seule d'un poids (dashboard, graphiques).
+  ///
+  /// BUG CORRIGÉ (21/08/2026, retour d'Alex — "je lui ai rentré 72,75 et ça
+  /// m'affiche 72,8 partout") : plafonné à 1 décimale, perdait silencieusement
+  /// le 2e chiffre saisi. 2 décimales désormais partout où un poids est
+  /// affiché (zéros inutiles retirés, comme dans le champ de saisie Mesures).
   static String formatWeight(double kg, UnitSystem s) {
-    if (s == UnitSystem.imperial) return '${kgToLb(kg).toStringAsFixed(1)} lb';
-    final trimmed = kg == kg.roundToDouble() ? kg.toStringAsFixed(0) : kg.toStringAsFixed(1);
-    return '$trimmed kg';
+    if (s == UnitSystem.imperial) return '${trimDecimals(kgToLb(kg))} lb';
+    return '${trimDecimals(kg)} kg';
   }
 
   /// Affichage lecture-seule d'une taille (dashboard) — format pied'pouce"

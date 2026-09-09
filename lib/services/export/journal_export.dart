@@ -80,13 +80,18 @@ class JournalExporter {
     }
 
     // ── 1. Bulk fetch Supabase ─────────────────────────────────────
+    // Limite explicite (21/08/2026, même correctif que calibration_service.dart/
+    // bilan_screen.dart ce jour-là) : garde-fou contre le plafond de lignes
+    // par défaut de PostgREST/Supabase sur un export portant sur une longue
+    // période et une saisie très granulaire (aliment par aliment).
     final List<dynamic> rawRows = await client
         .from('food_entries')
         .select()
         .eq('user_id', user.id)
         .gte('entry_date', _ymd(from))
         .lte('entry_date', _ymd(to))
-        .order('entry_date');
+        .order('entry_date')
+        .limit(10000);
 
     // Groupement : date → repas → entrées
     final byDate = <String, Map<String, List<Map<String, dynamic>>>>{};

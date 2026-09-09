@@ -21,18 +21,15 @@ class WeightTrendChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Retour d'Alex (21/08/2026) : "je veux que les vignettes Poids et
+    // Dépense énergétique aient exactement la même logique de
+    // représentation" — l'état "pas encore assez de données" (0 ou 1 pesée)
+    // utilise maintenant le même anneau + % que la vignette Dépense
+    // énergétique (`TotumReadinessRing`, partagé), au lieu d'un simple texte
+    // statique. Le seuil d'apparition du VRAI graphique (2 pesées) reste
+    // inchangé — seul l'habillage visuel de l'état transitoire change.
     if (data.length < 2) {
-      return Container(
-        height: compact ? 90 : height,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: TotumColors.page, borderRadius: BorderRadius.circular(12)),
-        child: Text(
-          context.l10n.weightTrendEmptyState,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 11.5, color: TotumColors.textMuted),
-        ),
-      );
+      return _WeightReadinessProgress(height: compact ? 90 : height, compact: compact);
     }
     return ValueListenableBuilder<UnitSystem>(
       valueListenable: AppSettings.unitSystem,
@@ -108,20 +105,32 @@ class WeightTrendChart extends StatelessWidget {
           // Sans ce réglage, fl_chart utilise son tooltip par défaut qui
           // affiche la valeur brute (nombreuses décimales issues du calcul
           // de tendance EMA) — retour d'Alex (12/08/2026) : forcé à 1
-          // décimale (Priorité 63 : 2 décimales encore signalées comme trop
-          // chargées — alignées sur le résumé au-dessus, lui-même en 1
-          // décimale).
+          // décimale (Priorité 63). Repassé à 2 décimales le 21/08/2026 sur
+          // demande explicite d'Alex ("2 chiffres après la virgule de
+          // partout pour tout ce qui est notion de poids") — Priorité 63
+          // visait la lisibilité générale, pas la précision de saisie ;
+          // cette nouvelle demande est plus spécifique et plus récente.
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
+              // Icône + couleur pour chaque valeur (21/08/2026, retour
+              // d'Alex — homogénéité demandée avec le tooltip Dépense
+              // énergétique, voir son commentaire dans expenditure_screen.dart) :
+              // la couleur seule différenciait déjà brut/tendance ici, mais
+              // sans icône contrairement à ce qui est maintenant fait côté
+              // dépense énergétique.
               getTooltipItems: (spots) => spots.map((s) {
                 final isTrend = s.barIndex == 1;
+                final icon = isTrend ? Icons.show_chart_rounded : Icons.scatter_plot_outlined;
+                final color = isTrend ? TotumColors.accent : TotumColors.outlineStrong;
                 return LineTooltipItem(
-                  '${s.y.toStringAsFixed(1)} $unitLabel',
-                  TextStyle(
-                    color: isTrend ? TotumColors.accent : TotumColors.outlineStrong,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 12,
-                  ),
+                  String.fromCharCode(icon.codePoint),
+                  TextStyle(fontFamily: icon.fontFamily, fontSize: 12, color: color),
+                  children: [
+                    TextSpan(
+                      text: ' ${Units.trimDecimals(s.y)} $unitLabel',
+                      style: TextStyle(color: color, fontWeight: FontWeight.w800, fontSize: 12),
+                    ),
+                  ],
                 );
               }).toList(),
             ),
@@ -153,6 +162,72 @@ class WeightTrendChart extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// État "pas encore assez de pesées" — même anneau + logique que
+/// `_ExpenditureProgress` (expenditure_screen.dart), réutilise le MÊME
+/// compteur `weighDaysProgress`/`minWeighDays` déjà calculé par
+/// `CalibrationService.expenditureReadiness()` pour le volet poids de la
+/// calibration adaptative — jamais un 2e seuil inventé pour ce seul
+/// graphique, garantissant que les 2 vignettes ne peuvent plus dériver
+/// l'une de l'autre.
+class _WeightReadinessProgress extends StatefulWidget {
+  final double height;
+  final bool compact;
+  const _WeightReadinessProgress({required this.height, required this.compact});
+
+  @override
+  State<_WeightReadinessProgress> createState() => _WeightReadinessProgressState();
+}
+
+class _WeightReadinessProgressState extends State<_WeightReadinessProgress> {
+  late final Future<ExpenditureReadiness> _future =
+      CalibrationService.instance.expenditureReadiness();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: widget.height,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: TotumColors.page, borderRadius: BorderRadius.circular(12)),
+      child: FutureBuilder<ExpenditureReadiness>(
+        future: _future,
+        builder: (context, snap) {
+          final r = snap.data;
+          if (r == null) {
+            return const Center(
+              child: SizedBox(
+                width: 20, height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2, color: TotumColors.accent),
+              ),
+            );
+          }
+          final daysRemaining = (r.minWeighDays - r.weighInsCount).clamp(0, r.minWeighDays);
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TotumReadinessRing(fraction: r.weighDaysProgress, compact: widget.compact),
+              SizedBox(width: widget.compact ? 12 : 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(context.l10n.weightTrendDaysRemaining(daysRemaining),
+                        style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary, height: 1.3)),
+                    if (!widget.compact) ...[
+                      const SizedBox(height: 4),
+                      Text(context.l10n.weightTrendAdviceText,
+                          style: TextStyle(fontSize: 11, height: 1.4, color: TotumColors.textSecondary)),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -259,7 +334,7 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
             Expanded(child: Text(label, style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary))),
             Icon(icon, size: 15, color: TotumColors.textMuted),
             const SizedBox(width: 6),
-            Text('${delta >= 0 ? '+' : ''}${delta.toStringAsFixed(1)} $unitLabel',
+            Text('${delta >= 0 ? '+' : ''}${Units.trimDecimals(delta)} $unitLabel',
                 style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           ],
         ),
@@ -326,7 +401,7 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(current.toStringAsFixed(1),
+        Text(Units.trimDecimals(current),
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
         Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 5),
@@ -337,7 +412,7 @@ class _WeightTrendScreenState extends State<WeightTrendScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(color: TotumColors.accentSoft, borderRadius: BorderRadius.circular(999)),
-            child: Text('${change >= 0 ? '+' : ''}${change.toStringAsFixed(1)} $unitLabel / ${totalDays}j',
+            child: Text('${change >= 0 ? '+' : ''}${Units.trimDecimals(change)} $unitLabel / ${totalDays}j',
                 style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: TotumColors.accent)),
           ),
         ),

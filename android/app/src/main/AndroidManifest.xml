@@ -57,10 +57,26 @@
 
         <!-- Module Respiration : service au premier plan pour la continuité
              audio écran verrouillé. Nom de classe imposé par le plugin
-             flutter_foreground_task, ne pas renommer. -->
+             flutter_foreground_task, ne pas renommer.
+
+             BUG CORRIGÉ (19/08/2026, retour d'Alex — "si je swipe
+             totalement l'appli, la respiration continue en fond, il y a un
+             bug") : sans `android:stopWithTask`, ce service survit à la
+             suppression de la tâche depuis Récents (comportement PAR
+             DÉFAUT d'Android = false), exactement comme il doit survivre à
+             une simple mise en veille de l'écran — les deux événements
+             n'étaient pas distingués. `stopWithTask="true"` cible
+             SPÉCIFIQUEMENT la fermeture volontaire (swipe depuis Récents/
+             `finishAndRemoveTask`) : verrouiller l'écran ou mettre l'app en
+             arrière-plan sans la retirer de Récents NE déclenche PAS cet
+             événement, donc la continuité "écran verrouillé" recherchée
+             reste intacte. Voir aussi `ForegroundTaskOptions.stopWithTask`
+             côté Dart (breath_background_session.dart) — les deux réglages
+             pointent vers le même comportement natif, gardés synchronisés. -->
         <service
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
             android:foregroundServiceType="mediaPlayback"
+            android:stopWithTask="true"
             android:exported="false" />
 
     </application>

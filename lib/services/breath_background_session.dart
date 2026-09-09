@@ -45,6 +45,18 @@ class BreathBackgroundSession {
       foregroundTaskOptions: ForegroundTaskOptions(
         eventAction: ForegroundTaskEventAction.nothing(),
         allowWakeLock: true,
+        // BUG CORRIGÉ (19/08/2026, retour d'Alex — la respiration continue
+        // en fond même après avoir swipé complètement l'app) : explicite ici
+        // ET dans AndroidManifest.xml (`android:stopWithTask="true"` sur le
+        // <service>) — les deux réglages pointent vers le même comportement
+        // natif ; le laisser à `null` (valeur par défaut du plugin) retombe
+        // sur le flag manifeste, donc le mettre ici aussi documente
+        // l'intention explicitement plutôt que de dépendre d'un repli
+        // silencieux. `true` = le service (et donc le timer/l'audio de la
+        // séance) s'arrête quand la tâche est retirée des Récents — jamais
+        // lors d'une simple mise en veille de l'écran, qui ne déclenche pas
+        // cet événement.
+        stopWithTask: true,
       ),
     );
     _foregroundTaskInitialized = true;

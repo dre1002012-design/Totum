@@ -335,14 +335,12 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   double _num(TextEditingController c) => double.tryParse(c.text.replaceAll(',', '.')) ?? 0.0;
 
-  /// Affiche un nombre sans zéros décimaux inutiles.
-  String _trimNumber(double v) {
-    String s = v.toStringAsFixed(2);
-    if (s.contains('.')) {
-      s = s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-    }
-    return s;
-  }
+  /// Affiche un nombre sans zéros décimaux inutiles — délègue à
+  /// `Units.trimDecimals` (21/08/2026, nettoyage doublons) : 3 copies quasi
+  /// identiques de cette même logique vivaient séparément dans ce fichier et
+  /// units.dart, exactement le pattern "logique dupliquée qui dérive" déjà
+  /// documenté ailleurs dans ce projet.
+  String _trimNumber(double v) => Units.trimDecimals(v);
 
   double? _currentBodyFat() {
     if (!_bodyFatEnabled || _bodyFatRange == null) return null;
@@ -665,19 +663,38 @@ class ProfileScreenState extends State<ProfileScreen> {
       final sexEnum = (sexStr == 'female') ? nutri.Sex.female : nutri.Sex.male;
       final goalEnum = nutri.GoalType.values[goalIndex.clamp(0, nutri.GoalType.values.length - 1)];
 
-      // Profil tout juste créé : aucune donnée de pas/entraînement encore
-      // renseignée -> repli sédentaire (PAL 1.20), cohérent avec la valeur
-      // par défaut de _dailyPal.
+      // BUG CORRIGÉ (24/08/2026, retour d'Alex — cible recalculée trop basse
+      // juste après une réinstallation) : ce repli utilisait un niveau
+      // d'activité SEDENTARY câblé en dur ET la formule pure (sans
+      // calibration), au lieu du niveau d'activité réellement restauré
+      // depuis Supabase (`activityIndex`, déjà résolu juste au-dessus) et de
+      // la calibration adaptative — silencieusement, ça pouvait produire une
+      // cible bien plus basse (jusqu'à ~600 kcal d'écart pour un profil
+      // "Actif", PAL 1.20 vs 1.62) que celle réellement active avant la
+      // réinstallation, persistée localement et affichée partout (Tableau de
+      // bord, Journal) tant que l'utilisateur n'ouvrait pas l'onglet Profil
+      // pour appuyer sur "Enregistrer mes objectifs". `goal` seul n'est pas
+      // vraiment "objectif non enregistré" comme le laisse penser l'écran —
+      // c'est bien tout le calcul qui repartait d'une base tronquée.
+      final activityEnum = activityIndex != null
+          ? nutri.ActivityLevel.values[activityIndex.clamp(0, nutri.ActivityLevel.values.length - 1)]
+          : nutri.ActivityLevel.sedentary;
+      final dietStyleEnum = dietStyleIndex != null
+          ? nutri.DietStyle.values[dietStyleIndex.clamp(0, nutri.DietStyle.values.length - 1)]
+          : nutri.DietStyle.balanced;
+
       final profile = nutri.UserProfile(
         sex: sexEnum,
         age: age.round(),
         heightCm: height,
         weightKg: weight,
-        activity: nutri.ActivityLevel.sedentary,
+        activity: activityEnum,
         goal: goalEnum,
         bodyFatPercent: (bodyFat != null && bodyFat > 0) ? bodyFat : null,
+        dietStyle: dietStyleEnum,
+        targetWeightKg: (targetWeight != null && targetWeight > 0) ? targetWeight : null,
       );
-      final goalsAuto = nutri.computeGoals(profile);
+      final goalsAuto = (await nutri.computeCalibratedTargets(profile)).goals;
       goalsKcal = goalsAuto.kcal;
       goalsProt = goalsAuto.prot;
       goalsCarb = goalsAuto.carb;
@@ -781,7 +798,23 @@ class ProfileScreenState extends State<ProfileScreen> {
         elevation: 0,
         foregroundColor: TotumColors.textPrimary,
         centerTitle: true,
-        title: Image.asset('assets/logo_wordmark.png', height: 46),
+        // BUG CORRIGÉ (21/08/2026, retour d'Alex — "mon logo Totum en haut,
+        // c'est marqué en gris, alors que ça devrait être marqué en blanc")
+        // : le PNG source a le texte "Totum" en encre marine fixe, illisible
+        // sur fond sombre. Variante dédiée générée (script ponctuel, texte
+        // recoloré en blanc pixel par pixel sur la zone du texte
+        // uniquement — repérée précisément par rangée de pixels pour ne
+        // JAMAIS toucher à l'icône orange/verte au-dessus — vérifiée
+        // visuellement avant intégration), sélectionnée selon le thème
+        // effectif. Pas de recolorisation dynamique (`color`+`colorBlendMode`)
+        // possible ici : l'icône et le texte partagent le même PNG, un
+        // tinting global aurait aussi blanchi le fruit.
+        title: Image.asset(
+          Theme.of(context).brightness == Brightness.dark
+              ? 'assets/logo_wordmark_dark.png'
+              : 'assets/logo_wordmark.png',
+          height: 46,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.account_circle_outlined),
@@ -818,6 +851,20 @@ class ProfileScreenState extends State<ProfileScreen> {
                 label: Text(_dirty ? l10n.profileConfirmGoals : l10n.profileGoalsSaved,
                     style: const TextStyle(fontWeight: FontWeight.w800)),
               ),
+            ),
+            const SizedBox(height: 8),
+            // Retour d'Alex (01/09/2026) : "j'ai peur que l'utilisateur ne
+            // comprenne pas qu'il doit enregistrer ses objectifs plusieurs
+            // fois" — en réalité FAUX (computeAndSaveTargetsFromStoredProfile
+            // recalcule déjà la calibration à chaque ouverture de l'app/du
+            // Journal, voir profile.dart), mais rien à l'écran ne le disait.
+            // Ce bouton ne sert qu'à confirmer un changement DÉLIBÉRÉ de
+            // réglage — jamais à "rafraîchir" le calcul du jour, qui se fait
+            // déjà tout seul.
+            Text(
+              _dirty ? l10n.profileConfirmGoalsCaption : l10n.profileGoalsSavedCaption,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, height: 1.4, color: TotumColors.textSecondary),
             ),
             const SizedBox(height: 14),
             Center(
@@ -862,7 +909,12 @@ class ProfileScreenState extends State<ProfileScreen> {
       builder: (context, snap) {
         final today = snap.data ?? DayTotals.empty;
         return SizedBox(
-          height: 220,
+          // 220 -> 246 (19/08/2026, demande d'Alex) : place pour la
+          // répartition métabolisme de base / mouvement sur la carte 1 (voir
+          // _kpiRemainingCard) — hauteur partagée par les 4 cartes du
+          // carrousel, les 3 autres gardent simplement un peu plus d'espace
+          // libre en bas qu'avant.
+          height: 246,
           child: PageView(
             controller: _kpiPageCtrl,
             onPageChanged: (i) => setState(() => _kpiPage = i),
@@ -892,19 +944,10 @@ class ProfileScreenState extends State<ProfileScreen> {
             color: TotumColors.textMuted));
   }
 
-  Widget _legendIconRow(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Icon(icon, size: 15, color: TotumColors.accent),
-          const SizedBox(width: 7),
-          Expanded(child: Text(label, style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary))),
-          Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
-        ],
-      ),
-    );
-  }
+  // BUG CORRIGÉ (19/08/2026) : `_legendIconRow` (libellé + valeur en ligne)
+  // supprimée — remplacée par `_donutLegendRow` (pictogramme + valeur
+  // seuls, sous chaque anneau) dans le cadre de la refonte 2 donuts de
+  // `_kpiRemainingCard`. Plus aucun appelant.
 
   /// Carte 1 — la première chose vue en ouvrant l'app : façon MyFitnessPal,
   /// Reste = Objectif − Aliments (pas de ligne Exercice, décision Alex : le
@@ -913,87 +956,186 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// exactement le double comptage qu'on a corrigé). Traitement visuel un
   /// cran au-dessus des autres cartes (contour accentué, ring plus grand,
   /// pictogrammes) puisque c'est la vignette la plus vue de tout l'onglet.
+  ///
+  /// REFONTE (19/08/2026, 2e retour d'Alex — "je suis pas satisfait de la
+  /// barre, je veux quelque chose d'ultra visuel, deux donuts distincts") :
+  /// la carte affiche désormais 2 anneaux côte à côte, même vocabulaire
+  /// visuel pour les deux (anneau + gros chiffre central + 2 lignes de
+  /// légende pictogramme+valeur, voir [_energyDonut]) — pour que les 2
+  /// lectures ("où j'en suis vs mon objectif" / "pourquoi mon objectif est
+  /// ce qu'il est") soient comprises en un coup d'œil, sans texte à lire.
   Widget _kpiRemainingCard(DayTotals today) {
     final l10n = context.l10n;
     // Priorité 65 (audit global) : calculé à partir des valeurs déjà
-    // arrondies (mêmes que "Objectif"/"Aliments" juste à droite), pour que
+    // arrondies (mêmes que "Objectif"/"Aliments" juste en dessous), pour que
     // les 3 nombres affichés se recoupent toujours exactement (avant : un
     // écart d'affichage de ±1 kcal possible entre les deux calculs indépendants).
     final goalRounded = _kcal.round();
     final consumedRounded = today.kcal.round();
     final remaining = (goalRounded - consumedRounded).toDouble();
-    final isOver = _kcal > 0 && today.kcal > _kcal;
-    final fraction = _kcal > 0 ? (today.kcal / _kcal).clamp(0.0, 1.0) : 0.0;
+    // BUG CORRIGÉ (19/08/2026, retour d'Alex — anneau rouge alors
+    // qu'exactement à l'objectif) : comparait les doubles bruts
+    // (`today.kcal > _kcal`), sensibles au bruit de calcul en virgule
+    // flottante — repris sur les mêmes valeurs ARRONDIES que `remaining`
+    // ci-dessus, cohérent avec le principe déjà énoncé pour ce bloc.
+    final isOver = goalRounded > 0 && consumedRounded > goalRounded;
+    final consumedFraction = _kcal > 0 ? (today.kcal / _kcal).clamp(0.0, 1.0) : 0.0;
     final ringColor = isOver ? TotumColors.negative : TotumColors.accent;
+
+    // Répartition métabolisme de base / mouvement (19/08/2026, demande
+    // d'Alex — "comprendre en 2 secondes pourquoi ça a été affiné, je
+    // consommais tant au repos") : le BMR ne dépend jamais du niveau
+    // d'activité (formule Mifflin-St Jeor/Cunningham, voir profile.dart) —
+    // stable même quand la calibration adaptative ajuste l'objectif total.
+    // "Mouvement" = tout ce qui reste de l'objectif AFFICHÉ (`_kcal`, déjà
+    // calibré) une fois le BMR retiré — reste donc automatiquement cohérent
+    // avec le chiffre "Objectif de base" juste au-dessus, sans dupliquer la
+    // logique de calibration ici. Simplification assumée pour objectifs
+    // perte/prise : ce "reste" inclut alors aussi le petit ajustement
+    // déficit/surplus (quelques centaines de kcal max), pas seulement le
+    // mouvement pur — négligeable pour l'objectif de ce visuel (comprendre
+    // l'ORDRE DE GRANDEUR repos vs actif, pas une décomposition comptable
+    // exacte à 3 termes).
+    final kg = _num(_weightCtrl);
+    final cm = _num(_heightCtrl);
+    final age = _num(_ageCtrl).round();
+    final bmr = (kg > 0 && cm > 0 && age > 0) ? nutri.computeBmr(_buildCurrentProfile(kg, cm, age)) : null;
+    final movementKcal = bmr != null ? (_kcal - bmr).clamp(0.0, double.infinity) : null;
+    final movementFraction = (bmr != null && movementKcal != null && _kcal > 0)
+        ? (movementKcal / _kcal).clamp(0.0, 1.0)
+        : 0.0;
+
     return TotumCard(
       accentBorder: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _todayEyebrow(),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                width: 116,
-                height: 116,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    PieChart(
-                      PieChartData(
-                        sectionsSpace: 3,
-                        centerSpaceRadius: 38,
-                        sections: [
-                          PieChartSectionData(
-                            value: fraction > 0 ? fraction : 0.0001,
-                            color: ringColor,
-                            title: '',
-                            radius: 15,
-                          ),
-                          PieChartSectionData(
-                            value: (1 - fraction) > 0 ? (1 - fraction) : 0.0001,
-                            color: TotumColors.outlineStrong,
-                            title: '',
-                            radius: 15,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(isOver ? '+${(-remaining).round()}' : remaining.round().toString(),
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w900,
-                                color: isOver ? TotumColors.negative : TotumColors.textPrimary)),
-                        Text(isOver ? l10n.profileKcalOver : l10n.profileKcalRemaining, textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 9.5, color: TotumColors.textSecondary, fontWeight: FontWeight.w700)),
-                      ],
-                    ),
+              // Donut 1 — Objectif vs Aliments consommés.
+              Expanded(
+                child: _energyDonut(
+                  filledFraction: consumedFraction,
+                  filledColor: ringColor,
+                  centerValue: isOver ? '+${(-remaining).round()}' : remaining.round().toString(),
+                  centerValueColor: isOver ? TotumColors.negative : TotumColors.textPrimary,
+                  centerLabel: isOver ? l10n.profileKcalOver : l10n.profileKcalRemaining,
+                  legendRows: [
+                    _donutLegendRow(Icons.flag_rounded, '${_kcal.round()}'),
+                    _donutLegendRow(Icons.restaurant_rounded, '${today.kcal.round()}'),
                   ],
                 ),
               ),
-              const SizedBox(width: 18),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _legendIconRow(Icons.flag_rounded, l10n.profileBaseGoal, '${_kcal.round()}'),
-                    _legendIconRow(Icons.restaurant_rounded, l10n.profileFoodsLabel, '${today.kcal.round()}'),
-                    if (_calibration.hasEnoughData) ...[
-                      const SizedBox(height: 6),
-                      Text(l10n.profileRefinedByResults,
-                          style: const TextStyle(fontSize: 10, color: TotumColors.accent, fontWeight: FontWeight.w700)),
+              const SizedBox(width: 14),
+              // Donut 2 — répartition Métabolisme de base / Mouvement.
+              if (bmr != null && movementKcal != null)
+                Expanded(
+                  child: _energyDonut(
+                    filledFraction: movementFraction,
+                    filledColor: TotumColors.accent,
+                    emptyColor: TotumColors.outlineStrong,
+                    centerValue: '+${movementKcal.round()}',
+                    centerValueColor: TotumColors.textPrimary,
+                    centerLabel: l10n.profileMovementExpenditure,
+                    legendRows: [
+                      _donutLegendRow(Icons.bedtime_outlined, '${bmr.round()}'),
+                      _donutLegendRow(Icons.directions_run_rounded, '+${movementKcal.round()}'),
                     ],
+                  ),
+                )
+              else
+                const Expanded(child: SizedBox.shrink()),
+            ],
+          ),
+          if (_calibration.hasEnoughData) ...[
+            const SizedBox(height: 10),
+            Center(
+              child: Text(l10n.profileRefinedByResults,
+                  style: const TextStyle(fontSize: 10, color: TotumColors.accent, fontWeight: FontWeight.w700)),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Anneau générique (façon "Apple Fitness rings") réutilisé pour les 2
+  /// donuts de [_kpiRemainingCard] — même structure visuelle pour les deux
+  /// lectures ("Objectif/Aliments" et "Métabolisme/Mouvement"), pour une
+  /// cohérence immédiate entre les deux (demande explicite d'Alex :
+  /// "ultra cohérent"). `emptyColor` par défaut = neutre (outline) ; le
+  /// donut 2 le redéfinit sur `outlineStrong` pour représenter explicitement
+  /// le métabolisme de base (part "de fond", jamais nulle) plutôt qu'un
+  /// simple espace non rempli.
+  Widget _energyDonut({
+    required double filledFraction,
+    required Color filledColor,
+    required String centerValue,
+    required Color centerValueColor,
+    required String centerLabel,
+    required List<Widget> legendRows,
+    Color? emptyColor,
+  }) {
+    final f = filledFraction.clamp(0.0, 1.0);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 98,
+          height: 98,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              PieChart(
+                PieChartData(
+                  sectionsSpace: 3,
+                  centerSpaceRadius: 32,
+                  sections: [
+                    PieChartSectionData(value: f > 0 ? f : 0.0001, color: filledColor, title: '', radius: 13),
+                    PieChartSectionData(
+                        value: (1 - f) > 0 ? (1 - f) : 0.0001,
+                        color: emptyColor ?? TotumColors.outline,
+                        title: '',
+                        radius: 13),
                   ],
                 ),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(centerValue,
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: centerValueColor)),
+                  Text(centerLabel,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 9, color: TotumColors.textSecondary, fontWeight: FontWeight.w700)),
+                ],
               ),
             ],
           ),
+        ),
+        const SizedBox(height: 8),
+        ...legendRows,
+      ],
+    );
+  }
+
+  /// Ligne de légende compacte pictogramme + valeur (jamais de texte long
+  /// ici, volontairement — le pictogramme porte le sens, voir la demande
+  /// d'Alex d'un rendu "ultra visuel").
+  Widget _donutLegendRow(IconData icon, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 13, color: TotumColors.textSecondary),
+          const SizedBox(width: 5),
+          Text(value, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
         ],
       ),
     );
@@ -1002,7 +1144,10 @@ class ProfileScreenState extends State<ProfileScreen> {
   Widget _macroRing(String label, IconData icon, double consumed, double target) {
     final fraction = target > 0 ? (consumed / target).clamp(0.0, 1.0) : 0.0;
     final diff = target - consumed;
-    final isOver = target > 0 && diff < 0;
+    // BUG CORRIGÉ (19/08/2026) — même correctif que le ring kcal ci-dessus :
+    // compare les valeurs ARRONDIES (celles réellement affichées, voir
+    // `consumed.round()` plus bas), pas les doubles bruts.
+    final isOver = target > 0 && consumed.round() > target.round();
     final ringColor = isOver ? TotumColors.negative : TotumColors.accent;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1908,6 +2053,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         const _PauseBanner(),
         const SizedBox(height: 14),
         _evolutionTapCard(
+          icon: Icons.monitor_weight_outlined,
           title: l10n.weightScreenTitle,
           subtitle: l10n.profileLast60Days,
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const WeightTrendScreen())),
@@ -1923,6 +2069,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         ),
         const SizedBox(height: 14),
         _evolutionTapCard(
+          icon: Icons.local_fire_department_outlined,
           title: l10n.expenditureScreenTitle,
           subtitle: l10n.profileAdaptiveEstimate,
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ExpenditureScreen())),
@@ -1932,7 +2079,10 @@ class ProfileScreenState extends State<ProfileScreen> {
               if (snap.connectionState != ConnectionState.done) {
                 return const SizedBox(height: 90, child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
               }
-              return ExpenditureChart(data: snap.data ?? const <ExpenditurePoint>[]);
+              // showDetailCard: false — ceci est la vignette compacte
+              // d'aperçu (tap pour ouvrir l'écran dédié), pas la place pour
+              // la fiche de détail interactive (voir expenditure_screen.dart).
+              return ExpenditureChart(data: snap.data ?? const <ExpenditurePoint>[], showDetailCard: false);
             },
           ),
         ),
@@ -1940,7 +2090,12 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Retour d'Alex (21/08/2026) : "toutes les autres vignettes ont un
+  // émoticône" — icône Material monochrome (charte graphique, jamais
+  // d'emoji), même emplacement/taille/couleur que les autres en-têtes de
+  // carte de cet écran (voir ex. Icons.emoji_events_outlined plus haut).
   Widget _evolutionTapCard({
+    required IconData icon,
     required String title,
     required String subtitle,
     required Widget chart,
@@ -1956,6 +2111,8 @@ class ProfileScreenState extends State<ProfileScreen> {
           children: [
             Row(
               children: [
+                Icon(icon, size: 18, color: TotumColors.accent),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -2219,6 +2376,17 @@ class _UnitAwareNumFieldState extends State<_UnitAwareNumField> {
 
   double _parse(TextEditingController c) => double.tryParse(c.text.replaceAll(',', '.')) ?? 0.0;
 
+  /// BUG CORRIGÉ (21/08/2026, retour d'Alex — "on ne peut pas rentrer 2
+  /// chiffres après la virgule" dans Mesures) : ce champ arrondissait à 1
+  /// décimale à chaque (ré)affichage — la valeur tapée (ex. 72,35) était
+  /// bien acceptée le temps de la frappe, mais retombait à 1 décimale
+  /// (72,4) dès que ce widget se resynchronisait depuis `metricController`
+  /// (perte silencieuse de précision au fil des sauvegardes). Aligné sur
+  /// `_trimNumber()` (2 décimales, zéros inutiles retirés) déjà utilisé pour
+  /// la même donnée ailleurs dans cet écran — jamais 2 arrondis différents
+  /// pour le même poids.
+  String _trim2(double v) => Units.trimDecimals(v);
+
   void _syncFromMetric() {
     final metricValue = _parse(widget.metricController);
     if (metricValue <= 0) {
@@ -2228,8 +2396,7 @@ class _UnitAwareNumFieldState extends State<_UnitAwareNumField> {
     final system = AppSettings.unitSystem.value;
     final displayed =
         widget.isWeight ? Units.displayWeight(metricValue, system) : Units.displayHeight(metricValue, system);
-    _displayCtrl.text =
-        displayed == displayed.roundToDouble() ? displayed.toStringAsFixed(0) : displayed.toStringAsFixed(1);
+    _displayCtrl.text = _trim2(displayed);
   }
 
   void _onDisplayChanged(String v) {

@@ -57,14 +57,21 @@ void main() {
   });
 
   group('formatWeight', () {
-    test('métrique : entier si rond, sinon 1 décimale', () {
+    test('métrique : entier si rond, sinon jusqu\'à 2 décimales (zéros inutiles retirés)', () {
       expect(Units.formatWeight(75.0, UnitSystem.metric), '75 kg');
       expect(Units.formatWeight(75.5, UnitSystem.metric), '75.5 kg');
     });
 
-    test('impérial : toujours 1 décimale', () {
-      expect(Units.formatWeight(Units.lbToKg(150.0), UnitSystem.imperial),
-          '150.0 lb');
+    // Régression (21/08/2026, retour d'Alex — "je lui ai rentré 72,75 et ça
+    // m'affiche 72,8 partout") : la 2e décimale ne doit plus jamais être
+    // perdue, quel que soit l'écran.
+    test('métrique conserve bien 2 décimales quand elles sont significatives', () {
+      expect(Units.formatWeight(72.75, UnitSystem.metric), '72.75 kg');
+      expect(Units.formatWeight(72.8, UnitSystem.metric), '72.8 kg');
+    });
+
+    test('impérial : jusqu\'à 2 décimales, zéros inutiles retirés (plus jamais figé à 1 décimale)', () {
+      expect(Units.formatWeight(Units.lbToKg(150.0), UnitSystem.imperial), '150 lb');
     });
   });
 

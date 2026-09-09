@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Totum — Suivi nutrition, santé et bien-être</title>
+<meta name="description" content="Totum est une application de suivi nutritionnel qui calcule tes besoins caloriques et nutritionnels personnalisés, tient ton journal alimentaire et suit ta dépense énergétique réelle.">
+<style>
+  :root {
+    --bg: #FAF8F5;
+    --card: #FFFFFF;
+    --text: #2B2B2B;
+    --muted: #6B6B6B;
+    --accent: #E8792A;
+    --border: #EFE6DC;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 40px 20px 80px; }
+  header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  header .logo { font-size: 32px; }
+  header strong { font-size: 22px; }
+  h1 { font-size: 30px; margin: 28px 0 8px; }
+  .tagline { color: var(--muted); font-size: 17px; margin-bottom: 32px; }
+  h2 { font-size: 20px; margin: 40px 0 12px; color: var(--accent); }
+  p, li { color: var(--text); font-size: 15.5px; }
+  ul { padding-left: 22px; }
+  li { margin: 8px 0; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin: 16px 0;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin: 20px 0;
+  }
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .pillar { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
+  .pillar strong { display: block; margin-bottom: 4px; }
+  .pillar span { color: var(--muted); font-size: 14px; }
+  a { color: var(--accent); }
+  footer {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13.5px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="logo">🍑🍴</span>
+    <strong>Totum</strong>
+  </header>
+  <h1>Totum — ta santé, sans complications</h1>
+  <p class="tagline">L'application de suivi nutrition et bien-être qui calcule tes besoins réels, pas des moyennes génériques.</p>
+
+  <div class="card">
+    <p><strong>Totum</strong> est une application mobile et web qui t'aide à comprendre et suivre tes besoins caloriques, tes macronutriments et tes micronutriments, à tenir un journal alimentaire simple, et à suivre l'évolution de ton poids et de ta dépense énergétique réelle au fil du temps.</p>
+  </div>
+
+  <h2>Ce que Totum propose</h2>
+  <div class="grid">
+    <div class="pillar">
+      <strong>🍽️ Nutrition</strong>
+      <span>Journal alimentaire, objectifs caloriques et nutritionnels personnalisés, recherche d'aliments et de recettes.</span>
+    </div>
+    <div class="pillar">
+      <strong>📈 Calibration adaptative</strong>
+      <span>Tes objectifs s'ajustent automatiquement selon l'évolution réelle de ton poids, pas seulement des formules théoriques.</span>
+    </div>
+    <div class="pillar">
+      <strong>🧘 Bien-être</strong>
+      <span>Sommeil, gestion du stress, techniques de respiration guidées.</span>
+    </div>
+    <div class="pillar">
+      <strong>🏃 Mouvement</strong>
+      <span>Suivi de ton activité et de son impact sur ta dépense énergétique.</span>
+    </div>
+  </div>
+
+  <h2>Une approche holistique</h2>
+  <p>Totum ne se limite pas à compter des calories : l'app relie nutrition, mouvement, sommeil et gestion du stress pour donner une vision complète de ta santé et de ta vitalité au quotidien.</p>
+
+  <h2>En savoir plus</h2>
+  <p>
+    <a href="/privacy.html">Politique de confidentialité</a> ·
+    <a href="/terms.html">Conditions d'utilisation</a> ·
+    <a href="mailto:totum.app.fr@gmail.com">Contact</a>
+  </p>
+
+  <footer>Totum — édité par Alexandre Gernez</footer>
+</div>
+</body>
+</html>

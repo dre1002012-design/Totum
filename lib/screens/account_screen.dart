@@ -455,7 +455,19 @@ class _AccountScreenState extends State<AccountScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
                 children: [
                   _profileHeader(user),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 22),
+                  // BUG CORRIGÉ (19/08/2026, retour d'Alex — audit ergonomie
+                  // "Compte et paramètres") : la carte d'abonnement n'avait
+                  // aucun libellé de section, contrairement à "Réglages"
+                  // juste en dessous — ajoutée pour la même clarté/parité
+                  // visuelle, et pour bien distinguer "Abonnement" de
+                  // "Compte" (identité) comme demandé.
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(l10n.accountSubscriptionSectionLabel,
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+                  ),
+                  const SizedBox(height: 12),
                   _subscriptionCard(),
                   const SizedBox(height: 26),
                   Align(
@@ -505,10 +517,71 @@ class _AccountScreenState extends State<AccountScreen> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  // BUG CORRIGÉ (19/08/2026, retour d'Alex — "je veux que le
+                  // bouton déconnexion soit directement visible depuis la
+                  // partie Compte et paramètres, pas dans Compte") :
+                  // déplacé depuis AccountDetailsScreen (où il était bundlé
+                  // avec "Supprimer mon compte", 2 actions de nature très
+                  // différente) vers cet écran racine, en ligne autonome.
+                  // Pas de style "danger" (rouge) — se déconnecter n'est ni
+                  // destructif ni irréversible, contrairement à la
+                  // suppression de compte qui, elle, reste dans Compte.
+                  TotumCard(
+                    padding: EdgeInsets.zero,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(TotumRadius.card),
+                      onTap: () => _confirmSignOut(context),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout_rounded, size: 20, color: TotumColors.textPrimary),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Text(l10n.accountSignOut,
+                                  style: TextStyle(
+                                      fontSize: 14, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
       ),
     );
+  }
+
+  Future<void> _confirmSignOut(BuildContext context) async {
+    final l10n = context.l10n;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.accountSignOutConfirmTitle),
+        content: Text(l10n.accountSignOutConfirmContent),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.commonCancel)),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.accountSignOut)),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await _client.auth.signOut();
+      // BUG CORRIGÉ (21/08/2026, retour d'Alex — "on reste sur la page,
+      // seulement en revenant en arrière on voit l'écran de connexion") :
+      // `signOut()` fait bien basculer `AuthGate` (main.dart) sur
+      // `AuthScreen`, mais ce changement a lieu SOUS la pile de navigation
+      // — cet écran (`AccountScreen`) reste poussé PAR-DESSUS tant qu'il
+      // n'est pas explicitement dépilé, masquant le nouvel écran en
+      // dessous. Même correctif déjà appliqué à la suppression de compte
+      // juste en dessous (`_confirmDelete`) — généralisé ici avec
+      // `popUntil(isFirst)` plutôt qu'un nombre de `pop()` fixe, pour
+      // rester correct quel que soit le nombre d'écrans empilés au-dessus
+      // du tableau de bord au moment de la déconnexion.
+      if (context.mounted) Navigator.of(context).popUntil((route) => route.isFirst);
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -590,8 +663,21 @@ class _AccountScreenState extends State<AccountScreen> {
     final String storePriceText = kIsWeb ? '14,99 €/an' : (_subProduct?.price ?? '14,99 €/an');
 
     if (_isPremium) {
+      // BUG CORRIGÉ (19/08/2026, retour d'Alex — "on ne peut pas cliquer sur
+      // la vignette abonnement") : la carte n'avait aucune action au tap.
+      // Rien à "gérer" pour un accès à vie (pas de facturation récurrente),
+      // mais un tap doit malgré tout donner une confirmation explicite
+      // plutôt que de rester une vignette morte.
       return TotumCard(
         accentBorder: true,
+        onTap: () => showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(l10n.accountStatusLifetimePremium),
+            content: Text(l10n.accountLifetimeDialogContent),
+            actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.commonConfirm))],
+          ),
+        ),
         child: Row(
           children: [
             Container(
@@ -612,14 +698,20 @@ class _AccountScreenState extends State<AccountScreen> {
                 ],
               ),
             ),
+            Icon(Icons.chevron_right, size: 18, color: TotumColors.textMuted),
           ],
         ),
       );
     }
 
     if (_subActive) {
+      // BUG CORRIGÉ (19/08/2026) : toute la carte est désormais cliquable
+      // (avant : seul le petit bouton texte "Gérer mon abonnement" en bas
+      // l'était) — mène directement à la gestion (Play Store/Stripe), où se
+      // trouvent le renouvellement/l'annulation.
       return TotumCard(
         accentBorder: true,
+        onTap: _openManageSubscription,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -682,7 +774,18 @@ class _AccountScreenState extends State<AccountScreen> {
             ? l10n.accountTrialRemainingDays(remaining)
             : l10n.accountTrialEndedSubtitle;
 
+    // BUG CORRIGÉ (19/08/2026) : toute la carte cliquable, même action que
+    // le bouton principal en dessous (achat natif si disponible, sinon
+    // Stripe sur web) — cohérent avec les 2 autres états ci-dessus.
+    VoidCallback? cardTap;
+    if (!kIsWeb && _storeAvailable && _subProduct != null) {
+      cardTap = _purchasePending ? null : _buyPremium;
+    } else if (kIsWeb) {
+      cardTap = _openStripe;
+    }
+
     return TotumCard(
+      onTap: cardTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -794,6 +897,155 @@ class AccountDetailsScreen extends StatefulWidget {
 class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   bool _deleting = false;
 
+  /// BUG CORRIGÉ (19/08/2026, retour d'Alex — audit ergonomie "Compte et
+  /// paramètres") : avant ce correctif, cet écran n'affichait QUE l'email en
+  /// lecture seule — aucun moyen de modifier nom/téléphone/mot de passe/
+  /// email une fois connecté (le seul flux mot de passe existant était le
+  /// "mot de passe oublié" pré-connexion). Nom/téléphone stockés dans
+  /// `user_metadata` (fusion défensive avec l'existant, jamais un
+  /// remplacement complet — voir `_saveMetadata`) : aucun autre endroit du
+  /// code n'utilise `user_metadata` à ce jour, mais fusionner reste la
+  /// pratique sûre par défaut plutôt que de supposer que ça restera vrai.
+  Future<void> _editTextField({
+    required String fieldLabel,
+    required String currentValue,
+    required Future<void> Function(String newValue) onSave,
+    bool obscure = false,
+    TextInputType? keyboardType,
+  }) async {
+    final ctrl = TextEditingController(text: currentValue);
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.accountEditFieldTitle(fieldLabel)),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          obscureText: obscure,
+          keyboardType: keyboardType,
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(context.l10n.commonCancel)),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(context.l10n.commonSave)),
+        ],
+      ),
+    );
+    if (saved != true || !mounted) return;
+    try {
+      await onSave(ctrl.text.trim());
+      if (mounted) {
+        setState(() {});
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(context.l10n.accountFieldSaved)));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(context.l10n.accountFieldSaveError(e.toString()))));
+      }
+    }
+  }
+
+  Future<void> _saveMetadata(String key, String value) async {
+    final current = Map<String, dynamic>.from(widget.client.auth.currentUser?.userMetadata ?? {});
+    current[key] = value;
+    await widget.client.auth.updateUser(UserAttributes(data: current));
+  }
+
+  Future<void> _editEmail() async {
+    final ctrl = TextEditingController();
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.accountEditFieldTitle(context.l10n.accountEmailLabel)),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(labelText: context.l10n.accountNewEmailLabel),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(context.l10n.commonCancel)),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(context.l10n.commonSave)),
+        ],
+      ),
+    );
+    if (saved != true || !mounted) return;
+    final newEmail = ctrl.text.trim();
+    if (newEmail.isEmpty) return;
+    try {
+      // Supabase envoie un e-mail de confirmation avant que le changement ne
+      // prenne réellement effet — `currentUser.email` ne change donc pas
+      // immédiatement ici, volontairement (sécurité : évite qu'une simple
+      // faute de frappe verrouille le compte hors d'une adresse valide).
+      await widget.client.auth.updateUser(UserAttributes(email: newEmail));
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(context.l10n.accountEmailChangeSentMessage(newEmail))));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(context.l10n.accountFieldSaveError(e.toString()))));
+      }
+    }
+  }
+
+  Future<void> _editPassword() async {
+    final newCtrl = TextEditingController();
+    final confirmCtrl = TextEditingController();
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.accountEditFieldTitle(context.l10n.accountPasswordLabel)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: newCtrl,
+              autofocus: true,
+              obscureText: true,
+              decoration: InputDecoration(labelText: context.l10n.accountNewPasswordLabel),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: confirmCtrl,
+              obscureText: true,
+              decoration: InputDecoration(labelText: context.l10n.accountConfirmPasswordLabel),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(context.l10n.commonCancel)),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(context.l10n.commonSave)),
+        ],
+      ),
+    );
+    if (saved != true || !mounted) return;
+    if (newCtrl.text.length < 8) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(context.l10n.accountPasswordTooShort)));
+      return;
+    }
+    if (newCtrl.text != confirmCtrl.text) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(context.l10n.accountPasswordMismatch)));
+      return;
+    }
+    try {
+      await widget.client.auth.updateUser(UserAttributes(password: newCtrl.text));
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(context.l10n.accountFieldSaved)));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(context.l10n.accountFieldSaveError(e.toString()))));
+      }
+    }
+  }
+
   Future<void> _confirmDeleteAccount() async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -873,47 +1125,83 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final email = widget.client.auth.currentUser?.email ?? '';
-    final l10n = context.l10n;
-    return _settingsScaffold(title: l10n.accountDetailsScreenTitle, children: () => [
-      TotumCard(
+  Widget _infoRow({required String label, required String value, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(l10n.accountEmailLabel, style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
+            Expanded(
+              child: Text(label, style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
+            ),
             Flexible(
-              child: Text(email,
+              child: Text(value,
                   textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
             ),
+            const SizedBox(width: 6),
+            Icon(Icons.chevron_right, size: 18, color: TotumColors.textMuted),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = widget.client.auth.currentUser;
+    final email = user?.email ?? '';
+    final fullName = (user?.userMetadata?['full_name'] as String?) ?? '';
+    final phone = (user?.userMetadata?['phone_number'] as String?) ?? '';
+    final l10n = context.l10n;
+    // BUG CORRIGÉ (19/08/2026, retour d'Alex — audit ergonomie) : email,
+    // nom, téléphone et mot de passe regroupés dans UNE carte "Identité",
+    // tous modifiables (avant : email seul, en lecture seule) — "Se
+    // déconnecter" déplacé sur l'écran racine (Compte et paramètres), ne
+    // reste ici que "Supprimer mon compte" (action sur l'identité elle-même).
+    return _settingsScaffold(title: l10n.accountDetailsScreenTitle, children: () => [
+      TotumCard(
+        padding: EdgeInsets.zero,
+        child: Column(
+          children: [
+            _infoRow(label: l10n.accountEmailLabel, value: email, onTap: _editEmail),
+            Divider(height: 1, color: TotumColors.outline),
+            _infoRow(
+              label: l10n.accountFullNameLabel,
+              value: fullName.isEmpty ? l10n.accountFullNameEmpty : fullName,
+              onTap: () => _editTextField(
+                fieldLabel: l10n.accountFullNameLabel,
+                currentValue: fullName,
+                onSave: (v) => _saveMetadata('full_name', v),
+              ),
+            ),
+            Divider(height: 1, color: TotumColors.outline),
+            _infoRow(
+              label: l10n.accountPhoneLabel,
+              value: phone.isEmpty ? l10n.accountPhoneEmpty : phone,
+              onTap: () => _editTextField(
+                fieldLabel: l10n.accountPhoneLabel,
+                currentValue: phone,
+                keyboardType: TextInputType.phone,
+                onSave: (v) => _saveMetadata('phone_number', v),
+              ),
+            ),
+            Divider(height: 1, color: TotumColors.outline),
+            _infoRow(label: l10n.accountPasswordLabel, value: l10n.accountPasswordMasked, onTap: _editPassword),
           ],
         ),
       ),
       const SizedBox(height: 14),
       TotumCard(
         padding: EdgeInsets.zero,
-        child: Column(
-          children: [
-            _actionRow(
-              icon: Icons.logout_rounded,
-              label: l10n.accountSignOut,
-              onTap: () async {
-                await widget.client.auth.signOut();
-                if (context.mounted) Navigator.of(context).pop();
-              },
-            ),
-            Divider(height: 1, color: TotumColors.outline),
-            _actionRow(
-              icon: Icons.delete_outline,
-              label: l10n.accountDeleteDialogTitle,
-              danger: true,
-              loading: _deleting,
-              onTap: _deleting ? null : _confirmDeleteAccount,
-            ),
-          ],
+        child: _actionRow(
+          icon: Icons.delete_outline,
+          label: l10n.accountDeleteDialogTitle,
+          danger: true,
+          loading: _deleting,
+          onTap: _deleting ? null : _confirmDeleteAccount,
         ),
       ),
     ]);
@@ -1195,15 +1483,14 @@ class _DataExportScreenState extends State<DataExportScreen> {
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
-  // Priorité 61 (15/08/2026) : version lue directement depuis le build
-  // (package_info_plus) plutôt qu'une constante dupliquée à resynchroniser
-  // à la main à chaque bump de pubspec.yaml — source d'incohérence
-  // éliminée pour de bon, plutôt que juste corrigée une fois de plus.
-  Future<String> _loadVersion() async {
-    final info = await PackageInfo.fromPlatform();
-    return '${info.version} (${info.buildNumber})';
-  }
-
+  // BUG CORRIGÉ (19/08/2026, retour d'Alex — "apporter un niveau de détail
+  // supérieur") : n'affichait QUE le numéro de version. Ajouté : identifiant
+  // du package (utile pour un rapport de bug précis) et un bouton d'info
+  // synthétisant la valeur ajoutée de l'app et sa rigueur scientifique —
+  // SANS mention nominative (demande explicite d'Alex, deuxième passe :
+  // retirer le crédit personnel affiché en dur). Volontairement pas de lien
+  // vers des CGU/politique de confidentialité qui n'existent pas encore
+  // ailleurs dans l'app — n'invente jamais un lien vers une page absente.
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -1212,18 +1499,57 @@ class AboutScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sectionHeader(Icons.info_outline, 'TOTUM'),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(l10n.aboutVersionLabel, style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
-                FutureBuilder<String>(
-                  future: _loadVersion(),
-                  builder: (context, snap) => Text(snap.data ?? '…',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+            // BUG CORRIGÉ (19/08/2026, retour d'Alex) : la mention nominative
+            // ("conçue et développée par Alex, naturopathe...") est retirée
+            // — remplacée par une info accessible au tap sur le pictogramme
+            // "i" DÉJÀ présent à côté du titre (`_sectionHeader`), dont le
+            // contenu ne mentionne ni nom ni qualification, seulement la
+            // valeur ajoutée de l'app et sa rigueur scientifique (voir
+            // `aboutInfoContent`). Un SEUL pictogramme cliquable pour toute
+            // la vignette — retour d'Alex (2e passe) : un 2e bouton "i"
+            // séparé ajouté à droite faisait doublon avec celui déjà présent
+            // à gauche du titre.
+            InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('TOTUM'),
+                  content: Text(l10n.aboutInfoContent, style: const TextStyle(height: 1.4)),
+                  actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.commonConfirm))],
                 ),
-              ],
+              ),
+              child: _sectionHeader(Icons.info_outline, 'TOTUM'),
+            ),
+            const SizedBox(height: 16),
+            FutureBuilder<PackageInfo>(
+              future: PackageInfo.fromPlatform(),
+              builder: (context, snap) {
+                final info = snap.data;
+                Widget row(String label, String value) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(label, style: TextStyle(fontSize: 13, color: TotumColors.textSecondary)),
+                          Flexible(
+                            child: Text(value,
+                                textAlign: TextAlign.right,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+                          ),
+                        ],
+                      ),
+                    );
+                return Column(
+                  children: [
+                    row(l10n.aboutVersionLabel,
+                        info == null ? '…' : '${info.version} (${info.buildNumber})'),
+                    row(l10n.aboutPackageIdLabel, info?.packageName ?? '…'),
+                  ],
+                );
+              },
             ),
           ],
         ),
