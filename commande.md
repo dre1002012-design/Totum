@@ -2,7 +2,7 @@
 
 * **Appli local:**
 
-cd C:\\Users\\Alexa\\totum\_clean
+cd C:\\Users\\Alexa\\Apps\\Totum
 flutter clean
 flutter pub get
 flutter run -d chrome --wasm
@@ -19,14 +19,14 @@ firebase deploy --only hosting
 flutter clean
 flutter pub get
 flutter build apk --release
-C:\Users\Alexa\totum_clean\build\app\outputs\flutter-apk
+C:\Users\Alexa\Apps\Totum\build\app\outputs\flutter-apk
 
 * **Play store:**
 
 flutter clean
 flutter pub get
 flutter build appbundle --release
-C:\Users\Alexa\totum_clean\build\app\outputs\bundle\release
+C:\Users\Alexa\Apps\Totum\build\app\outputs\bundle\release
 
 
 * **Logo:**
