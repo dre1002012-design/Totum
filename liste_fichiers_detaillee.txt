@@ -11,7 +11,7 @@ C:\Users\Alexa\Apps\Totum\liste_fichiers_detaillee.txt
 C:\Users\Alexa\Apps\Totum\pubspec.lock                                                                                 
 C:\Users\Alexa\Apps\Totum\pubspec.yaml                                                                                 
 C:\Users\Alexa\Apps\Totum\README.md                                                                                    
-C:\Users\Alexa\Apps\Totum\totum_clean.iml                                                                              
+C:\Users\Alexa\Apps\Totum\totum_app.iml                                                                              
 C:\Users\Alexa\Apps\Totum\.dart_tool\package_config.json                                                               
 C:\Users\Alexa\Apps\Totum\.dart_tool\package_graph.json                                                                
 C:\Users\Alexa\Apps\Totum\.dart_tool\version                                                                           
@@ -220,7 +220,7 @@ C:\Users\Alexa\Apps\Totum\android\gradlew.bat
 C:\Users\Alexa\Apps\Totum\android\key.properties                                                                       
 C:\Users\Alexa\Apps\Totum\android\local.properties                                                                     
 C:\Users\Alexa\Apps\Totum\android\settings.gradle.kts                                                                  
-C:\Users\Alexa\Apps\Totum\android\totum_clean_android.iml                                                              
+C:\Users\Alexa\Apps\Totum\android\totum_app_android.iml                                                              
 C:\Users\Alexa\Apps\Totum\android\.gradle\file-system.probe                                                            
 C:\Users\Alexa\Apps\Totum\android\.gradle\8.12\gc.properties                                                           
 C:\Users\Alexa\Apps\Totum\android\.gradle\8.12\checksums\checksums.lock                                                
