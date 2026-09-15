@@ -86,7 +86,18 @@ class _FoodStats {
   int last(String id)  => (map[id]?['last']  ?? 0).toInt();
 }
 
-class FavoritesStore {
+// Bug corrigé (15/09/2026, retour utilisateur iOS/web : un aliment ajouté
+// aux favoris depuis la fiche détail n'apparaissait dans l'onglet "Favoris"
+// qu'après avoir quitté et rouvert l'appli). Cause racine : la page "Ajouter
+// un aliment" (_AddFoodPage) est poussée comme une route Navigator séparée
+// de JournalScreenState — un `setState()` sur JournalScreenState (déclenché
+// par les boutons cœur des fiches détail/repas) ne rebuild donc jamais
+// _AddFoodPageState, qui recalcule pourtant sa liste "Favoris" à chaque
+// build. `ChangeNotifier` fait de ce store la seule source de vérité :
+// n'importe quel écran qui s'y abonne se met à jour tout seul, quel que
+// soit l'endroit d'où vient le toggle — plus besoin de faire remonter un
+// `setState()` manuel jusqu'au bon écran à chaque nouveau point d'ajout.
+class FavoritesStore extends ChangeNotifier {
   static const _key = 'fav_food_ids_v2';
   final Set<String> _ids = <String>{};
   Set<String> get ids => _ids;
@@ -110,6 +121,10 @@ class FavoritesStore {
               .map((r) => (r['food_id'] ?? '').toString())
               .where((id) => id.isNotEmpty));
           await sp.setString(_key, jsonEncode(_ids.toList()));
+          // Le fetch Supabase est asynchrone et peut arriver après le premier
+          // build (un écran déjà abonné, ex. _AddFoodPage ouverte vite après
+          // le lancement, doit refléter les favoris synchronisés du compte).
+          notifyListeners();
         }
       }
     } catch (e) { debugPrint('Erreur load favoris: $e'); }
@@ -119,6 +134,7 @@ class FavoritesStore {
     final sp = await SharedPreferences.getInstance();
     final isRemove = _ids.contains(id);
     if (isRemove) { _ids.remove(id); } else { _ids.add(id); }
+    notifyListeners();
     await sp.setString(_key, jsonEncode(_ids.toList()));
     try {
       final user = _supabaseClient.auth.currentUser;
@@ -1484,6 +1500,10 @@ class JournalScreenState extends State<JournalScreen> {
   @override
   void initState() {
     super.initState();
+    // Robustesse (voir FavoritesStore) : cet écran est monté en permanence
+    // (IndexedStack) pour toute la session, donc pas de removeListener utile
+    // ici — _fav lui-même vit et meurt avec ce State.
+    _fav.addListener(() { if (mounted) setState(() {}); });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       setState(() => loading = true);
       final t = await computeAndSaveTargetsFromStoredProfile();
@@ -4567,10 +4587,16 @@ class _AddFoodPageState extends State<_AddFoodPage>
 
   JournalScreenState get p => widget.parent;
 
+  // Voir le commentaire sur FavoritesStore : cette page est une route
+  // Navigator séparée de JournalScreenState, donc son onglet "Favoris" ne
+  // se met à jour que si CET écran écoute directement le store.
+  void _onFavChanged() { if (mounted) setState(() {}); }
+
   @override
   void initState() {
     super.initState();
     _tab.addListener(() => setState(() {}));
+    p._fav.addListener(_onFavChanged);
     // On s'aligne sur les valeurs courantes du parent.
     _searchCtrl.text = p._query;
     _loadFilterPrefs();
@@ -4934,6 +4960,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
     _searchDebounce?.cancel();
     _tab.dispose();
     _searchCtrl.dispose();
+    p._fav.removeListener(_onFavChanged);
     super.dispose();
   }
 
