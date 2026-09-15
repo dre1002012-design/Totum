@@ -1,6 +1,8 @@
 # Audit — Scanner code-barres & base d'aliments (étude de faisabilité)
 
-**Date : 15/09/2026 — commandé par Alex.** Objectif : que le scanner Totum couvre "un panel d'aliments ultra complet", avec macros ET micronutriments à chaque scan, aussi vite et fiable que Yuka/Yazio/MyFitnessPal — sur web aujourd'hui, Play Store et App Store demain. Ce document est une **étude de faisabilité** : aucun code n'a été modifié pour cette partie, les recommandations attendent la décision d'Alex avant implémentation. (Le bug favoris signalé dans le même message a, lui, été corrigé séparément — voir `git log`.)
+**Date : 15/09/2026 — commandé par Alex.** Objectif : que le scanner Totum couvre "un panel d'aliments ultra complet", avec macros ET micronutriments à chaque scan, aussi vite et fiable que Yuka/Yazio/MyFitnessPal — sur web aujourd'hui, Play Store et App Store demain.
+
+**Mise à jour du 15/09/2026, même jour** : Alex a donné mandat explicite ("je te laisse trancher toi-même... prendre les mesures nécessaires") pour implémenter directement la suite priorisée au §4. **Étapes 1 et 2 (mesure du taux d'échec + repli USDA Branded Foods) sont FAITES et en production** — voir détail et statut à jour tout en bas du document, section "Statut d'implémentation". Le reste de ce document garde sa valeur d'audit/état des lieux tel qu'écrit initialement.
 
 ---
 
@@ -54,9 +56,18 @@ Alex a demandé d'auditer et viser "le scanner le plus complet qui existe" — a
 
 Ce séquencement évite d'engager un budget récurrent (Option C/D) avant d'avoir la preuve, par la mesure, qu'il est nécessaire — cohérent avec l'exigence de rigueur déjà actée sur ce projet pour tout ce qui touche au moteur de calcul.
 
-## 5. Ce qui n'a PAS été touché
+## 5. Statut d'implémentation (mis à jour 15/09/2026)
 
-Aucun fichier de code n'a été modifié pour cette partie scanner — uniquement ce document d'audit. Le bug favoris signalé dans le même message a été traité séparément (voir le commit correspondant) et n'a aucun lien avec le scanner.
+- **Étape 1 — Mesure du taux d'échec** ✅ FAIT. Table `barcode_scan_misses` (migration `supabase/migrations/20260915_barcode_scan_misses.sql`, à exécuter dans Supabase Studio), loggée depuis `_logBarcodeMiss()` dans `journal_screen.dart` dès que ni OFF ni USDA ne trouvent le produit. Best-effort, ne bloque jamais l'utilisateur (échec silencieux hors-ligne ou si la migration n'est pas encore exécutée — même filet de sécurité que les autres migrations du projet).
+- **Étape 2 — USDA Branded Foods en repli** ✅ FAIT. `UsdaService.findByBarcode()` (`lib/services/usda_service.dart`) interroge l'API FoodData Central (`dataType=Branded`) UNIQUEMENT quand Open Food Facts échoue, avec la clé API déjà présente dans le repo (`lib/secrets/usda_keys.dart`, vérifiée active le 15/09/2026 — pas la clé `DEMO_KEY` limitée). Un seul appel réseau (`/foods/search`, qui renvoie déjà tous les nutriments pour un résultat Branded), correspondance code-barres exacte revérifiée côté client (comparaison numérique, insensible aux zéros de tête). Mapping nutriments par `nutrientId`, repris **directement** de `scripts/build_usda_foods.py` (`NUTRIENT_COLUMN_MAP`, déjà en production pour la base USDA bundlée) — pas de table de correspondance parallèle inventée. Deux subtilités vérifiées empiriquement contre l'API réelle (pas supposées) et testées (`test/services/usda_branded_mapping_test.dart`) :
+  - Les sucres utilisent l'id **2000** ("Total Sugars") sur les données Branded/étiquette US, différent de l'id 1063 utilisé par Foundation/SR Legacy — les deux sont vérifiés.
+  - La vitamine D est quasi toujours reportée en **UI** sur une étiquette US (id 1110), pas en µg (id 1114) — conversion appliquée avec le facteur officiel NIH/FDA (1 UI = 0,025 µg), uniquement quand la forme directe en µg est absente.
+  - La vitamine A (id 1104, "Vitamin A, IU") n'est **volontairement pas convertie** : la conversion UI → µg RAE dépend de la source (rétinol pur vs caroténoïdes provitamine A), pas un facteur fixe fiable — mieux vaut 0 qu'une valeur potentiellement fausse sur un champ nutritionnel de santé.
+- L'id produit résultant (`usda:<fdcId>`) est strictement le même format que la base USDA déjà bundlée — aucun code de badge/favori/journal à adapter, l'aliment se comporte comme n'importe quel aliment USDA existant.
+- `flutter analyze` propre, 74/74 tests passent (4 nouveaux, ciblés sur ce mapping).
+- **Non fait à ce stade, volontairement** (voir §4) : Option A (bundle local OFF), Option C (Nutritionix), Option D (Scandit) — restent conditionnées à ce que révèle la mesure de l'étape 1 dans la durée, pas engagées à l'aveugle.
+
+Le bug favoris signalé dans le même message initial a été traité séparément (voir `git log`) et n'a aucun lien avec le scanner.
 
 ---
 

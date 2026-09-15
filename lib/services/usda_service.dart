@@ -202,6 +202,163 @@ class UsdaService {
     return result;
   }
 
+  /// Recherche par code-barres (GTIN/UPC) dans le dataset USDA "Global
+  /// Branded Food Products" via l'API FoodData Central — contrairement à
+  /// Foundation/SR Legacy (voir foods_loader.dart), ce dataset n'est PAS
+  /// bundlé en local : bien trop volumineux (~3 Go décompressé), voir
+  /// docs/AUDIT_SCANNER_BASE_ALIMENTS.md. Utilisé en repli UNIQUEMENT
+  /// quand Open Food Facts ne connaît pas le produit (`_handleBarcode`
+  /// dans journal_screen.dart) — complémentaire géographiquement : USDA
+  /// Branded est fort sur le marché américain, OFF plus fort en France/UE.
+  ///
+  /// Un seul appel réseau (`/foods/search`, qui renvoie déjà tous les
+  /// nutriments pour les résultats Branded — pas besoin d'un 2ᵉ appel vers
+  /// `/food/{fdcId}`). Le `query` texte n'est pas un filtre exact sur le
+  /// GTIN côté API (vérifié empiriquement : un GTIN sans ses zéros de tête
+  /// ne remonte aucun résultat) — la correspondance exacte est donc revérifiée
+  /// ici, en comparant les codes-barres en valeur numérique (insensible aux
+  /// zéros de tête/longueur, même principe que `_barcodeVariants` côté OFF).
+  static Future<foods_loader.FoodItem?> findByBarcode(String rawBarcode) async {
+    final digits = rawBarcode.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.isEmpty) return null;
+    int scannedValue;
+    try {
+      scannedValue = int.parse(digits);
+    } catch (_) {
+      return null;
+    }
+
+    final uri = Uri.https(_host, '/fdc/v1/foods/search', {
+      'api_key': usdaApiKey,
+      'query': digits,
+      'dataType': 'Branded',
+      'pageSize': '25',
+    });
+
+    Map<String, dynamic>? data;
+    for (var attempt = 0; attempt < 2; attempt++) {
+      try {
+        final resp = await http.get(uri).timeout(const Duration(seconds: 6));
+        if (resp.statusCode == 200) {
+          data = jsonDecode(resp.body) as Map<String, dynamic>;
+          break;
+        }
+      } catch (_) {
+        // on retente une fois, sinon on abandonne silencieusement (repli
+        // "produit non trouvé" côté appelant, jamais d'erreur qui bloque)
+      }
+      if (attempt == 0) await Future.delayed(const Duration(milliseconds: 500));
+    }
+    if (data == null) return null;
+
+    final List foods = data['foods'] as List? ?? const [];
+    Map<String, dynamic>? match;
+    for (final f in foods) {
+      final m = f as Map<String, dynamic>;
+      final gtin = (m['gtinUpc'] ?? '').toString().replaceAll(RegExp(r'[^0-9]'), '');
+      if (gtin.isEmpty) continue;
+      try {
+        if (int.parse(gtin) == scannedValue) { match = m; break; }
+      } catch (_) {}
+    }
+    if (match == null) return null;
+
+    return foodItemFromBrandedSearchHit(match);
+  }
+
+  /// Construit un FoodItem à partir d'un résultat `/foods/search` (dataType
+  /// Branded) — champs `foodNutrients[].{nutrientId, value, unitName}`,
+  /// TOUJOURS pour 100 g/100 mL (convention FoodData Central, vérifiée
+  /// empiriquement le 15/09/2026 : ex. Coca-Cola = 39 kcal/269 kJ pour
+  /// 100 mL, cohérent avec l'étiquette réelle — pas la portion déclarée).
+  /// IDs nutriments repris tels quels de `scripts/build_usda_foods.py`
+  /// (NUTRIENT_COLUMN_MAP), déjà vérifiés/utilisés pour la base USDA
+  /// bundlée — même source de vérité, pas de mapping parallèle inventé.
+  ///
+  /// Volontairement sans `_` (donc appelable depuis un test, voir
+  /// test/services/usda_branded_mapping_test.dart) : c'est la partie pure
+  /// (aucun réseau) et la plus sensible de `findByBarcode` — celle qui
+  /// convertit des IDs nutriments USDA en valeurs affichées à l'utilisateur,
+  /// exactement le genre de logique que la rigueur du projet exige de
+  /// vérifier par un test, pas seulement à la main.
+  static foods_loader.FoodItem foodItemFromBrandedSearchHit(Map<String, dynamic> food) {
+    final List nutrients = food['foodNutrients'] as List? ?? const [];
+    final byId = <int, double>{};
+    for (final n in nutrients) {
+      final m = n as Map<String, dynamic>;
+      final id = (m['nutrientId'] as num?)?.toInt();
+      final value = (m['value'] as num?)?.toDouble();
+      if (id != null && value != null) byId[id] = value;
+    }
+    double g(int id) => byId[id] ?? 0.0;
+    double? gN(int id) => byId[id];
+
+    final Map<String, double> micros = {
+      'AG_saturés_g_100g': g(1258),
+      'Acide_oléique_W9_g_100g': g(1268),
+      'Acide_linoléique_W6_LA_g_100g': g(1316),
+      'Acide_alpha-linolénique_W3_ALA_g_100g': g(1404),
+      'EPA_g_100g': g(1278),
+      'DHA_g_100g': g(1272),
+      // Les étiquettes US (Branded) utilisent l'id 2000 ("Total Sugars"),
+      // différent de 1063 utilisé par Foundation/SR Legacy — vérifié
+      // empiriquement (Cheerios, Coca-Cola), les deux gardés en repli.
+      'Sucres_g_100g': byId[2000] ?? g(1063),
+      'Sel_g_100g': g(1093) * 2.5 / 1000, // pas de "salt" direct sur une étiquette US, dérivé du sodium (même formule que build_usda_foods.py)
+      'Cholestérol_mg_100g': g(1253),
+      'Calcium_mg_100g': g(1087),
+      'Cuivre_mg_100g': g(1098),
+      'Fer_mg_100g': g(1089),
+      'Iode_µg_100g': g(1100),
+      'Magnésium_mg_100g': g(1090),
+      'Manganèse_mg_100g': g(1101),
+      'Phosphore_mg_100g': g(1091),
+      'Potassium_mg_100g': g(1092),
+      'Sélénium_µg_100g': g(1103),
+      'Sodium_mg_100g': g(1093),
+      'Zinc_mg_100g': g(1095),
+      // Vitamine A : volontairement PAS reprise depuis l'id 1104 ("Vitamin
+      // A, IU") — conversion UI -> µg RAE dépendante de la source (rétinol
+      // pur vs caroténoïdes provitamine A), pas un facteur fixe fiable.
+      // Seule la forme directe en µg (1105, rare sur une étiquette US) est
+      // prise — mieux vaut 0 (déjà le comportement par défaut ailleurs
+      // dans l'app) qu'une valeur inventée sur un champ nutritionnel.
+      'Rétinol_µg_100g': g(1105),
+      'Beta-Carotène_µg_100g': g(1107),
+      // Vitamine D : les étiquettes US reportent presque toujours en UI
+      // (id 1110), pas en µg (id 1114) — conversion officielle NIH/FDA
+      // 1 UI = 0.025 µg de cholécalciférol (facteur fixe, non ambigu,
+      // contrairement à la vitamine A ci-dessus).
+      'Vitamine_D_µg_100g': gN(1114) ?? (g(1110) * 0.025),
+      'Vitamine_E_mg_100g': g(1109),
+      'Vitamine_K1_µg_100g': g(1185),
+      'Vitamine_K2_µg_100g': g(1183),
+      'Vitamine_C_mg_100g': g(1162),
+      'Vitamine_B1_mg_100g': g(1165),
+      'Vitamine_B2_mg_100g': g(1166),
+      'Vitamine_B3_mg_100g': g(1167),
+      'Vitamine_B5_mg_100g': g(1170),
+      'Vitamine_B6_mg_100g': g(1175),
+      'Vitamine_B9_µg_100g': g(1177),
+      'Vitamine_B12_µg_100g': g(1178),
+    };
+
+    final brandName = (food['brandName'] ?? food['brandOwner'])?.toString();
+
+    return foods_loader.FoodItem(
+      id: 'usda:${food['fdcId']}',
+      name: (food['description'] ?? 'Aliment USDA').toString(),
+      kcal100: gN(1008),
+      prot100: gN(1003),
+      carb100: gN(1005),
+      fat100: gN(1004),
+      fiber100: gN(1079),
+      micros100: micros,
+      sourceType: 'marque',
+      brand: (brandName != null && brandName.trim().isNotEmpty) ? brandName.trim() : null,
+    );
+  }
+
   /// Détail d'un aliment USDA -> conversion dans ton FoodItem
   static Future<foods_loader.FoodItem?> getFoodItem(int fdcId) async {
     final uri = Uri.https(_host, '/fdc/v1/food/$fdcId', {

@@ -10,6 +10,7 @@ import '../services/profile.dart'
 import '../services/foods_loader.dart' as foods_loader;
 import '../services/app_settings.dart';
 import '../services/pending_food_ops.dart';
+import '../services/usda_service.dart' as usda;
 import 'account_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -2379,6 +2380,24 @@ class JournalScreenState extends State<JournalScreen> {
     return variants.toList();
   }
 
+  /// Mesure du taux d'échec réel du scan (15/09/2026, étape 1 de
+  /// docs/AUDIT_SCANNER_BASE_ALIMENTS.md) : un code-barres que ni Open Food
+  /// Facts ni USDA Branded Foods ne connaissent est loggé pour, plus tard,
+  /// décider objectivement si une 3ᵉ source (API payante) est justifiée —
+  /// plutôt que d'engager un budget récurrent sans données réelles. Best
+  /// effort : ne bloque jamais l'utilisateur (hors-ligne, pas de compte, ou
+  /// migration Supabase pas encore exécutée → échec silencieux).
+  Future<void> _logBarcodeMiss(String barcode) async {
+    try {
+      final user = _supabaseClient.auth.currentUser;
+      if (user == null) return;
+      await _supabaseClient.from('barcode_scan_misses').insert({
+        'user_id': user.id,
+        'barcode': barcode,
+      });
+    } catch (_) {}
+  }
+
   Future<Map<String, dynamic>?> _fetchOFF(String code) async {
     for (int attempt = 0; attempt < 3; attempt++) {
       try {
@@ -2426,9 +2445,28 @@ class JournalScreenState extends State<JournalScreen> {
           if (data != null) { usedCode = code; break; }
         }
 
+        // Repli USDA Branded Foods (15/09/2026, suite audit scanner — voir
+        // docs/AUDIT_SCANNER_BASE_ALIMENTS.md, Option B) : Open Food Facts
+        // reste la source principale (plus forte en France/UE, marché
+        // actuel de Totum), USDA comble le marché américain — un seul
+        // appel réseau de plus, UNIQUEMENT si OFF ne connaît pas le
+        // produit. `findByBarcode` retourne déjà un FoodItem complet
+        // (id "usda:<fdcId>", même format que la base USDA bundlée —
+        // aucun code de badge/favori/journal à adapter).
+        foods_loader.FoodItem? usdaFallback;
+        if (data == null) {
+          try {
+            usdaFallback = await usda.UsdaService.findByBarcode(rawBarcode);
+          } catch (_) {}
+        }
+
         if (mounted && Navigator.canPop(context)) Navigator.pop(context);
 
-        if (data == null) {
+        if (data == null && usdaFallback == null) {
+          // Mesure du taux d'échec réel (étape 1 de l'audit scanner) :
+          // best-effort, jamais bloquant si hors-ligne ou si la migration
+          // Supabase n'a pas encore été exécutée.
+          unawaited(_logBarcodeMiss(rawBarcode));
           _showErrorDialog(
             l10n.jrnlProductNotFoundTitle,
             l10n.jrnlProductNotFoundBody,
@@ -2436,6 +2474,10 @@ class JournalScreenState extends State<JournalScreen> {
           return;
         }
 
+        foods_loader.FoodItem item;
+        if (data == null) {
+          item = usdaFallback!;
+        } else {
         final product = data['product'] as Map<String, dynamic>;
         final Map<String, dynamic> nutriments =
             (product['nutriments'] as Map?)?.cast<String, dynamic>() ?? {};
@@ -2692,7 +2734,7 @@ class JournalScreenState extends State<JournalScreen> {
         if (imageUrl != null && imageUrl.trim().isEmpty) imageUrl = null;
 
         // ── Construction du FoodItem ──────────────────────────────────────
-        final item = foods_loader.FoodItem(
+        item = foods_loader.FoodItem(
           id: 'off:$usedCode',
           name: name,
           kcal100: kcal100,
@@ -2705,6 +2747,7 @@ class JournalScreenState extends State<JournalScreen> {
           novaEstime: false,
           imageUrl: imageUrl,
         );
+        } // fin du bloc de parsing Open Food Facts (voir `if (data == null)` plus haut)
 
         final customFood = _CustomFood(
           id: item.id, name: item.name,
