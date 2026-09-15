@@ -58,7 +58,7 @@ Ce séquencement évite d'engager un budget récurrent (Option C/D) avant d'avoi
 
 ## 5. Statut d'implémentation (mis à jour 15/09/2026)
 
-- **Étape 1 — Mesure du taux d'échec** ✅ FAIT. Table `barcode_scan_misses` (migration `supabase/migrations/20260915_barcode_scan_misses.sql`, à exécuter dans Supabase Studio), loggée depuis `_logBarcodeMiss()` dans `journal_screen.dart` dès que ni OFF ni USDA ne trouvent le produit. Best-effort, ne bloque jamais l'utilisateur (échec silencieux hors-ligne ou si la migration n'est pas encore exécutée — même filet de sécurité que les autres migrations du projet).
+- **Étape 1 — Mesure du taux d'échec** ✅ FAIT ET ACTIF (migration exécutée par Alex dans Supabase Studio le 15/09/2026). Table `barcode_scan_misses` (`supabase/migrations/20260915_barcode_scan_misses.sql`), loggée depuis `_logBarcodeMiss()` dans `journal_screen.dart` dès que ni OFF ni USDA ne trouvent le produit. Best-effort, ne bloque jamais l'utilisateur (échec silencieux hors-ligne).
 - **Étape 2 — USDA Branded Foods en repli** ✅ FAIT. `UsdaService.findByBarcode()` (`lib/services/usda_service.dart`) interroge l'API FoodData Central (`dataType=Branded`) UNIQUEMENT quand Open Food Facts échoue, avec la clé API déjà présente dans le repo (`lib/secrets/usda_keys.dart`, vérifiée active le 15/09/2026 — pas la clé `DEMO_KEY` limitée). Un seul appel réseau (`/foods/search`, qui renvoie déjà tous les nutriments pour un résultat Branded), correspondance code-barres exacte revérifiée côté client (comparaison numérique, insensible aux zéros de tête). Mapping nutriments par `nutrientId`, repris **directement** de `scripts/build_usda_foods.py` (`NUTRIENT_COLUMN_MAP`, déjà en production pour la base USDA bundlée) — pas de table de correspondance parallèle inventée. Deux subtilités vérifiées empiriquement contre l'API réelle (pas supposées) et testées (`test/services/usda_branded_mapping_test.dart`) :
   - Les sucres utilisent l'id **2000** ("Total Sugars") sur les données Branded/étiquette US, différent de l'id 1063 utilisé par Foundation/SR Legacy — les deux sont vérifiés.
   - La vitamine D est quasi toujours reportée en **UI** sur une étiquette US (id 1110), pas en µg (id 1114) — conversion appliquée avec le facteur officiel NIH/FDA (1 UI = 0,025 µg), uniquement quand la forme directe en µg est absente.
@@ -66,6 +66,23 @@ Ce séquencement évite d'engager un budget récurrent (Option C/D) avant d'avoi
 - L'id produit résultant (`usda:<fdcId>`) est strictement le même format que la base USDA déjà bundlée — aucun code de badge/favori/journal à adapter, l'aliment se comporte comme n'importe quel aliment USDA existant.
 - `flutter analyze` propre, 74/74 tests passent (4 nouveaux, ciblés sur ce mapping).
 - **Non fait à ce stade, volontairement** (voir §4) : Option A (bundle local OFF), Option C (Nutritionix), Option D (Scandit) — restent conditionnées à ce que révèle la mesure de l'étape 1 dans la durée, pas engagées à l'aveugle.
+
+**Comment consulter la mesure plus tard** (Supabase Studio → SQL Editor, laisser tourner quelques semaines d'usage réel avant de juger) :
+```sql
+-- Codes-barres les plus fréquemment ratés (les deux sources échouent)
+select barcode, count(*) as echecs
+from public.barcode_scan_misses
+group by barcode
+order by echecs desc
+limit 50;
+
+-- Volume total d'échecs sur la période, pour estimer le taux réel
+-- (à comparer au nombre total de scans, non loggé actuellement — si ce
+-- ratio devient utile, ajouter un compteur de scans réussis serait la
+-- prochaine étape avant de juger un taux d'échec en %, pas en absolu).
+select count(*) from public.barcode_scan_misses
+where created_at > now() - interval '30 days';
+```
 
 Le bug favoris signalé dans le même message initial a été traité séparément (voir `git log`) et n'a aucun lien avec le scanner.
 
