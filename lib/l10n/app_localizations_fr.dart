@@ -44,6 +44,39 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onboardingSex => 'Sexe';
 
   @override
+  String get nutrientBreakdownTitle => 'Aujourd\'hui, par aliment';
+
+  @override
+  String get nutrientBreakdownEmpty =>
+      'Rien de loggé aujourd\'hui pour l\'instant.';
+
+  @override
+  String nutrientBreakdownGrams(String grams) {
+    return '$grams g';
+  }
+
+  @override
+  String get vitaminK1Label => 'Vitamine K1 (phylloquinone)';
+
+  @override
+  String get vitaminK1Note =>
+      'Seule forme avec un apport de référence officiel (EFSA/ANSES) — c\'est elle qui pilote le % affiché sur la vignette.';
+
+  @override
+  String get vitaminK2Label => 'Vitamine K2 (ménaquinones)';
+
+  @override
+  String get vitaminK2Note =>
+      'Pas d\'apport de référence officiel à ce jour (preuves jugées insuffisantes par l\'EFSA) — associée dans la recherche récente à la santé osseuse et cardiovasculaire. Purement informatif ici.';
+
+  @override
+  String get vitaminK2CoverageNote =>
+      'Donnée K2 encore incomplète dans la base CIQUAL pour de nombreux aliments — un 0 peut signifier \"non mesuré\", pas forcément \"absent\".';
+
+  @override
+  String get vitaminKNoTarget => 'Pas de cible';
+
+  @override
   String get appTitle => 'Totum';
 
   @override

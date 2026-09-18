@@ -11,6 +11,18 @@
   "onboardingBack": "Retour",
   "onboardingStart": "Commencer",
   "onboardingSex": "Sexe",
+  "nutrientBreakdownTitle": "Aujourd'hui, par aliment",
+  "nutrientBreakdownEmpty": "Rien de loggé aujourd'hui pour l'instant.",
+  "nutrientBreakdownGrams": "{grams} g",
+  "@nutrientBreakdownGrams": {
+    "placeholders": { "grams": { "type": "String" } }
+  },
+  "vitaminK1Label": "Vitamine K1 (phylloquinone)",
+  "vitaminK1Note": "Seule forme avec un apport de référence officiel (EFSA/ANSES) — c'est elle qui pilote le % affiché sur la vignette.",
+  "vitaminK2Label": "Vitamine K2 (ménaquinones)",
+  "vitaminK2Note": "Pas d'apport de référence officiel à ce jour (preuves jugées insuffisantes par l'EFSA) — associée dans la recherche récente à la santé osseuse et cardiovasculaire. Purement informatif ici.",
+  "vitaminK2CoverageNote": "Donnée K2 encore incomplète dans la base CIQUAL pour de nombreux aliments — un 0 peut signifier \"non mesuré\", pas forcément \"absent\".",
+  "vitaminKNoTarget": "Pas de cible",
   "appTitle": "Totum",
   "@appTitle": {
     "description": "Nom de l'application"

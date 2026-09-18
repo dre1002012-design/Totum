@@ -180,6 +180,11 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   late Future<List<WeighIn>> _weightHistoryFuture;
   late Future<DayTotals> _dayTotalsFuture;
+  // Donuts macros/micronutriments cliquables (19/09/2026, demande d'Alex,
+  // audit confirmant que Cronometer/MyFitnessPal proposent ce même détail
+  // "quels aliments contribuent le plus à ce nutriment aujourd'hui") — liste
+  // brute (pas agrégée) des aliments du jour, voir dayFoodEntries.
+  late Future<List<FoodEntryContribution>> _dayEntriesFuture;
   late Future<nutri.NutritionTargets> _targetsFuture;
   late Future<List<ExpenditurePoint>> _expenditureHistoryFuture;
 
@@ -204,6 +209,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// redéclencher une fois le profil chargé.
   void _refreshProfileDependentCharts() {
     _dayTotalsFuture = computeTodayTotals();
+    _dayEntriesFuture = dayFoodEntries(DateTime.now());
     _targetsFuture = _computeAutoTargets();
   }
 
@@ -1200,7 +1206,13 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _macroRing(String label, IconData icon, double consumed, double target) {
+  // BUG CORRIGÉ / demande d'Alex (19/09/2026) : donuts macros non cliquables,
+  // incohérent avec la carte "Micronutriments en vedette" ci-dessous (rendue
+  // cliquable dans la même passe) — audit confirmant que Cronometer/
+  // MyFitnessPal proposent ce même détail au tap sur un nutriment ("quels
+  // aliments d'aujourd'hui y contribuent le plus"). [onTap] optionnel pour
+  // ne pas casser un éventuel autre appelant de cette fonction.
+  Widget _macroRing(String label, IconData icon, double consumed, double target, {VoidCallback? onTap}) {
     final fraction = target > 0 ? (consumed / target).clamp(0.0, 1.0) : 0.0;
     final diff = target - consumed;
     // BUG CORRIGÉ (19/08/2026) — même correctif que le ring kcal ci-dessus :
@@ -1208,7 +1220,10 @@ class ProfileScreenState extends State<ProfileScreen> {
     // `consumed.round()` plus bas), pas les doubles bruts.
     final isOver = target > 0 && consumed.round() > target.round();
     final ringColor = isOver ? TotumColors.negative : TotumColors.accent;
-    return Column(
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
@@ -1259,6 +1274,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               fontWeight: isOver ? FontWeight.w700 : FontWeight.normal),
         ),
       ],
+      ),
     );
   }
 
@@ -1282,9 +1298,12 @@ class ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _macroRing(l10n.profileCarbs, Icons.grain, today.carb, _carb),
-              _macroRing(l10n.profileFats, Icons.opacity, today.fat, _fat),
-              _macroRing(l10n.profileProteins, Icons.fitness_center, today.prot, _prot),
+              _macroRing(l10n.profileCarbs, Icons.grain, today.carb, _carb,
+                  onTap: () => _showNutrientBreakdown(l10n.profileCarbs, 'g', (e) => e.carb)),
+              _macroRing(l10n.profileFats, Icons.opacity, today.fat, _fat,
+                  onTap: () => _showNutrientBreakdown(l10n.profileFats, 'g', (e) => e.fat)),
+              _macroRing(l10n.profileProteins, Icons.fitness_center, today.prot, _prot,
+                  onTap: () => _showNutrientBreakdown(l10n.profileProteins, 'g', (e) => e.prot)),
             ],
           ),
         ],
@@ -1408,12 +1427,129 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  /// Fiche "quels aliments d'aujourd'hui contribuent le plus à CE
+  /// nutriment" — au tap sur n'importe quel donut du carrousel (macros ou
+  /// micronutriments), demande d'Alex (19/09/2026) confirmée par audit
+  /// concurrentiel (Cronometer/MyFitnessPal proposent le même détail).
+  /// [valueOf] extrait la contribution de CE nutriment pour un aliment
+  /// donné — trié du plus grand au plus petit, sans jamais filtrer les
+  /// zéros (savoir qu'un aliment mangé aujourd'hui n'en contient PAS est
+  /// une information à part entière, pas du bruit à cacher).
+  void _showNutrientBreakdown(
+    String title,
+    String unit,
+    double Function(FoodEntryContribution) valueOf,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: TotumColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (ctx) => ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.75),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40, height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(color: TotumColors.outlineStrong, borderRadius: BorderRadius.circular(999)),
+                ),
+              ),
+              Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+              Text(ctx.l10n.nutrientBreakdownTitle,
+                  style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
+              const SizedBox(height: 12),
+              Flexible(
+                child: FutureBuilder<List<FoodEntryContribution>>(
+                  future: _dayEntriesFuture,
+                  builder: (ctx, snap) {
+                    final entries = List<FoodEntryContribution>.from(snap.data ?? const [])
+                      ..sort((a, b) => valueOf(b).compareTo(valueOf(a)));
+                    if (snap.connectionState != ConnectionState.done) {
+                      return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 24),
+                          child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
+                    }
+                    if (entries.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: Text(ctx.l10n.nutrientBreakdownEmpty,
+                            style: TextStyle(color: TotumColors.textSecondary)),
+                      );
+                    }
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: entries.length,
+                      separatorBuilder: (_, __) => Divider(height: 1, color: TotumColors.outline),
+                      itemBuilder: (ctx, i) {
+                        final e = entries[i];
+                        final v = valueOf(e);
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 22,
+                                child: Text('${i + 1}',
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: TotumColors.textMuted)),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(e.name, maxLines: 1, overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+                                    Text(ctx.l10n.nutrientBreakdownGrams(e.grams.round().toString()),
+                                        style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+                                  ],
+                                ),
+                              ),
+                              Text('${v.round()} $unit',
+                                  style: TextStyle(fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // BUG CORRIGÉ / demande d'Alex (19/09/2026) : puces micronutriments non
+  // cliquables. Audit vitamine K fait en même temps (voir _showVitaminKBreakdown)
+  // : contrairement à une supposition initiale, priorityNutrientConsumed('vitK')
+  // ne lisant QUE Vitamine_K1 n'est PAS un bug — vitKUg (profile.dart, ligne
+  // ~759 : `poids_kg × 1.0`) est déjà l'apport de référence EFSA/ANSES pour
+  // la phylloquinone (K1) SPÉCIFIQUEMENT (1 µg/kg/j — EFSA 2017, aucune
+  // valeur de référence officielle pour la K2, preuves jugées insuffisantes),
+  // donc comparer un consommé K1 à une cible K1 reste scientifiquement
+  // cohérent. Le vrai manque : rien n'explique nulle part cette distinction
+  // à l'utilisateur, et la K2 (associée dans la recherche récente à la santé
+  // osseuse/cardiovasculaire, ex. natto, fromages affinés, jaune d'œuf)
+  // n'est affichée nulle part alors que la donnée existe déjà en base.
   Widget _microChip(String key, DayTotals today, nutri.NutritionTargets targets) {
     final target = priorityNutrientTarget(key, targets) ?? 0;
     final consumed = priorityNutrientConsumed(key, today.micros);
     final fraction = target > 0 ? (consumed / target).clamp(0.0, 1.0) : 0.0;
     final label = nutrientDisplayLabel(kPriorityNutrientLabel[key] ?? key, context.l10n);
-    return Column(
+    return GestureDetector(
+      onTap: () => key == 'vitK'
+          ? _showVitaminKBreakdown(targets)
+          : _showNutrientBreakdown(label, _priorityNutrientUnit(key),
+              (e) => _priorityNutrientValueFromEntry(key, e)),
+      behavior: HitTestBehavior.opaque,
+      child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
@@ -1452,8 +1588,187 @@ class ProfileScreenState extends State<ProfileScreen> {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 8.5, color: TotumColors.textSecondary, fontWeight: FontWeight.w600)),
       ],
+      ),
     );
   }
+
+  /// Unité d'affichage à partir du nom de colonne CIQUAL (suffixe standard).
+  String _priorityNutrientUnit(String key) {
+    if (key == 'omega3_marins') return 'g';
+    final col = kPriorityNutrientColumn[key] ?? '';
+    if (col.contains('_µg_')) return 'µg';
+    if (col.contains('_mg_')) return 'mg';
+    return 'g';
+  }
+
+  /// Contribution d'UN aliment à un nutriment prioritaire donné — même
+  /// définition que [priorityNutrientConsumed], appliquée à un aliment
+  /// individuel plutôt qu'au total du jour, pour que le classement de la
+  /// fiche de détail corresponde exactement à ce que mesure la puce tapée.
+  double _priorityNutrientValueFromEntry(String key, FoodEntryContribution e) {
+    if (key == 'omega3_marins') {
+      return (e.micros['EPA_g_100g'] ?? 0) + (e.micros['DHA_g_100g'] ?? 0);
+    }
+    final col = kPriorityNutrientColumn[key];
+    return col == null ? 0 : (e.micros[col] ?? 0);
+  }
+
+  /// Fiche dédiée "Vitamine K" — voir le commentaire complet sur
+  /// [_microChip] : K1 et K2 sont deux nutriments biologiquement distincts
+  /// (coagulation vs santé osseuse/cardiovasculaire), une seule des deux
+  /// (K1) a un apport de référence officiel. Contrairement à Cronometer
+  /// (le concurrent le plus rigoureux sur les micronutriments, qui combine
+  /// pourtant les deux faute de les différencier), cette fiche montre les
+  /// deux séparément avec leur statut réel — audit du 19/09/2026 confirmant
+  /// qu'aucune app grand public ne fait cette distinction aujourd'hui.
+  void _showVitaminKBreakdown(nutri.NutritionTargets targets) {
+    final l10n = context.l10n;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: TotumColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (ctx) => ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.85),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40, height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(color: TotumColors.outlineStrong, borderRadius: BorderRadius.circular(999)),
+                ),
+              ),
+              Text(kPriorityNutrientLabel['vitK'] ?? 'Vitamine K',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+              const SizedBox(height: 14),
+              FutureBuilder<List<FoodEntryContribution>>(
+                future: _dayEntriesFuture,
+                builder: (ctx, snap) {
+                  final entries = List<FoodEntryContribution>.from(snap.data ?? const []);
+                  double k1Total = 0, k2Total = 0;
+                  for (final e in entries) {
+                    k1Total += e.micros['Vitamine_K1_µg_100g'] ?? 0;
+                    k2Total += e.micros['Vitamine_K2_µg_100g'] ?? 0;
+                  }
+                  final k1Target = priorityNutrientTarget('vitK', targets) ?? 0;
+
+                  Widget summaryRow(String label, double value, double? target, String note) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(label, style: TextStyle(fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                              Text(
+                                target != null && target > 0
+                                    ? '${value.round()} / ${target.round()} µg'
+                                    : '${value.round()} µg  ·  ${l10n.vitaminKNoTarget}',
+                                style: TextStyle(fontWeight: FontWeight.w800, color: TotumColors.textSecondary),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(note, style: TextStyle(fontSize: 11.5, height: 1.35, color: TotumColors.textSecondary)),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      summaryRow(l10n.vitaminK1Label, k1Total, k1Target, l10n.vitaminK1Note),
+                      summaryRow(l10n.vitaminK2Label, k2Total, null, l10n.vitaminK2Note),
+                      const SizedBox(height: 4),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(Icons.info_outline, size: 14, color: TotumColors.textMuted),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(l10n.vitaminK2CoverageNote,
+                                style: TextStyle(fontSize: 11, height: 1.3, color: TotumColors.textMuted)),
+                          ),
+                        ],
+                      ),
+                      const Divider(height: 24),
+                      Text(l10n.nutrientBreakdownTitle,
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
+                      const SizedBox(height: 8),
+                      if (snap.connectionState != ConnectionState.done)
+                        const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 24),
+                            child: Center(child: CircularProgressIndicator(strokeWidth: 2)))
+                      else if (entries.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 24),
+                          child: Text(l10n.nutrientBreakdownEmpty, style: TextStyle(color: TotumColors.textSecondary)),
+                        )
+                      else
+                        Flexible(
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: (entries..sort((a, b) =>
+                                    (b.micros['Vitamine_K1_µg_100g'] ?? 0)
+                                        .compareTo(a.micros['Vitamine_K1_µg_100g'] ?? 0)))
+                                .length,
+                            separatorBuilder: (_, __) => Divider(height: 1, color: TotumColors.outline),
+                            itemBuilder: (ctx, i) {
+                              final e = entries[i];
+                              final k1 = e.micros['Vitamine_K1_µg_100g'] ?? 0;
+                              final k2 = e.micros['Vitamine_K2_µg_100g'] ?? 0;
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 9),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(e.name, maxLines: 1, overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+                                          Text(l10n.nutrientBreakdownGrams(e.grams.round().toString()),
+                                              style: TextStyle(fontSize: 11, color: TotumColors.textSecondary)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 56,
+                                      child: Text('K1 ${k1.round()}',
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
+                                    ),
+                                    SizedBox(
+                                      width: 56,
+                                      child: Text('K2 ${k2.round()}',
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 
   // ─── Grille de vignettes « + » ────────────────────────────────────────
 

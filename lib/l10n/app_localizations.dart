@@ -164,6 +164,60 @@ abstract class AppLocalizations {
   /// **'Sexe'**
   String get onboardingSex;
 
+  /// No description provided for @nutrientBreakdownTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui, par aliment'**
+  String get nutrientBreakdownTitle;
+
+  /// No description provided for @nutrientBreakdownEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien de loggé aujourd\'hui pour l\'instant.'**
+  String get nutrientBreakdownEmpty;
+
+  /// No description provided for @nutrientBreakdownGrams.
+  ///
+  /// In fr, this message translates to:
+  /// **'{grams} g'**
+  String nutrientBreakdownGrams(String grams);
+
+  /// No description provided for @vitaminK1Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine K1 (phylloquinone)'**
+  String get vitaminK1Label;
+
+  /// No description provided for @vitaminK1Note.
+  ///
+  /// In fr, this message translates to:
+  /// **'Seule forme avec un apport de référence officiel (EFSA/ANSES) — c\'est elle qui pilote le % affiché sur la vignette.'**
+  String get vitaminK1Note;
+
+  /// No description provided for @vitaminK2Label.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitamine K2 (ménaquinones)'**
+  String get vitaminK2Label;
+
+  /// No description provided for @vitaminK2Note.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas d\'apport de référence officiel à ce jour (preuves jugées insuffisantes par l\'EFSA) — associée dans la recherche récente à la santé osseuse et cardiovasculaire. Purement informatif ici.'**
+  String get vitaminK2Note;
+
+  /// No description provided for @vitaminK2CoverageNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donnée K2 encore incomplète dans la base CIQUAL pour de nombreux aliments — un 0 peut signifier \"non mesuré\", pas forcément \"absent\".'**
+  String get vitaminK2CoverageNote;
+
+  /// No description provided for @vitaminKNoTarget.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de cible'**
+  String get vitaminKNoTarget;
+
   /// Nom de l'application
   ///
   /// In fr, this message translates to:

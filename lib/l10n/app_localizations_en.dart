@@ -44,6 +44,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingSex => 'Sex';
 
   @override
+  String get nutrientBreakdownTitle => 'Today, by food';
+
+  @override
+  String get nutrientBreakdownEmpty => 'Nothing logged today yet.';
+
+  @override
+  String nutrientBreakdownGrams(String grams) {
+    return '$grams g';
+  }
+
+  @override
+  String get vitaminK1Label => 'Vitamin K1 (phylloquinone)';
+
+  @override
+  String get vitaminK1Note =>
+      'The only form with an official reference intake (EFSA/ANSES) — it\'s the one driving the % shown on the tile.';
+
+  @override
+  String get vitaminK2Label => 'Vitamin K2 (menaquinones)';
+
+  @override
+  String get vitaminK2Note =>
+      'No official reference intake yet (EFSA considers the evidence insufficient) — linked in recent research to bone and cardiovascular health. Shown here for information only.';
+
+  @override
+  String get vitaminK2CoverageNote =>
+      'K2 data is still incomplete in the CIQUAL database for many foods — a 0 can mean \"not measured\", not necessarily \"absent\".';
+
+  @override
+  String get vitaminKNoTarget => 'No target';
+
+  @override
   String get appTitle => 'Totum';
 
   @override
