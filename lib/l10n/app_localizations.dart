@@ -98,6 +98,72 @@ abstract class AppLocalizations {
     Locale('en')
   ];
 
+  /// No description provided for @onboardingWelcomeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bienvenue sur Totum'**
+  String get onboardingWelcomeTitle;
+
+  /// No description provided for @onboardingWelcomeSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quelques informations pour calculer tes besoins — modifiables à tout moment depuis le Tableau de bord.'**
+  String get onboardingWelcomeSubtitle;
+
+  /// No description provided for @onboardingStepMeasures.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes mesures'**
+  String get onboardingStepMeasures;
+
+  /// No description provided for @onboardingStepActivityTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton niveau d\'activité'**
+  String get onboardingStepActivityTitle;
+
+  /// No description provided for @onboardingStepGoalTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton objectif'**
+  String get onboardingStepGoalTitle;
+
+  /// No description provided for @onboardingStepSummaryTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout est prêt'**
+  String get onboardingStepSummaryTitle;
+
+  /// No description provided for @onboardingSummaryIntro.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voici ton objectif calorique et tes macros de départ, calculés à partir de ce que tu viens de renseigner. Ils s\'affineront automatiquement au fil de tes pesées et de ton journal.'**
+  String get onboardingSummaryIntro;
+
+  /// No description provided for @onboardingContinue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get onboardingContinue;
+
+  /// No description provided for @onboardingBack.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retour'**
+  String get onboardingBack;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commencer'**
+  String get onboardingStart;
+
+  /// No description provided for @onboardingSex.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sexe'**
+  String get onboardingSex;
+
   /// Nom de l'application
   ///
   /// In fr, this message translates to:

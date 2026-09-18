@@ -1,5 +1,16 @@
 {
   "@@locale": "fr",
+  "onboardingWelcomeTitle": "Bienvenue sur Totum",
+  "onboardingWelcomeSubtitle": "Quelques informations pour calculer tes besoins — modifiables à tout moment depuis le Tableau de bord.",
+  "onboardingStepMeasures": "Tes mesures",
+  "onboardingStepActivityTitle": "Ton niveau d'activité",
+  "onboardingStepGoalTitle": "Ton objectif",
+  "onboardingStepSummaryTitle": "Tout est prêt",
+  "onboardingSummaryIntro": "Voici ton objectif calorique et tes macros de départ, calculés à partir de ce que tu viens de renseigner. Ils s'affineront automatiquement au fil de tes pesées et de ton journal.",
+  "onboardingContinue": "Continuer",
+  "onboardingBack": "Retour",
+  "onboardingStart": "Commencer",
+  "onboardingSex": "Sexe",
   "appTitle": "Totum",
   "@appTitle": {
     "description": "Nom de l'application"

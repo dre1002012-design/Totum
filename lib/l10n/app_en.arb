@@ -1,5 +1,16 @@
 {
   "@@locale": "en",
+  "onboardingWelcomeTitle": "Welcome to Totum",
+  "onboardingWelcomeSubtitle": "A few details to calculate your needs — you can change them anytime from the Dashboard.",
+  "onboardingStepMeasures": "Your measurements",
+  "onboardingStepActivityTitle": "Your activity level",
+  "onboardingStepGoalTitle": "Your goal",
+  "onboardingStepSummaryTitle": "All set",
+  "onboardingSummaryIntro": "Here's your starting calorie target and macros, calculated from what you just entered. They'll fine-tune automatically as you log your weight and meals.",
+  "onboardingContinue": "Continue",
+  "onboardingBack": "Back",
+  "onboardingStart": "Get started",
+  "onboardingSex": "Sex",
   "appTitle": "Totum",
 
   "weightScreenTitle": "Weight",

@@ -1382,6 +1382,38 @@ NutritionTargets applyManualMacros(
   );
 }
 
+/// Vrai uniquement si ce compte n'a JAMAIS configuré son profil — ni en
+/// local (première installation) ni sur Supabase (réinstallation, nouvel
+/// appareil, même compte déjà configuré ailleurs). Pilote l'affichage de
+/// l'onboarding dédié (18/09/2026, audit ergonomie demandé par Alex — audit
+/// concurrentiel confirmant que MyFitnessPal et Cronometer imposent tous
+/// deux un parcours guidé avant le tableau de bord, contrairement à Totum
+/// jusqu'ici qui atterrissait directement sur des valeurs par défaut
+/// éditables, à l'origine du bug de sauvegarde manquée déjà corrigé). Le
+/// drapeau local (`profile_sex`) suffit pour la quasi-totalité des cas
+/// (même appareil) ; le repli Supabase couvre la réinstallation/le
+/// changement d'appareil, pour ne jamais réimposer l'onboarding à un
+/// utilisateur déjà configuré ailleurs.
+Future<bool> needsOnboarding() async {
+  final sp = await SharedPreferences.getInstance();
+  if (sp.getString('profile_sex') != null) return false;
+  try {
+    final client = Supabase.instance.client;
+    final user = client.auth.currentUser;
+    if (user == null) return true;
+    final remote = await client
+        .from('user_profile')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+    return remote == null;
+  } catch (_) {
+    // Hors-ligne/erreur réseau : repli sur le seul signal local déjà lu
+    // ci-dessus (même filet de sécurité que le reste de ce fichier).
+    return true;
+  }
+}
+
 Future<NutritionTargets> computeAndSaveTargetsFromStoredProfile() async {
   final profile = await ProfileStore.instance.load();
   var targets = computeNutritionTargets(profile);

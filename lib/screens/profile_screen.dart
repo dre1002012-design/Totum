@@ -42,14 +42,14 @@ String _dietLabel(Diet d, AppLocalizations l10n) => switch (d) {
 /// accessibles via "En savoir plus" — une vraie valeur ajoutée, au même
 /// titre que les fiches nutriments de l'onglet Bilan, donc conservée
 /// spécifiquement ici (contrairement aux autres fiches, restées épurées).
-class _GoalOption {
+class GoalOption {
   final nutri.GoalType goal;
   final IconData icon;
   final String title;
   final String description;
   final List<String> tips;
   final String coach;
-  const _GoalOption({
+  const GoalOption({
     required this.goal,
     required this.icon,
     required this.title,
@@ -59,8 +59,8 @@ class _GoalOption {
   });
 }
 
-List<_GoalOption> _goalOptionsFor(AppLocalizations l10n) => [
-      _GoalOption(
+List<GoalOption> goalOptionsFor(AppLocalizations l10n) => [
+      GoalOption(
         goal: nutri.GoalType.lose,
         icon: Icons.local_fire_department,
         title: l10n.goalLoseTitle,
@@ -68,7 +68,7 @@ List<_GoalOption> _goalOptionsFor(AppLocalizations l10n) => [
         tips: [l10n.goalLoseTip1, l10n.goalLoseTip2, l10n.goalLoseTip3, l10n.goalLoseTip4],
         coach: l10n.goalLoseCoach,
       ),
-      _GoalOption(
+      GoalOption(
         goal: nutri.GoalType.loseMild,
         icon: Icons.trending_down,
         title: l10n.goalLoseMildTitle,
@@ -76,7 +76,7 @@ List<_GoalOption> _goalOptionsFor(AppLocalizations l10n) => [
         tips: [l10n.goalLoseMildTip1, l10n.goalLoseMildTip2, l10n.goalLoseMildTip3, l10n.goalLoseMildTip4],
         coach: l10n.goalLoseMildCoach,
       ),
-      _GoalOption(
+      GoalOption(
         goal: nutri.GoalType.maintain,
         icon: Icons.balance,
         title: l10n.goalMaintainTitle,
@@ -84,7 +84,7 @@ List<_GoalOption> _goalOptionsFor(AppLocalizations l10n) => [
         tips: [l10n.goalMaintainTip1, l10n.goalMaintainTip2, l10n.goalMaintainTip3, l10n.goalMaintainTip4],
         coach: l10n.goalMaintainCoach,
       ),
-      _GoalOption(
+      GoalOption(
         goal: nutri.GoalType.gainMild,
         icon: Icons.fitness_center,
         title: l10n.goalGainMildTitle,
@@ -92,7 +92,7 @@ List<_GoalOption> _goalOptionsFor(AppLocalizations l10n) => [
         tips: [l10n.goalGainMildTip1, l10n.goalGainMildTip2, l10n.goalGainMildTip3, l10n.goalGainMildTip4],
         coach: l10n.goalGainMildCoach,
       ),
-      _GoalOption(
+      GoalOption(
         goal: nutri.GoalType.gain,
         icon: Icons.rocket_launch,
         title: l10n.goalGainTitle,
@@ -102,8 +102,8 @@ List<_GoalOption> _goalOptionsFor(AppLocalizations l10n) => [
       ),
     ];
 
-_GoalOption _goalOption(nutri.GoalType g, AppLocalizations l10n) =>
-    _goalOptionsFor(l10n).firstWhere((o) => o.goal == g);
+GoalOption goalOptionFor(nutri.GoalType g, AppLocalizations l10n) =>
+    goalOptionsFor(l10n).firstWhere((o) => o.goal == g);
 
 class ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
@@ -1467,7 +1467,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               child: TotumInputTile(
                 icon: Icons.flag_rounded,
                 label: l10n.profileGoalTileLabel,
-                value: _goalChosen ? _goalOption(_goal, l10n).title : null,
+                value: _goalChosen ? goalOptionFor(_goal, l10n).title : null,
                 onTap: () => _openGoalSheet(context),
               ),
             ),
@@ -1542,12 +1542,27 @@ class ProfileScreenState extends State<ProfileScreen> {
   // sémantique "annuler" à préserver ici. Un point unique de sauvegarde,
   // partagé par les 5 fiches de réglages, plutôt que de dépendre d'un seul
   // bouton qu'un balayage ou un tap en dehors permettait de contourner.
+  /// Instantané comparable de TOUS les champs de réglage — sert uniquement
+  /// à détecter "quelque chose a-t-il vraiment changé pendant que cette
+  /// fiche était ouverte" (voir `_openSheet`). Volontairement plus large
+  /// que `_dirty` (qui ne compare que le résultat kcal/macros) : un champ
+  /// comme `_diet` (régime alimentaire) n'influence JAMAIS le calcul kcal
+  /// (voir son commentaire — seulement la source d'oméga-3/le rappel B12),
+  /// donc `_dirty` resterait faux même après un vrai changement de ce
+  /// champ précis — ce snapshot, lui, le détecte correctement.
+  String _formSnapshot() => [
+        _sex, _num(_ageCtrl), _num(_heightCtrl), _num(_weightCtrl),
+        _activityLevel, _goal, _diet, _dietStyle,
+        _bodyFatEnabled, _bodyFatRange, _targetWeightCtrl.text.trim(),
+      ].join('|');
+
   Future<void> _openSheet(
     BuildContext context, {
     required String title,
     Widget Function(BuildContext, StateSetter)? pinned,
     required Widget Function(BuildContext, StateSetter) builder,
   }) {
+    final snapshotBefore = _formSnapshot();
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -1594,8 +1609,14 @@ class ProfileScreenState extends State<ProfileScreen> {
       ),
     ).then((_) {
       // Sauvegarde à la fermeture de la fiche, quelle qu'en soit la cause
-      // (voir le commentaire au début de cette fonction).
-      if (mounted) _computeAndSave();
+      // (voir le commentaire au début de cette fonction) — UNIQUEMENT si
+      // quelque chose a réellement changé (comparaison au snapshot pris à
+      // l'ouverture, voir `_formSnapshot`). Sans cette garde, ouvrir une
+      // fiche juste pour regarder puis la refermer déclencherait quand même
+      // un aller-retour Supabase et le SnackBar de confirmation — exactement
+      // le genre de "pollution" qu'Alex a explicitement demandé d'éviter
+      // (18/09/2026, audit ergonomie, 2ᵉ passe).
+      if (mounted && _formSnapshot() != snapshotBefore) _computeAndSave();
     });
   }
 
@@ -1737,7 +1758,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final o in _goalOptionsFor(context.l10n)) _goalPickRow(ctx, o, setSheetState),
+            for (final o in goalOptionsFor(context.l10n)) _goalPickRow(ctx, o, setSheetState),
             const SizedBox(height: 4),
             _sheetDoneButton(ctx),
           ],
@@ -1749,7 +1770,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// Ligne de sélection d'un objectif — 2 zones cliquables, comme la banque
   /// d'exercices : le corps de la ligne choisit l'objectif, le bouton
   /// "En savoir plus" ouvre le descriptif complet (conseils du coach).
-  Widget _goalPickRow(BuildContext sheetCtx, _GoalOption o, StateSetter setSheetState) {
+  Widget _goalPickRow(BuildContext sheetCtx, GoalOption o, StateSetter setSheetState) {
     final selected = _goalChosen && _goal == o.goal;
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
@@ -1803,7 +1824,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// Descriptif complet d'un objectif (conseils du coach) — une vraie
   /// valeur ajoutée conservée spécifiquement ici, au même titre que les
   /// fiches nutriments de l'onglet Bilan.
-  void _openGoalDetailSheet(BuildContext context, _GoalOption o) {
+  void _openGoalDetailSheet(BuildContext context, GoalOption o) {
     _openSheet(context, title: o.title, builder: (ctx, _) {
       return Column(
         mainAxisSize: MainAxisSize.min,

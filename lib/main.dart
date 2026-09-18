@@ -9,12 +9,13 @@ import 'screens/journal_screen.dart';
 import 'screens/bilan_screen.dart';
 import 'screens/conseils_screen.dart';
 import 'screens/auth_screen.dart';
+import 'screens/onboarding_screen.dart';
 import 'screens/paywall_screen.dart';
 import 'services/account_guard.dart';
 import 'services/app_settings.dart';
 import 'services/pending_food_ops.dart';
 import 'services/premium_status.dart';
-import 'services/profile.dart' show computeAndSaveTargetsFromStoredProfile;
+import 'services/profile.dart' show computeAndSaveTargetsFromStoredProfile, needsOnboarding;
 import 'theme/totum_style.dart';
 
 
@@ -201,15 +202,27 @@ class PremiumGate extends StatefulWidget {
 class _PremiumGateState extends State<PremiumGate> {
   bool _loading = true;
   bool _allowed = true; // par défaut : on laisse entrer en cas d'erreur
+  // Onboarding dédié (18/09/2026, audit ergonomie) : `null` tant que la
+  // vérification n'a pas fini, pour ne jamais afficher brièvement le
+  // Tableau de bord (avec ses valeurs par défaut) avant de basculer sur
+  // l'onboarding — même prudence que `_loading` pour `_allowed` ci-dessus.
+  bool? _needsOnboarding;
 
   @override
   void initState() {
     super.initState();
     _loadStatus();
+    _checkOnboarding();
     // Priorité 65 : voir services/premium_status.dart — permet à
     // AccountScreen/PaywallScreen de nous dire "réévalue le statut" (après
     // un achat, une activation) sans jamais avoir à recréer cette route.
     PremiumStatus.refreshTrigger.addListener(_loadStatus);
+  }
+
+  Future<void> _checkOnboarding() async {
+    final needs = await needsOnboarding();
+    if (!mounted) return;
+    setState(() => _needsOnboarding = needs);
   }
 
   @override
@@ -325,10 +338,21 @@ class _PremiumGateState extends State<PremiumGate> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
+    if (_loading || _needsOnboarding == null) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
+    }
+
+    // Onboarding dédié (18/09/2026) : avant même le paywall/essai — un
+    // compte qui n'a jamais configuré son profil doit d'abord passer par
+    // là, qu'il soit ou non en période d'essai. Une fois terminé
+    // (OnboardingScreen.onDone), on revérifie juste ce drapeau plutôt que
+    // de supposer un état — cohérent avec le reste de cette porte.
+    if (_needsOnboarding == true) {
+      return OnboardingScreen(onDone: () {
+        if (mounted) setState(() => _needsOnboarding = false);
+      });
     }
 
     // Essai actif OU premium à vie OU abonnement en cours

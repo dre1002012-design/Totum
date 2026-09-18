@@ -9,6 +9,41 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
+  String get onboardingWelcomeTitle => 'Bienvenue sur Totum';
+
+  @override
+  String get onboardingWelcomeSubtitle =>
+      'Quelques informations pour calculer tes besoins — modifiables à tout moment depuis le Tableau de bord.';
+
+  @override
+  String get onboardingStepMeasures => 'Tes mesures';
+
+  @override
+  String get onboardingStepActivityTitle => 'Ton niveau d\'activité';
+
+  @override
+  String get onboardingStepGoalTitle => 'Ton objectif';
+
+  @override
+  String get onboardingStepSummaryTitle => 'Tout est prêt';
+
+  @override
+  String get onboardingSummaryIntro =>
+      'Voici ton objectif calorique et tes macros de départ, calculés à partir de ce que tu viens de renseigner. Ils s\'affineront automatiquement au fil de tes pesées et de ton journal.';
+
+  @override
+  String get onboardingContinue => 'Continuer';
+
+  @override
+  String get onboardingBack => 'Retour';
+
+  @override
+  String get onboardingStart => 'Commencer';
+
+  @override
+  String get onboardingSex => 'Sexe';
+
+  @override
   String get appTitle => 'Totum';
 
   @override
