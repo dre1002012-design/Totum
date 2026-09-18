@@ -4725,6 +4725,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get jrnlCopySelection => 'Copier la sélection';
 
   @override
+  String get jrnlCopyItemTooltip =>
+      'Copier cet aliment vers un autre repas/jour';
+
+  @override
   String get jrnlMealNutritionDetailsTooltip =>
       'Détails nutritionnels du repas';
 

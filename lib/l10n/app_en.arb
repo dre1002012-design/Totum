@@ -1469,6 +1469,7 @@
   "jrnlCheckFoodsToCopy": "Check the foods to copy",
   "jrnlFoodsSelectedCount": "{count, plural, =1{1 item selected} other{{count} items selected}}",
   "jrnlCopySelection": "Copy selection",
+  "jrnlCopyItemTooltip": "Copy this food to another meal/day",
   "jrnlMealNutritionDetailsTooltip": "Meal nutrition details",
   "jrnlNova1Label": "Unprocessed or minimally processed",
   "jrnlNova2Label": "Processed culinary ingredient",

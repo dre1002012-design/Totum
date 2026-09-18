@@ -7878,6 +7878,12 @@ abstract class AppLocalizations {
   /// **'Copier la sélection'**
   String get jrnlCopySelection;
 
+  /// No description provided for @jrnlCopyItemTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier cet aliment vers un autre repas/jour'**
+  String get jrnlCopyItemTooltip;
+
   /// No description provided for @jrnlMealNutritionDetailsTooltip.
   ///
   /// In fr, this message translates to:

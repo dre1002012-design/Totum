@@ -5436,6 +5436,31 @@ class _DayJournalViewState extends State<_DayJournalView> {
   bool _loadingDate = false;
   final ScrollController _scrollController = ScrollController();
 
+  // BUG CORRIGÉ (19/09/2026, retour d'Alex : "les repas repliés reviennent
+  // dépliés dès que je descends puis remonte") : le repli/dépli vivait
+  // uniquement dans l'état local de chaque _MealSectionState (`_expanded`),
+  // sans Key explicite sur les 4 instances _MealSection — assez fragile pour
+  // se perdre au moindre rebuild de ce parent. Source de vérité déplacée
+  // ici (survit à n'importe quel rebuild de _MealSection) ET persistée en
+  // SharedPreferences (survit aussi à une fermeture de l'app — "jusqu'à ce
+  // qu'on réappuie dessus" veut dire durablement, pas juste pour la session).
+  static const _collapsedMealsKey = 'journal_collapsed_meals_v1';
+  Set<String> _collapsedMeals = {};
+
+  Future<void> _loadCollapsedMeals() async {
+    final sp = await SharedPreferences.getInstance();
+    final raw = sp.getStringList(_collapsedMealsKey);
+    if (raw != null && mounted) setState(() => _collapsedMeals = raw.toSet());
+  }
+
+  Future<void> _setMealExpanded(String meal, bool expanded) async {
+    setState(() {
+      if (expanded) { _collapsedMeals.remove(meal); } else { _collapsedMeals.add(meal); }
+    });
+    final sp = await SharedPreferences.getInstance();
+    await sp.setStringList(_collapsedMealsKey, _collapsedMeals.toList());
+  }
+
   // Priorité 71bis — objectifs RÉELLEMENT en vigueur le jour consulté
   // (`_currentDate`), distincts des objectifs courants (`widget.goals`/
   // `widget.nutritionTargets`) dès qu'on navigue sur un jour passé via les
@@ -5458,6 +5483,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
   void initState() {
     super.initState();
     _currentDate = widget.initialDate;
+    _loadCollapsedMeals();
     _fetchDate(_currentDate);
   }
 /// Rafraîchit la vue depuis l'extérieur (ex : après un scan).
@@ -6202,7 +6228,15 @@ class _DayJournalViewState extends State<_DayJournalView> {
       useSafeArea: true,
       showDragHandle: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      builder: (ctx) => SafeArea(
+      // BUG CORRIGÉ (19/09/2026, retour d'Alex) : cette fiche (ouverte depuis
+      // le Journal sur un aliment DÉJÀ loggé) n'avait pas le bouton cœur
+      // présent partout ailleurs (fiche "ajouter au journal", scan...) —
+      // impossible de mettre en favori un aliment déjà consommé sans
+      // ressortir puis le rechercher à nouveau. StatefulBuilder ajouté (le
+      // reste du contenu, statique, n'en avait pas besoin jusqu'ici) pour
+      // que le cœur se mette à jour immédiatement dans LA fiche au tap.
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSheetState) => SafeArea(
         child: Column(
           children: [
             Padding(
@@ -6219,6 +6253,18 @@ class _DayJournalViewState extends State<_DayJournalView> {
                       // détail elle-même, contrairement à la ligne de liste.
                     ),
                   ),
+                  if (widget.isFav != null && foodId.isNotEmpty)
+                    IconButton(
+                      tooltip: widget.isFav!(foodId) ? ctx.l10n.jrnlRemoveFavorite : ctx.l10n.jrnlAddFavorite,
+                      icon: Icon(
+                        widget.isFav!(foodId) ? Icons.favorite : Icons.favorite_border,
+                        color: widget.isFav!(foodId) ? TotumColors.accent : TotumColors.textMuted,
+                      ),
+                      onPressed: () async {
+                        await widget.onToggleFav?.call(foodId);
+                        setSheetState(() {});
+                      },
+                    ),
                   Text('$grams g',
                       style: TextStyle(color: TotumColors.textSecondary, fontSize: 14)),
                 ],
@@ -6296,6 +6342,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
               ),
             ),
           ],
+        ),
         ),
       ),
     );
@@ -6417,6 +6464,8 @@ class _DayJournalViewState extends State<_DayJournalView> {
                       onCopy: () => _showCopyDialog(meal, _journal[meal] ?? []),
                       onCopySelected: (selectedItems) =>
                           _showCopyDialog(meal, selectedItems),
+                      initiallyExpanded: !_collapsedMeals.contains(meal),
+                      onExpandedChanged: (v) => _setMealExpanded(meal, v),
                       onAddFood: () => _openAddFoodDialog(meal),
                       onScan: widget.onScanForMeal != null
                           ? () => widget.onScanForMeal!(meal)
@@ -6653,10 +6702,21 @@ class _MealSection extends StatefulWidget {
   final Future<void> Function()? onClearAll;
   final NutritionTargets? nutritionTargets;
   final List<dynamic> allFoods;
+  // Demande d'Alex (19/09/2026) : le repli/dépli de chaque repas revenait
+  // toujours à "déplié" après avoir défilé ailleurs dans la page puis
+  // remonté — le choix de l'utilisateur devait persister "jusqu'à ce qu'on
+  // réappuie dessus". La source de vérité est déplacée vers le parent
+  // (_DayJournalViewState, voir _collapsedMeals), qui survit à tout ce qui
+  // pourrait faire perdre l'état local de ce widget — et persistée dans
+  // SharedPreferences pour survivre aussi à une fermeture de l'app.
+  final bool initiallyExpanded;
+  final ValueChanged<bool>? onExpandedChanged;
 
   const _MealSection({
     required this.title,
     required this.items,
+    this.initiallyExpanded = true,
+    this.onExpandedChanged,
     required this.onRemove,
     required this.onEdit,
     required this.onCopy,
@@ -6676,7 +6736,12 @@ class _MealSection extends StatefulWidget {
 class _MealSectionState extends State<_MealSection> {
   bool _selectMode = false;
   final Set<int> _selected = {};
-  bool _expanded = true; // bannière dépliée par défaut
+  late bool _expanded = widget.initiallyExpanded;
+
+  void _setExpanded(bool v) {
+    setState(() => _expanded = v);
+    widget.onExpandedChanged?.call(v);
+  }
 
   void _toggleSelectMode() {
     setState(() { _selectMode = !_selectMode; _selected.clear(); });
@@ -6827,7 +6892,7 @@ class _MealSectionState extends State<_MealSection> {
             Row(
               children: [
                 InkWell(
-                  onTap: () => setState(() => _expanded = !_expanded),
+                  onTap: () => _setExpanded(!_expanded),
                   borderRadius: BorderRadius.circular(8),
                   child: Icon(
                     _expanded ? Icons.expand_more : Icons.chevron_right,
@@ -6838,7 +6903,7 @@ class _MealSectionState extends State<_MealSection> {
                 const SizedBox(width: 2),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => setState(() => _expanded = !_expanded),
+                    onTap: () => _setExpanded(!_expanded),
                     child: Text(
                       _mealTypeLabel(widget.title, l10n),
                       maxLines: 1,
@@ -7087,6 +7152,7 @@ class _MealSectionState extends State<_MealSection> {
                           onTapItem: widget.onTapItem != null
                               ? () => widget.onTapItem!(widget.items[i])
                               : null,
+                          onCopyItem: () => widget.onCopySelected([widget.items[i]]),
                         ),
                         if (i != widget.items.length - 1) Divider(height: 12, color: TotumColors.outline),
                       ],
@@ -7110,6 +7176,7 @@ class _MealRow extends StatefulWidget {
   final bool isSelected;
   final VoidCallback? onToggleSelect;
   final VoidCallback? onTapItem;
+  final VoidCallback? onCopyItem;
 
   const _MealRow({
     super.key,
@@ -7121,6 +7188,7 @@ class _MealRow extends StatefulWidget {
     this.isSelected = false,
     this.onToggleSelect,
     this.onTapItem,
+    this.onCopyItem,
   });
 
   @override
@@ -7255,6 +7323,21 @@ class _MealRowState extends State<_MealRow> {
             ),
           ),
           if (!widget.selectMode) ...[
+            // Demande d'Alex (19/09/2026) : copier un SEUL aliment passait
+            // obligatoirement par le menu ⋮ → "Sélectionner des aliments" →
+            // cocher → "Copier la sélection" (4 gestes) — beaucoup trop long
+            // pour le cas le plus courant (un aliment à la fois). Ce bouton
+            // réutilise directement `onCopySelected` (déjà câblé pour le
+            // mode sélection multiple, voir _MealSectionState) avec une
+            // liste d'un seul élément — aucune nouvelle logique de copie,
+            // juste un raccourci direct pour le cas simple.
+            if (!_pendingDelete && widget.onCopyItem != null)
+              IconButton(
+                onPressed: widget.onCopyItem,
+                icon: const Icon(Icons.copy_outlined, size: 19),
+                tooltip: context.l10n.jrnlCopyItemTooltip,
+                color: TotumColors.textSecondary,
+              ),
             if (!_pendingDelete)
               IconButton(
                 onPressed: widget.onEdit,

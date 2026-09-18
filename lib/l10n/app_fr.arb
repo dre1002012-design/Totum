@@ -1646,6 +1646,7 @@
   "jrnlFoodsSelectedCount": "{count, plural, =1{1 aliment sélectionné} other{{count} aliments sélectionnés}}",
   "@jrnlFoodsSelectedCount": { "placeholders": { "count": {"type": "int"} } },
   "jrnlCopySelection": "Copier la sélection",
+  "jrnlCopyItemTooltip": "Copier cet aliment vers un autre repas/jour",
   "jrnlMealNutritionDetailsTooltip": "Détails nutritionnels du repas",
   "jrnlNova1Label": "Peu ou pas transformé",
   "jrnlNova2Label": "Ingrédient culinaire transformé",
