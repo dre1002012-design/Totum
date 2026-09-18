@@ -61,12 +61,28 @@ class ExpenditurePoint {
   // cette estimation, sur la fenêtre d'analyse de ce point précis — jamais un
   // texte d'explication inventé, seulement les 2 nombres qui alimentent
   // directement l'équation d'équilibre énergétique (voir expenditureHistory
-  // ci-dessous). `daysWithFoodLogged`/`windowDays` renseignent la couverture
+  // ci-dessous). `daysWithFoodLogged`/`loggableDays` renseignent la couverture
   // réelle de cette fenêtre (déjà ce qui pilote `lowKcal`/`highKcal`).
   final double avgKcalLogged;
   final double weightChangeKg;
   final int daysWithFoodLogged;
   final int windowDays;
+  // BUG CORRIGÉ (18/09/2026, retour d'Alex — "je ne dépasse jamais 19/20
+  // jours de journal couverts, même après 3 mois à peser et loguer tous les
+  // jours sans exception") : vérifié à la main sur son export réel
+  // `weight_log` (aucune lacune de pesée récente n'expliquait le plafond) —
+  // la VRAIE cause est que la boucle ci-dessous exclut TOUJOURS le jour en
+  // cours du décompte `daysWithFoodLogged` (correctif légitime du
+  // 01/09/2026 : un repas seul sur une journée pas terminée fausserait la
+  // moyenne) mais l'affichage utilisait encore le `windowDays` CONFIGURÉ (20)
+  // comme dénominateur — pour le point le plus récent (fenêtre qui inclut
+  // "aujourd'hui"), 20/20 est donc mathématiquement IMPOSSIBLE quel que soit
+  // le sérieux du suivi, alors que rien ne manque réellement. `loggableDays`
+  // est le VRAI plafond atteignable pour CE point précis (jours de la
+  // fenêtre réellement éligibles à être logués : jour en cours et jours de
+  // pause exclus) — toujours ≥ `daysWithFoodLogged`, et un suivi parfait
+  // atteint désormais 100 % à l'affichage, comme il le devrait.
+  final int loggableDays;
   const ExpenditurePoint({
     required this.date,
     required this.estimateKcal,
@@ -76,7 +92,8 @@ class ExpenditurePoint {
     this.weightChangeKg = 0,
     this.daysWithFoodLogged = 0,
     this.windowDays = 0,
-  });
+    int? loggableDays,
+  }) : loggableDays = loggableDays ?? windowDays;
 }
 
 /// Résultat d'une tentative de calibration.
@@ -774,6 +791,13 @@ class CalibrationService {
 
       double totalKcal = 0;
       int daysWithFood = 0;
+      // Vrai plafond atteignable pour CE point (voir le commentaire de
+      // `loggableDays` sur ExpenditurePoint) : chaque jour de la fenêtre qui
+      // ATTEINT le test `k > 0` ci-dessous compte ici, qu'il ait ou non été
+      // effectivement logué — c'est exactement le dénominateur honnête de
+      // `daysWithFood`, contrairement au `windowDays` configuré (20), qui ne
+      // tient pas compte de l'exclusion du jour en cours/des jours de pause.
+      int loggableDays = 0;
       final todayKey = _dateKey(now);
       for (int j = 0; j <= spanDays; j++) {
         final d = inWindow.first.date.add(Duration(days: j));
@@ -786,6 +810,7 @@ class CalibrationService {
         // l'estimation vers le bas à chaque repas ajouté).
         if (_dateKey(d) == todayKey) continue;
         if (pauses.any((p) => p.contains(d))) continue;
+        loggableDays++;
         final k = kcalByDay[_dateKey(d)] ?? 0.0;
         if (k > 0) {
           totalKcal += k;
@@ -852,7 +877,15 @@ class CalibrationService {
       // Bande d'incertitude : resserrée avec le volume de données (jamais
       // sous ±3%, aucune estimation empirique n'étant jamais parfaitement
       // certaine ; jusqu'à ±15% quand la fenêtre est peu couverte).
-      final coverage = (daysWithFood / windowDays).clamp(0.0, 1.0);
+      // BUG CORRIGÉ (18/09/2026, même audit que `loggableDays` ci-dessus) :
+      // utilisait `windowDays` (20, constant) au lieu de `loggableDays` (le
+      // vrai nombre de jours logeables de la fenêtre) — un suivi PARFAIT sur
+      // le point du jour même (jour en cours toujours exclu) plafonnait donc
+      // `coverage` à 19/20 = 0.95 au lieu de 1.0, gonflant légèrement la
+      // marge d'incertitude sans raison réelle.
+      final coverage = loggableDays > 0
+          ? (daysWithFood / loggableDays).clamp(0.0, 1.0)
+          : 0.0;
       final uncertainty = estimate.abs() * (0.15 - 0.10 * coverage).clamp(0.03, 0.15);
 
       points.add(ExpenditurePoint(
@@ -864,6 +897,7 @@ class CalibrationService {
         weightChangeKg: weightChangeKg,
         daysWithFoodLogged: daysWithFood,
         windowDays: windowDays,
+        loggableDays: loggableDays,
       ));
     }
     return points;

@@ -313,15 +313,26 @@ class _PointDetailCard extends StatelessWidget {
           row(context.l10n.expenditureDetailWeightChange,
               '${weightChangeKg >= 0 ? '+' : ''}${weightChangeKg.toStringAsFixed(2)} kg'),
           row(context.l10n.expenditureDetailAvgLogged, '${point.avgKcalLogged.round()} kcal/j'),
+          // BUG CORRIGÉ (18/09/2026, retour d'Alex — "je ne dépasse jamais
+          // 19/20 jours de journal couverts") : affichait `windowDays` (20,
+          // constant configuré) au lieu de `loggableDays` (le vrai nombre de
+          // jours logeables de CETTE fenêtre — jour en cours et jours de
+          // pause exclus, voir le commentaire complet sur ExpenditurePoint
+          // dans calibration_service.dart). Pour le point le plus récent
+          // (fenêtre incluant "aujourd'hui"), 20/20 était donc
+          // MATHÉMATIQUEMENT impossible quel que soit le sérieux du suivi —
+          // vérifié à la main sur l'export réel `weight_log` d'Alex, aucune
+          // lacune de pesée n'expliquait le plafond, c'était bien ce
+          // dénominateur qui ne reflétait pas l'exclusion du jour en cours.
           row(context.l10n.expenditureDetailCoverage,
-              '${point.daysWithFoodLogged}/${point.windowDays} ${context.l10n.dayAbbrev}'),
+              '${point.daysWithFoodLogged}/${point.loggableDays} ${context.l10n.dayAbbrev}'),
           row(context.l10n.expenditureDetailUncertainty, '± $uncertainty kcal'),
           // Priorité 71ter — couverture < 50 % de la fenêtre : les jours non
           // loggés (repas oubliés, sauces/boissons non notées) tirent
           // mécaniquement `avgKcalLogged` — et donc l'estimation — vers le
           // bas. Avertissement visible directement là où le chiffre est
           // affiché, jamais caché dans un écran séparé.
-          if (point.windowDays > 0 && point.daysWithFoodLogged / point.windowDays < 0.5) ...[
+          if (point.loggableDays > 0 && point.daysWithFoodLogged / point.loggableDays < 0.5) ...[
             const SizedBox(height: 8),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
