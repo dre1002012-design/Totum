@@ -213,9 +213,52 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// montés en permanence (IndexedStack, pour éviter le flash visuel au
   /// changement d'onglet), donc plus rien ne recharge automatiquement au
   /// retour comme le faisait — par accident — l'ancien remontage complet.
+  ///
+  /// BUG CORRIGÉ (18/09/2026, audit demandé par Alex — "est-ce que c'est
+  /// fiable ?") : `_kcal`/`_savedKcal` (la base de comparaison utilisée par
+  /// le bandeau "Impact sur ton objectif" de la fiche "Tes mesures")
+  /// n'étaient synchronisés qu'à `initState()` (une seule fois par session,
+  /// cet onglet restant monté en permanence) et à l'enregistrement explicite
+  /// — jamais quand la calibration se met à jour SEULE en arrière-plan
+  /// (nouvelle pesée loguée ailleurs, fenêtre glissante qui avance d'un
+  /// jour...). Résultat concret confirmé sur les captures d'écran d'Alex :
+  /// en ouvrant "Tes mesures" sans avoir RIEN modifié, le bandeau affichait
+  /// un "impact" de plusieurs centaines de kcal (ex. "3410 → 3090, -320")
+  /// — pas l'effet d'un vrai changement, juste l'écart entre l'instantané
+  /// figé du début de session et la cible réellement à jour. `refresh()`
+  /// resynchronise maintenant cette base à chaque retour sur l'onglet, avec
+  /// exactement la même fonction que Journal (`computeAndSaveTargetsFromStoredProfile`,
+  /// déjà la source de vérité utilisée pour le Tableau de bord/Journal) —
+  /// jamais quand une édition est en cours (`_dirty`), pour ne pas écraser
+  /// un aperçu que l'utilisateur est en train de regarder.
   void refresh() {
     if (!mounted) return;
     setState(_refreshCharts);
+    if (_dirty) return;
+    // `_calibration` (voir son commentaire dans `_loadProfile()`) doit être
+    // resynchronisé au même rythme que `_kcal` — sinon un aperçu live
+    // (`_recomputePreview`) resterait bloqué sur une calibration figée au
+    // dernier enregistrement explicite, alors que `_kcal`/`_savedKcal`,
+    // eux, refléteraient déjà la calibration à jour.
+    CalibrationService.instance.computeCalibration().then((calib) {
+      if (mounted && !_dirty) setState(() => _calibration = calib);
+    });
+    nutri.computeAndSaveTargetsFromStoredProfile().then((targets) {
+      if (!mounted || _dirty) return;
+      final g = targets.goals;
+      setState(() {
+        _kcal = g.kcal;
+        _prot = g.prot;
+        _carb = g.carb;
+        _fat = g.fat;
+        _fib = g.fiber;
+        _savedKcal = g.kcal;
+        _savedProt = g.prot;
+        _savedCarb = g.carb;
+        _savedFat = g.fat;
+        _savedFib = g.fiber;
+      });
+    });
   }
 
   /// Cibles complètes (macros + micronutriments) pour la carte
@@ -710,8 +753,24 @@ class ProfileScreenState extends State<ProfileScreen> {
 
     final bodyFatRangeIdx = sp.getInt('profile_body_fat_range');
 
+    // BUG CORRIGÉ (18/09/2026, audit demandé par Alex — "est-ce que c'est
+    // fiable ?") : `_calibration` n'était JAMAIS peuplé ici — seulement en
+    // effet de bord de `_computeAndSave()` (bouton "Enregistrer mes
+    // objectifs"). Tant que l'utilisateur n'avait pas explicitement
+    // sauvegardé une fois dans la session, `_calibration` restait à
+    // `CalibrationResult.none` : tout aperçu LIVE (`_recomputePreview`,
+    // utilisé par les 4 fiches d'édition) blendait donc contre AUCUNE
+    // calibration — formule pure — même pour un utilisateur dont la cible
+    // RÉELLEMENT active (Tableau de bord/Journal, via
+    // `computeAndSaveTargetsFromStoredProfile`) est bien calibrée. Résultat
+    // concret : le bandeau "Impact sur ton objectif" pouvait afficher un
+    // écart de plusieurs centaines de kcal qui ne reflétait rien de réel —
+    // juste "formule pure" comparée à "cible calibrée déjà sauvegardée".
+    final calib = await CalibrationService.instance.computeCalibration();
+
     if (!mounted) return;
     setState(() {
+      _calibration = calib;
       _sex = (sexStr == 'female') ? nutri.Sex.female : nutri.Sex.male;
 
       if (activityIndex != null) {
