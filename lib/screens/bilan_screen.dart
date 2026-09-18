@@ -2060,7 +2060,7 @@ class LimitesRepo {
 
 /// Contributions agrégées sur une PÉRIODE (1 à 90 jours).
 /// Une seule requête Supabase pour toute la plage, puis fusion par aliment.
-Future<List<_FoodContribution>> _contributorsForRange(
+Future<List<FoodContribution>> _contributorsForRange(
   DateTime from,
   DateTime to,
   String microKey,
@@ -2181,7 +2181,7 @@ Future<List<_FoodContribution>> _contributorsForRange(
     } catch (_) {}
   }
 
-  final out = agg.entries.map((e) => _FoodContribution(e.key, e.value)).toList()
+  final out = agg.entries.map((e) => FoodContribution(e.key, e.value)).toList()
     ..sort((a, b) => b.amount.compareTo(a.amount));
   return out;
 }
@@ -2310,7 +2310,7 @@ void showLimiteSheet(
           Text(l10n.bilanConcernedFoods(periodeLabel),
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
           const SizedBox(height: 10),
-          FutureBuilder<List<_FoodContribution>>(
+          FutureBuilder<List<FoodContribution>>(
             future: _contributorsForRange(from, to, microKey, l10n),
             builder: (context, snap) {
               if (snap.connectionState != ConnectionState.done) {
@@ -2319,7 +2319,7 @@ void showLimiteSheet(
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
-              final list = snap.data ?? const <_FoodContribution>[];
+              final list = snap.data ?? const <FoodContribution>[];
               if (list.isEmpty) {
                 return Text(
                   l10n.bilanNoFoodIdentifiedPeriod,
@@ -2331,7 +2331,7 @@ void showLimiteSheet(
               return Column(
                 children: [
                   for (int i = 0; i < top.length; i++)
-                    _contributorRow(i + 1, top[i], unit, maxAmount),
+                    contributorRow(i + 1, top[i], unit, maxAmount),
                 ],
               );
             },
@@ -2735,10 +2735,10 @@ Widget _ficheBloc(String titre, String corps, Color color) {
 //  TRAÇABILITÉ — aliments responsables d'un dépassement de limite
 // ═══════════════════════════════════════════════════════════════════════
 
-class _FoodContribution {
+class FoodContribution {
   final String name;
   final double amount; // contribution au micro (dans son unité)
-  const _FoodContribution(this.name, this.amount);
+  const FoodContribution(this.name, this.amount);
 }
 
 /// Map label affiché (ex "Fer") → clé micro CSV (ex "Fer_mg_100g").
@@ -3248,7 +3248,7 @@ void showConsumedFoodsSheet(
           Text(l10n.bilanConsumedPeriod(periodeLabel),
               style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
           const SizedBox(height: 16),
-          FutureBuilder<List<_FoodContribution>>(
+          FutureBuilder<List<FoodContribution>>(
             future: _contributorsForRange(from, to, microKey, l10n),
             builder: (context, snap) {
               if (snap.connectionState != ConnectionState.done) {
@@ -3257,7 +3257,7 @@ void showConsumedFoodsSheet(
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
-              final list = snap.data ?? const <_FoodContribution>[];
+              final list = snap.data ?? const <FoodContribution>[];
               if (list.isEmpty) {
                 return Container(
                   padding: const EdgeInsets.all(14),
@@ -3277,7 +3277,7 @@ void showConsumedFoodsSheet(
               return Column(
                 children: [
                   for (int i = 0; i < top.length; i++)
-                    _contributorRow(i + 1, top[i], unit, maxAmount,
+                    contributorRow(i + 1, top[i], unit, maxAmount,
                         accent: TotumColors.accent),
                 ],
               );
@@ -3291,7 +3291,7 @@ void showConsumedFoodsSheet(
 
 /// Recalcule, pour un jour donné, la contribution de chaque aliment à un
 /// micronutriment précis. Renvoie la liste triée (plus gros contributeur d'abord).
-Future<List<_FoodContribution>> _contributorsForMicro(
+Future<List<FoodContribution>> _contributorsForMicro(
   DateTime day,
   String microKey,
   AppLocalizations l10n,
@@ -3307,7 +3307,7 @@ Future<List<_FoodContribution>> _contributorsForMicro(
 
   foods_loader.FoodItem? findFood(String id) => repo.findById(id);
 
-  final contributions = <_FoodContribution>[];
+  final contributions = <FoodContribution>[];
 
   // 1) Supabase
   try {
@@ -3334,7 +3334,7 @@ Future<List<_FoodContribution>> _contributorsForMicro(
             amount = food.microsFor(grams)[microKey] ?? 0.0;
           }
         }
-        if (amount > 0) contributions.add(_FoodContribution(name, amount));
+        if (amount > 0) contributions.add(FoodContribution(name, amount));
       }
       if (contributions.isNotEmpty) {
         contributions.sort((a, b) => b.amount.compareTo(a.amount));
@@ -3359,7 +3359,7 @@ Future<List<_FoodContribution>> _contributorsForMicro(
           if (food != null) {
             final amount = food.microsFor(grams)[microKey] ?? 0.0;
             if (amount > 0) {
-              contributions.add(_FoodContribution(name, amount));
+              contributions.add(FoodContribution(name, amount));
             }
           }
         }
@@ -3395,7 +3395,7 @@ void showContributorsSheet(
         minChildSize: 0.35,
         maxChildSize: 0.9,
         expand: false,
-        builder: (ctx, scrollCtrl) => FutureBuilder<List<_FoodContribution>>(
+        builder: (ctx, scrollCtrl) => FutureBuilder<List<FoodContribution>>(
           future: _contributorsForMicro(day, microKey, l10n),
           builder: (ctx, snap) {
             return SingleChildScrollView(
@@ -3446,7 +3446,7 @@ void showContributorsSheet(
                         style: TextStyle(color: TotumColors.textSecondary))
                   else ...[
                     for (int i = 0; i < snap.data!.length && i < 10; i++)
-                      _contributorRow(
+                      contributorRow(
                         i + 1,
                         snap.data![i],
                         unit,
@@ -3475,8 +3475,8 @@ void showContributorsSheet(
   );
 }
 
-Widget _contributorRow(
-    int rank, _FoodContribution c, String unit, double maxAmount,
+Widget contributorRow(
+    int rank, FoodContribution c, String unit, double maxAmount,
     {Color? accent}) {
   final ratio = maxAmount > 0 ? (c.amount / maxAmount).clamp(0.0, 1.0) : 0.0;
   accent ??= TotumColors.negative;

@@ -24,6 +24,12 @@
   "vitaminK2CoverageNote": "Donnée K2 encore incomplète dans la base CIQUAL pour de nombreux aliments — un 0 peut signifier \"non mesuré\", pas forcément \"absent\".",
   "vitaminKNoTarget": "Pas de cible",
   "profileNutrientInfoTooltip": "En savoir plus sur ce nutriment",
+  "profileValidatedTodayAt": "Confirmé aujourd'hui à {time}",
+  "@profileValidatedTodayAt": { "placeholders": { "time": { "type": "String" } } },
+  "profileValidatedYesterday": "Dernière confirmation : hier — pense à revalider après ta pesée du jour",
+  "profileValidatedDaysAgo": "Dernière confirmation : il y a {days} jours — pense à revalider après ta pesée du jour",
+  "@profileValidatedDaysAgo": { "placeholders": { "days": { "type": "int" } } },
+  "profileNeverValidated": "Objectifs jamais confirmés — valide-les une première fois ci-dessous",
   "appTitle": "Totum",
   "@appTitle": {
     "description": "Nom de l'application"

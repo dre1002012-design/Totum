@@ -17,7 +17,7 @@ import '../theme/totum_style.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'weight_trend_screen.dart';
 import 'expenditure_screen.dart';
-import 'bilan_screen.dart' show showNutrientFiche;
+import 'bilan_screen.dart' show showNutrientFiche, FoodContribution, contributorRow;
 import '../l10n/app_localizations.dart';
 import '../l10n/l10n_ext.dart';
 
@@ -169,6 +169,16 @@ class ProfileScreenState extends State<ProfileScreen> {
   // diffèrent des dernières valeurs réellement sauvegardées.
   bool _dirty = false;
   double _savedKcal = 0, _savedProt = 0, _savedCarb = 0, _savedFat = 0, _savedFib = 30;
+
+  // Demande d'Alex (19/09/2026, 3ᵉ point) : "Objectifs enregistrés" ne
+  // disait pas QUAND — un utilisateur qui n'avait rien retouché depuis 3
+  // jours voyait le même message que quelqu'un qui vient de confirmer à
+  // l'instant, sans savoir s'il devait revalider après sa pesée du jour.
+  // Horodatage informatif, JAMAIS un streak/compteur/badge (voir
+  // [[feedback_no_gamification]]) — juste "la dernière fois que c'était à
+  // jour", avec une invite neutre si ce n'est pas encore fait aujourd'hui.
+  static const _lastValidatedKey = 'goals_last_validated_at';
+  DateTime? _lastValidatedAt;
 
   bool _manualMode = false;
   final _manualKcalCtrl = TextEditingController();
@@ -480,6 +490,64 @@ class ProfileScreenState extends State<ProfileScreen> {
     return nutri.computeCalibratedGoals(profile);
   }
 
+  // Statut daté, factuel — pas de série/points/badge (voir
+  // feedback_no_gamification) : juste QUAND la dernière confirmation
+  // explicite a eu lieu, pour que "objectifs enregistrés" ne soit jamais
+  // ambigu entre "fraîchement validé" et "validé il y a des jours".
+  Widget _validationStatusRow(AppLocalizations l10n) {
+    if (_dirty) {
+      return Text(
+        l10n.profileConfirmGoalsCaption,
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 12, height: 1.4, color: TotumColors.textSecondary),
+      );
+    }
+
+    final last = _lastValidatedAt;
+    IconData icon;
+    Color color;
+    String text;
+    if (last == null) {
+      icon = Icons.info_outline_rounded;
+      color = TotumColors.textSecondary;
+      text = l10n.profileNeverValidated;
+    } else {
+      final now = DateTime.now();
+      final lastDay = DateTime(last.year, last.month, last.day);
+      final today = DateTime(now.year, now.month, now.day);
+      final dayDiff = today.difference(lastDay).inDays;
+      if (dayDiff <= 0) {
+        icon = Icons.check_circle_rounded;
+        color = TotumColors.positive;
+        final hh = last.hour.toString().padLeft(2, '0');
+        final mm = last.minute.toString().padLeft(2, '0');
+        text = l10n.profileValidatedTodayAt('$hh:$mm');
+      } else {
+        icon = Icons.schedule_rounded;
+        color = TotumColors.textSecondary;
+        text = dayDiff == 1
+            ? l10n.profileValidatedYesterday
+            : l10n.profileValidatedDaysAgo(dayDiff);
+      }
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 15, color: color),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 12, height: 1.4, color: color, fontWeight: FontWeight.w600),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<void> _computeAndSave() async {
     if (!_formKey.currentState!.validate()) return;
     final kg = _num(_weightCtrl);
@@ -596,6 +664,9 @@ class ProfileScreenState extends State<ProfileScreen> {
       debugPrint('Erreur Supabase user_profile (poids cible/répartition macros) — colonnes pas encore migrées ? $e');
     }
 
+    final now = DateTime.now();
+    await sp.setString(_lastValidatedKey, now.toIso8601String());
+
     if (!mounted) return;
     setState(() {
       _kcal = finalKcal;
@@ -609,6 +680,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       _savedFat = finalFat;
       _savedFib = finalFib;
       _dirty = false;
+      _lastValidatedAt = now;
     });
     _refreshCharts();
     // Le nouvel objectif change les cibles micronutriments affichées dans
@@ -650,6 +722,8 @@ class ProfileScreenState extends State<ProfileScreen> {
     var bodyFat = sp.getDouble('profile_body_fat_pct');
     var targetWeight = sp.getDouble('profile_target_weight');
     var dietStyleIndex = sp.getInt('profile_diet_style');
+    final lastValidatedRaw = sp.getString(_lastValidatedKey);
+    _lastValidatedAt = lastValidatedRaw != null ? DateTime.tryParse(lastValidatedRaw) : null;
 
     try {
       final user = _client.auth.currentUser;
@@ -927,11 +1001,14 @@ class ProfileScreenState extends State<ProfileScreen> {
             // Ce bouton ne sert qu'à confirmer un changement DÉLIBÉRÉ de
             // réglage — jamais à "rafraîchir" le calcul du jour, qui se fait
             // déjà tout seul.
-            Text(
-              _dirty ? l10n.profileConfirmGoalsCaption : l10n.profileGoalsSavedCaption,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, height: 1.4, color: TotumColors.textSecondary),
-            ),
+            //
+            // Retour d'Alex (19/09/2026) : "objectif enregistré" ne dit pas
+            // si c'est un état FRAIS (validé aujourd'hui, après la pesée) ou
+            // un état ANCIEN qui traîne depuis des jours — porte à confusion.
+            // Ci-dessous : un statut daté, factuel (pas de série/points/badge,
+            // voir feedback_no_gamification) pour installer l'habitude d'une
+            // confirmation quotidienne après la pesée.
+            _validationStatusRow(l10n),
             const SizedBox(height: 14),
             Center(
               child: TextButton.icon(
@@ -1499,8 +1576,19 @@ class ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(color: TotumColors.outlineStrong, borderRadius: BorderRadius.circular(999)),
                 ),
               ),
+              // Visuel aligné sur `showConsumedFoodsSheet` du Bilan (demande
+              // d'Alex, 19/09/2026 — "exactement le même rendu... le même
+              // code couleur") : icône fourchette/couteau + `contributorRow`
+              // (rang en médaillon, barre de progression relative au plus
+              // gros contributeur), au lieu d'une simple liste plate. Bouton
+              // "i" en plus (absent du Bilan pour cette fiche précise — voir
+              // le commentaire du paramètre `ficheKey` — normal, il vit sur
+              // la ligne EXTÉRIEURE côté Bilan ; ici le donut ouvre la fiche
+              // directement, donc le bouton doit être DANS la fiche).
               Row(
                 children: [
+                  const Icon(Icons.restaurant_menu, color: TotumColors.accent, size: 24),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(title, maxLines: 2, overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
@@ -1516,14 +1604,17 @@ class ProfileScreenState extends State<ProfileScreen> {
                     ),
                 ],
               ),
+              const SizedBox(height: 4),
               Text(ctx.l10n.nutrientBreakdownTitle,
-                  style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
-              const SizedBox(height: 12),
+                  style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary)),
+              const SizedBox(height: 16),
               Flexible(
                 child: FutureBuilder<List<FoodEntryContribution>>(
                   future: _dayEntriesFuture,
                   builder: (ctx, snap) {
                     final entries = List<FoodEntryContribution>.from(snap.data ?? const [])
+                        .where((e) => valueOf(e) > 0)
+                        .toList()
                       ..sort((a, b) => valueOf(b).compareTo(valueOf(a)));
                     if (snap.connectionState != ConnectionState.done) {
                       return const Padding(
@@ -1531,45 +1622,22 @@ class ProfileScreenState extends State<ProfileScreen> {
                           child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
                     }
                     if (entries.isEmpty) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 24),
+                      return Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(color: TotumColors.accentSoft, borderRadius: BorderRadius.circular(12)),
                         child: Text(ctx.l10n.nutrientBreakdownEmpty,
-                            style: TextStyle(color: TotumColors.textSecondary)),
+                            style: TextStyle(fontSize: 13, height: 1.5, color: TotumColors.textPrimary)),
                       );
                     }
-                    return ListView.separated(
+                    final top = entries.take(12).toList();
+                    final maxAmount = valueOf(top.first);
+                    return ListView(
                       shrinkWrap: true,
-                      itemCount: entries.length,
-                      separatorBuilder: (_, __) => Divider(height: 1, color: TotumColors.outline),
-                      itemBuilder: (ctx, i) {
-                        final e = entries[i];
-                        final v = valueOf(e);
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 22,
-                                child: Text('${i + 1}',
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: TotumColors.textMuted)),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(e.name, maxLines: 1, overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
-                                    Text(ctx.l10n.nutrientBreakdownGrams(e.grams.round().toString()),
-                                        style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
-                                  ],
-                                ),
-                              ),
-                              Text('${v.round()} $unit',
-                                  style: TextStyle(fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
-                            ],
-                          ),
-                        );
-                      },
+                      children: [
+                        for (int i = 0; i < top.length; i++)
+                          contributorRow(i + 1, FoodContribution(top[i].name, valueOf(top[i])), unit, maxAmount,
+                              accent: TotumColors.accent),
+                      ],
                     );
                   },
                 ),
@@ -1724,6 +1792,8 @@ class ProfileScreenState extends State<ProfileScreen> {
               ),
               Row(
                 children: [
+                  const Icon(Icons.restaurant_menu, color: TotumColors.accent, size: 24),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(kPriorityNutrientLabel['vitK'] ?? 'Vitamine K',
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),

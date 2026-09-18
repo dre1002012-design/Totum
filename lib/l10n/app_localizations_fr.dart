@@ -80,6 +80,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileNutrientInfoTooltip => 'En savoir plus sur ce nutriment';
 
   @override
+  String profileValidatedTodayAt(String time) {
+    return 'Confirmé aujourd\'hui à $time';
+  }
+
+  @override
+  String get profileValidatedYesterday =>
+      'Dernière confirmation : hier — pense à revalider après ta pesée du jour';
+
+  @override
+  String profileValidatedDaysAgo(int days) {
+    return 'Dernière confirmation : il y a $days jours — pense à revalider après ta pesée du jour';
+  }
+
+  @override
+  String get profileNeverValidated =>
+      'Objectifs jamais confirmés — valide-les une première fois ci-dessous';
+
+  @override
   String get appTitle => 'Totum';
 
   @override

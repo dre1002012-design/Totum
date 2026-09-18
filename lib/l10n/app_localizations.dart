@@ -224,6 +224,30 @@ abstract class AppLocalizations {
   /// **'En savoir plus sur ce nutriment'**
   String get profileNutrientInfoTooltip;
 
+  /// No description provided for @profileValidatedTodayAt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmé aujourd\'hui à {time}'**
+  String profileValidatedTodayAt(String time);
+
+  /// No description provided for @profileValidatedYesterday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière confirmation : hier — pense à revalider après ta pesée du jour'**
+  String get profileValidatedYesterday;
+
+  /// No description provided for @profileValidatedDaysAgo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière confirmation : il y a {days} jours — pense à revalider après ta pesée du jour'**
+  String profileValidatedDaysAgo(int days);
+
+  /// No description provided for @profileNeverValidated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectifs jamais confirmés — valide-les une première fois ci-dessous'**
+  String get profileNeverValidated;
+
   /// Nom de l'application
   ///
   /// In fr, this message translates to:
