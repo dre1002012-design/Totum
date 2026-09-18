@@ -1855,29 +1855,61 @@ class ProfileScreenState extends State<ProfileScreen> {
   // l'écran principal instantanément, quelle que soit la façon dont la
   // fiche sera fermée ensuite — il n'y a donc jamais eu de vraie
   // sémantique "annuler" à préserver ici. Un point unique de sauvegarde,
-  // partagé par les 5 fiches de réglages, plutôt que de dépendre d'un seul
-  // bouton qu'un balayage ou un tap en dehors permettait de contourner.
-  /// Instantané comparable de TOUS les champs de réglage — sert uniquement
-  /// à détecter "quelque chose a-t-il vraiment changé pendant que cette
-  /// fiche était ouverte" (voir `_openSheet`). Volontairement plus large
-  /// que `_dirty` (qui ne compare que le résultat kcal/macros) : un champ
-  /// comme `_diet` (régime alimentaire) n'influence JAMAIS le calcul kcal
-  /// (voir son commentaire — seulement la source d'oméga-3/le rappel B12),
-  /// donc `_dirty` resterait faux même après un vrai changement de ce
-  /// champ précis — ce snapshot, lui, le détecte correctement.
-  String _formSnapshot() => [
-        _sex, _num(_ageCtrl), _num(_heightCtrl), _num(_weightCtrl),
-        _activityLevel, _goal, _diet, _dietStyle,
-        _bodyFatEnabled, _bodyFatRange, _targetWeightCtrl.text.trim(),
-      ].join('|');
+  // BUG CORRIGÉ (19/09/2026, retour d'Alex — confirmé en conditions réelles :
+  // "je clique sur Perte en douceur, je sors de la bannière SANS appuyer sur
+  // Terminer, et ça l'a pris en compte quand même") : la version du
+  // 18/09/2026 sauvegardait sur N'IMPORTE QUELLE fermeture de la fiche
+  // (bouton, balayage, tap en dehors), en confondant deux choses distinctes
+  // — l'APERÇU en direct (setState sur _activityLevel/_goal/etc. + bandeau
+  // d'impact, qui DOIT rester instantané, confirmé "pas de souci" par Alex)
+  // et la VALIDATION du choix (qui doit rester un geste explicite : le
+  // bouton "Terminé", et lui seul). Un balayage/tap en dehors est
+  // maintenant un vrai ANNULER : les champs sont restaurés à ce qu'ils
+  // étaient à l'ouverture de la fiche, rien n'est écrit sur disque/Supabase.
+  /// Instantané RESTAURABLE de tous les champs de réglage — capturé à
+  /// l'ouverture d'une fiche, réappliqué si elle se ferme sans validation
+  /// explicite (voir `_openSheet`/`_sheetDoneButton`).
+  ({
+    nutri.Sex sex, String age, String height, String weight, String targetWeight,
+    nutri.ActivityLevel? activity, nutri.GoalType goal, bool goalChosen,
+    Diet diet, nutri.DietStyle dietStyle, bool bodyFatEnabled, nutri.BodyFatRange? bodyFatRange,
+  }) _captureFormSnapshot() => (
+        sex: _sex, age: _ageCtrl.text, height: _heightCtrl.text, weight: _weightCtrl.text,
+        targetWeight: _targetWeightCtrl.text,
+        activity: _activityLevel, goal: _goal, goalChosen: _goalChosen,
+        diet: _diet, dietStyle: _dietStyle,
+        bodyFatEnabled: _bodyFatEnabled, bodyFatRange: _bodyFatRange,
+      );
+
+  void _restoreFormSnapshot(
+    ({
+      nutri.Sex sex, String age, String height, String weight, String targetWeight,
+      nutri.ActivityLevel? activity, nutri.GoalType goal, bool goalChosen,
+      Diet diet, nutri.DietStyle dietStyle, bool bodyFatEnabled, nutri.BodyFatRange? bodyFatRange,
+    }) s,
+  ) {
+    _sex = s.sex;
+    _ageCtrl.text = s.age;
+    _heightCtrl.text = s.height;
+    _weightCtrl.text = s.weight;
+    _targetWeightCtrl.text = s.targetWeight;
+    _activityLevel = s.activity;
+    _goal = s.goal;
+    _goalChosen = s.goalChosen;
+    _diet = s.diet;
+    _dietStyle = s.dietStyle;
+    _bodyFatEnabled = s.bodyFatEnabled;
+    _bodyFatRange = s.bodyFatRange;
+  }
 
   Future<void> _openSheet(
     BuildContext context, {
     required String title,
     Widget Function(BuildContext, StateSetter)? pinned,
-    required Widget Function(BuildContext, StateSetter) builder,
+    required Widget Function(BuildContext, StateSetter, VoidCallback markDone) builder,
   }) {
-    final snapshotBefore = _formSnapshot();
+    final snapshot = _captureFormSnapshot();
+    var committed = false;
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -1914,7 +1946,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 Flexible(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
-                    child: builder(ctx, setSheetState),
+                    child: builder(ctx, setSheetState, () => committed = true),
                   ),
                 ),
               ],
@@ -1923,37 +1955,32 @@ class ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     ).then((_) {
-      // Sauvegarde à la fermeture de la fiche, quelle qu'en soit la cause
-      // (voir le commentaire au début de cette fonction) — UNIQUEMENT si
-      // quelque chose a réellement changé (comparaison au snapshot pris à
-      // l'ouverture, voir `_formSnapshot`). Sans cette garde, ouvrir une
-      // fiche juste pour regarder puis la refermer déclencherait quand même
-      // un aller-retour Supabase et le SnackBar de confirmation — exactement
-      // le genre de "pollution" qu'Alex a explicitement demandé d'éviter
-      // (18/09/2026, audit ergonomie, 2ᵉ passe).
-      if (mounted && _formSnapshot() != snapshotBefore) _computeAndSave();
+      if (!mounted) return;
+      if (committed) {
+        // Bouton "Terminé" pressé : c'est le SEUL geste qui valide et
+        // sauvegarde réellement (voir le commentaire au-dessus de
+        // `_captureFormSnapshot`).
+        _computeAndSave();
+      } else {
+        // Fermeture SANS validation (balayage, tap en dehors, retour
+        // matériel) : annule — les champs redeviennent ce qu'ils étaient à
+        // l'ouverture, rien n'est écrit sur disque/Supabase. `_recomputePreview`
+        // resynchronise `_kcal`/`_dirty` sur l'état restauré (sinon le
+        // bandeau d'impact et la vignette resteraient sur la valeur annulée
+        // jusqu'au prochain rebuild).
+        setState(() => _restoreFormSnapshot(snapshot));
+        _recomputePreview();
+      }
     });
   }
 
-  // BUG CORRIGÉ (18/09/2026, audit ergonomie demandé par Alex — retours
-  // d'utilisateurs réels : "je choisis, je tape Terminé, je reviens plus
-  // tard et tout est revenu aux valeurs par défaut") : chaque choix (`onTap`
-  // des options ci-dessus) met à jour `_activityLevel`/`_goal`/etc. ET la
-  // vignette correspondante sur l'écran principal IMMÉDIATEMENT, donnant
-  // l'impression trompeuse que c'est déjà pris en compte. Rien n'était
-  // réellement persisté (SharedPreferences/Supabase) tant que le bouton
-  // "Enregistrer mes objectifs", tout en bas de l'écran (après le carrousel
-  // KPI et les graphiques d'évolution), n'était PAS pressé séparément — un
-  // second geste, loin, facile à ne jamais atteindre. Aucune app
-  // concurrente sérieuse (MyFitnessPal, Cronometer, MacroFactor, Yazio)
-  // n'impose ce détour : un réglage choisi puis "Terminé" est enregistré,
-  // point. La sauvegarde réelle se déclenche maintenant à la fermeture de
-  // la fiche (voir `_openSheet`, qui couvre aussi le balayage/tap en dehors,
-  // pas seulement ce bouton) — ce bouton se contente donc de fermer la
-  // fiche, le `.then()` de `_openSheet` fait le reste. Le bouton du bas
-  // reste utile pour le mode manuel (macros tapées directement sur l'écran
-  // principal, hors fiche) et comme filet de sécurité.
-  Widget _sheetDoneButton(BuildContext ctx) {
+  // BUG CORRIGÉ (19/09/2026, retour d'Alex confirmé en usage réel — voir le
+  // commentaire complet sur `_captureFormSnapshot`) : ce bouton est
+  // maintenant le SEUL geste qui valide un choix. Il appelle [markDone]
+  // (fourni par `_openSheet`) AVANT de fermer la fiche — sans ça, `.then()`
+  // ne saurait pas distinguer "fermé via ce bouton" d'un balayage/tap en
+  // dehors, qui doivent rester une annulation.
+  Widget _sheetDoneButton(BuildContext ctx, VoidCallback markDone) {
     return SizedBox(
       width: double.infinity,
       child: FilledButton(
@@ -1963,7 +1990,10 @@ class ProfileScreenState extends State<ProfileScreen> {
           minimumSize: const Size.fromHeight(48),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
-        onPressed: () => Navigator.of(ctx).pop(),
+        onPressed: () {
+          markDone();
+          Navigator.of(ctx).pop();
+        },
         child: Text(ctx.l10n.profileDone, style: const TextStyle(fontWeight: FontWeight.w800)),
       ),
     );
@@ -2068,14 +2098,14 @@ class ProfileScreenState extends State<ProfileScreen> {
       context,
       title: context.l10n.profileYourGoalTitle,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
-      builder: (ctx, setSheetState) {
+      builder: (ctx, setSheetState, markDone) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (final o in goalOptionsFor(context.l10n)) _goalPickRow(ctx, o, setSheetState),
             const SizedBox(height: 4),
-            _sheetDoneButton(ctx),
+            _sheetDoneButton(ctx, markDone),
           ],
         );
       },
@@ -2140,7 +2170,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// valeur ajoutée conservée spécifiquement ici, au même titre que les
   /// fiches nutriments de l'onglet Bilan.
   void _openGoalDetailSheet(BuildContext context, GoalOption o) {
-    _openSheet(context, title: o.title, builder: (ctx, _) {
+    _openSheet(context, title: o.title, builder: (ctx, _, __) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2198,7 +2228,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       (Diet.vegetarien, Icons.eco_outlined, l10n.profileDietVegetarian),
       (Diet.vegetalien, Icons.grass_outlined, l10n.profileDietVegan),
     ];
-    _openSheet(context, title: l10n.profileDietTileLabel, builder: (ctx, setSheetState) {
+    _openSheet(context, title: l10n.profileDietTileLabel, builder: (ctx, setSheetState, markDone) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -2213,7 +2243,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               },
             ),
           const SizedBox(height: 4),
-          _sheetDoneButton(ctx),
+          _sheetDoneButton(ctx, markDone),
         ],
       );
     });
@@ -2226,7 +2256,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       context,
       title: l10n.profileMeasuresSheetTitle,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
-      builder: (ctx, setSheetState) {
+      builder: (ctx, setSheetState, markDone) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2346,7 +2376,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 ),
             ],
             const SizedBox(height: 8),
-            _sheetDoneButton(ctx),
+            _sheetDoneButton(ctx, markDone),
           ],
         );
       },
@@ -2371,7 +2401,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       context,
       title: l10n.profileActivitySheetTitle,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
-      builder: (ctx, setSheetState) {
+      builder: (ctx, setSheetState, markDone) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2397,7 +2427,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
             const SizedBox(height: 4),
-            _sheetDoneButton(ctx),
+            _sheetDoneButton(ctx, markDone),
           ],
         );
       },
@@ -2417,7 +2447,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       context,
       title: l10n.profileMacroSplitTileLabel,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
-      builder: (ctx, setSheetState) {
+      builder: (ctx, setSheetState, markDone) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2440,7 +2470,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
             const SizedBox(height: 4),
-            _sheetDoneButton(ctx),
+            _sheetDoneButton(ctx, markDone),
           ],
         );
       },
