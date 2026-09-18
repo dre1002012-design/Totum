@@ -218,6 +218,12 @@ abstract class AppLocalizations {
   /// **'Pas de cible'**
   String get vitaminKNoTarget;
 
+  /// No description provided for @profileNutrientInfoTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'En savoir plus sur ce nutriment'**
+  String get profileNutrientInfoTooltip;
+
   /// Nom de l'application
   ///
   /// In fr, this message translates to:

@@ -76,6 +76,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vitaminKNoTarget => 'No target';
 
   @override
+  String get profileNutrientInfoTooltip => 'Learn more about this nutrient';
+
+  @override
   String get appTitle => 'Totum';
 
   @override

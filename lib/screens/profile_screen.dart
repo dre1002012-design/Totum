@@ -17,6 +17,7 @@ import '../theme/totum_style.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'weight_trend_screen.dart';
 import 'expenditure_screen.dart';
+import 'bilan_screen.dart' show showNutrientFiche;
 import '../l10n/app_localizations.dart';
 import '../l10n/l10n_ext.dart';
 
@@ -1045,7 +1046,12 @@ class ProfileScreenState extends State<ProfileScreen> {
     // ci-dessus, cohérent avec le principe déjà énoncé pour ce bloc.
     final isOver = goalRounded > 0 && consumedRounded > goalRounded;
     final consumedFraction = _kcal > 0 ? (today.kcal / _kcal).clamp(0.0, 1.0) : 0.0;
-    final ringColor = isOver ? TotumColors.negative : TotumColors.accent;
+    // Visuel demandé par Alex (19/09/2026, "un peu fade") : même rampe de
+    // couleur déjà utilisée pour Poids/Dépense énergétique/micronutriments
+    // (TotumProgress.forFraction) au lieu d'un accent plat — l'anneau
+    // s'intensifie en se remplissant, plus vivant, sans sortir de la
+    // charte graphique (toujours la même famille de teintes accent).
+    final ringColor = isOver ? TotumColors.negative : TotumProgress.forFraction(consumedFraction);
 
     // Répartition métabolisme de base / mouvement (19/08/2026, demande
     // d'Alex — "comprendre en 2 secondes pourquoi ça a été affiné, je
@@ -1080,7 +1086,9 @@ class ProfileScreenState extends State<ProfileScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Donut 1 — Objectif vs Aliments consommés.
+              // Donut 1 — Objectif vs Aliments consommés. Au tap : mêmes
+              // aliments du jour, triés par calories — même mécanisme que
+              // tous les autres donuts (voir _showNutrientBreakdown).
               Expanded(
                 child: _energyDonut(
                   filledFraction: consumedFraction,
@@ -1092,10 +1100,16 @@ class ProfileScreenState extends State<ProfileScreen> {
                     _donutLegendRow(Icons.flag_rounded, '${_kcal.round()}'),
                     _donutLegendRow(Icons.restaurant_rounded, '${today.kcal.round()}'),
                   ],
+                  onTap: () => _showNutrientBreakdown(
+                      nutrientDisplayLabel('Énergie', l10n), 'kcal', (e) => e.kcal),
                 ),
               ),
               const SizedBox(width: 14),
-              // Donut 2 — répartition Métabolisme de base / Mouvement.
+              // Donut 2 — répartition Métabolisme de base / Mouvement. Au
+              // tap : pas un total d'aliments (c'est une DÉPENSE, pas une
+              // consommation) — renvoie vers l'écran dédié "Dépense
+              // énergétique" (courbe adaptative complète), la suite logique
+              // pour qui veut comprendre ce chiffre plus en détail.
               if (bmr != null && movementKcal != null)
                 Expanded(
                   child: _energyDonut(
@@ -1109,6 +1123,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                       _donutLegendRow(Icons.bedtime_outlined, '${bmr.round()}'),
                       _donutLegendRow(Icons.directions_run_rounded, '+${movementKcal.round()}'),
                     ],
+                    onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const ExpenditureScreen())),
                   ),
                 )
               else
@@ -1135,6 +1151,11 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// donut 2 le redéfinit sur `outlineStrong` pour représenter explicitement
   /// le métabolisme de base (part "de fond", jamais nulle) plutôt qu'un
   /// simple espace non rempli.
+  // Demande d'Alex (19/09/2026) : les 2 donuts de la carte "Aujourd'hui"
+  // (kcal restant, répartition repos/mouvement) n'étaient pas cliquables,
+  // incohérent avec tous les autres donuts rendus cliquables la veille.
+  // [onTap] optionnel pour ne rien casser d'autre qui réutiliserait déjà
+  // cette fonction sans vouloir de comportement au tap.
   Widget _energyDonut({
     required double filledFraction,
     required Color filledColor,
@@ -1143,9 +1164,13 @@ class ProfileScreenState extends State<ProfileScreen> {
     required String centerLabel,
     required List<Widget> legendRows,
     Color? emptyColor,
+    VoidCallback? onTap,
   }) {
     final f = filledFraction.clamp(0.0, 1.0);
-    return Column(
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
@@ -1186,6 +1211,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 8),
         ...legendRows,
       ],
+      ),
     );
   }
 
@@ -1219,7 +1245,9 @@ class ProfileScreenState extends State<ProfileScreen> {
     // compare les valeurs ARRONDIES (celles réellement affichées, voir
     // `consumed.round()` plus bas), pas les doubles bruts.
     final isOver = target > 0 && consumed.round() > target.round();
-    final ringColor = isOver ? TotumColors.negative : TotumColors.accent;
+    // Même rampe que le ring kcal ci-dessus (voir son commentaire) —
+    // cohérence visuelle entre les 2 cartes du carrousel.
+    final ringColor = isOver ? TotumColors.negative : TotumProgress.forFraction(fraction);
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -1299,11 +1327,11 @@ class ProfileScreenState extends State<ProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _macroRing(l10n.profileCarbs, Icons.grain, today.carb, _carb,
-                  onTap: () => _showNutrientBreakdown(l10n.profileCarbs, 'g', (e) => e.carb)),
+                  onTap: () => _showNutrientBreakdown(l10n.profileCarbs, 'g', (e) => e.carb, ficheKey: 'glucides')),
               _macroRing(l10n.profileFats, Icons.opacity, today.fat, _fat,
-                  onTap: () => _showNutrientBreakdown(l10n.profileFats, 'g', (e) => e.fat)),
+                  onTap: () => _showNutrientBreakdown(l10n.profileFats, 'g', (e) => e.fat, ficheKey: 'lipides')),
               _macroRing(l10n.profileProteins, Icons.fitness_center, today.prot, _prot,
-                  onTap: () => _showNutrientBreakdown(l10n.profileProteins, 'g', (e) => e.prot)),
+                  onTap: () => _showNutrientBreakdown(l10n.profileProteins, 'g', (e) => e.prot, ficheKey: 'proteines')),
             ],
           ),
         ],
@@ -1414,7 +1442,12 @@ class ProfileScreenState extends State<ProfileScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 mainAxisSpacing: 8,
                 crossAxisSpacing: 4,
-                childAspectRatio: 0.72,
+                // 0.72 -> 0.66 : marge verticale supplémentaire pour
+                // l'anneau légèrement agrandi (34->38px, visuel du
+                // 19/09/2026) — évite tout risque de débordement du badge
+                // par rapport à la hauteur de cellule précédemment calée
+                // sur la taille d'anneau d'avant.
+                childAspectRatio: 0.66,
                 children: [
                   for (final key in kPriorityNutrientKeys)
                     _microChip(key, today, targets),
@@ -1435,11 +1468,17 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// donné — trié du plus grand au plus petit, sans jamais filtrer les
   /// zéros (savoir qu'un aliment mangé aujourd'hui n'en contient PAS est
   /// une information à part entière, pas du bruit à cacher).
+  // [ficheKey] (19/09/2026, demande d'Alex — "à côté du nom, un i pour la
+  // fiche informative, comme pour chaque élément") : clé de
+  // `assets/nutrient_fiches.json`, réutilise le contenu éducatif déjà
+  // écrit et déjà utilisé ailleurs (Bilan/Conseils, `showNutrientFiche`)
+  // plutôt que d'inventer un second texte qui pourrait diverger.
   void _showNutrientBreakdown(
     String title,
     String unit,
-    double Function(FoodEntryContribution) valueOf,
-  ) {
+    double Function(FoodEntryContribution) valueOf, {
+    String? ficheKey,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1460,7 +1499,23 @@ class ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(color: TotumColors.outlineStrong, borderRadius: BorderRadius.circular(999)),
                 ),
               ),
-              Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(title, maxLines: 2, overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+                  ),
+                  if (ficheKey != null)
+                    IconButton(
+                      onPressed: () => showNutrientFiche(context, ficheKey),
+                      icon: const Icon(Icons.info_outline, color: TotumColors.accent, size: 22),
+                      tooltip: ctx.l10n.profileNutrientInfoTooltip,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(minWidth: 34),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                ],
+              ),
               Text(ctx.l10n.nutrientBreakdownTitle,
                   style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
               const SizedBox(height: 12),
@@ -1547,37 +1602,46 @@ class ProfileScreenState extends State<ProfileScreen> {
       onTap: () => key == 'vitK'
           ? _showVitaminKBreakdown(targets)
           : _showNutrientBreakdown(label, _priorityNutrientUnit(key),
-              (e) => _priorityNutrientValueFromEntry(key, e)),
+              (e) => _priorityNutrientValueFromEntry(key, e), ficheKey: _priorityNutrientFicheKey(key)),
       behavior: HitTestBehavior.opaque,
       child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Visuel demandé par Alex (19/09/2026, "un peu fade") : léger badge
+        // rond (accentSoft, déjà une couleur de la charte — même fond que
+        // les vignettes de réglage) derrière l'anneau + anneau et texte
+        // légèrement agrandis (34→38px), sans toucher au nombre de
+        // colonnes de la grille ni risquer un nouveau débordement.
         SizedBox(
-          width: 34,
-          height: 34,
+          width: 38,
+          height: 38,
           child: Stack(
             alignment: Alignment.center,
             children: [
+              Container(
+                width: 38, height: 38,
+                decoration: BoxDecoration(color: TotumColors.accentSoft, shape: BoxShape.circle),
+              ),
               PieChart(
                 PieChartData(
                   sectionsSpace: 1,
-                  centerSpaceRadius: 11,
+                  centerSpaceRadius: 12,
                   sections: [
                     PieChartSectionData(
                         value: fraction > 0 ? fraction : 0.0001,
                         color: TotumProgress.forFraction(fraction),
                         title: '',
-                        radius: 6),
+                        radius: 7),
                     PieChartSectionData(
                         value: (1 - fraction) > 0 ? (1 - fraction) : 0.0001,
                         color: TotumColors.outline,
                         title: '',
-                        radius: 6),
+                        radius: 7),
                   ],
                 ),
               ),
               Text('${(fraction * 100).round()}',
-                  style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                  style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
             ],
           ),
         ),
@@ -1600,6 +1664,21 @@ class ProfileScreenState extends State<ProfileScreen> {
     if (col.contains('_mg_')) return 'mg';
     return 'g';
   }
+
+  /// Clé `assets/nutrient_fiches.json` correspondante (bouton "i", demande
+  /// d'Alex 19/09/2026) — réutilise le contenu déjà écrit pour Bilan/Conseils.
+  String? _priorityNutrientFicheKey(String key) => switch (key) {
+        'omega3_marins' => 'omega3',
+        'magnesium' => 'magnesium',
+        'iron' => 'fer',
+        'iodine' => 'iode',
+        'zinc' => 'zinc',
+        'vitC' => 'vitc',
+        'vitD' => 'vitd',
+        'B9' => 'b9',
+        'B12' => 'b12',
+        _ => null,
+      };
 
   /// Contribution d'UN aliment à un nutriment prioritaire donné — même
   /// définition que [priorityNutrientConsumed], appliquée à un aliment
@@ -1643,8 +1722,22 @@ class ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(color: TotumColors.outlineStrong, borderRadius: BorderRadius.circular(999)),
                 ),
               ),
-              Text(kPriorityNutrientLabel['vitK'] ?? 'Vitamine K',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(kPriorityNutrientLabel['vitK'] ?? 'Vitamine K',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: TotumColors.textPrimary)),
+                  ),
+                  IconButton(
+                    onPressed: () => showNutrientFiche(context, 'vitk'),
+                    icon: const Icon(Icons.info_outline, color: TotumColors.accent, size: 22),
+                    tooltip: l10n.profileNutrientInfoTooltip,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 34),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
+              ),
               const SizedBox(height: 14),
               FutureBuilder<List<FoodEntryContribution>>(
                 future: _dayEntriesFuture,
@@ -1664,13 +1757,28 @@ class ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(label, style: TextStyle(fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                              // BUG CORRIGÉ (19/09/2026, retour d'Alex —
+                              // texte qui sort du cadre sur certaines
+                              // fiches) : ni le libellé ("Vitamine K1
+                              // (phylloquinone)", long) ni la valeur
+                              // n'étaient contraints — sur un écran étroit,
+                              // la Row débordait purement et simplement.
+                              // Expanded sur le libellé absorbe l'espace en
+                              // trop (quitte à passer sur 2 lignes), la
+                              // valeur garde sa largeur naturelle, toujours
+                              // courte.
+                              Expanded(
+                                child: Text(label, maxLines: 2, overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                              ),
+                              const SizedBox(width: 8),
                               Text(
                                 target != null && target > 0
                                     ? '${value.round()} / ${target.round()} µg'
                                     : '${value.round()} µg  ·  ${l10n.vitaminKNoTarget}',
+                                textAlign: TextAlign.right,
                                 style: TextStyle(fontWeight: FontWeight.w800, color: TotumColors.textSecondary),
                               ),
                             ],
@@ -1740,16 +1848,25 @@ class ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       ),
                                     ),
+                                    // BUG CORRIGÉ (19/09/2026, retour d'Alex —
+                                    // "la K2 va sortir du cadre") : largeur
+                                    // fixe sans `overflow`, un Text déborde
+                                    // silencieusement (coupé net, pas
+                                    // d'ellipse) dès qu'une valeur dépasse
+                                    // ~3 chiffres. `maxLines`+ellipsis en
+                                    // filet de sécurité, largeur élargie.
                                     SizedBox(
-                                      width: 56,
+                                      width: 64,
                                       child: Text('K1 ${k1.round()}',
                                           textAlign: TextAlign.right,
+                                          maxLines: 1, overflow: TextOverflow.ellipsis,
                                           style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: TotumColors.textPrimary)),
                                     ),
                                     SizedBox(
-                                      width: 56,
+                                      width: 64,
                                       child: Text('K2 ${k2.round()}',
                                           textAlign: TextAlign.right,
+                                          maxLines: 1, overflow: TextOverflow.ellipsis,
                                           style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
                                     ),
                                   ],

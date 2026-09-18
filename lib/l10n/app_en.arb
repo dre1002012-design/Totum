@@ -23,6 +23,7 @@
   "vitaminK2Note": "No official reference intake yet (EFSA considers the evidence insufficient) — linked in recent research to bone and cardiovascular health. Shown here for information only.",
   "vitaminK2CoverageNote": "K2 data is still incomplete in the CIQUAL database for many foods — a 0 can mean \"not measured\", not necessarily \"absent\".",
   "vitaminKNoTarget": "No target",
+  "profileNutrientInfoTooltip": "Learn more about this nutrient",
   "appTitle": "Totum",
 
   "weightScreenTitle": "Weight",
