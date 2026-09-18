@@ -1531,13 +1531,24 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// "Entraînements", le contenu dépasse la hauteur visible, et un bandeau
   /// simplement placé en tête du contenu scrollable disparaissait dès qu'on
   /// descendait — corrigé en le sortant de la zone scrollable.
+  // BUG CORRIGÉ (18/09/2026, audit ergonomie — voir aussi le commentaire de
+  // `_sheetDoneButton`) : la sauvegarde est déclenchée ici, sur la
+  // FERMETURE de la fiche elle-même (peu importe comment — bouton
+  // "Terminé", balayage vers le bas, tap hors de la fiche, retour matériel
+  // Android), pas seulement sur un bouton précis. Cohérent avec l'existant :
+  // chaque choix (`onTap` d'une option) met DÉJÀ à jour la vignette de
+  // l'écran principal instantanément, quelle que soit la façon dont la
+  // fiche sera fermée ensuite — il n'y a donc jamais eu de vraie
+  // sémantique "annuler" à préserver ici. Un point unique de sauvegarde,
+  // partagé par les 5 fiches de réglages, plutôt que de dépendre d'un seul
+  // bouton qu'un balayage ou un tap en dehors permettait de contourner.
   Future<void> _openSheet(
     BuildContext context, {
     required String title,
     Widget Function(BuildContext, StateSetter)? pinned,
     required Widget Function(BuildContext, StateSetter) builder,
   }) {
-    return showModalBottomSheet(
+    return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: TotumColors.surface,
@@ -1581,9 +1592,31 @@ class ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
-    );
+    ).then((_) {
+      // Sauvegarde à la fermeture de la fiche, quelle qu'en soit la cause
+      // (voir le commentaire au début de cette fonction).
+      if (mounted) _computeAndSave();
+    });
   }
 
+  // BUG CORRIGÉ (18/09/2026, audit ergonomie demandé par Alex — retours
+  // d'utilisateurs réels : "je choisis, je tape Terminé, je reviens plus
+  // tard et tout est revenu aux valeurs par défaut") : chaque choix (`onTap`
+  // des options ci-dessus) met à jour `_activityLevel`/`_goal`/etc. ET la
+  // vignette correspondante sur l'écran principal IMMÉDIATEMENT, donnant
+  // l'impression trompeuse que c'est déjà pris en compte. Rien n'était
+  // réellement persisté (SharedPreferences/Supabase) tant que le bouton
+  // "Enregistrer mes objectifs", tout en bas de l'écran (après le carrousel
+  // KPI et les graphiques d'évolution), n'était PAS pressé séparément — un
+  // second geste, loin, facile à ne jamais atteindre. Aucune app
+  // concurrente sérieuse (MyFitnessPal, Cronometer, MacroFactor, Yazio)
+  // n'impose ce détour : un réglage choisi puis "Terminé" est enregistré,
+  // point. La sauvegarde réelle se déclenche maintenant à la fermeture de
+  // la fiche (voir `_openSheet`, qui couvre aussi le balayage/tap en dehors,
+  // pas seulement ce bouton) — ce bouton se contente donc de fermer la
+  // fiche, le `.then()` de `_openSheet` fait le reste. Le bouton du bas
+  // reste utile pour le mode manuel (macros tapées directement sur l'écran
+  // principal, hors fiche) et comme filet de sécurité.
   Widget _sheetDoneButton(BuildContext ctx) {
     return SizedBox(
       width: double.infinity,
