@@ -173,6 +173,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'You don\'t need to do anything special: this number recalculates itself every time you open the app, using only your COMPLETED days — today\'s meals never count until the day is over (otherwise logging just breakfast in the morning would make the estimate crash for no real reason). The \"Confirm my goals\" button on your Profile only validates a deliberate setting change (weight, goal...), it never \"refreshes\" this calculation.';
 
   @override
+  String get expenditureInfoRollingWindow =>
+      '\"Days of journal covered\" is NOT a cumulative counter that progresses once and for all once it hits 20: it\'s a rolling window of the last 20 days, recalculated every single day. A declared pause or an old unlogged day eventually falls out of this window on its own as days go by — but a recent missing day can still lower this number even if you have far more than 20 total days of history.';
+
+  @override
   String get expenditureLowCoverageBadge =>
       'Low coverage on this window — interpret with caution (unlogged meals = underestimated intake).';
 

@@ -356,6 +356,12 @@ abstract class AppLocalizations {
   /// **'Aucune action de ta part n\'est nécessaire : ce chiffre se recalcule tout seul à chaque ouverture de l\'app, à partir de tes journées TERMINÉES uniquement — les repas du jour même ne comptent jamais tant que la journée n\'est pas finie (sinon un simple petit-déjeuner logué le matin ferait chuter artificiellement l\'estimation). Le bouton \"Confirmer mes objectifs\" du Profil ne sert qu\'à valider un changement de réglage (poids, objectif...), jamais à \"rafraîchir\" ce calcul.'**
   String get expenditureInfoAutoRefresh;
 
+  /// No description provided for @expenditureInfoRollingWindow.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Jours de journal couverts » n\'est PAS un compteur cumulatif qui progresse une fois pour toutes en atteignant 20 : c\'est une fenêtre glissante des 20 DERNIERS jours, recalculée chaque jour. Une pause déclarée ou une journée non logguée ancienne finit par sortir de cette fenêtre au fil des jours, sans rien à faire de ta part — mais un jour manquant récent peut faire baisser ce chiffre même si tu as beaucoup plus de 20 jours d\'historique au total.'**
+  String get expenditureInfoRollingWindow;
+
   /// No description provided for @expenditureLowCoverageBadge.
   ///
   /// In fr, this message translates to:

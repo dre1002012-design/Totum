@@ -985,6 +985,34 @@ class ExpenditureInfoSheet extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: 10),
+              // Retour d'Alex (18/09/2026) : confusion récurrente (déjà
+              // remontée une première fois) entre "20 jours" fenêtre
+              // glissante des 20 DERNIERS jours (recalculée chaque jour) et
+              // "20 jours" compteur cumulatif qui progresserait une fois
+              // pour toutes avec l'ancienneté totale du compte — d'où
+              // l'attente erronée qu'un jour précis dans le futur "débloque"
+              // durablement 20/20. Explication dédiée, au même endroit que
+              // les deux autres clarifications ci-dessus (le seul endroit où
+              // l'utilisateur cherche activement une explication).
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: TotumColors.accentSoft,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.calendar_view_week_rounded, size: 16, color: TotumColors.accent),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(context.l10n.expenditureInfoRollingWindow,
+                          style: TextStyle(fontSize: 12, height: 1.45, color: TotumColors.textPrimary)),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 20),
               Divider(color: TotumColors.outline, height: 1),
               const SizedBox(height: 14),
