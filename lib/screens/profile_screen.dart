@@ -189,22 +189,42 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   CalibrationResult _calibration = CalibrationResult.none;
 
-  late Future<List<WeighIn>> _weightHistoryFuture;
-  late Future<DayTotals> _dayTotalsFuture;
+  // BUG CORRIGÉ (21/09/2026, retour d'Alex — "les donuts se rafraîchissent
+  // visiblement, ce n'est pas fluide comme chez la concurrence") : ces 4
+  // widgets vivaient derrière un FutureBuilder dont le `future` était
+  // RÉASSIGNÉ à chaque `refresh()` (donc à chaque retour sur cet onglet,
+  // même si rien n'a changé) — un nouveau Future ne résout jamais de façon
+  // synchrone, donc le tout premier rebuild après réassignation voyait
+  // forcément `snapshot.hasData == false` : flash vers un spinner, ou pire,
+  // vers `DayTotals.empty` (donuts à 0 une fraction de seconde) avant que
+  // les vraies valeurs ne réapparaissent. Remplacé par un cache en dur
+  // (dernière valeur connue), mis à jour en tâche de fond via `.then()` —
+  // aucun rebuild n'est déclenché tant que la nouvelle valeur n'est pas
+  // là, donc l'ancienne reste affichée sans interruption visible ; seul le
+  // tout premier chargement de la session affiche un indicateur (cache
+  // encore `null`). `_dayEntriesFuture` reste un vrai Future : il n'alimente
+  // que des fiches modales ouvertes à la demande (tap sur un donut), où un
+  // court chargement au moment de l'ouverture est normal et attendu.
+  List<WeighIn>? _weightHistoryCache;
+  DayTotals? _dayTotalsCache;
   // Donuts macros/micronutriments cliquables (19/09/2026, demande d'Alex,
   // audit confirmant que Cronometer/MyFitnessPal proposent ce même détail
   // "quels aliments contribuent le plus à ce nutriment aujourd'hui") — liste
   // brute (pas agrégée) des aliments du jour, voir dayFoodEntries.
   late Future<List<FoodEntryContribution>> _dayEntriesFuture;
-  late Future<nutri.NutritionTargets> _targetsFuture;
-  late Future<List<ExpenditurePoint>> _expenditureHistoryFuture;
+  nutri.NutritionTargets? _targetsCache;
+  List<ExpenditurePoint>? _expenditureHistoryCache;
 
   final _kpiPageCtrl = PageController();
   int _kpiPage = 0;
 
   void _refreshCharts() {
-    _weightHistoryFuture = CalibrationService.instance.recentHistory(60);
-    _expenditureHistoryFuture = CalibrationService.instance.expenditureHistory(days: 60);
+    CalibrationService.instance.recentHistory(60).then((v) {
+      if (mounted) setState(() => _weightHistoryCache = v);
+    });
+    CalibrationService.instance.expenditureHistory(days: 60).then((v) {
+      if (mounted) setState(() => _expenditureHistoryCache = v);
+    });
     _refreshProfileDependentCharts();
   }
 
@@ -213,15 +233,15 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// `_refreshCharts()` en entier une seconde fois à sa fin — les 4 futures
   /// (dont `expenditureHistory`, un scan glissant ~60×20 jours) partaient
   /// donc deux fois de suite à chaque ouverture de l'onglet. Seuls
-  /// `_dayTotalsFuture`/`_targetsFuture` dépendent réellement des champs du
+  /// `_dayTotalsCache`/`_targetsCache` dépendent réellement des champs du
   /// formulaire (poids/taille/âge) que `_loadProfile()` vient de remplir —
-  /// `_weightHistoryFuture`/`_expenditureHistoryFuture` n'en dépendent pas,
+  /// `_weightHistoryCache`/`_expenditureHistoryCache` n'en dépendent pas,
   /// inutile de les relancer. Ce sous-ensemble est donc le seul à
   /// redéclencher une fois le profil chargé.
   void _refreshProfileDependentCharts() {
-    _dayTotalsFuture = computeTodayTotals();
+    computeTodayTotals().then((v) { if (mounted) setState(() => _dayTotalsCache = v); });
     _dayEntriesFuture = dayFoodEntries(DateTime.now());
-    _targetsFuture = _computeAutoTargets();
+    _computeAutoTargets().then((v) { if (mounted) setState(() => _targetsCache = v); });
   }
 
   /// Recharge les données pouvant avoir changé depuis un autre onglet
@@ -250,7 +270,10 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// un aperçu que l'utilisateur est en train de regarder.
   void refresh() {
     if (!mounted) return;
-    setState(_refreshCharts);
+    // `_refreshCharts()` ne mute plus aucun champ de façon synchrone (voir
+    // son commentaire) : pas besoin de l'envelopper dans setState, chaque
+    // valeur déclenchera son propre rebuild une fois prête.
+    _refreshCharts();
     if (_dirty) return;
     // `_calibration` (voir son commentaire dans `_loadProfile()`) doit être
     // resynchronisé au même rythme que `_kcal` — sinon un aperçu live
@@ -624,7 +647,20 @@ class ProfileScreenState extends State<ProfileScreen> {
     await sp.setDouble('goals_fiber', finalFib);
     await sp.setBool('goals_manual', _manualMode);
 
-    await nutri.computeAndSaveTargetsFromStoredProfile();
+    // BUG CORRIGÉ (21/09/2026, retour d'Alex — un changement de répartition
+    // des macros n'était "parfois" pas reflété dans le Journal) :
+    // `computeAndSaveTargetsFromStoredProfile()` relit le profil via
+    // `ProfileStore.load()`, qui fusionne un instantané Supabase pouvant
+    // dater de jusqu'à 5s (`ProfileStore._cachedRemote`). Appelé ICI, AVANT
+    // l'upsert `user_profile` ci-dessous, il ne pouvait voir QUE l'ancien
+    // diet_style/activité/objectif encore en base — recalculait donc des
+    // cibles avec les anciennes valeurs et écrasait silencieusement
+    // goals_kcal/goals_prot/... (mêmes clés SharedPreferences) juste après
+    // les avoir correctement écrites ci-dessus. Persiste directement les
+    // cibles déjà calculées depuis le profil EN MÉMOIRE (source de vérité
+    // pendant une sauvegarde, jamais périmée) — pas besoin de repasser par
+    // le store pour re-router vers les mêmes valeurs.
+    await nutri.saveNutritionTargets(await _computeAutoTargets());
     await CalibrationService.instance.logWeighIn(kg);
 
     try {
@@ -664,6 +700,16 @@ class ProfileScreenState extends State<ProfileScreen> {
       debugPrint('Erreur Supabase user_profile (poids cible/répartition macros) — colonnes pas encore migrées ? $e');
     }
 
+    // Sans ça, tout écran qui relit le profil dans les 5s qui suivent
+    // (Journal en changeant d'onglet, Bilan, Conseils — voir
+    // ProfileStore._cachedRemote) pouvait encore recevoir l'instantané
+    // Supabase d'AVANT cette sauvegarde si le cache était déjà chaud (ex :
+    // le Journal venait d'être consulté juste avant ce changement de
+    // réglage). Même principe que CalibrationService.logWeighIn : le cache
+    // mémoire doit refléter une écriture immédiatement, jamais attendre
+    // l'expiration du TTL.
+    nutri.ProfileStore.instance.resetInMemoryCache();
+
     final now = DateTime.now();
     await sp.setString(_lastValidatedKey, now.toIso8601String());
 
@@ -682,11 +728,11 @@ class ProfileScreenState extends State<ProfileScreen> {
       _dirty = false;
       _lastValidatedAt = now;
     });
+    // Le nouvel objectif change les cibles micronutriments affichées dans le
+    // carrousel (carte "Micronutriments en vedette") : `_refreshCharts()`
+    // relance ce calcul en tâche de fond et déclenche lui-même un rebuild
+    // (via setState) une fois `_targetsCache` prêt — voir son commentaire.
     _refreshCharts();
-    // Le nouvel objectif change les cibles micronutriments affichées dans
-    // le carrousel (carte "Micronutriments en vedette") : redéclenche un
-    // rebuild pour que la FutureBuilder concernée reflète _targetsFuture.
-    if (mounted) setState(() {});
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -916,10 +962,10 @@ class ProfileScreenState extends State<ProfileScreen> {
       await sp.setInt('profile_body_fat_range', _bodyFatRange!.index);
     }
 
+    // Relance le calcul totaux du jour/cibles en tâche de fond ; chaque
+    // valeur déclenche elle-même un setState une fois prête (voir le
+    // commentaire sur les caches `_dayTotalsCache`/`_targetsCache`).
     _refreshProfileDependentCharts();
-    // Déclenche un rebuild pour que les FutureBuilder (poids, totaux du
-    // jour, cibles) affichent les futures fraîchement réassignées ci-dessus.
-    if (mounted) setState(() {});
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -1047,29 +1093,24 @@ class ProfileScreenState extends State<ProfileScreen> {
   // ─── Carrousel KPI ────────────────────────────────────────────────────
 
   Widget _kpiCarousel() {
-    return FutureBuilder<DayTotals>(
-      future: _dayTotalsFuture,
-      builder: (context, snap) {
-        final today = snap.data ?? DayTotals.empty;
-        return SizedBox(
-          // 220 -> 246 (19/08/2026, demande d'Alex) : place pour la
-          // répartition métabolisme de base / mouvement sur la carte 1 (voir
-          // _kpiRemainingCard) — hauteur partagée par les 4 cartes du
-          // carrousel, les 3 autres gardent simplement un peu plus d'espace
-          // libre en bas qu'avant.
-          height: 246,
-          child: PageView(
-            controller: _kpiPageCtrl,
-            onPageChanged: (i) => setState(() => _kpiPage = i),
-            children: [
-              _kpiRemainingCard(today),
-              _kpiMacroRingsCard(today),
-              _kpiMacroPlateCard(today),
-              _kpiMicronutrientsCard(today),
-            ],
-          ),
-        );
-      },
+    final today = _dayTotalsCache ?? DayTotals.empty;
+    return SizedBox(
+      // 220 -> 246 (19/08/2026, demande d'Alex) : place pour la
+      // répartition métabolisme de base / mouvement sur la carte 1 (voir
+      // _kpiRemainingCard) — hauteur partagée par les 4 cartes du
+      // carrousel, les 3 autres gardent simplement un peu plus d'espace
+      // libre en bas qu'avant.
+      height: 246,
+      child: PageView(
+        controller: _kpiPageCtrl,
+        onPageChanged: (i) => setState(() => _kpiPage = i),
+        children: [
+          _kpiRemainingCard(today),
+          _kpiMacroRingsCard(today),
+          _kpiMacroPlateCard(today),
+          _kpiMicronutrientsCard(today),
+        ],
+      ),
     );
   }
 
@@ -1505,33 +1546,27 @@ class ProfileScreenState extends State<ProfileScreen> {
           Text(context.l10n.profileMicronutrientsFeatured,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
           const SizedBox(height: 12),
-          FutureBuilder<nutri.NutritionTargets>(
-            future: _targetsFuture,
-            builder: (context, snap) {
-              final targets = snap.data;
-              if (targets == null) {
-                return const SizedBox(
-                    height: 130, child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
-              }
-              return GridView.count(
-                crossAxisCount: 5,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 4,
-                // 0.72 -> 0.66 : marge verticale supplémentaire pour
-                // l'anneau légèrement agrandi (34->38px, visuel du
-                // 19/09/2026) — évite tout risque de débordement du badge
-                // par rapport à la hauteur de cellule précédemment calée
-                // sur la taille d'anneau d'avant.
-                childAspectRatio: 0.66,
-                children: [
-                  for (final key in kPriorityNutrientKeys)
-                    _microChip(key, today, targets),
-                ],
-              );
-            },
-          ),
+          if (_targetsCache == null)
+            const SizedBox(
+                height: 130, child: Center(child: CircularProgressIndicator(strokeWidth: 2)))
+          else
+            GridView.count(
+              crossAxisCount: 5,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 4,
+              // 0.72 -> 0.66 : marge verticale supplémentaire pour
+              // l'anneau légèrement agrandi (34->38px, visuel du
+              // 19/09/2026) — évite tout risque de débordement du badge
+              // par rapport à la hauteur de cellule précédemment calée
+              // sur la taille d'anneau d'avant.
+              childAspectRatio: 0.66,
+              children: [
+                for (final key in kPriorityNutrientKeys)
+                  _microChip(key, today, _targetsCache!),
+              ],
+            ),
         ],
       ),
     );
@@ -2702,15 +2737,9 @@ class ProfileScreenState extends State<ProfileScreen> {
           title: l10n.weightScreenTitle,
           subtitle: l10n.profileLast60Days,
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const WeightTrendScreen())),
-          chart: FutureBuilder<List<WeighIn>>(
-            future: _weightHistoryFuture,
-            builder: (context, snap) {
-              if (snap.connectionState != ConnectionState.done) {
-                return const SizedBox(height: 90, child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
-              }
-              return WeightTrendChart(data: snap.data ?? const <WeighIn>[]);
-            },
-          ),
+          chart: _weightHistoryCache == null
+              ? const SizedBox(height: 90, child: Center(child: CircularProgressIndicator(strokeWidth: 2)))
+              : WeightTrendChart(data: _weightHistoryCache!),
         ),
         const SizedBox(height: 14),
         _evolutionTapCard(
@@ -2718,18 +2747,12 @@ class ProfileScreenState extends State<ProfileScreen> {
           title: l10n.expenditureScreenTitle,
           subtitle: l10n.profileAdaptiveEstimate,
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ExpenditureScreen())),
-          chart: FutureBuilder<List<ExpenditurePoint>>(
-            future: _expenditureHistoryFuture,
-            builder: (context, snap) {
-              if (snap.connectionState != ConnectionState.done) {
-                return const SizedBox(height: 90, child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
-              }
-              // showDetailCard: false — ceci est la vignette compacte
-              // d'aperçu (tap pour ouvrir l'écran dédié), pas la place pour
-              // la fiche de détail interactive (voir expenditure_screen.dart).
-              return ExpenditureChart(data: snap.data ?? const <ExpenditurePoint>[], showDetailCard: false);
-            },
-          ),
+          // showDetailCard: false — ceci est la vignette compacte d'aperçu
+          // (tap pour ouvrir l'écran dédié), pas la place pour la fiche de
+          // détail interactive (voir expenditure_screen.dart).
+          chart: _expenditureHistoryCache == null
+              ? const SizedBox(height: 90, child: Center(child: CircularProgressIndicator(strokeWidth: 2)))
+              : ExpenditureChart(data: _expenditureHistoryCache!, showDetailCard: false),
         ),
       ],
     );
