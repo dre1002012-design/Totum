@@ -1,4 +1,5 @@
--- Effacer proprement un compte de test à partir de son email (19/09/2026).
+-- Effacer proprement un compte de test à partir de son email (19/09/2026,
+-- rendu défensif le 21/09/2026 après 2 échecs réels — voir plus bas).
 --
 -- Usage : à coller dans Supabase Studio → SQL Editor (projet "Totum",
 -- réf yqcbawsszozouhlkxtsj), après avoir remplacé la valeur de
@@ -22,11 +23,45 @@
 -- dans l'app, Compte → "Supprimer mon compte" (PAS "Se déconnecter", qui ne
 -- vide pas le cache local) — vide SharedPreferences sur l'appareil de test
 -- et déconnecte la session en cours.
+--
+-- Pourquoi une version défensive : la 1ʳᵉ tentative d'Alex a échoué sur
+-- user_status (sa clé primaire est "id", pas "user_id" — corrigé), la 2ᵉ
+-- sur account_deletion_requests, dont la migration n'a en fait jamais été
+-- appliquée sur ce projet Supabase (table absente). Plutôt que corriger un
+-- cas à la fois à chaque nouvel échec, chaque suppression ci-dessous est
+-- maintenant encadrée : une table absente ou une colonne au nom différent
+-- est signalée (raise notice) et SAUTÉE, sans jamais faire échouer tout le
+-- bloc — les autres tables continuent d'être nettoyées normalement.
 
 do $$
 declare
   target_email text := 'REMPLACER_PAR_EMAIL@exemple.com';
   target_user_id uuid;
+  -- (table, colonne portant l'id utilisateur) — user_status est la seule
+  -- exception connue : sa clé primaire EST directement l'id auth.users
+  -- (voir .eq('id', user.id) dans account_screen.dart/main.dart).
+  targets text[][] := array[
+    ['food_entries', 'user_id'],
+    ['weight_log', 'user_id'],
+    ['water_intake', 'user_id'],
+    ['sun_vitamin_d', 'user_id'],
+    ['holistic_log', 'user_id'],
+    ['pause_periods', 'user_id'],
+    ['score_history', 'user_id'],
+    ['goal_snapshots', 'user_id'],
+    ['favorite_foods', 'user_id'],
+    ['custom_meals', 'user_id'],
+    ['custom_foods', 'user_id'],
+    ['recipes', 'user_id'],
+    ['barcode_scan_misses', 'user_id'],
+    ['play_purchases', 'user_id'],
+    ['user_status', 'id'],
+    ['account_deletion_requests', 'user_id'],
+    ['user_profile', 'user_id']
+  ];
+  t text;
+  c text;
+  n int;
 begin
   select id into target_user_id from auth.users where email = target_email;
 
@@ -35,26 +70,24 @@ begin
     return;
   end if;
 
-  delete from public.food_entries          where user_id = target_user_id;
-  delete from public.weight_log            where user_id = target_user_id;
-  delete from public.water_intake          where user_id = target_user_id;
-  delete from public.sun_vitamin_d         where user_id = target_user_id;
-  delete from public.holistic_log          where user_id = target_user_id;
-  delete from public.pause_periods         where user_id = target_user_id;
-  delete from public.score_history         where user_id = target_user_id;
-  delete from public.goal_snapshots        where user_id = target_user_id;
-  delete from public.favorite_foods        where user_id = target_user_id;
-  delete from public.custom_meals          where user_id = target_user_id;
-  delete from public.custom_foods          where user_id = target_user_id;
-  delete from public.recipes               where user_id = target_user_id;
-  delete from public.barcode_scan_misses   where user_id = target_user_id;
-  delete from public.play_purchases        where user_id = target_user_id;
-  -- user_status est la seule exception : sa clé primaire EST directement
-  -- l'id auth.users (voir .eq('id', user.id) dans account_screen.dart/
-  -- main.dart), pas une colonne user_id séparée.
-  delete from public.user_status           where id = target_user_id;
-  delete from public.account_deletion_requests where user_id = target_user_id;
-  delete from public.user_profile          where user_id = target_user_id;
+  for i in 1 .. array_length(targets, 1) loop
+    t := targets[i][1];
+    c := targets[i][2];
+    if to_regclass('public.' || t) is null then
+      raise notice '  [ignoré] table public.% absente (migration jamais appliquée sur ce projet)', t;
+      continue;
+    end if;
+    begin
+      execute format('delete from public.%I where %I = $1', t, c) using target_user_id;
+      get diagnostics n = row_count;
+      raise notice '  [ok] public.% : % ligne(s) supprimée(s)', t, n;
+    exception
+      when undefined_column then
+        raise notice '  [ignoré] public.% : colonne "%" introuvable (vérifier le vrai nom de colonne)', t, c;
+      when undefined_table then
+        raise notice '  [ignoré] public.% : table introuvable au moment de la suppression', t;
+    end;
+  end loop;
 
-  raise notice 'Données applicatives effacées pour % (user_id=%). Étape suivante : Authentication -> Users -> supprimer ce compte.', target_email, target_user_id;
+  raise notice 'Terminé pour % (user_id=%). Étape suivante : Authentication -> Users -> supprimer ce compte.', target_email, target_user_id;
 end $$;
