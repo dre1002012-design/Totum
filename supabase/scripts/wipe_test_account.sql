@@ -49,7 +49,10 @@ begin
   delete from public.recipes               where user_id = target_user_id;
   delete from public.barcode_scan_misses   where user_id = target_user_id;
   delete from public.play_purchases        where user_id = target_user_id;
-  delete from public.user_status           where user_id = target_user_id;
+  -- user_status est la seule exception : sa clé primaire EST directement
+  -- l'id auth.users (voir .eq('id', user.id) dans account_screen.dart/
+  -- main.dart), pas une colonne user_id séparée.
+  delete from public.user_status           where id = target_user_id;
   delete from public.account_deletion_requests where user_id = target_user_id;
   delete from public.user_profile          where user_id = target_user_id;
 
