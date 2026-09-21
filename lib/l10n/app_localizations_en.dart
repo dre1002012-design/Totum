@@ -97,6 +97,29 @@ class AppLocalizationsEn extends AppLocalizations {
       'Goals never confirmed — confirm them for the first time below';
 
   @override
+  String profileGoalSavedSnackbar(String goal) {
+    return 'Goal $goal saved successfully';
+  }
+
+  @override
+  String get profileMeasuresSavedSnackbar => 'Measurements saved successfully';
+
+  @override
+  String profileActivitySavedSnackbar(String level) {
+    return 'Activity level saved: $level';
+  }
+
+  @override
+  String profileDietSavedSnackbar(String diet) {
+    return 'Diet saved: $diet';
+  }
+
+  @override
+  String profileDietStyleSavedSnackbar(String style) {
+    return 'Macro split saved: $style';
+  }
+
+  @override
   String get appTitle => 'Totum';
 
   @override
@@ -506,7 +529,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get authSignUpWelcome =>
-      '🎉 Welcome! Your account has been created.\n📧 Open your inbox and click the confirmation link, then come back to log in.';
+      '🎉 Welcome! Your account has been created.\n📧 Open your inbox and click the confirmation link, then come back to log in. It\'s usually fast, but can sometimes take a few minutes — check your spam folder too.';
 
   @override
   String get authSignInSuccess => 'Signed in successfully ✅ Welcome back!';
@@ -518,6 +541,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get authResetPasswordSent =>
       '📧 If an account exists for this email, you\'ll receive a link to reset your password. Don\'t forget to check your spam folder.';
+
+  @override
+  String get authResendConfirmation => 'Resend';
+
+  @override
+  String get authConfirmationResent =>
+      '📧 Confirmation email resent — check your spam folder too.';
 
   @override
   String get authGoogleSignInFailed =>

@@ -248,6 +248,36 @@ abstract class AppLocalizations {
   /// **'Objectifs jamais confirmés — valide-les une première fois ci-dessous'**
   String get profileNeverValidated;
 
+  /// No description provided for @profileGoalSavedSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif {goal} bien enregistré'**
+  String profileGoalSavedSnackbar(String goal);
+
+  /// No description provided for @profileMeasuresSavedSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mesures bien enregistrées'**
+  String get profileMeasuresSavedSnackbar;
+
+  /// No description provided for @profileActivitySavedSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Niveau d\'activité enregistré : {level}'**
+  String profileActivitySavedSnackbar(String level);
+
+  /// No description provided for @profileDietSavedSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Régime alimentaire enregistré : {diet}'**
+  String profileDietSavedSnackbar(String diet);
+
+  /// No description provided for @profileDietStyleSavedSnackbar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartition des macros enregistrée : {style}'**
+  String profileDietStyleSavedSnackbar(String style);
+
   /// Nom de l'application
   ///
   /// In fr, this message translates to:
@@ -917,7 +947,7 @@ abstract class AppLocalizations {
   /// No description provided for @authSignUpWelcome.
   ///
   /// In fr, this message translates to:
-  /// **'🎉 Bienvenue ! Ton compte est créé.\n📧 Ouvre ta boîte mail et clique sur le lien de confirmation, puis reviens te connecter ici.'**
+  /// **'🎉 Bienvenue ! Ton compte est créé.\n📧 Ouvre ta boîte mail et clique sur le lien de confirmation, puis reviens te connecter ici. Ça arrive généralement vite, mais compte parfois quelques minutes — pense aussi à vérifier tes spams.'**
   String get authSignUpWelcome;
 
   /// No description provided for @authSignInSuccess.
@@ -937,6 +967,18 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'📧 Si un compte existe pour cet email, tu vas recevoir un lien pour réinitialiser ton mot de passe. Pense à vérifier tes spams.'**
   String get authResetPasswordSent;
+
+  /// No description provided for @authResendConfirmation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renvoyer'**
+  String get authResendConfirmation;
+
+  /// No description provided for @authConfirmationResent.
+  ///
+  /// In fr, this message translates to:
+  /// **'📧 Email de confirmation renvoyé — pense aussi à vérifier tes spams.'**
+  String get authConfirmationResent;
 
   /// No description provided for @authGoogleSignInFailed.
   ///

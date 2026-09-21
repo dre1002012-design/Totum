@@ -2,7 +2,7 @@ name: totum_app
 description: Application Totum – Suivi nutrition et bien-être
 publish_to: 'none'
 
-version: 1.2.8+49
+version: 1.2.9+50
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

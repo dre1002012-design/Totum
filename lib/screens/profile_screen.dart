@@ -38,6 +38,12 @@ String _dietLabel(Diet d, AppLocalizations l10n) => switch (d) {
       Diet.vegetalien => l10n.profileDietVegan,
     };
 
+/// Quelle fiche vient d'être validée — sert UNIQUEMENT à choisir le message
+/// du snackbar de confirmation (retour d'Alex, 21/09/2026 : "adapte-les bien
+/// à chaque élément... pour bien distinguer à chaque fois"). N'affecte
+/// jamais le calcul lui-même, seulement le texte affiché après coup.
+enum _SavedSetting { goal, measures, activity, diet, dietStyle, generic }
+
 /// 5 objectifs — la vignette/liste reste compacte (emoji/titre/indication
 /// chiffrée), mais chaque option garde son descriptif complet + conseils,
 /// accessibles via "En savoir plus" — une vraie valeur ajoutée, au même
@@ -513,6 +519,51 @@ class ProfileScreenState extends State<ProfileScreen> {
     return nutri.computeCalibratedGoals(profile);
   }
 
+  /// Message du snackbar de confirmation — un par fiche (retour d'Alex,
+  /// 21/09/2026 : "adapte-les bien à chaque élément... Objectif, Mesure,
+  /// Niveau d'activité, Régime, Répartition des macros, pour bien
+  /// distinguer à chaque fois"), plutôt que le même "Objectifs mis à jour ·
+  /// X kcal" générique quelle que soit la fiche utilisée. Lit les champs EN
+  /// MÉMOIRE (`_goal`/`_activityLevel`/`_diet`/`_dietStyle`) : au moment où
+  /// ceci s'exécute (après "Terminé"), ils portent déjà la valeur validée.
+  String _savedSettingMessage(AppLocalizations l10n, _SavedSetting s, double kcal) {
+    return switch (s) {
+      _SavedSetting.goal =>
+        l10n.profileGoalSavedSnackbar(goalOptionFor(_goal, l10n).title),
+      _SavedSetting.measures => l10n.profileMeasuresSavedSnackbar,
+      _SavedSetting.activity => l10n.profileActivitySavedSnackbar(
+          (_activityLevel ?? nutri.ActivityLevel.sedentary).titleFor(l10n)),
+      _SavedSetting.diet => l10n.profileDietSavedSnackbar(_dietLabel(_diet, l10n)),
+      _SavedSetting.dietStyle => l10n.profileDietStyleSavedSnackbar(_dietStyle.titleFor(l10n)),
+      _SavedSetting.generic => l10n.profileGoalsUpdatedSnackbar(kcal.round()),
+    };
+  }
+
+  /// Bouton maître — 2 styles visuellement distincts, pas seulement 2
+  /// textes (voir le commentaire au point d'appel) : plein accent = une
+  /// confirmation reste à faire, doux vert = déjà à jour ET déjà confirmé
+  /// au moins une fois. Reste toujours tapable (re-confirmer sans rien
+  /// changer est un geste valide — ex. rituel après la pesée du jour).
+  Widget _masterConfirmButton(AppLocalizations l10n) {
+    final needsConfirmation = _dirty || _lastValidatedAt == null;
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: FilledButton.icon(
+        style: FilledButton.styleFrom(
+          backgroundColor: needsConfirmation ? TotumColors.accent : TotumColors.positiveSoft,
+          foregroundColor: needsConfirmation ? Colors.white : TotumColors.positive,
+          elevation: needsConfirmation ? null : 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        ),
+        onPressed: () => _computeAndSave(),
+        icon: Icon(needsConfirmation ? Icons.check_rounded : Icons.check_circle_rounded),
+        label: Text(needsConfirmation ? l10n.profileConfirmGoals : l10n.profileGoalsSaved,
+            style: const TextStyle(fontWeight: FontWeight.w800)),
+      ),
+    );
+  }
+
   // Statut daté, factuel — pas de série/points/badge (voir
   // feedback_no_gamification) : juste QUAND la dernière confirmation
   // explicite a eu lieu, pour que "objectifs enregistrés" ne soit jamais
@@ -571,7 +622,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Future<void> _computeAndSave() async {
+  Future<void> _computeAndSave({_SavedSetting savedSetting = _SavedSetting.generic}) async {
     if (!_formKey.currentState!.validate()) return;
     final kg = _num(_weightCtrl);
     final cm = _num(_heightCtrl);
@@ -736,7 +787,7 @@ class ProfileScreenState extends State<ProfileScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(context.l10n.profileGoalsUpdatedSnackbar(finalKcal.round())),
+        content: Text(_savedSettingMessage(context.l10n, savedSetting, finalKcal)),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
       ),
@@ -1023,21 +1074,23 @@ class ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 22),
             _evolutionCarousel(),
             const SizedBox(height: 22),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: TotumColors.accent,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                ),
-                onPressed: () => _computeAndSave(),
-                icon: const Icon(Icons.check_rounded),
-                label: Text(_dirty ? l10n.profileConfirmGoals : l10n.profileGoalsSaved,
-                    style: const TextStyle(fontWeight: FontWeight.w800)),
-              ),
-            ),
+            // BUG CORRIGÉ (21/09/2026, retour d'Alex avec captures avant/
+            // après à l'appui) : ce bouton gardait EXACTEMENT le même rendu
+            // (orange plein, "Objectifs enregistrés ✓") qu'on ait déjà
+            // confirmé ou jamais touché à rien — un compte tout juste créé
+            // affichait "Objectifs enregistrés" alors que la légende
+            // juste en dessous disait "jamais confirmés" : contradiction
+            // visible sur les 2 captures. `_dirty` seul ne suffit pas ("le
+            // formulaire correspond à la dernière sauvegarde" est vrai par
+            // défaut sur un compte neuf, où aucune sauvegarde n'a jamais eu
+            // lieu) — il faut aussi `_lastValidatedAt`. Les 2 styles sont
+            // maintenant visuellement distincts (pas qu'un texte qui
+            // change) : plein orange = action à faire, doux vert = déjà à
+            // jour — même code couleur que la légende juste en dessous
+            // (`_validationStatusRow`), pour que l'ensemble se lise comme
+            // UN SEUL statut cohérent plutôt que 2 informations qui peuvent
+            // se contredire.
+            _masterConfirmButton(l10n),
             const SizedBox(height: 8),
             // Retour d'Alex (01/09/2026) : "j'ai peur que l'utilisateur ne
             // comprenne pas qu'il doit enregistrer ses objectifs plusieurs
@@ -2129,6 +2182,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     required String title,
     Widget Function(BuildContext, StateSetter)? pinned,
     required Widget Function(BuildContext, StateSetter, VoidCallback markDone) builder,
+    _SavedSetting savedSetting = _SavedSetting.generic,
   }) {
     final snapshot = _captureFormSnapshot();
     var committed = false;
@@ -2182,7 +2236,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         // Bouton "Terminé" pressé : c'est le SEUL geste qui valide et
         // sauvegarde réellement (voir le commentaire au-dessus de
         // `_captureFormSnapshot`).
-        _computeAndSave();
+        _computeAndSave(savedSetting: savedSetting);
       } else {
         // Fermeture SANS validation (balayage, tap en dehors, retour
         // matériel) : annule — les champs redeviennent ce qu'ils étaient à
@@ -2319,6 +2373,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     _openSheet(
       context,
       title: context.l10n.profileYourGoalTitle,
+      savedSetting: _SavedSetting.goal,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
       builder: (ctx, setSheetState, markDone) {
         return Column(
@@ -2450,7 +2505,8 @@ class ProfileScreenState extends State<ProfileScreen> {
       (Diet.vegetarien, Icons.eco_outlined, l10n.profileDietVegetarian),
       (Diet.vegetalien, Icons.grass_outlined, l10n.profileDietVegan),
     ];
-    _openSheet(context, title: l10n.profileDietTileLabel, builder: (ctx, setSheetState, markDone) {
+    _openSheet(context, title: l10n.profileDietTileLabel, savedSetting: _SavedSetting.diet,
+        builder: (ctx, setSheetState, markDone) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -2477,6 +2533,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     _openSheet(
       context,
       title: l10n.profileMeasuresSheetTitle,
+      savedSetting: _SavedSetting.measures,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
       builder: (ctx, setSheetState, markDone) {
         return Column(
@@ -2622,6 +2679,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     _openSheet(
       context,
       title: l10n.profileActivitySheetTitle,
+      savedSetting: _SavedSetting.activity,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
       builder: (ctx, setSheetState, markDone) {
         return Column(
@@ -2668,6 +2726,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     _openSheet(
       context,
       title: l10n.profileMacroSplitTileLabel,
+      savedSetting: _SavedSetting.dietStyle,
       pinned: (ctx, setSheetState) => _impactBanner(kcalAtOpen),
       builder: (ctx, setSheetState, markDone) {
         return Column(

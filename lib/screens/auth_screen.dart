@@ -35,7 +35,7 @@ class _AuthScreenState extends State<AuthScreen> {
   /// comme valeur par défaut (ce sont des `get`, pas des constantes) — d'où
   /// `Color?` résolu dans le corps plutôt qu'en valeur par défaut du
   /// paramètre.
-  void _showMessage(String text, {Color? color, int seconds = 4}) {
+  void _showMessage(String text, {Color? color, int seconds = 4, SnackBarAction? action}) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -44,11 +44,33 @@ class _AuthScreenState extends State<AuthScreen> {
         backgroundColor: color ?? TotumColors.positive,
         behavior: SnackBarBehavior.floating,
         duration: Duration(seconds: seconds),
+        action: action,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
       ),
     );
+  }
+
+  // Retour d'Alex (21/09/2026) : l'email de confirmation Supabase peut
+  // mettre plusieurs minutes à arriver (service d'envoi par défaut de
+  // Supabase — mutualisé, volontairement limité en débit, non prévu pour la
+  // production ; seule une config SMTP dédiée côté Supabase Studio
+  // corrigerait vraiment la latence, hors de portée de ce code). Ce qu'on
+  // contrôle depuis l'app : ne jamais laisser l'utilisateur bloqué sans
+  // recours si l'email tarde — un "Renvoyer" est proposé dès qu'il tente de
+  // se connecter avant confirmation (voir _signIn), plutôt que de le
+  // laisser deviner s'il doit réessayer, ré-attendre, ou recommencer une
+  // inscription.
+  Future<void> _resendConfirmationEmail(String email) async {
+    try {
+      await _client.auth.resend(type: OtpType.signup, email: email);
+      if (!mounted) return;
+      _showMessage(context.l10n.authConfirmationResent, seconds: 6);
+    } catch (e) {
+      if (!mounted) return;
+      _showMessage(_friendlyError(e), color: TotumColors.negative);
+    }
   }
 
   /// Traduit une erreur technique Supabase en message clair en français.
@@ -125,7 +147,20 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      _showMessage(_friendlyError(e), color: TotumColors.negative);
+      final l10n = context.l10n;
+      final isUnconfirmed = e.toString().toLowerCase().contains('email not confirmed');
+      _showMessage(
+        _friendlyError(e),
+        color: TotumColors.negative,
+        seconds: isUnconfirmed ? 8 : 4,
+        action: isUnconfirmed
+            ? SnackBarAction(
+                label: l10n.authResendConfirmation,
+                textColor: Colors.white,
+                onPressed: () => _resendConfirmationEmail(_emailController.text.trim()),
+              )
+            : null,
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

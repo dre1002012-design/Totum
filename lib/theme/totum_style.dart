@@ -86,6 +86,10 @@ class TotumColors {
   // éclaircis en sombre : un vert/rouge saturé devient terne sur fond noir.
   static Color get positive => _isDark ? const Color(0xFF3DB673) : const Color(0xFF1F9254);
   static Color get negative => _isDark ? const Color(0xFFF06B5C) : const Color(0xFFD84C3E);
+
+  // positive à la même intensité qu'accentSoft (~12%/~20%) — fond discret
+  // pour un état "déjà validé, rien à faire", jamais un CTA à part entière.
+  static Color get positiveSoft => _isDark ? const Color(0x333DB673) : const Color(0x1F1F9254);
 }
 
 /// Rampe de progression — LA seule logique de remplissage progressif de
