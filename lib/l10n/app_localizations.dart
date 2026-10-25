@@ -8277,7 +8277,7 @@ abstract class AppLocalizations {
   /// No description provided for @jrnlFilterPersonalFoods.
   ///
   /// In fr, this message translates to:
-  /// **'Aliments perso'**
+  /// **'Aliments'**
   String get jrnlFilterPersonalFoods;
 
   /// No description provided for @jrnlFilterRecipes.
@@ -8357,6 +8357,444 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Évolution du score'**
   String get bilanScoreTrendTitle;
+
+  /// No description provided for @jrnlQuickAddedSnack.
+  ///
+  /// In fr, this message translates to:
+  /// **'✓ {name} · {grams} g → {meal}'**
+  String jrnlQuickAddedSnack(String name, String grams, String meal);
+
+  /// No description provided for @jrnlUndo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get jrnlUndo;
+
+  /// No description provided for @jrnlQuickAddTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajout rapide ({grams} g)'**
+  String jrnlQuickAddTooltip(String grams);
+
+  /// No description provided for @jrnlTabFoods.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aliments'**
+  String get jrnlTabFoods;
+
+  /// No description provided for @jrnlBrandsRestaurantsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marques & restaurants'**
+  String get jrnlBrandsRestaurantsTitle;
+
+  /// No description provided for @jrnlBrandsRestaurantsEntry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marques & restaurants'**
+  String get jrnlBrandsRestaurantsEntry;
+
+  /// No description provided for @jrnlBrandsRestaurantsEntrySub.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits de marque et enseignes de restauration'**
+  String get jrnlBrandsRestaurantsEntrySub;
+
+  /// No description provided for @jrnlBrandsMatchesForQuery.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} résultat(s) dans Marques & restaurants'**
+  String jrnlBrandsMatchesForQuery(int count);
+
+  /// No description provided for @jrnlSegmentBrands.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marques'**
+  String get jrnlSegmentBrands;
+
+  /// No description provided for @jrnlSegmentRestaurants.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurants'**
+  String get jrnlSegmentRestaurants;
+
+  /// No description provided for @jrnlSearchHintUnified.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher un aliment, une recette…'**
+  String get jrnlSearchHintUnified;
+
+  /// No description provided for @jrnlAddingForDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajout au {date}'**
+  String jrnlAddingForDate(String date);
+
+  /// No description provided for @jrnlRecentHeader.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes aliments habituels'**
+  String get jrnlRecentHeader;
+
+  /// No description provided for @jrnlAllFoodsHeader.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toute la base'**
+  String get jrnlAllFoodsHeader;
+
+  /// No description provided for @jrnlProductsMatching.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits correspondants'**
+  String get jrnlProductsMatching;
+
+  /// No description provided for @jrnlChainsHeader.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enseignes'**
+  String get jrnlChainsHeader;
+
+  /// No description provided for @jrnlLastQtyHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière quantité utilisée'**
+  String get jrnlLastQtyHint;
+
+  /// No description provided for @commonMore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus d\'options'**
+  String get commonMore;
+
+  /// No description provided for @jrnlFavoritesEmptyHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun favori pour l\'instant.\nTouche le ♡ d\'un aliment pour le retrouver ici en un geste.'**
+  String get jrnlFavoritesEmptyHint;
+
+  /// No description provided for @shareProteinShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Protéines'**
+  String get shareProteinShort;
+
+  /// No description provided for @shareCarbsShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Glucides'**
+  String get shareCarbsShort;
+
+  /// No description provided for @shareFatShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lipides'**
+  String get shareFatShort;
+
+  /// No description provided for @shareProtein.
+  ///
+  /// In fr, this message translates to:
+  /// **'Protéines'**
+  String get shareProtein;
+
+  /// No description provided for @shareCarbs.
+  ///
+  /// In fr, this message translates to:
+  /// **'Glucides'**
+  String get shareCarbs;
+
+  /// No description provided for @shareFat.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lipides'**
+  String get shareFat;
+
+  /// No description provided for @shareFiber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fibres'**
+  String get shareFiber;
+
+  /// No description provided for @shareKickerMyPlate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon assiette'**
+  String get shareKickerMyPlate;
+
+  /// No description provided for @shareKickerMacros.
+  ///
+  /// In fr, this message translates to:
+  /// **'Macros'**
+  String get shareKickerMacros;
+
+  /// No description provided for @shareKickerMicros.
+  ///
+  /// In fr, this message translates to:
+  /// **'Micronutriments'**
+  String get shareKickerMicros;
+
+  /// No description provided for @shareKickerRecipe.
+  ///
+  /// In fr, this message translates to:
+  /// **'La recette'**
+  String get shareKickerRecipe;
+
+  /// No description provided for @shareKickerNaturo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le point naturo'**
+  String get shareKickerNaturo;
+
+  /// No description provided for @shareMacrosTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'D\'où vient l\'énergie ?'**
+  String get shareMacrosTitle;
+
+  /// No description provided for @shareMacrosSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour la portion de ce plat'**
+  String get shareMacrosSubtitle;
+
+  /// No description provided for @shareEnergyShare.
+  ///
+  /// In fr, this message translates to:
+  /// **'{pct} % de l\'énergie'**
+  String shareEnergyShare(int pct);
+
+  /// No description provided for @shareOfEfsaFiber.
+  ///
+  /// In fr, this message translates to:
+  /// **'{pct} % des 25 g/j'**
+  String shareOfEfsaFiber(int pct);
+
+  /// No description provided for @shareMacrosFootnote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Répartition calculée sur l\'énergie du plat (4 kcal/g protéines et glucides, 9 kcal/g lipides). Fibres : référence EFSA 25 g/j.'**
+  String get shareMacrosFootnote;
+
+  /// No description provided for @shareMicrosTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que ce plat t\'apporte'**
+  String get shareMicrosTitle;
+
+  /// No description provided for @shareNoMicroHighlight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun micronutriment n\'atteint 15 % des valeurs de référence sur cette portion.'**
+  String get shareNoMicroHighlight;
+
+  /// No description provided for @shareVnrFootnote.
+  ///
+  /// In fr, this message translates to:
+  /// **'% des valeurs nutritionnelles de référence (VNR adulte, règlement UE 1169/2011) pour la portion. Oméga-3 : référence EFSA 250 mg/j.'**
+  String get shareVnrFootnote;
+
+  /// No description provided for @shareIngredientsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans l\'assiette'**
+  String get shareIngredientsTitle;
+
+  /// No description provided for @shareIngredientsSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{grams} g au total — à enregistrer pour la refaire'**
+  String shareIngredientsSubtitle(int grams);
+
+  /// No description provided for @shareMoreIngredients.
+  ///
+  /// In fr, this message translates to:
+  /// **'+ {count} autre(s) ingrédient(s)'**
+  String shareMoreIngredients(int count);
+
+  /// No description provided for @shareNaturoTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que j\'en retiens'**
+  String get shareNaturoTitle;
+
+  /// No description provided for @shareCtaSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'💾 Enregistre ce post pour ta prochaine assiette'**
+  String get shareCtaSave;
+
+  /// No description provided for @shareCtaSend.
+  ///
+  /// In fr, this message translates to:
+  /// **'✈️ Envoie-le à quelqu\'un qui cherche des idées de repas'**
+  String get shareCtaSend;
+
+  /// No description provided for @shareScreenTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager sur Instagram'**
+  String get shareScreenTitle;
+
+  /// No description provided for @shareFormatCarousel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Carrousel'**
+  String get shareFormatCarousel;
+
+  /// No description provided for @shareFormatPost.
+  ///
+  /// In fr, this message translates to:
+  /// **'Post'**
+  String get shareFormatPost;
+
+  /// No description provided for @shareFormatStory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Story'**
+  String get shareFormatStory;
+
+  /// No description provided for @shareFormatReel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reel'**
+  String get shareFormatReel;
+
+  /// No description provided for @shareFormatCarouselDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'5 visuels 1080×1350 — le format le plus enregistré'**
+  String get shareFormatCarouselDesc;
+
+  /// No description provided for @shareFormatPostDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'1 visuel 1080×1350 tout-en-un'**
+  String get shareFormatPostDesc;
+
+  /// No description provided for @shareFormatStoryDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'1 visuel 1080×1920, zones Instagram respectées'**
+  String get shareFormatStoryDesc;
+
+  /// No description provided for @shareFormatReelDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'5 images 1080×1920 à importer dans l\'éditeur de Reels, avec ta musique'**
+  String get shareFormatReelDesc;
+
+  /// No description provided for @shareDishNameLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du plat'**
+  String get shareDishNameLabel;
+
+  /// No description provided for @shareAddPhoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter la photo du plat'**
+  String get shareAddPhoto;
+
+  /// No description provided for @shareChangePhoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer la photo'**
+  String get shareChangePhoto;
+
+  /// No description provided for @shareRemovePhoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer la photo'**
+  String get shareRemovePhoto;
+
+  /// No description provided for @shareHandleLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton compte Instagram'**
+  String get shareHandleLabel;
+
+  /// No description provided for @shareHandleHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'@ton.compte'**
+  String get shareHandleHint;
+
+  /// No description provided for @sharePaletteLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ambiance'**
+  String get sharePaletteLabel;
+
+  /// No description provided for @shareTotumMarkToggle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mention « Calculé avec Totum »'**
+  String get shareTotumMarkToggle;
+
+  /// No description provided for @shareCaptionLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Légende prête à coller'**
+  String get shareCaptionLabel;
+
+  /// No description provided for @shareCopyCaption.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier la légende'**
+  String get shareCopyCaption;
+
+  /// No description provided for @shareCaptionCopied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Légende copiée — colle-la dans Instagram'**
+  String get shareCaptionCopied;
+
+  /// No description provided for @shareExportButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter {count} visuel(s)'**
+  String shareExportButton(int count);
+
+  /// No description provided for @shareExporting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Création des visuels…'**
+  String get shareExporting;
+
+  /// No description provided for @shareError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible de créer les visuels : {error}'**
+  String shareError(String error);
+
+  /// No description provided for @shareDownloaded.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} visuel(s) téléchargé(s)'**
+  String shareDownloaded(int count);
+
+  /// No description provided for @shareTipsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour maximiser la portée'**
+  String get shareTipsTitle;
+
+  /// No description provided for @shareTipsBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Publie le carrousel avec la légende copiée (5 mots-dièse max., la limite Instagram). Les enregistrements et les envois en message privé font partie des signaux qu\'Instagram dit valoriser le plus : les deux appels à l\'action du dernier visuel sont là pour ça.'**
+  String get shareTipsBody;
+
+  /// No description provided for @shareMealButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager sur Instagram'**
+  String get shareMealButton;
+
+  /// No description provided for @shareEmptyMeal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute au moins un aliment à ce repas pour le partager.'**
+  String get shareEmptyMeal;
 }
 
 class _AppLocalizationsDelegate

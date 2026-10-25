@@ -44,6 +44,7 @@ dependencies:
   # depuis le build (plus de constante dupliquée à resynchroniser à la main
   # à chaque bump de version, source d'incohérence).
   package_info_plus: ^9.0.1
+  image_picker: ^1.2.4   # photo du plat pour la carte Instagram d'un repas (galerie uniquement : sélecteur système, aucune permission caméra supplémentaire)
 
 dev_dependencies:
   flutter_test:

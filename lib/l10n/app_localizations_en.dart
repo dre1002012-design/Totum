@@ -4933,7 +4933,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get jrnlFilterPersonalFoods => 'Personal foods';
+  String get jrnlFilterPersonalFoods => 'Foods';
 
   @override
   String get jrnlFilterRecipes => 'Recipes';
@@ -4977,4 +4977,255 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bilanScoreTrendTitle => 'Score trend';
+
+  @override
+  String jrnlQuickAddedSnack(String name, String grams, String meal) {
+    return '✓ $name · $grams g → $meal';
+  }
+
+  @override
+  String get jrnlUndo => 'Undo';
+
+  @override
+  String jrnlQuickAddTooltip(String grams) {
+    return 'Quick add ($grams g)';
+  }
+
+  @override
+  String get jrnlTabFoods => 'Foods';
+
+  @override
+  String get jrnlBrandsRestaurantsTitle => 'Brands & restaurants';
+
+  @override
+  String get jrnlBrandsRestaurantsEntry => 'Brands & restaurants';
+
+  @override
+  String get jrnlBrandsRestaurantsEntrySub =>
+      'Branded products and restaurant chains';
+
+  @override
+  String jrnlBrandsMatchesForQuery(int count) {
+    return '$count result(s) in Brands & restaurants';
+  }
+
+  @override
+  String get jrnlSegmentBrands => 'Brands';
+
+  @override
+  String get jrnlSegmentRestaurants => 'Restaurants';
+
+  @override
+  String get jrnlSearchHintUnified => 'Search a food, a recipe…';
+
+  @override
+  String jrnlAddingForDate(String date) {
+    return 'Adding to $date';
+  }
+
+  @override
+  String get jrnlRecentHeader => 'Your usual foods';
+
+  @override
+  String get jrnlAllFoodsHeader => 'Whole database';
+
+  @override
+  String get jrnlProductsMatching => 'Matching products';
+
+  @override
+  String get jrnlChainsHeader => 'Chains';
+
+  @override
+  String get jrnlLastQtyHint => 'Last quantity used';
+
+  @override
+  String get commonMore => 'More options';
+
+  @override
+  String get jrnlFavoritesEmptyHint =>
+      'No favorites yet.\nTap the ♡ on any food to find it here in one tap.';
+
+  @override
+  String get shareProteinShort => 'Protein';
+
+  @override
+  String get shareCarbsShort => 'Carbs';
+
+  @override
+  String get shareFatShort => 'Fat';
+
+  @override
+  String get shareProtein => 'Protein';
+
+  @override
+  String get shareCarbs => 'Carbohydrates';
+
+  @override
+  String get shareFat => 'Fat';
+
+  @override
+  String get shareFiber => 'Fiber';
+
+  @override
+  String get shareKickerMyPlate => 'My plate';
+
+  @override
+  String get shareKickerMacros => 'Macros';
+
+  @override
+  String get shareKickerMicros => 'Micronutrients';
+
+  @override
+  String get shareKickerRecipe => 'The recipe';
+
+  @override
+  String get shareKickerNaturo => 'Nutrition take';
+
+  @override
+  String get shareMacrosTitle => 'Where does the energy come from?';
+
+  @override
+  String get shareMacrosSubtitle => 'For one serving of this plate';
+
+  @override
+  String shareEnergyShare(int pct) {
+    return '$pct% of energy';
+  }
+
+  @override
+  String shareOfEfsaFiber(int pct) {
+    return '$pct% of 25 g/day';
+  }
+
+  @override
+  String get shareMacrosFootnote =>
+      'Split computed on the plate\'s energy (4 kcal/g protein and carbs, 9 kcal/g fat). Fiber: EFSA reference 25 g/day.';
+
+  @override
+  String get shareMicrosTitle => 'What this plate gives you';
+
+  @override
+  String get shareNoMicroHighlight =>
+      'No micronutrient reaches 15% of reference values in this serving.';
+
+  @override
+  String get shareVnrFootnote =>
+      '% of EU nutrient reference values (adult, Regulation 1169/2011) per serving. Omega-3: EFSA reference 250 mg/day.';
+
+  @override
+  String get shareIngredientsTitle => 'On the plate';
+
+  @override
+  String shareIngredientsSubtitle(int grams) {
+    return '$grams g in total — save it to make it again';
+  }
+
+  @override
+  String shareMoreIngredients(int count) {
+    return '+ $count more ingredient(s)';
+  }
+
+  @override
+  String get shareNaturoTitle => 'My takeaways';
+
+  @override
+  String get shareCtaSave => '💾 Save this post for your next plate';
+
+  @override
+  String get shareCtaSend => '✈️ Send it to someone looking for meal ideas';
+
+  @override
+  String get shareScreenTitle => 'Share on Instagram';
+
+  @override
+  String get shareFormatCarousel => 'Carousel';
+
+  @override
+  String get shareFormatPost => 'Post';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFormatReel => 'Reel';
+
+  @override
+  String get shareFormatCarouselDesc =>
+      '5 visuals 1080×1350 — the most saved format';
+
+  @override
+  String get shareFormatPostDesc => '1 all-in-one visual 1080×1350';
+
+  @override
+  String get shareFormatStoryDesc =>
+      '1 visual 1080×1920, Instagram safe zones respected';
+
+  @override
+  String get shareFormatReelDesc =>
+      '5 images 1080×1920 to import into the Reels editor, with your music';
+
+  @override
+  String get shareDishNameLabel => 'Dish name';
+
+  @override
+  String get shareAddPhoto => 'Add a photo of the dish';
+
+  @override
+  String get shareChangePhoto => 'Change photo';
+
+  @override
+  String get shareRemovePhoto => 'Remove photo';
+
+  @override
+  String get shareHandleLabel => 'Your Instagram handle';
+
+  @override
+  String get shareHandleHint => '@your.handle';
+
+  @override
+  String get sharePaletteLabel => 'Style';
+
+  @override
+  String get shareTotumMarkToggle => '\"Computed with Totum\" mention';
+
+  @override
+  String get shareCaptionLabel => 'Ready-to-paste caption';
+
+  @override
+  String get shareCopyCaption => 'Copy caption';
+
+  @override
+  String get shareCaptionCopied => 'Caption copied — paste it in Instagram';
+
+  @override
+  String shareExportButton(int count) {
+    return 'Export $count visual(s)';
+  }
+
+  @override
+  String get shareExporting => 'Creating visuals…';
+
+  @override
+  String shareError(String error) {
+    return 'Could not create the visuals: $error';
+  }
+
+  @override
+  String shareDownloaded(int count) {
+    return '$count visual(s) downloaded';
+  }
+
+  @override
+  String get shareTipsTitle => 'To maximize reach';
+
+  @override
+  String get shareTipsBody =>
+      'Post the carousel with the copied caption (5 hashtags max, Instagram\'s limit). Saves and DM sends are among the signals Instagram says it values most: the two calls to action on the last visual are there for that.';
+
+  @override
+  String get shareMealButton => 'Share on Instagram';
+
+  @override
+  String get shareEmptyMeal =>
+      'Add at least one food to this meal to share it.';
 }

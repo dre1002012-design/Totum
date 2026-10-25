@@ -4975,7 +4975,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get jrnlFilterPersonalFoods => 'Aliments perso';
+  String get jrnlFilterPersonalFoods => 'Aliments';
 
   @override
   String get jrnlFilterRecipes => 'Recettes';
@@ -5020,4 +5020,256 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get bilanScoreTrendTitle => 'Évolution du score';
+
+  @override
+  String jrnlQuickAddedSnack(String name, String grams, String meal) {
+    return '✓ $name · $grams g → $meal';
+  }
+
+  @override
+  String get jrnlUndo => 'Annuler';
+
+  @override
+  String jrnlQuickAddTooltip(String grams) {
+    return 'Ajout rapide ($grams g)';
+  }
+
+  @override
+  String get jrnlTabFoods => 'Aliments';
+
+  @override
+  String get jrnlBrandsRestaurantsTitle => 'Marques & restaurants';
+
+  @override
+  String get jrnlBrandsRestaurantsEntry => 'Marques & restaurants';
+
+  @override
+  String get jrnlBrandsRestaurantsEntrySub =>
+      'Produits de marque et enseignes de restauration';
+
+  @override
+  String jrnlBrandsMatchesForQuery(int count) {
+    return '$count résultat(s) dans Marques & restaurants';
+  }
+
+  @override
+  String get jrnlSegmentBrands => 'Marques';
+
+  @override
+  String get jrnlSegmentRestaurants => 'Restaurants';
+
+  @override
+  String get jrnlSearchHintUnified => 'Rechercher un aliment, une recette…';
+
+  @override
+  String jrnlAddingForDate(String date) {
+    return 'Ajout au $date';
+  }
+
+  @override
+  String get jrnlRecentHeader => 'Tes aliments habituels';
+
+  @override
+  String get jrnlAllFoodsHeader => 'Toute la base';
+
+  @override
+  String get jrnlProductsMatching => 'Produits correspondants';
+
+  @override
+  String get jrnlChainsHeader => 'Enseignes';
+
+  @override
+  String get jrnlLastQtyHint => 'Dernière quantité utilisée';
+
+  @override
+  String get commonMore => 'Plus d\'options';
+
+  @override
+  String get jrnlFavoritesEmptyHint =>
+      'Aucun favori pour l\'instant.\nTouche le ♡ d\'un aliment pour le retrouver ici en un geste.';
+
+  @override
+  String get shareProteinShort => 'Protéines';
+
+  @override
+  String get shareCarbsShort => 'Glucides';
+
+  @override
+  String get shareFatShort => 'Lipides';
+
+  @override
+  String get shareProtein => 'Protéines';
+
+  @override
+  String get shareCarbs => 'Glucides';
+
+  @override
+  String get shareFat => 'Lipides';
+
+  @override
+  String get shareFiber => 'Fibres';
+
+  @override
+  String get shareKickerMyPlate => 'Mon assiette';
+
+  @override
+  String get shareKickerMacros => 'Macros';
+
+  @override
+  String get shareKickerMicros => 'Micronutriments';
+
+  @override
+  String get shareKickerRecipe => 'La recette';
+
+  @override
+  String get shareKickerNaturo => 'Le point naturo';
+
+  @override
+  String get shareMacrosTitle => 'D\'où vient l\'énergie ?';
+
+  @override
+  String get shareMacrosSubtitle => 'Pour la portion de ce plat';
+
+  @override
+  String shareEnergyShare(int pct) {
+    return '$pct % de l\'énergie';
+  }
+
+  @override
+  String shareOfEfsaFiber(int pct) {
+    return '$pct % des 25 g/j';
+  }
+
+  @override
+  String get shareMacrosFootnote =>
+      'Répartition calculée sur l\'énergie du plat (4 kcal/g protéines et glucides, 9 kcal/g lipides). Fibres : référence EFSA 25 g/j.';
+
+  @override
+  String get shareMicrosTitle => 'Ce que ce plat t\'apporte';
+
+  @override
+  String get shareNoMicroHighlight =>
+      'Aucun micronutriment n\'atteint 15 % des valeurs de référence sur cette portion.';
+
+  @override
+  String get shareVnrFootnote =>
+      '% des valeurs nutritionnelles de référence (VNR adulte, règlement UE 1169/2011) pour la portion. Oméga-3 : référence EFSA 250 mg/j.';
+
+  @override
+  String get shareIngredientsTitle => 'Dans l\'assiette';
+
+  @override
+  String shareIngredientsSubtitle(int grams) {
+    return '$grams g au total — à enregistrer pour la refaire';
+  }
+
+  @override
+  String shareMoreIngredients(int count) {
+    return '+ $count autre(s) ingrédient(s)';
+  }
+
+  @override
+  String get shareNaturoTitle => 'Ce que j\'en retiens';
+
+  @override
+  String get shareCtaSave => '💾 Enregistre ce post pour ta prochaine assiette';
+
+  @override
+  String get shareCtaSend =>
+      '✈️ Envoie-le à quelqu\'un qui cherche des idées de repas';
+
+  @override
+  String get shareScreenTitle => 'Partager sur Instagram';
+
+  @override
+  String get shareFormatCarousel => 'Carrousel';
+
+  @override
+  String get shareFormatPost => 'Post';
+
+  @override
+  String get shareFormatStory => 'Story';
+
+  @override
+  String get shareFormatReel => 'Reel';
+
+  @override
+  String get shareFormatCarouselDesc =>
+      '5 visuels 1080×1350 — le format le plus enregistré';
+
+  @override
+  String get shareFormatPostDesc => '1 visuel 1080×1350 tout-en-un';
+
+  @override
+  String get shareFormatStoryDesc =>
+      '1 visuel 1080×1920, zones Instagram respectées';
+
+  @override
+  String get shareFormatReelDesc =>
+      '5 images 1080×1920 à importer dans l\'éditeur de Reels, avec ta musique';
+
+  @override
+  String get shareDishNameLabel => 'Nom du plat';
+
+  @override
+  String get shareAddPhoto => 'Ajouter la photo du plat';
+
+  @override
+  String get shareChangePhoto => 'Changer la photo';
+
+  @override
+  String get shareRemovePhoto => 'Retirer la photo';
+
+  @override
+  String get shareHandleLabel => 'Ton compte Instagram';
+
+  @override
+  String get shareHandleHint => '@ton.compte';
+
+  @override
+  String get sharePaletteLabel => 'Ambiance';
+
+  @override
+  String get shareTotumMarkToggle => 'Mention « Calculé avec Totum »';
+
+  @override
+  String get shareCaptionLabel => 'Légende prête à coller';
+
+  @override
+  String get shareCopyCaption => 'Copier la légende';
+
+  @override
+  String get shareCaptionCopied => 'Légende copiée — colle-la dans Instagram';
+
+  @override
+  String shareExportButton(int count) {
+    return 'Exporter $count visuel(s)';
+  }
+
+  @override
+  String get shareExporting => 'Création des visuels…';
+
+  @override
+  String shareError(String error) {
+    return 'Impossible de créer les visuels : $error';
+  }
+
+  @override
+  String shareDownloaded(int count) {
+    return '$count visuel(s) téléchargé(s)';
+  }
+
+  @override
+  String get shareTipsTitle => 'Pour maximiser la portée';
+
+  @override
+  String get shareTipsBody =>
+      'Publie le carrousel avec la légende copiée (5 mots-dièse max., la limite Instagram). Les enregistrements et les envois en message privé font partie des signaux qu\'Instagram dit valoriser le plus : les deux appels à l\'action du dernier visuel sont là pour ça.';
+
+  @override
+  String get shareMealButton => 'Partager sur Instagram';
+
+  @override
+  String get shareEmptyMeal =>
+      'Ajoute au moins un aliment à ce repas pour le partager.';
 }

@@ -1,8 +1,10 @@
 // lib/screens/journal_screen.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 import '../services/profile.dart'
     show NutritionTargets, Goals, computeAndSaveTargetsFromStoredProfile,
@@ -20,7 +22,10 @@ import '../theme/totum_style.dart';
 import '../l10n/app_localizations.dart';
 import '../l10n/l10n_ext.dart';
 import '../services/nutrient_labels.dart';
+import '../services/food_search.dart';
+import '../services/meal_share.dart' show buildMealShareData;
 import '../widgets/word_safe_text.dart';
+import 'meal_share_screen.dart';
 
 SupabaseClient get _supabaseClient => Supabase.instance.client;
 
@@ -61,6 +66,33 @@ int _scoreForQuery(String name, String q) {
   return n.length;
 }
 
+/// Index de recherche partagé par toutes les listes d'aliments de cet écran
+/// (voir services/food_search.dart) : nom affiché + tous les noms
+/// alternatifs connus (nom CIQUAL complet, traductions FR/EN, marque), pour
+/// qu'un aliment se trouve quelle que soit la langue ou le libellé tapé.
+final FoodSearchIndex _foodSearchIndex = FoodSearchIndex((o) {
+  final it = o as dynamic;
+  String raw = '';
+  try { raw = (it.name as String?) ?? ''; } catch (_) {}
+  if (o is foods_loader.FoodItem) {
+    return (displayNameOf(o, raw), [raw, o.nomGenerique, o.nameFr, o.nameEn, o.brand]);
+  }
+  return (raw, const <String?>[]);
+});
+
+/// Liste blanche des aliments bruts courants (assets/common_foods.json,
+/// déjà curée pour Conseils) — réutilisée comme signal de popularité en
+/// recherche : "lait" propose du lait de vache avant du lait de coco.
+Set<String> _commonFoodIds = const {};
+Future<void> _loadCommonFoodIds() async {
+  if (_commonFoodIds.isNotEmpty) return;
+  try {
+    final raw = await rootBundle.loadString('assets/common_foods.json');
+    final codes = (jsonDecode(raw) as Map)['codes'] as List;
+    _commonFoodIds = codes.map((c) => 'ciqual:$c').toSet();
+  } catch (_) {}
+}
+
 class _FoodStats {
   Map<String, Map<String, num>> map = {};
   Future<void> load() async {
@@ -74,17 +106,24 @@ class _FoodStats {
       } catch (_) {}
     }
   }
-  Future<void> bump(String id) async {
+  Future<void> bump(String id, {double? grams}) async {
     final now = DateTime.now().millisecondsSinceEpoch;
     final m = map[id] ?? {'count': 0, 'last': 0};
     m['count'] = (m['count'] ?? 0) + 1;
     m['last']  = now;
+    if (grams != null && grams > 0) m['g'] = grams;
     map[id] = m;
     final sp = await SharedPreferences.getInstance();
     await sp.setString('food_stats', jsonEncode(map));
   }
   int count(String id) => (map[id]?['count'] ?? 0).toInt();
   int last(String id)  => (map[id]?['last']  ?? 0).toInt();
+  /// Dernière quantité utilisée pour cet aliment (25/10/2026, audit
+  /// "ajout ultra rapide") : principe que l'étude de vitesse de saisie de
+  /// MacroFactor (FLSI 2025) identifie comme décisif — réajouter un aliment
+  /// habituel ne devrait jamais obliger à retaper sa quantité (ex. les 160 g
+  /// d'oeufs ou les 24 g de whey d'Alex, chaque matin).
+  double? lastGrams(String id) => (map[id]?['g'])?.toDouble();
 }
 
 // Bug corrigé (15/09/2026, retour utilisateur iOS/web : un aliment ajouté
@@ -500,7 +539,6 @@ bool _novaEstimeOf(dynamic it) {
 
 String? _pictogramOf(dynamic it) => it is foods_loader.FoodItem ? it.pictogramme : null;
 
-String? _nomGeneriqueOf(dynamic it) => it is foods_loader.FoodItem ? it.nomGenerique : null;
 
 /// Priorité 63 : déplacé dans services/foods_loader.dart (`displayNameOf`)
 /// pour être partagé avec conseils_screen.dart (ingrédients de recette) sans
@@ -842,6 +880,41 @@ class JournalScreenState extends State<JournalScreen> {
   // aller-retour Supabase à chaque changement d'onglet.
   static const _cacheAllTtl = Duration(minutes: 2);
   List<dynamic> _all = <dynamic>[];
+
+  // BUG CORRIGÉ (25/10/2026, retour d'Alex — "quand on ajoute une recette
+  // perso, ça ne l'ajoute pas directement, il faut changer de vignette et
+  // revenir") : exactement le pattern déjà corrigé pour les favoris le
+  // 15/09/2026 (voir FavoritesStore) — `_AddFoodPage` est une route
+  // Navigator séparée, un `setState()` ici ne la reconstruit jamais.
+  // Recettes, aliments perso et repas perso (créés/modifiés/supprimés)
+  // passaient tous par ce `setState()` muet. Ce compteur est désormais LA
+  // source de notification du catalogue : incrémenté à chaque mutation, la
+  // page d'ajout l'écoute directement (et s'en sert aussi comme clé de
+  // cache de ses listes calculées).
+  final ValueNotifier<int> _catalogVersion = ValueNotifier<int>(0);
+  void _catalogChanged() => _catalogVersion.value++;
+
+  /// Bonus personnel de pertinence en recherche : favoris, aliments déjà
+  /// utilisés (fréquence), aliments bruts courants, puis créations perso.
+  double _searchBoost(dynamic it, {bool favorites = true}) {
+    final id = ((it as dynamic).id as String?) ?? '';
+    var b = 0.0;
+    if (favorites && _fav.isFav(id)) b += 8;
+    b += (_stats.count(id).clamp(0, 15)) * 1.5;
+    if (_commonFoodIds.contains(id)) b += 6;
+    if (id.startsWith('custom:') || id.startsWith('recipe:')) b += 3;
+    if (id.startsWith('usda:')) b -= 2;
+    return b;
+  }
+
+  List<dynamic> _rankSearch(Iterable<dynamic> items, String q, {bool favorites = true}) =>
+      rankFoods<dynamic>(items, q,
+          keyOf: (it) => _foodSearchIndex.keyOf(it as Object),
+          boost: (it) => _searchBoost(it, favorites: favorites));
+
+  /// Clé de tri alphabétique pré-calculée (jamais renormalisée dans un
+  /// comparateur de tri — voir food_search.dart, section Performance).
+  String _sortKey(dynamic it) => _foodSearchIndex.keyOf(it as Object).primary;
   String _query = '';
   _SortMode _sortMode = _SortMode.frequent;
   // Pilote le rafraîchissement de la page d'ajout sans reconstruire l'onglet.
@@ -1100,7 +1173,10 @@ class JournalScreenState extends State<JournalScreen> {
     ];
     _cacheAll = list;
     _cacheAllAt = DateTime.now();
+    await _loadCommonFoodIds();
+    if (!mounted) return;
     setState(() => _all = list);
+    _catalogChanged();
   }
 
   /// Recalcule les valeurs nutritionnelles d'une recette depuis ses ingrédients.
@@ -1231,66 +1307,48 @@ class JournalScreenState extends State<JournalScreen> {
         // _visibleByDefaultInCommun ci-dessus), triée selon le mode choisi
         // (fréquent/récent/A→Z/Z→A), sans biais favoris. Dès qu'une
         // recherche est active, on cherche aussi parmi les aliments et
-        // recettes perso — avant, "Commun" les excluait toujours, y
-        // compris pendant une recherche par mot-clé. Le filtre USDA
-        // s'applique aussi pendant la recherche : la découverte de
-        // nouveaux aliments USDA passe par `_usdaMatches` (bascule dédiée),
-        // pas par une frappe directe dans "Commun".
+        // recettes perso. La découverte de nouveaux aliments USDA passe par
+        // `_usdaMatches` (bascule dédiée), pas par une frappe dans "Commun".
         base = q.isEmpty
             ? _all.where((it) =>
                 !_isPersonal(it) && !_isRecipe(it) && _visibleByDefaultInCommun(it))
             : _all.where(_visibleByDefaultInCommun);
         break;
     }
-    final arr = base.toList();
-    arr.sort((a, b) {
-      final an = (((a as dynamic).name) as String?) ?? '';
-      final bn = (((b as dynamic).name) as String?) ?? '';
-      // Recherche active : la pertinence prime, puis les favoris remontent
-      // en premier parmi les résultats (dans Commun uniquement). Hors
-      // recherche (affichage par défaut), aucun biais favoris — seul le
-      // mode de tri choisi s'applique, comme demandé.
-      if (q.isNotEmpty) {
-        final s = _scoreForQuery(an, q).compareTo(_scoreForQuery(bn, q));
-        if (s != 0) return s;
-        if (tabIndex == 0) {
-          bool favOf(dynamic x) {
-            try { return _fav.isFav(((x as dynamic).id as String)); }
-            catch (_) { return false; }
-          }
-          final fa = favOf(a), fb = favOf(b);
-          if (fa != fb) return fa ? -1 : 1;
-        }
-      }
-      switch (_sortMode) {
-        case _SortMode.frequent:
-          final s = _stats.count(((b as dynamic).id as String?) ?? '')
-              .compareTo(_stats.count(((a as dynamic).id as String?) ?? ''));
-          if (s != 0) return s;
-          break;
-        case _SortMode.recent:
-          final s = _stats.last(((b as dynamic).id as String?) ?? '')
-              .compareTo(_stats.last(((a as dynamic).id as String?) ?? ''));
-          if (s != 0) return s;
-          break;
-        case _SortMode.az:
-          final s = _norm(an).compareTo(_norm(bn));
-          if (s != 0) return s;
-          break;
-        case _SortMode.za:
-          final s = _norm(bn).compareTo(_norm(an));
-          if (s != 0) return s;
-          break;
-      }
-      if (q.isEmpty) return 0;
-      return _scoreForQuery(an, q).compareTo(_scoreForQuery(bn, q));
-    });
-    return q.isEmpty
-        ? arr
-        : arr.where((it) {
-            final n = _norm((((it as dynamic).name) as String?) ?? '');
-            return n.contains(_norm(q));
-          }).toList();
+
+    // Recherche active : moteur multi-mots partagé (food_search.dart) —
+    // pertinence d'abord, puis bonus personnel (favoris dans "Aliments"
+    // uniquement, fréquence d'usage partout).
+    if (q.isNotEmpty) return _rankSearch(base, q, favorites: tabIndex == 0);
+
+    return _sortBySortMode(base.toList());
+  }
+
+  /// Tri "liste par défaut" (sans recherche) selon le mode choisi dans le
+  /// tiroir de filtre — partagé par tous les onglets de la page d'ajout.
+  List<dynamic> _sortBySortMode(List<dynamic> arr) {
+    String idOf(dynamic x) => ((x as dynamic).id as String?) ?? '';
+    switch (_sortMode) {
+      case _SortMode.frequent:
+        arr.sort((a, b) {
+          final s = _stats.count(idOf(b)).compareTo(_stats.count(idOf(a)));
+          return s != 0 ? s : _sortKey(a).compareTo(_sortKey(b));
+        });
+        break;
+      case _SortMode.recent:
+        arr.sort((a, b) {
+          final s = _stats.last(idOf(b)).compareTo(_stats.last(idOf(a)));
+          return s != 0 ? s : _sortKey(a).compareTo(_sortKey(b));
+        });
+        break;
+      case _SortMode.az:
+        arr.sort((a, b) => _sortKey(a).compareTo(_sortKey(b)));
+        break;
+      case _SortMode.za:
+        arr.sort((a, b) => _sortKey(b).compareTo(_sortKey(a)));
+        break;
+    }
+    return arr;
   }
 
   /// Retrouve un aliment/recette dans la liste globale par son id.
@@ -1339,7 +1397,10 @@ class JournalScreenState extends State<JournalScreen> {
     );
   }
 
-  Future<void> _addToJournal(String meal, dynamic it, double grams) async {
+  /// Renvoie l'entrée ajoutée (même instance que celle du journal en
+  /// mémoire), une fois l'insertion Supabase terminée — utilisée pour
+  /// l'action "Annuler" de l'ajout rapide.
+  Future<Map<String, dynamic>> _addToJournal(String meal, dynamic it, double grams) async {
     double getD(dynamic v) => (v is num) ? v.toDouble() : 0.0;
     final f = grams / 100.0;
     final kcal  = getD(it.kcal100)  * f;
@@ -1350,11 +1411,12 @@ class JournalScreenState extends State<JournalScreen> {
     final name = (it.name as String?) ?? 'Aliment';
     final id   = (it.id   as String?) ?? 'custom:temp';
 
-    _journal[meal]!.add({
+    final entry = <String, dynamic>{
       'id': id, 'name': name, 'grams': grams,
       'kcal': kcal, 'prot': prot, 'carb': carb, 'fat': fat, 'fiber': fiber,
-    });
-    await _stats.bump(id);
+    };
+    _journal[meal]!.add(entry);
+    await _stats.bump(id, grams: grams);
 
     final micros = _microsSnapshot(it, grams);
 
@@ -1375,11 +1437,10 @@ class JournalScreenState extends State<JournalScreen> {
               .insert(row)
               .select('id')
               .single();
+          // L'id est rattaché à CETTE entrée précise, jamais à `list.last` :
+          // plusieurs ajouts rapides peuvent se chevaucher (25/10/2026).
           final entryId = inserted['id'];
-          final list = _journal[meal];
-          if (entryId != null && list != null && list.isNotEmpty) {
-            list.last['entry_id'] = entryId;
-          }
+          if (entryId != null) entry['entry_id'] = entryId;
         } catch (e) {
           // Priorité 66 (fiabilité hors ligne) : plutôt que de perdre
           // l'ajout, on le met en attente pour un rejeu automatique dès
@@ -1389,10 +1450,7 @@ class JournalScreenState extends State<JournalScreen> {
           // le modifie avant qu'il ait pu se synchroniser.
           debugPrint('Erreur ajout food_entries: $e');
           final opId = await PendingFoodOps.instance.enqueue('insert', row);
-          final list = _journal[meal];
-          if (list != null && list.isNotEmpty) {
-            list.last['pending_op_id'] = opId;
-          }
+          entry['pending_op_id'] = opId;
           _notifySyncFailure();
         }
       }
@@ -1405,6 +1463,7 @@ class JournalScreenState extends State<JournalScreen> {
     // Rafraîchit la vue quotidienne pour que l'aliment ajouté apparaisse
     // immédiatement (sans avoir à changer de jour et revenir).
     _dayViewKey.currentState?.refreshCurrentDate();
+    return entry;
   }
 
   /// Ajoute un aliment à un repas pour N'IMPORTE QUELLE date (passée incluse)
@@ -1446,7 +1505,7 @@ class JournalScreenState extends State<JournalScreen> {
       _notifySyncFailure();
     }
 
-    await _stats.bump(id);
+    await _stats.bump(id, grams: grams);
 
     if (ymd == _ymd(DateTime.now())) {
       // Date = aujourd'hui → on garde le comportement existant
@@ -1496,6 +1555,7 @@ class JournalScreenState extends State<JournalScreen> {
         date: date, kcal: dKcal, prot: dProt, carb: dCarb, fat: dFat, fiber: dFiber,
       );
     }
+    _dayViewKey.currentState?.refreshCurrentDate();
   }
 
   @override
@@ -1550,12 +1610,69 @@ class JournalScreenState extends State<JournalScreen> {
     }
   }
 
-  Future<void> _openFoodSheet(dynamic it, {String? presetMeal}) async {
+  /// Ajout unifié (fiche aliment, ajout rapide, ajout multiple) : le jour
+  /// même passe par [_addToJournal] (entrée annulable, entry_id connu),
+  /// une autre date par [_addEntryToDate]. Renvoie l'entrée créée pour
+  /// aujourd'hui, `null` pour une autre date.
+  Future<Map<String, dynamic>?> _addFood(
+      String meal, dynamic it, double grams, DateTime? date) async {
+    final d = date ?? DateTime.now();
+    if (_ymd(d) == _ymd(DateTime.now())) return _addToJournal(meal, it, grams);
+    await _addEntryToDate(meal, it, grams, d);
+    return null;
+  }
+
+  /// Confirmation visible d'un ajout + "Annuler" (25/10/2026) : l'ajout ne
+  /// bloque plus l'écran le temps de l'aller-retour réseau (la fiche se
+  /// ferme immédiatement, l'enregistrement continue en arrière-plan) — ce
+  /// retour visuel remplace l'attente comme preuve que c'est bien pris en
+  /// compte. "Annuler" attend la fin de l'insertion pour supprimer la BONNE
+  /// ligne côté serveur (jamais une suppression à l'aveugle).
+  void _showAddedFeedback(dynamic it, double grams, String meal,
+      Future<Map<String, dynamic>?> pending) {
+    if (!mounted) return;
+    final l10n = context.l10n;
+    final name = displayNameOf(it, ((it as dynamic).name as String?) ?? l10n.jrnlGenericFoodFallback);
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(SnackBar(
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 3),
+      content: Text(
+        l10n.jrnlQuickAddedSnack(name, grams.toStringAsFixed(0), _mealTypeLabel(meal, l10n)),
+        maxLines: 2, overflow: TextOverflow.ellipsis,
+      ),
+      action: SnackBarAction(
+        label: l10n.jrnlUndo,
+        onPressed: () async {
+          final entry = await pending;
+          if (entry == null || !mounted) return;
+          final list = _journal[meal];
+          final idx = list?.indexOf(entry) ?? -1;
+          await _removeEntry(meal, idx, entry, DateTime.now());
+          _dayViewKey.currentState?.refreshCurrentDate();
+        },
+      ),
+    ));
+  }
+
+  /// Ajout en un tap, avec la dernière quantité utilisée (100 g sinon).
+  Future<void> _quickAdd(dynamic it, String meal, DateTime? date) async {
+    final id = ((it as dynamic).id as String?) ?? '';
+    final grams = _stats.lastGrams(id) ?? 100.0;
+    final pending = _addFood(meal, it, grams, date);
+    final isToday = date == null || _ymd(date) == _ymd(DateTime.now());
+    _showAddedFeedback(it, grams, meal, isToday ? pending : Future.value(null));
+    await pending;
+  }
+
+  Future<void> _openFoodSheet(dynamic it, {String? presetMeal, DateTime? targetDate}) async {
     if (_targets == null) return;
     final T = _targets!;
-    double grams = 100;
+    final lastG = _stats.lastGrams(((it as dynamic).id as String?) ?? '');
+    double grams = lastG ?? 100;
     String meal = presetMeal ?? 'Déjeuner';
-    final qtyCtrl = TextEditingController(text: '100');
+    final qtyCtrl = TextEditingController(text: grams.toStringAsFixed(0));
     // Priorité 65 (audit global) : garde-fou anti double-tap — sans ça, un
     // double-tap sur "Ajouter" (fréquent sur connexion lente, exactement
     // quand l'utilisateur retape en pensant que rien ne s'est passé) déclenche
@@ -1749,6 +1866,18 @@ class JournalScreenState extends State<JournalScreen> {
                             // possibles ici, contrairement à une ligne de liste.
                           ),
                         ),
+                        // Déplacé ici depuis chaque ligne de liste (25/10/2026) :
+                        // 3 icônes par ligne (copier, cœur, chevron) brouillaient
+                        // la lecture — la copie reste disponible, au bon endroit.
+                        if (!_isPersonal(it) && !_isRecipe(it))
+                          IconButton(
+                            tooltip: ctx.l10n.jrnlCopyAsPersonalFoodTooltip,
+                            icon: Icon(Icons.copy_outlined, size: 20, color: TotumColors.textMuted),
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                              _openCustomDialog(prefillFrom: it);
+                            },
+                          ),
                         IconButton(
                           tooltip: _fav.isFav(
                                   ((it as dynamic).id as String? ?? ''))
@@ -1988,8 +2117,14 @@ class JournalScreenState extends State<JournalScreen> {
                           ? null
                           : () async {
                               setSheetState(() => submitting = true);
-                              await _addToJournal(meal, it, grams);
+                              final g = grams, m = meal;
                               if (ctx.mounted) Navigator.of(ctx).pop();
+                              final pending = _addFood(m, it, g, targetDate);
+                              final isToday = targetDate == null ||
+                                  _ymd(targetDate) == _ymd(DateTime.now());
+                              _showAddedFeedback(it, g, m,
+                                  isToday ? pending : Future.value(null));
+                              await pending;
                             },
                       label: Text(ctx.l10n.jrnlAddToJournal),
                     ),
@@ -2001,12 +2136,6 @@ class JournalScreenState extends State<JournalScreen> {
         );
       },
     );
-  }
-
-  /// La page d'ajout d'aliment (recherche + Commun/Favoris/Perso).
-  /// Ouverte via le bouton central « + » de la barre de navigation.
-  Widget _buildSearchScaffold(BuildContext context) {
-    return _AddFoodPage(parent: this);
   }
 
   /// L'onglet Journal affiche directement la vue quotidienne.
@@ -2039,17 +2168,24 @@ class JournalScreenState extends State<JournalScreen> {
       foodStats: _stats,
       customMeals: _customMeals.list,
       onAddCustomMeal: _addCustomMealToDate,
+      onOpenAddPage: (meal, date) => openAddPage(meal: meal, date: date),
     );
   }
 
-  /// Ouvre la page d'ajout d'aliment (appelée par le bouton central « + »).
-  Future<void> openAddPage() async {
+  /// Ouvre la page d'ajout d'aliment — bouton central « + » ET bouton « + »
+  /// de chaque repas du Journal (25/10/2026 : ces 2 boutons ouvraient jusqu'ici
+  /// 2 interfaces d'ajout DIFFÉRENTES — une page complète à onglets d'un côté,
+  /// une petite recherche sans onglets, sans favoris ni liste par défaut de
+  /// l'autre — source directe des questions des testeurs d'Alex). [meal] et
+  /// [date] présélectionnent le repas et le jour visés (date passée possible).
+  Future<void> openAddPage({String? meal, DateTime? date}) async {
     if (_all.isEmpty) {
       await _ensureFoodsLoaded();
     }
     if (!mounted) return;
     await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => _buildSearchScaffold(context)),
+      MaterialPageRoute(builder: (_) => _AddFoodPage(
+          parent: this, initialMeal: meal, targetDate: date)),
     );
     if (mounted) setState(() {});
   }
@@ -2274,6 +2410,7 @@ class JournalScreenState extends State<JournalScreen> {
     );
     await _customMeals.add(meal);
     if (mounted) setState(() {});
+    _catalogChanged();
   }
 
   /// Ajoute le contenu d'un repas perso à un jour/repas donné — même
@@ -2330,9 +2467,11 @@ class JournalScreenState extends State<JournalScreen> {
   final GlobalKey<_DayJournalViewState> _dayViewKey =
       GlobalKey<_DayJournalViewState>();
   String? _scanTargetMeal;
+  DateTime? _scanTargetDate;
 
-  Future<void> _openBarcodeScannerForMeal(String meal) async {
+  Future<void> _openBarcodeScannerForMeal(String meal, {DateTime? date}) async {
     _scanTargetMeal = meal;
+    _scanTargetDate = date;
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => BarcodeScanScreen(
@@ -2342,16 +2481,6 @@ class JournalScreenState extends State<JournalScreen> {
     );
     // _scanTargetMeal est remis à null dans _handleBarcode après usage,
     // pour rester disponible pendant l'ouverture de la fiche produit.
-  }
-
-  Future<void> _openBarcodeScanner() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => BarcodeScanScreen(
-          onBarcode: (code) async { await _handleBarcode(code); },
-        ),
-      ),
-    );
   }
 
   void _showErrorDialog(String title, String message) {
@@ -2769,8 +2898,10 @@ class JournalScreenState extends State<JournalScreen> {
         // 2) Ouverture de la fiche (utilise l'objet 'item' en mémoire,
         //    toujours correct peu importe l'état des caches)
         final targetMeal = _scanTargetMeal;
+        final targetDate = _scanTargetDate;
         _scanTargetMeal = null;
-        await _openFoodSheet(item, presetMeal: targetMeal);
+        _scanTargetDate = null;
+        await _openFoodSheet(item, presetMeal: targetMeal, targetDate: targetDate);
         // Rafraîchit la vue "jour" si elle est ouverte (le scan y ajoute).
         _dayViewKey.currentState?.refreshCurrentDate();
 
@@ -2815,6 +2946,7 @@ class JournalScreenState extends State<JournalScreen> {
             await _customMeals.add(meal);
           }
           if (mounted) setState(() {});
+          _catalogChanged();
         },
       ),
     ));
@@ -2952,9 +3084,13 @@ class JournalScreenState extends State<JournalScreen> {
   /// Choix du jour/repas où ajouter un repas perso — même schéma que
   /// "Copier ce repas", plus simple (pas de choix de destination, la source
   /// est déjà un modèle enregistré).
-  Future<void> _addMealTemplateDialog(_CustomMeal meal) async {
-    String targetMeal = 'Petit-déjeuner';
-    DateTime targetDate = DateTime.now();
+  Future<void> _addMealTemplateDialog(_CustomMeal meal,
+      {String? initialMeal, DateTime? initialDate}) async {
+    // Présélection du repas/jour déjà choisis dans la page d'ajout
+    // (25/10/2026) — avant, toujours "Petit-déjeuner, aujourd'hui", quel
+    // que soit le repas d'où l'on venait.
+    String targetMeal = initialMeal ?? 'Petit-déjeuner';
+    DateTime targetDate = initialDate ?? DateTime.now();
     final dateCtrl = TextEditingController(
         text: '${targetDate.day.toString().padLeft(2, '0')}/'
             '${targetDate.month.toString().padLeft(2, '0')}/'
@@ -3394,7 +3530,10 @@ class JournalScreenState extends State<JournalScreen> {
 class _BrandOrRestaurantTab extends StatefulWidget {
   final String sourceType; // 'marque' ou 'restaurant'
   final Future<void> Function(foods_loader.FoodItem food) onFoodSelected;
-  const _BrandOrRestaurantTab({required this.sourceType, required this.onFoodSelected});
+  /// Recherche reprise de la page d'ajout (raccourci "N résultats dans
+  /// Marques & restaurants").
+  final String initialQuery;
+  const _BrandOrRestaurantTab({required this.sourceType, required this.onFoodSelected, this.initialQuery = ''});
   @override
   State<_BrandOrRestaurantTab> createState() => _BrandOrRestaurantTabState();
 }
@@ -3413,6 +3552,7 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
   @override
   void initState() {
     super.initState();
+    _queryCtrl.text = widget.initialQuery;
     foods_loader.FoodsRepository.instance
         .loadUsdaFromAsset('assets/usda_foods.csv')
         .then((_) { if (mounted) setState(() => _ready = true); });
@@ -3570,6 +3710,29 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
     final filtered = q.isEmpty
         ? names
         : names.where((n) => n.toLowerCase().contains(q)).toList();
+    // Recherche d'un PRODUIT (pas seulement d'une enseigne) sans avoir à
+    // choisir l'enseigne d'abord (25/10/2026) : "big mac", "nuggets"...
+    final products = q.length < 2
+        ? const <foods_loader.FoodItem>[]
+        : rankFoods<foods_loader.FoodItem>(
+            foods_loader.FoodsRepository.instance.brandItems
+                .where((it) => it.sourceType == widget.sourceType),
+            q,
+            keyOf: (it) => _foodSearchIndex.keyOf(it),
+            limit: 60,
+          );
+    if (products.isNotEmpty) {
+      return ListView(
+        children: [
+          if (filtered.isNotEmpty) ...[
+            _sectionLabel(context.l10n.jrnlChainsHeader),
+            for (final name in filtered.take(5)) _chainTile(name),
+          ],
+          _sectionLabel(context.l10n.jrnlProductsMatching),
+          for (final food in products) _foodTile(food),
+        ],
+      );
+    }
     if (filtered.isEmpty) {
       return Center(
         child: Text(_ready ? context.l10n.jrnlNoChainFound : context.l10n.jrnlLoadingEllipsis,
@@ -3579,26 +3742,32 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
     return ListView.separated(
       itemCount: filtered.length,
       separatorBuilder: (_, __) => Divider(height: 1, color: TotumColors.outline),
-      itemBuilder: (ctx, i) {
-        final name = filtered[i];
-        return ListTile(
-          leading: Container(
-            width: 36, height: 36,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: TotumColors.accentSoft,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(_isRestaurant ? Icons.restaurant_outlined : Icons.storefront_outlined,
-                color: TotumColors.accent, size: 18),
-          ),
-          title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => _select(name),
-        );
-      },
+      itemBuilder: (ctx, i) => _chainTile(filtered[i]),
     );
   }
+
+  Widget _sectionLabel(String text) => Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+        child: Text(text.toUpperCase(),
+            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800,
+                letterSpacing: 0.6, color: TotumColors.textSecondary)),
+      );
+
+  Widget _chainTile(String name) => ListTile(
+        leading: Container(
+          width: 36, height: 36,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: TotumColors.accentSoft,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(_isRestaurant ? Icons.restaurant_outlined : Icons.storefront_outlined,
+              color: TotumColors.accent, size: 18),
+        ),
+        title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => _select(name),
+      );
 
   Widget _buildFoodList(List<foods_loader.FoodItem> foods) {
     if (foods.isEmpty) {
@@ -3608,36 +3777,37 @@ class _BrandOrRestaurantTabState extends State<_BrandOrRestaurantTab>
     }
     return ListView.builder(
       itemCount: foods.length,
-      itemBuilder: (ctx, i) {
-        final food = foods[i];
-        final pictogram = food.pictogramme;
-        final displayName = displayNameOf(food, food.name);
-        return ListTile(
-          leading: Container(
-            width: 38, height: 38,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: TotumColors.accentSoft,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(pictogram ?? '🍽️', style: const TextStyle(fontSize: 19)),
-          ),
-          title: WordSafeText(displayName, maxLines: 2, style: const TextStyle(fontSize: 14, height: 1.25)),
-          subtitle: Row(
-            children: [
-              Flexible(child: Text(_kcalLabel(food.kcal100),
-                  style: TextStyle(fontSize: 12, color: TotumColors.textSecondary))),
-              if (food.novaScore != null) ...[
-                const SizedBox(width: 8),
-                _NovaBadge(score: food.novaScore!, estime: food.novaEstime),
-              ],
-            ],
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-          minVerticalPadding: 8,
-          onTap: () => widget.onFoodSelected(food),
-        );
-      },
+      itemBuilder: (ctx, i) => _foodTile(foods[i]),
+    );
+  }
+
+  Widget _foodTile(foods_loader.FoodItem food) {
+    final pictogram = food.pictogramme;
+    final displayName = displayNameOf(food, food.name);
+    return ListTile(
+      leading: Container(
+        width: 38, height: 38,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: TotumColors.accentSoft,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(pictogram ?? '🍽️', style: const TextStyle(fontSize: 19)),
+      ),
+      title: WordSafeText(displayName, maxLines: 2, style: const TextStyle(fontSize: 14, height: 1.25)),
+      subtitle: Row(
+        children: [
+          Flexible(child: Text(_kcalLabel(food.kcal100),
+              style: TextStyle(fontSize: 12, color: TotumColors.textSecondary))),
+          if (food.novaScore != null) ...[
+            const SizedBox(width: 8),
+            _NovaBadge(score: food.novaScore!, estime: food.novaEstime),
+          ],
+        ],
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      minVerticalPadding: 8,
+      onTap: () => widget.onFoodSelected(food),
     );
   }
 }
@@ -4560,13 +4730,30 @@ class DayTotals {
   });
 }
 
-/// Page d'ajout d'aliment autonome, avec son PROPRE TabController local.
-/// Elle réutilise les méthodes et données du parent (même fichier, donc
-/// les membres privés restent accessibles), mais gère son affichage
-/// — onglets, tri, recherche — toute seule : rapide, sans désynchronisation.
+/// Page d'ajout d'aliment — LA seule interface d'ajout de l'app, ouverte
+/// aussi bien par le « + » central que par le « + » de chaque repas.
+///
+/// Refonte du 25/10/2026 (audit global, retours des testeurs d'Alex) :
+/// - 3 onglets fixes, tous visibles sans défilement : Aliments · Favoris ·
+///   Perso — le cœur de l'usage quotidien. Marques/Restaurants (usage
+///   annexe) quittent la barre d'onglets pour leur propre écran, accessible
+///   par une ligne d'entrée qui défile avec la liste (aucune place fixe
+///   perdue) et par un raccourci contextuel quand une recherche y trouve
+///   des produits.
+/// - Listes calculées UNE fois par état (requête, tri, filtres, catalogue)
+///   et seulement pour l'onglet affiché — avant, les 3 listes + 3 comptages
+///   étaient recalculés sur ~11 000 aliments à chaque rebuild (ouverture,
+///   frappe, changement d'onglet, cœur), cause directe de la latence du « + ».
+/// - Ajout en un tap (⊕) avec la dernière quantité utilisée, la page reste
+///   ouverte pour enchaîner (principe "speed mode" de MacroFactor, l'app la
+///   plus rapide de l'étude FLSI 2025).
 class _AddFoodPage extends StatefulWidget {
   final JournalScreenState parent;
-  const _AddFoodPage({required this.parent});
+  final String? initialMeal;
+  /// Jour visé (null = aujourd'hui). Un jour passé est possible depuis le
+  /// « + » d'un repas affiché à une autre date.
+  final DateTime? targetDate;
+  const _AddFoodPage({required this.parent, this.initialMeal, this.targetDate});
 
   @override
   State<_AddFoodPage> createState() => _AddFoodPageState();
@@ -4574,34 +4761,15 @@ class _AddFoodPage extends StatefulWidget {
 
 class _AddFoodPageState extends State<_AddFoodPage>
     with SingleTickerProviderStateMixin {
-  // 5 onglets (Priorité 40, correction d'Alex) : Marques/Restaurant vivent
-  // sur la MÊME barre que Commun/Favoris/Perso, pas dans un écran séparé
-  // accessible par un lien caché dans le tiroir de filtre.
-  late final TabController _tab = TabController(length: 5, vsync: this);
+  late final TabController _tab = TabController(length: 3, vsync: this);
   final TextEditingController _searchCtrl = TextEditingController();
 
-  // Refonte recherche (Priorité 38, retour d'Alex sur des captures d'écran
-  // d'une appli concurrente) : ces 2 préférences remplacent l'ancien bouton
-  // "recherche USDA" séparé (peu visible, retour d'Alex) — regroupées dans
-  // un tiroir de filtre avec le tri déjà existant (_SortMode), pour gagner
-  // en clarté et en espace écran. Persistées : un choix fait une fois reste.
+  // Préférences du tiroir de filtre (Priorités 38/40), persistées.
   bool _includeUsda = false;
   bool _includeCiqual = true;
   bool _showCategoryTabs = true;
-  // Priorité 40 (retour d'Alex, capture d'écran fournie) : bascule "Activer
-  // l'ajout multiple" — sélection de plusieurs aliments d'un coup dans
-  // l'onglet Commun, avec ajout groupé vers un repas choisi. Volontairement
-  // scopé au seul onglet Commun (widget dédié _MultiSelectFoodList, ne
-  // touche pas _FoodListView, partagé et déjà densément câblé sur 5
-  // onglets — risque déjà identifié précédemment si modifié à la volée).
   bool _multiSelectEnabled = false;
-  List<foods_loader.FoodItem> _usdaMatches = [];
 
-  // Priorité 50 (13/08/2026, retour d'Alex) : repas présélectionné en tête
-  // d'écran (remplace le titre statique "Ajouter un aliment") — tout
-  // aliment tapé dans n'importe quel onglet est ajouté directement à CE
-  // repas, sans repasser par le menu déroulant "Repas" de la fiche détail
-  // (qui reste modifiable au cas par cas, voir _openFoodSheet).
   static const _mealOptions = ['Petit-déjeuner', 'Déjeuner', 'Dîner', 'Collation'];
   static const _mealIcons = <String, IconData>{
     'Petit-déjeuner': Icons.free_breakfast_outlined,
@@ -4616,33 +4784,53 @@ class _AddFoodPageState extends State<_AddFoodPage>
     if (h < 21) return 'Dîner';
     return 'Collation';
   }
-  late String _selectedMeal = _defaultMealForNow();
+  late String _selectedMeal = widget.initialMeal ?? _defaultMealForNow();
 
-  // Priorité 50 (14/08/2026, retour d'Alex : "énormément de latence dans la
-  // barre de recherche avant que mon texte apparaisse", surtout côté web) —
-  // `_list(0)` trie jusqu'à ~3490 aliments CIQUAL à chaque frappe, et ce
-  // calcul tournait sur CHAQUE lettre tapée (TextField.onChanged synchrone),
-  // assez lourd pour retarder visiblement jusqu'au rendu du caractère saisi
-  // lui-même. Le texte tapé s'affiche toujours instantanément (géré en
-  // interne par `_searchCtrl`, indépendant de ceci) — seule la mise à jour
-  // des RÉSULTATS est différée de 220ms après la dernière frappe.
+  // Le texte tapé s'affiche toujours instantanément (géré par `_searchCtrl`) ;
+  // seule la mise à jour des résultats attend une courte pause de frappe.
   Timer? _searchDebounce;
+
+  // Cache des listes calculées (voir en-tête de classe).
+  final Map<String, List<dynamic>> _memo = {};
+  int _favVersion = 0;
 
   JournalScreenState get p => widget.parent;
 
-  // Voir le commentaire sur FavoritesStore : cette page est une route
-  // Navigator séparée de JournalScreenState, donc son onglet "Favoris" ne
-  // se met à jour que si CET écran écoute directement le store.
-  void _onFavChanged() { if (mounted) setState(() {}); }
+  bool get _isToday {
+    final d = widget.targetDate;
+    if (d == null) return true;
+    final n = DateTime.now();
+    return d.year == n.year && d.month == n.month && d.day == n.day;
+  }
+
+  // Cette page est une route Navigator séparée de JournalScreenState : elle
+  // écoute DIRECTEMENT les stores (favoris, catalogue) — jamais un setState()
+  // du parent, qui ne la reconstruirait pas (voir FavoritesStore).
+  void _onFavChanged() {
+    if (mounted) setState(() => _favVersion++);
+  }
+
+  void _onCatalogChanged() {
+    if (mounted) setState(_memo.clear);
+  }
 
   @override
   void initState() {
     super.initState();
-    _tab.addListener(() => setState(() {}));
     p._fav.addListener(_onFavChanged);
-    // On s'aligne sur les valeurs courantes du parent.
+    p._catalogVersion.addListener(_onCatalogChanged);
     _searchCtrl.text = p._query;
     _loadFilterPrefs();
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    _tab.dispose();
+    _searchCtrl.dispose();
+    p._fav.removeListener(_onFavChanged);
+    p._catalogVersion.removeListener(_onCatalogChanged);
+    super.dispose();
   }
 
   Future<void> _loadFilterPrefs() async {
@@ -4654,61 +4842,37 @@ class _AddFoodPageState extends State<_AddFoodPage>
     if (!mounted) return;
     setState(() {
       _includeUsda = includeUsda;
-      // Garde-fou : jamais les deux bases désactivées en même temps (sinon
-      // "Commun" n'a plus rien à montrer) — CIQUAL reprend la main si un
-      // état incohérent a été persisté (ne devrait pas arriver vu les
-      // garde-fous dans les setters, mais coûte rien à vérifier au chargement).
+      // Jamais les deux bases désactivées en même temps.
       _includeCiqual = includeCiqual || !includeUsda;
       _showCategoryTabs = showTabs;
       _multiSelectEnabled = multiSelect;
     });
-    if (_includeUsda) _refreshUsdaMatches();
   }
 
   Future<void> _setIncludeUsda(bool v) async {
-    // Bug corrigé (13/08/2026, retour d'Alex : "je sélectionne uniquement
-    // USDA, ça ne marche pas") : l'ancien garde-fou refusait SILENCIEUSEMENT
-    // le clic quand l'utilisateur décochait la 1re case alors que l'autre
-    // base était encore inactive — la case ne bougeait pas, sans aucun
-    // retour, et un "USDA uniquement" tenté dans le mauvais ordre de clic
-    // finissait avec les deux bases actives sans que rien ne l'indique.
-    // Remplacé par un bascule automatique de l'autre base : décocher USDA
-    // alors que CIQUAL est déjà inactif réactive CIQUAL au lieu de bloquer
-    // le tap — au moins une base reste toujours active, mais chaque clic
-    // produit un effet visible.
+    // Décocher la dernière base active réactive l'autre (jamais de clic
+    // refusé silencieusement — bug corrigé le 13/08/2026).
     setState(() {
       _includeUsda = v;
-      _usdaMatches = [];
       if (!v && !_includeCiqual) _includeCiqual = true;
     });
     if (_includeUsda) {
-      await foods_loader.FoodsRepository.instance
-          .loadUsdaFromAsset('assets/usda_foods.csv');
-      _refreshUsdaMatches();
+      await foods_loader.FoodsRepository.instance.loadUsdaFromAsset('assets/usda_foods.csv');
+      if (mounted) setState(() {});
     }
     final sp = await SharedPreferences.getInstance();
     await sp.setBool('addfood_include_usda', _includeUsda);
     await sp.setBool('addfood_include_ciqual', _includeCiqual);
   }
 
-  /// Priorité 40 (retour d'Alex, capture d'écran) : CIQUAL et USDA
-  /// deviennent 2 bascules indépendantes ("Base de données"), CIQUAL activé
-  /// par défaut — au lieu du seul "Inclure la base USDA" (CIQUAL toujours
-  /// actif en dur). Filtre directement `_list(0)` (voir usage), sans
-  /// toucher `_applyFilterSort` : la logique "USDA masqué par défaut sauf
-  /// favori/fréquent" (Priorité 40, bug favoris/récents) reste inchangée,
-  /// ce réglage ne fait qu'exclure CIQUAL en plus si décoché.
   Future<void> _setIncludeCiqual(bool v) async {
-    // Même correctif que _setIncludeUsda ci-dessus : plus de blocage
-    // silencieux, l'autre base se réactive automatiquement si besoin.
     setState(() {
       _includeCiqual = v;
       if (!v && !_includeUsda) _includeUsda = true;
     });
     if (_includeUsda) {
-      await foods_loader.FoodsRepository.instance
-          .loadUsdaFromAsset('assets/usda_foods.csv');
-      _refreshUsdaMatches();
+      await foods_loader.FoodsRepository.instance.loadUsdaFromAsset('assets/usda_foods.csv');
+      if (mounted) setState(() {});
     }
     final sp = await SharedPreferences.getInstance();
     await sp.setBool('addfood_include_ciqual', _includeCiqual);
@@ -4724,68 +4888,11 @@ class _AddFoodPageState extends State<_AddFoodPage>
   Future<void> _setShowCategoryTabs(bool v) async {
     setState(() {
       _showCategoryTabs = v;
-      // Onglets masqués = plus aucun moyen de taper/swiper vers Favoris/
-      // Perso (TabBar cachée + swipe désactivé, voir build()) — sans ce
-      // recentrage, un utilisateur qui masque les onglets alors qu'il était
-      // sur "Perso" resterait bloqué dessus sans pouvoir en sortir.
+      // Onglets masqués = plus de moyen d'en sortir : retour sur "Aliments".
       if (!v) _tab.index = 0;
     });
     final sp = await SharedPreferences.getInstance();
     await sp.setBool('addfood_show_tabs', v);
-  }
-
-  int _usdaSortCompare(foods_loader.FoodItem a, foods_loader.FoodItem b) {
-    switch (p._sortMode) {
-      case _SortMode.frequent:
-        final s = p._stats.count(b.id).compareTo(p._stats.count(a.id));
-        return s != 0 ? s : a.name.toLowerCase().compareTo(b.name.toLowerCase());
-      case _SortMode.recent:
-        final s = p._stats.last(b.id).compareTo(p._stats.last(a.id));
-        return s != 0 ? s : a.name.toLowerCase().compareTo(b.name.toLowerCase());
-      case _SortMode.az:
-        return a.name.toLowerCase().compareTo(b.name.toLowerCase());
-      case _SortMode.za:
-        return b.name.toLowerCase().compareTo(a.name.toLowerCase());
-    }
-  }
-
-  void _refreshUsdaMatches() {
-    final q = p._query.trim();
-    setState(() {
-      if (!_includeUsda) {
-        _usdaMatches = [];
-      } else if (q.length >= 2) {
-        // Bug corrigé (14/08/2026, retour d'Alex — "USDA uniquement" ne
-        // montrait qu'une poignée d'aliments) : la limite de 20 avait un
-        // sens quand USDA venait juste EN RENFORT de CIQUAL (éviter de
-        // noyer les résultats CIQUAL) — mais en mode "USDA uniquement",
-        // rien ne justifie de tronquer la recherche elle-même.
-        _usdaMatches = foods_loader.FoodsRepository.instance
-            .searchUsda(q, limit: _includeCiqual ? 20 : 100000);
-      } else {
-        // Bug corrigé (14/08/2026, retour d'Alex : "je sélectionne
-        // uniquement USDA, je vois rien du tout") : sans recherche active,
-        // aucun aliment USDA "général" n'apparaissait jamais (seuls les
-        // favoris/déjà logués l'étaient, via _visibleByDefaultInCommun côté
-        // JournalScreenState) — cocher la case ne changeait donc rien tant
-        // que rien n'était tapé, indiscernable d'un filtre cassé.
-        //
-        // 2e bug corrigé le même jour : l'aperçu par défaut était plafonné
-        // à 60 aliments et toujours trié A→Z en dur — en pratique, la very
-        // grande quantité de "Alcoholic beverage, ..." (dizaines de
-        // variantes USDA, alphabétiquement en tête) remplissait à elle
-        // seule le plafond, laissant croire que le tri A→Z "s'arrêtait" et
-        // ignorant le mode de tri réellement choisi dans le tiroir de
-        // filtre. Plus de plafond, tri aligné sur `_sortMode` (comme le
-        // reste de "Commun") — la liste ListView.builder en aval est déjà
-        // paresseuse (construit seulement les lignes visibles), aucun coût
-        // de rendu à afficher les ~7800 aliments USDA au complet.
-        final all = List<foods_loader.FoodItem>.from(
-            foods_loader.FoodsRepository.instance.usdaItems);
-        all.sort(_usdaSortCompare);
-        _usdaMatches = all;
-      }
-    });
   }
 
   /// Fiche d'info CIQUAL vs USDA (Priorité 39) : permet un choix éclairé
@@ -4998,97 +5105,264 @@ class _AddFoodPageState extends State<_AddFoodPage>
     );
   }
 
-  @override
-  void dispose() {
-    _searchDebounce?.cancel();
-    _tab.dispose();
-    _searchCtrl.dispose();
-    p._fav.removeListener(_onFavChanged);
-    super.dispose();
+  /// Liste mise en cache par état : recalculée seulement si la requête, le
+  /// tri, un filtre, le catalogue ou les favoris ont changé.
+  List<dynamic> _cached(String name, List<dynamic> Function() compute) {
+    final key = '$name|${p._query.trim()}|${p._sortMode}|$_includeUsda|'
+        '$_includeCiqual|${p._persoFilter}|${p._onlyLibraryRecipes}|'
+        '${p._catalogVersion.value}|$_favVersion|${p._all.length}';
+    final hit = _memo[key];
+    if (hit != null) return hit;
+    // Une seule génération en mémoire par liste (pas d'accumulation).
+    _memo.removeWhere((k, _) => k.startsWith('$name|'));
+    return _memo[key] = compute();
   }
 
-  // Récupère la liste filtrée en s'assurant que le parent a les bons critères.
-  List<dynamic> _list(int tab) => p._applyFilterSort(tab);
-
-  /// Liste "Commun" combinant CIQUAL/perso/recettes (`_list(0)`, géré côté
-  /// JournalScreenState) et la découverte USDA (`_usdaMatches`, géré ici —
-  /// recherche live ou aperçu par défaut, voir _refreshUsdaMatches).
-  ///
-  /// Bug corrigé (14/08/2026, retour d'Alex : "si je sélectionne les deux,
-  /// je ne vois pas l'USDA") : l'ancienne version concaténait bêtement
-  /// [...CIQUAL, ...USDA] SANS re-trier par pertinence combinée — pendant
-  /// une recherche avec beaucoup de résultats CIQUAL, les résultats USDA
-  /// pourtant présents se retrouvaient rejetés tout en bas de la liste,
-  /// indiscernables d'une absence totale. Un doublon était aussi possible
-  /// (un aliment USDA déjà favori/logué pouvait apparaître à la fois via
-  /// `_list(0)` et via `_usdaMatches`) — dédoublonné par id ici.
-  List<dynamic> _commonItems() {
-    final seenIds = <String>{};
-    final merged = <dynamic>[];
-    // Bug corrigé (14/08/2026, retour d'Alex : "en recherche USDA
-    // uniquement, on voit encore des aliments perso/recettes/scannés qui
-    // ne font pas partie de la base USDA") : l'exclusion ne visait que
-    // CIQUAL (`_isCiqualFood`) — les aliments perso/recettes/scannés
-    // (préfixes `custom:`/`recipe:`) ne sont ni CIQUAL ni USDA, donc
-    // n'étaient jamais filtrés par ce test, quel que soit le réglage.
-    // "USDA uniquement" est désormais réellement exclusif : ne garde QUE
-    // les aliments `usda:`. Le mode normal (CIQUAL actif, seul ou avec
-    // USDA) garde le comportement existant — les perso/recettes restent
-    // volontairement surfacés pendant une recherche (voir _applyFilterSort).
-    final usdaOnly = _includeUsda && !_includeCiqual;
-    for (final it in [..._list(0), if (_includeUsda) ..._usdaMatches]) {
-      final id = ((it as dynamic).id as String?) ?? '';
-      if (id.isNotEmpty && !seenIds.add(id)) continue;
-      if (usdaOnly) {
-        if (!_isUsdaFood(it)) continue;
-      } else if (!_includeCiqual && _isCiqualFood(it)) {
-        continue;
-      }
-      merged.add(it);
-    }
-    final q = p._query.trim();
-    if (q.isNotEmpty) {
-      merged.sort((a, b) {
-        final an = (((a as dynamic).name) as String?) ?? '';
-        final bn = (((b as dynamic).name) as String?) ?? '';
-        return _scoreForQuery(an, q).compareTo(_scoreForQuery(bn, q));
-      });
-    } else {
-      // Bug corrigé (14/08/2026, retour d'Alex) : CIQUAL (déjà trié par
-      // _list()) et USDA (déjà trié par _usdaSortCompare()) arrivaient ici
-      // chacun DÉJÀ trié séparément puis simplement concaténés — avec les
-      // deux bases actives, ça donnait 2 blocs alphabétiques distincts
-      // (tout CIQUAL de A à Z, PUIS tout USDA de A à Z) au lieu d'un seul
-      // tri global mélangeant les deux. Retrie l'ensemble fusionné avec le
-      // même critère (`p._sortMode`) pour un vrai tri unique, cohérent que
-      // CIQUAL et/ou USDA soient actifs.
-      merged.sort((a, b) {
-        final an = (((a as dynamic).name) as String?) ?? '';
-        final bn = (((b as dynamic).name) as String?) ?? '';
-        final aid = ((a as dynamic).id as String?) ?? '';
-        final bid = ((b as dynamic).id as String?) ?? '';
-        switch (p._sortMode) {
-          case _SortMode.frequent:
-            final s = p._stats.count(bid).compareTo(p._stats.count(aid));
-            return s != 0 ? s : _norm(an).compareTo(_norm(bn));
-          case _SortMode.recent:
-            final s = p._stats.last(bid).compareTo(p._stats.last(aid));
-            return s != 0 ? s : _norm(an).compareTo(_norm(bn));
-          case _SortMode.az:
-            return _norm(an).compareTo(_norm(bn));
-          case _SortMode.za:
-            return _norm(bn).compareTo(_norm(an));
+  /// Onglet "Aliments" : base commune (CIQUAL par défaut, USDA en option
+  /// via le tiroir de filtre) + aliments perso/recettes pendant une
+  /// recherche, triés par pertinence (voir food_search.dart).
+  List<dynamic> _commonItems() => _cached('common', () {
+        final q = p._query.trim();
+        final usdaOnly = _includeUsda && !_includeCiqual;
+        bool keep(dynamic it) {
+          if (usdaOnly) return _isUsdaFood(it);
+          return _includeCiqual || !_isCiqualFood(it);
         }
+
+        final repo = foods_loader.FoodsRepository.instance;
+        final seen = <String>{};
+        final base = <dynamic>[];
+        void addAll(Iterable<dynamic> items) {
+          for (final it in items) {
+            final id = ((it as dynamic).id as String?) ?? '';
+            if (id.isNotEmpty && !seen.add(id)) continue;
+            if (keep(it)) base.add(it);
+          }
+        }
+
+        if (q.isEmpty) {
+          addAll(p._all.where((it) =>
+              !p._isPersonal(it) && !p._isRecipe(it) && p._visibleByDefaultInCommun(it)));
+          if (_includeUsda) addAll(repo.usdaItems);
+          return p._sortBySortMode(base);
+        }
+        addAll(p._all.where(p._visibleByDefaultInCommun));
+        if (_includeUsda) addAll(repo.usdaItems);
+        return p._rankSearch(base, q);
       });
-    }
-    return merged;
+
+  List<dynamic> _favoriteItems() => _cached('fav', () => p._applyFilterSort(1));
+  List<dynamic> _persoItems() => _cached('perso', () => p._applyFilterSort(2));
+
+  /// Produits de marque/restaurant correspondant à la recherche en cours —
+  /// sert uniquement au raccourci "N résultats dans Marques & restaurants".
+  List<dynamic> _brandMatches() => _cached('brands', () {
+        final q = p._query.trim();
+        if (q.length < 2) return const [];
+        return p._rankSearch(foods_loader.FoodsRepository.instance.brandItems, q,
+            favorites: false);
+      });
+
+  List<_CustomMeal> _matchingMeals() {
+    final q = p._query.trim();
+    if (q.isEmpty) return const [];
+    return _cached('meals', () => p._rankSearch(p._customMeals.list, q, favorites: false))
+        .cast<_CustomMeal>();
   }
+
+  void _openFood(dynamic it) =>
+      p._openFoodSheet(it, presetMeal: _selectedMeal, targetDate: widget.targetDate);
+
+  void _quickAdd(dynamic it) => p._quickAdd(it, _selectedMeal, widget.targetDate);
+
+  Future<void> _openBrandsPage() async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => _BrandsRestaurantsPage(
+        initialQuery: p._query.trim(),
+        onFoodSelected: (food) async => _openFood(food),
+      ),
+    ));
+  }
+
+  String _dateLabel(BuildContext context) {
+    final d = widget.targetDate!;
+    final loc = Localizations.localeOf(context).toLanguageTag();
+    return context.l10n.jrnlAddingForDate(DateFormat('EEEE d MMMM', loc).format(d));
+  }
+
+  /// Ligne d'entrée vers Marques & restaurants, en tête de la liste
+  /// "Aliments" : défile avec la liste, ne coûte aucune place fixe.
+  Widget _brandsEntry() {
+    final l10n = context.l10n;
+    final q = p._query.trim();
+    final matches = q.isEmpty ? 0 : _brandMatches().length;
+    if (q.isNotEmpty && matches == 0) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 6, 12, 2),
+      child: Material(
+        color: TotumColors.accentSoft,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: _openBrandsPage,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Row(
+              children: [
+                const Text('🏪', style: TextStyle(fontSize: 18)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    q.isEmpty ? l10n.jrnlBrandsRestaurantsEntry : l10n.jrnlBrandsMatchesForQuery(matches),
+                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: TotumColors.accent),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _mealsHeader(List<_CustomMeal> matches) {
+    if (matches.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(context.l10n.jrnlPersonalMealSegment,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: TotumColors.textSecondary)),
+          const SizedBox(height: 4),
+          for (final meal in matches.take(3))
+            Card(
+              margin: const EdgeInsets.symmetric(vertical: 3),
+              color: TotumColors.accentSoft,
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
+                dense: true,
+                leading: const Icon(Icons.bookmark, color: TotumColors.accent, size: 20),
+                title: Text(meal.name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                subtitle: Text(context.l10n.jrnlItemsAndKcal(meal.items.length, meal.totalKcal.toStringAsFixed(0))),
+                trailing: const Icon(Icons.add_circle_outline, color: TotumColors.accent),
+                onTap: () => p._addMealTemplateDialog(meal,
+                    initialMeal: _selectedMeal, initialDate: widget.targetDate),
+              ),
+            ),
+          Divider(height: 16, color: TotumColors.outline),
+        ],
+      ),
+    );
+  }
+
+  Widget _commonTab() {
+    final items = _commonItems();
+    final meals = _matchingMeals();
+    final header = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [_brandsEntry(), _mealsHeader(meals)],
+    );
+    if (_multiSelectEnabled) {
+      return Column(
+        children: [
+          header,
+          Expanded(
+            child: _MultiSelectFoodList(
+              items: items,
+              initialMeal: _selectedMeal,
+              onAddSelected: (selected, meal) async {
+                for (final it in selected) {
+                  final id = ((it as dynamic).id as String?) ?? '';
+                  await p._addFood(meal, it, p._stats.lastGrams(id) ?? 100, widget.targetDate);
+                }
+              },
+            ),
+          ),
+        ],
+      );
+    }
+    return _FoodListView(
+      items: items,
+      header: header,
+      isFav: (id) => p._fav.isFav(id),
+      onFavToggle: (id) => p._fav.toggle(id),
+      onTap: _openFood,
+      onQuickAdd: _quickAdd,
+      lastGrams: p._stats.lastGrams,
+      showCreateButton: false,
+    );
+  }
+
+  Widget _favoritesTab() => _FoodListView(
+        items: _favoriteItems(),
+        isFav: (id) => p._fav.isFav(id),
+        onFavToggle: (id) => p._fav.toggle(id),
+        onTap: _openFood,
+        onQuickAdd: _quickAdd,
+        lastGrams: p._stats.lastGrams,
+        showCreateButton: false,
+        emptyHint: context.l10n.jrnlFavoritesEmptyHint,
+      );
+
+  Widget _persoTab() => _FoodListView(
+        items: _persoItems(),
+        isFav: (id) => p._fav.isFav(id),
+        onFavToggle: (id) => p._fav.toggle(id),
+        onTap: _openFood,
+        onQuickAdd: _quickAdd,
+        lastGrams: p._stats.lastGrams,
+        showCreateButton: true,
+        persoFilter: p._persoFilter,
+        onPersoFilterChanged: (v) => setState(() => p._persoFilter = v),
+        persoCount: p._customs.list.length,
+        recipeCount: p._recipes.list.length,
+        onlyLibraryRecipes: p._onlyLibraryRecipes,
+        onOnlyLibraryChanged: (v) => setState(() => p._onlyLibraryRecipes = v),
+        libraryRecipeCount: p._recipes.list.where((r) => r.id.startsWith('recipe:totum_')).length,
+        onCreateCustom: () => p._openCustomDialog(),
+        onCreateRecipe: () => p._openRecipeEditor(),
+        onCreateMeal: () => p._openMealEditor(),
+        onEditCustom: (item) {
+          if (p._isRecipe(item)) {
+            final recipeId = ((item as dynamic).id as String?) ?? '';
+            final recipe = p._recipes.list.firstWhere(
+                (r) => r.id == recipeId,
+                orElse: () => _Recipe(
+                    id: recipeId, name: '', ingredients: [],
+                    totalWeightG: 100, micros100: {}));
+            p._openRecipeEditor(editRecipe: recipe);
+          } else {
+            p._openCustomDialog(editItem: item);
+          }
+        },
+        onDeleteCustom: (id) async {
+          if (id.startsWith('recipe:')) {
+            await p._recipes.remove(id);
+          } else {
+            await p._customs.remove(id);
+          }
+          await p._ensureFoodsLoaded(force: true);
+        },
+        mealItems: p._customMeals.list,
+        onTapMeal: (meal) => p._addMealTemplateDialog(meal,
+            initialMeal: _selectedMeal, initialDate: widget.targetDate),
+        onOpenMealDetail: (meal) => p._openMealDetailSheet(meal),
+        onEditMeal: (meal) => p._openMealEditor(editMeal: meal),
+        onDeleteMeal: (id) async {
+          await p._customMeals.remove(id);
+          p._catalogChanged();
+        },
+      );
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
+        titleSpacing: 4,
         title: PopupMenuButton<String>(
           initialValue: _selectedMeal,
           tooltip: l10n.jrnlChooseMeal,
@@ -5106,215 +5380,107 @@ class _AddFoodPageState extends State<_AddFoodPage>
                 ),
               ),
           ],
-          child: Row(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(_mealIcons[_selectedMeal], size: 19),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(_mealTypeLabel(_selectedMeal, l10n),
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(_mealIcons[_selectedMeal], size: 19),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(_mealTypeLabel(_selectedMeal, l10n),
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+                  ),
+                  const Icon(Icons.arrow_drop_down, size: 20),
+                ],
               ),
-              const Icon(Icons.arrow_drop_down, size: 20),
+              // Jour visé rappelé explicitement dès qu'il ne s'agit pas
+              // d'aujourd'hui — on ne doit jamais ajouter "à l'aveugle" sur
+              // une autre journée.
+              if (!_isToday)
+                Text(_dateLabel(context),
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w700, color: TotumColors.accent)),
             ],
           ),
         ),
         actions: [
           IconButton(
             icon: ScannerIcon(color: IconTheme.of(context).color ?? TotumColors.textSecondary),
-            tooltip: context.l10n.jrnlScanProductTooltip,
-            onPressed: p._openBarcodeScanner,
+            tooltip: l10n.jrnlScanProductTooltip,
+            onPressed: () => p._openBarcodeScannerForMeal(_selectedMeal, date: widget.targetDate),
           ),
           IconButton(
-            icon: const Icon(Icons.account_circle),
-            tooltip: context.l10n.jrnlMyAccountTooltip,
-            onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const AccountScreen())),
+            icon: const Icon(Icons.tune),
+            tooltip: l10n.jrnlFiltersSortTooltip,
+            onPressed: _openFilterSheet,
           ),
         ],
         bottom: _showCategoryTabs
             ? TabBar(
                 controller: _tab,
-                isScrollable: true,
-                tabAlignment: TabAlignment.start,
+                labelStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
                 tabs: [
-                  Tab(text: context.l10n.jrnlTabCommon),
-                  Tab(text: context.l10n.jrnlTabFavorites),
-                  Tab(text: context.l10n.jrnlTabPersonal),
-                  Tab(text: context.l10n.jrnlTabBrands),
-                  Tab(text: context.l10n.jrnlTabRestaurant),
+                  Tab(text: l10n.jrnlTabFoods),
+                  Tab(text: l10n.jrnlTabFavorites),
+                  Tab(text: l10n.jrnlTabPersonal),
                 ],
               )
             : null,
       ),
       body: Column(
         children: [
-          // Retour d'Alex (11/08/2026, captures d'écran d'une appli
-          // concurrente) : recherche + filtre + scanner regroupés sur une
-          // seule ligne — l'ancien bouton "recherche USDA" séparé (icône
-          // 🔍🚫 peu explicite) disparaît, remplacé par le réglage "Inclure
-          // USDA" du tiroir de filtre, plus visible et plus clair.
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _searchCtrl,
-                    decoration: InputDecoration(
-                      // Bug corrigé (13/08/2026) : le libellé ne regardait
-                      // que _includeUsda et affichait "CIQUAL + USDA" même
-                      // quand CIQUAL était décochée — reflète maintenant les
-                      // 2 bascules ("Base de données", tiroir de filtre).
-                      labelText: _includeCiqual && _includeUsda
-                          ? context.l10n.jrnlSearchBothDb
-                          : _includeUsda
-                              ? context.l10n.jrnlSearchUsdaOnly
-                              : context.l10n.jrnlSearchCiqualOnly,
-                      prefixIcon: const Icon(Icons.search),
-                      suffixIcon: _searchCtrl.text.isEmpty
-                          ? null
-                          : IconButton(
-                              icon: const Icon(Icons.close, size: 18),
-                              onPressed: () {
-                                _searchDebounce?.cancel();
-                                setState(() { _searchCtrl.clear(); p._query = ''; });
-                                _refreshUsdaMatches();
-                              },
-                            ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    onChanged: (s) {
-                      _searchDebounce?.cancel();
-                      _searchDebounce = Timer(const Duration(milliseconds: 220), () {
-                        if (!mounted) return;
-                        setState(() => p._query = s);
-                        _refreshUsdaMatches();
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Material(
-                  color: TotumColors.accentSoft,
-                  borderRadius: BorderRadius.circular(12),
-                  child: IconButton(
-                    icon: const Icon(Icons.tune, color: TotumColors.accent),
-                    tooltip: context.l10n.jrnlFiltersSortTooltip,
-                    onPressed: _openFilterSheet,
-                  ),
-                ),
-              ],
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+            child: TextField(
+              controller: _searchCtrl,
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                hintText: _includeCiqual && _includeUsda
+                    ? l10n.jrnlSearchBothDb
+                    : _includeUsda
+                        ? l10n.jrnlSearchUsdaOnly
+                        : l10n.jrnlSearchHintUnified,
+                prefixIcon: const Icon(Icons.search),
+                isDense: true,
+                filled: true,
+                fillColor: TotumColors.surface,
+                suffixIcon: _searchCtrl.text.isEmpty
+                    ? null
+                    : IconButton(
+                        icon: const Icon(Icons.close, size: 18),
+                        onPressed: () {
+                          _searchDebounce?.cancel();
+                          setState(() { _searchCtrl.clear(); p._query = ''; });
+                        },
+                      ),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+              onChanged: (s) {
+                setState(() {}); // croix d'effacement
+                _searchDebounce?.cancel();
+                _searchDebounce = Timer(const Duration(milliseconds: 150), () {
+                  if (!mounted) return;
+                  setState(() => p._query = s);
+                });
+              },
             ),
           ),
           Expanded(
             child: TabBarView(
               controller: _tab,
-              // Onglets masqués : plus de TabBar pour naviguer, donc plus de
-              // swipe non plus (verrouillé sur "Commun", voir
-              // _setShowCategoryTabs) — sans ça, un swipe accidentel
-              // enverrait vers Favoris/Perso sans moyen visible d'en sortir.
               physics: _showCategoryTabs
                   ? const AlwaysScrollableScrollPhysics()
                   : const NeverScrollableScrollPhysics(),
+              // Builder : chaque liste n'est calculée que si son onglet est
+              // réellement construit (affiché ou en cours de balayage).
               children: [
-                Builder(builder: (_) {
-                  final commonItems = _commonItems();
-                  return Column(
-                    children: [
-                      _matchingMealsSection(),
-                      Expanded(
-                        child: _multiSelectEnabled
-                            ? _MultiSelectFoodList(
-                                items: commonItems,
-                                initialMeal: _selectedMeal,
-                                onAddSelected: (items, meal) async {
-                                  for (final it in items) {
-                                    await p._addToJournal(meal, it, 100);
-                                  }
-                                },
-                              )
-                            : _FoodListView(
-                                items: commonItems,
-                                isFav: (id) => p._fav.isFav(id),
-                                onFavToggle: (id) async { await p._fav.toggle(id); setState(() {}); },
-                                onTap: (it) => p._openFoodSheet(it, presetMeal: _selectedMeal),
-                                showCreateButton: false,
-                                onDuplicate: (it) => p._openCustomDialog(prefillFrom: it),
-                              ),
-                      ),
-                    ],
-                  );
-                }),
-                _FoodListView(
-                  items: _list(1),
-                  isFav: (id) => p._fav.isFav(id),
-                  onFavToggle: (id) async { await p._fav.toggle(id); setState(() {}); },
-                  onTap: (it) => p._openFoodSheet(it, presetMeal: _selectedMeal),
-                  showCreateButton: false,
-                  onDuplicate: (it) => p._openCustomDialog(prefillFrom: it),
-                ),
-                _FoodListView(
-                  items: _list(2),
-                  isFav: (id) => p._fav.isFav(id),
-                  onFavToggle: (id) async { await p._fav.toggle(id); setState(() {}); },
-                  onTap: (it) => p._openFoodSheet(it, presetMeal: _selectedMeal),
-                  showCreateButton: true,
-                  persoFilter: p._persoFilter,
-                  onPersoFilterChanged: (v) => setState(() => p._persoFilter = v),
-                  persoCount: p._all.where(p._isPersonal).length,
-                  recipeCount: p._all.where(p._isRecipe).length,
-                  onlyLibraryRecipes: p._onlyLibraryRecipes,
-                  onOnlyLibraryChanged: (v) => setState(() => p._onlyLibraryRecipes = v),
-                  libraryRecipeCount: p._all.where((it) {
-                    final id = ((it as dynamic).id as String?) ?? '';
-                    return id.startsWith('recipe:totum_');
-                  }).length,
-                  onCreateCustom: () => p._openCustomDialog(),
-                  onCreateRecipe: () => p._openRecipeEditor(),
-                  onCreateMeal: () => p._openMealEditor(),
-                  onEditCustom: (item) {
-                    if (p._isRecipe(item)) {
-                      final recipeId = ((item as dynamic).id as String?) ?? '';
-                      final recipe = p._recipes.list.firstWhere(
-                          (r) => r.id == recipeId,
-                          orElse: () => _Recipe(
-                              id: recipeId, name: '', ingredients: [],
-                              totalWeightG: 100, micros100: {}));
-                      p._openRecipeEditor(editRecipe: recipe);
-                    } else {
-                      p._openCustomDialog(editItem: item);
-                    }
-                  },
-                  onDeleteCustom: (id) async {
-                    if (id.startsWith('recipe:')) {
-                      await p._recipes.remove(id);
-                    } else {
-                      await p._customs.remove(id);
-                    }
-                    await p._ensureFoodsLoaded(force: true);
-                    setState(() {});
-                  },
-                  mealItems: p._customMeals.list,
-                  onTapMeal: (meal) => p._addMealTemplateDialog(meal),
-                  onOpenMealDetail: (meal) => p._openMealDetailSheet(meal),
-                  onEditMeal: (meal) => p._openMealEditor(editMeal: meal),
-                  onDeleteMeal: (id) async {
-                    await p._customMeals.remove(id);
-                    setState(() {});
-                  },
-                ),
-                _BrandOrRestaurantTab(
-                  sourceType: 'marque',
-                  onFoodSelected: (food) => _addUsdaBrandFood(food),
-                ),
-                _BrandOrRestaurantTab(
-                  sourceType: 'restaurant',
-                  onFoodSelected: (food) => _addUsdaBrandFood(food),
-                ),
+                Builder(builder: (_) => _commonTab()),
+                Builder(builder: (_) => _favoritesTab()),
+                Builder(builder: (_) => _persoTab()),
               ],
             ),
           ),
@@ -5322,56 +5488,42 @@ class _AddFoodPageState extends State<_AddFoodPage>
       ),
     );
   }
+}
 
-  /// Même flux que pour un aliment USDA "classique" du Commun (voir
-  /// `onTap: (it) => p._openFoodSheet(it)` sur cet onglet) : l'id
-  /// "usda:<fdc_id>" est déjà résolu par `findById` (favoris, journal,
-  /// recettes...) sans registre "Perso" intermédiaire — voir confirmation
-  /// Priorité 40. Pas de `_customs.add()` ici : ça créerait un doublon
-  /// permanent (local + Supabase) juste en ouvrant la fiche pour consulter.
-  Future<void> _addUsdaBrandFood(foods_loader.FoodItem food) async {
-    await p._openFoodSheet(food, presetMeal: _selectedMeal);
-  }
+/// Marques & restaurants (aliments de marque USDA validés en laboratoire,
+/// voir _BrandOrRestaurantTab) — écran dédié depuis le 25/10/2026, hors de
+/// la barre d'onglets principale de la page d'ajout.
+class _BrandsRestaurantsPage extends StatelessWidget {
+  final String initialQuery;
+  final Future<void> Function(foods_loader.FoodItem food) onFoodSelected;
+  const _BrandsRestaurantsPage({required this.initialQuery, required this.onFoodSelected});
 
-  /// Repas perso correspondant à la recherche en cours, affichés en tête de
-  /// l'onglet Commun — avant, une recherche par mot-clé n'y faisait jamais
-  /// remonter les repas perso (ni les aliments/recettes perso, corrigé côté
-  /// _applyFilterSort).
-  Widget _matchingMealsSection() {
-    final q = p._query.trim();
-    if (q.isEmpty) return const SizedBox.shrink();
-    final matches = p._customMeals.list
-        .where((m) => _norm(m.name).contains(_norm(q)))
-        .toList();
-    if (matches.isEmpty) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(context.l10n.jrnlPersonalMealSegment, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: TotumColors.textSecondary)),
-          const SizedBox(height: 4),
-          for (final meal in matches)
-            Card(
-              margin: const EdgeInsets.symmetric(vertical: 3),
-              color: TotumColors.accentSoft,
-              elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              child: ListTile(
-                dense: true,
-                leading: const Icon(Icons.bookmark, color: TotumColors.accent, size: 20),
-                title: Text(meal.name, style: const TextStyle(fontWeight: FontWeight.w700)),
-                subtitle: Text(context.l10n.jrnlItemsAndKcal(meal.items.length, meal.totalKcal.toStringAsFixed(0))),
-                trailing: const Icon(Icons.add_circle_outline, color: TotumColors.accent),
-                onTap: () => p._addMealTemplateDialog(meal),
-              ),
-            ),
-          Divider(height: 16, color: TotumColors.outline),
-        ],
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.jrnlBrandsRestaurantsTitle,
+              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+          bottom: TabBar(
+            labelStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+            tabs: [
+              Tab(text: '🏪  ${l10n.jrnlSegmentBrands}'),
+              Tab(text: '🍔  ${l10n.jrnlSegmentRestaurants}'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _BrandOrRestaurantTab(sourceType: 'marque', initialQuery: initialQuery, onFoodSelected: onFoodSelected),
+            _BrandOrRestaurantTab(sourceType: 'restaurant', initialQuery: initialQuery, onFoodSelected: onFoodSelected),
+          ],
+        ),
       ),
     );
   }
-
 }
 
 class _DayJournalView extends StatefulWidget {
@@ -5396,10 +5548,16 @@ class _DayJournalView extends StatefulWidget {
   final Future<void> Function(String id)? onToggleFav;
   final Future<void> Function(String meal, DateTime date)? onClearMeal;
   final _FoodStats? foodStats;
-  final Future<void> Function(String meal)? onScanForMeal;
+  // BUG CORRIGÉ (25/10/2026) : la date affichée n'était pas transmise —
+  // un produit scanné depuis un repas d'un jour PASSÉ était ajouté à
+  // aujourd'hui.
+  final Future<void> Function(String meal, {DateTime? date})? onScanForMeal;
   final List<_CustomMeal> customMeals;
   final Future<void> Function(_CustomMeal meal, String targetMeal, DateTime targetDate)?
       onAddCustomMeal;
+  /// Ouvre LA page d'ajout unique (la même que le « + » central), avec le
+  /// repas et le jour affiché présélectionnés.
+  final Future<void> Function(String meal, DateTime date)? onOpenAddPage;
 
   const _DayJournalView({
     super.key,
@@ -5420,6 +5578,7 @@ class _DayJournalView extends StatefulWidget {
     this.onScanForMeal,
     this.customMeals = const [],
     this.onAddCustomMeal,
+    this.onOpenAddPage,
   });
 
   @override
@@ -5561,369 +5720,51 @@ class _DayJournalViewState extends State<_DayJournalView> {
     }
   }
 
-  bool _isPersonalFood(dynamic it) {
-    try {
-      return ((it as dynamic).id as String?)?.startsWith('custom:') == true;
-    } catch (_) { return false; }
+  /// Carte Instagram du repas affiché (25/10/2026, demande d'Alex) : macros
+  /// et micronutriments RÉELS du repas, calculés à partir des aliments du
+  /// journal (micros pour 100 g de la base × quantités loguées).
+  Future<void> _openMealShare(String meal) async {
+    final entries = _journal[meal] ?? const <Map<String, dynamic>>[];
+    if (entries.isEmpty) return;
+    final byId = <String, dynamic>{
+      for (final f in widget.allFoods) (((f as dynamic).id as String?) ?? ''): f,
+    };
+    final data = buildMealShareData(
+      title: _mealTypeLabel(meal, context.l10n),
+      date: _currentDate,
+      entries: entries,
+      lookup: (id, name) {
+        final f = byId[id] ?? foods_loader.FoodsRepository.instance.findById(id);
+        if (f == null) return null;
+        Map<String, double> micros = const {};
+        try {
+          final raw = (f as dynamic).micros100 as Map?;
+          if (raw != null) {
+            micros = raw.map((k, v) => MapEntry(k.toString(), (v as num).toDouble()));
+          }
+        } catch (_) {}
+        return (
+          micros100: micros,
+          emoji: _pictogramOf(f) ?? (_isRecipe(f) ? '🥘' : '🍽️'),
+          displayName: displayNameOf(f, name),
+        );
+      },
+    );
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => MealShareScreen(data: data),
+    ));
   }
 
-  bool _isRecipeFood(dynamic it) {
-    try {
-      return ((it as dynamic).id as String?)?.startsWith('recipe:') == true;
-    } catch (_) { return false; }
-  }
+  bool _isRecipe(dynamic it) =>
+      (((it as dynamic).id as String?) ?? '').startsWith('recipe:');
 
-
-  /// Ouvre une recherche d'aliment puis l'ajoute au repas choisi,
-  /// pour la date actuellement affichée (même si ce n'est pas aujourd'hui).
-  /// 
+  /// Ouvre la page d'ajout unique, pour ce repas et la date actuellement
+  /// affichée (même si ce n'est pas aujourd'hui).
   Future<void> _openAddFoodDialog(String meal) async {
-    final searchCtrl = TextEditingController();
-    String query = '';
-
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      showDragHandle: true,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setSheetState) {
-          final results = query.trim().isEmpty
-              ? <dynamic>[]
-              : (widget.allFoods.where((it) {
-                  final n = _norm((((it as dynamic).name) as String? ?? ''));
-                  final generic = _nomGeneriqueOf(it);
-                  final q = _norm(query.trim());
-                  return n.contains(q) || (generic != null && _norm(generic).contains(q));
-                }).toList()
-                ..sort((a, b) {
-                  final aid = ((a as dynamic).id  as String?) ?? '';
-                  final bid = ((b as dynamic).id  as String?) ?? '';
-                  final an  = ((a as dynamic).name as String?) ?? '';
-                  final bn  = ((b as dynamic).name as String?) ?? '';
-
-                  // 1. Favoris en premier
-                  final aFav = widget.isFav?.call(aid) ?? false;
-                  final bFav = widget.isFav?.call(bid) ?? false;
-                  if (aFav != bFav) return aFav ? -1 : 1;
-
-                  // 2. Fréquence d'utilisation (plus utilisé = plus haut)
-                  final aCount = widget.foodStats?.count(aid) ?? 0;
-                  final bCount = widget.foodStats?.count(bid) ?? 0;
-                  if (aCount != bCount) return bCount.compareTo(aCount);
-
-                  // 3. Récence (utilisé plus récemment = plus haut)
-                  final aLast = widget.foodStats?.last(aid) ?? 0;
-                  final bLast = widget.foodStats?.last(bid) ?? 0;
-                  if (aLast != bLast) return bLast.compareTo(aLast);
-
-                  // 4. Pertinence textuelle (début du nom > milieu > contenu)
-                  return _scoreForQuery(an, query.trim())
-                      .compareTo(_scoreForQuery(bn, query.trim()));
-                }))
-                  .take(30)
-                  .toList();
-
-          // Repas perso correspondant à la recherche (retour d'Alex,
-          // 12/08/2026) : un repas perso sauvegardé doit être trouvable et
-          // ajoutable en un tap depuis cette même recherche, comme un
-          // aliment classique — placés en tête, distincts visuellement
-          // (voir branche `is _CustomMeal` dans l'itemBuilder ci-dessous).
-          final matchingMeals = query.trim().isEmpty
-              ? <_CustomMeal>[]
-              : widget.customMeals
-                  .where((m) => _norm(m.name).contains(_norm(query.trim())))
-                  .toList();
-          final combined = <dynamic>[...matchingMeals, ...results];
-
-          return SafeArea(
-            child: Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(ctx).viewInsets.bottom,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-                    child: Text(
-                      ctx.l10n.jrnlAddToMeal(_mealTypeLabel(meal, ctx.l10n)),
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: TextField(
-                      controller: searchCtrl,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: ctx.l10n.jrnlSearchFood,
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: searchCtrl.text.isEmpty
-                            ? null
-                            : IconButton(
-                                icon: const Icon(Icons.close, size: 18),
-                                onPressed: () => setSheetState(() {
-                                  searchCtrl.clear();
-                                  query = '';
-                                }),
-                              ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      onChanged: (s) => setSheetState(() => query = s),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 320,
-                    child: combined.isEmpty
-                        ? Center(
-                            child: Text(
-                              query.trim().isEmpty
-                                  ? ctx.l10n.jrnlTypeToSearchFood
-                                  : ctx.l10n.jrnlNoResults,
-                              style: TextStyle(color: TotumColors.textSecondary),
-                            ),
-                          )
-                        : ListView.builder(
-                            itemCount: combined.length,
-                            itemBuilder: (_, i) {
-                              final food = combined[i];
-                              if (food is _CustomMeal) {
-                                return ListTile(
-                                  leading: Container(
-                                    width: 38, height: 38,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: TotumColors.accentSoft,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Icon(Icons.dining_outlined,
-                                        color: TotumColors.accent, size: 18),
-                                  ),
-                                  title: Text(food.name,
-                                      style: const TextStyle(fontWeight: FontWeight.w700)),
-                                  subtitle: Text(
-                                      ctx.l10n.jrnlPersonalMealSummary(
-                                          food.items.length, food.totalKcal.toStringAsFixed(0)),
-                                      style: TextStyle(color: TotumColors.textSecondary, fontSize: 12)),
-                                  onTap: () async {
-                                    Navigator.pop(ctx);
-                                    await widget.onAddCustomMeal?.call(food, meal, _currentDate);
-                                    await _fetchDate(_currentDate, showSpinner: false);
-                                  },
-                                );
-                              }
-                              final fname =
-                                  ((food as dynamic).name as String?) ??
-                                      ctx.l10n.jrnlGenericFoodFallback;
-                              final fkcal =
-                                  ((food).kcal100 as num?)?.toDouble() ?? 0.0;
-                              final fid = ((food).id as String?) ?? '';
-                              final favStatus = (widget.isFav != null &&
-                                      fid.isNotEmpty)
-                                  ? widget.isFav!(fid)
-                                  : false;
-                              final isPerso = _isPersonalFood(food);
-                              final isRecipe = _isRecipeFood(food);
-                              final isUsda = _isUsdaFood(food);
-                              // Pictogramme/photo + nom court (Priorité 26) : ce
-                              // dialogue d'ajout rapide (bouton + par repas) avait
-                              // sa propre liste, distincte de _FoodListView, et
-                              // n'affichait ni l'un ni l'autre — retour d'Alex.
-                              final photo = _photoOf(food);
-                              final pictogram = _pictogramOf(food);
-                              final displayName = displayNameOf(food, fname);
-                              return ListTile(
-                                leading: photo != null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
-                                          photo, width: 38, height: 38, fit: BoxFit.cover,
-                                          errorBuilder: (_, __, ___) => Container(
-                                            width: 38, height: 38,
-                                            decoration: BoxDecoration(
-                                              color: TotumColors.accentSoft,
-                                              borderRadius: BorderRadius.circular(10),
-                                            ),
-                                            child: const Icon(Icons.image_not_supported_outlined,
-                                                color: TotumColors.accent, size: 18),
-                                          ),
-                                        ),
-                                      )
-                                    : pictogram != null
-                                        ? Container(
-                                            width: 38, height: 38,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: TotumColors.accentSoft,
-                                              borderRadius: BorderRadius.circular(10),
-                                            ),
-                                            child: Text(pictogram, style: const TextStyle(fontSize: 19)),
-                                          )
-                                        // Retour d'Alex (11/08/2026) : distinguer visuellement
-                                        // un aliment venant de la base USDA (pas de pictogramme
-                                        // français dédié pour ceux-là) — et "je veux aucune
-                                        // ligne où je n'ai pas d'icône présente sur le côté" :
-                                        // "Perso" n'avait ici aucune icône dédiée (seulement le
-                                        // badge texte du titre), et il n'y avait aucun repli
-                                        // final avant ce correctif (juste `null`).
-                                        : isPerso
-                                            ? Container(
-                                                width: 38, height: 38,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: TotumColors.accentSoft,
-                                                  borderRadius: BorderRadius.circular(10),
-                                                ),
-                                                child: const Icon(Icons.person_outline,
-                                                    color: TotumColors.accent, size: 18),
-                                              )
-                                            : isRecipe
-                                            ? Container(
-                                                width: 38, height: 38,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: TotumColors.accentSoft,
-                                                  borderRadius: BorderRadius.circular(10),
-                                                ),
-                                                child: const Icon(Icons.menu_book_outlined,
-                                                    color: TotumColors.accent, size: 18),
-                                              )
-                                            : isUsda
-                                            ? Container(
-                                                width: 38, height: 38,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: TotumColors.accentSoft,
-                                                  borderRadius: BorderRadius.circular(10),
-                                                ),
-                                                child: const Icon(Icons.public,
-                                                    color: TotumColors.accent, size: 18),
-                                              )
-                                            : Container(
-                                                width: 38, height: 38,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: TotumColors.accentSoft,
-                                                  borderRadius: BorderRadius.circular(10),
-                                                ),
-                                                child: const Icon(Icons.restaurant,
-                                                    color: TotumColors.accent, size: 17),
-                                              ),
-                                // Priorité 50 (13/08/2026) : plafonné à 2 lignes
-                                // (au lieu d'illimité) — même correctif que
-                                // _FoodListView, hauteur de ligne prévisible.
-                                title: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: WordSafeText(displayName,
-                                          maxLines: 2, style: const TextStyle(fontSize: 14, height: 1.25)),
-                                    ),
-                                    if (isPerso) ...[
-                                      const SizedBox(width: 6),
-                                      _foodTag(ctx.l10n.jrnlTagPersonal, TotumColors.accent),
-                                    ] else if (isRecipe) ...[
-                                      const SizedBox(width: 6),
-                                      _foodTag(ctx.l10n.jrnlTagRecipe, TotumColors.accent),
-                                    ] else if (isUsda) ...[
-                                      const SizedBox(width: 6),
-                                      _foodTag('USDA', TotumColors.textSecondary),
-                                    ],
-                                  ],
-                                ),
-                                // Retour d'Alex (11/08/2026) : plus d'ancien nom en
-                                // double en dessous — juste le nom et les kcal/100g.
-                                subtitle: Text(ctx.l10n.jrnlKcalPer100g(fkcal.toStringAsFixed(0)),
-                                    style: const TextStyle(fontSize: 12)),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-                                minVerticalPadding: 8,
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        favStatus
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        size: 20,
-                                        color: favStatus
-                                            ? TotumColors.accent
-                                            : TotumColors.textMuted,
-                                      ),
-                                      tooltip: favStatus
-                                          ? ctx.l10n.jrnlRemoveFavorite
-                                          : ctx.l10n.jrnlAddFavorite,
-                                      onPressed: (widget.onToggleFav != null &&
-                                              fid.isNotEmpty)
-                                          ? () async {
-                                              await widget.onToggleFav!(fid);
-                                              setSheetState(() {});
-                                            }
-                                          : null,
-                                    ),
-                                    const Icon(Icons.add_circle_outline,
-                                        color: TotumColors.accent),
-                                  ],
-                                ),
-                                onTap: () async {
-                                  Navigator.pop(ctx);
-                                  await _openQuantityDialog(meal, food);
-                                },
-                              );
-                            },
-                          ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  /// Demande la quantité puis enregistre l'aliment sur la date affichée
-  Future<void> _openQuantityDialog(String meal, dynamic food) async {
-    final qtyCtrl = TextEditingController(text: '100');
-    final fname = displayNameOf(food, ((food as dynamic).name as String?) ?? context.l10n.jrnlGenericFoodFallback);
-
-    await showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(fname, style: const TextStyle(fontSize: 16)),
-        content: TextField(
-          controller: qtyCtrl,
-          keyboardType: TextInputType.number,
-          autofocus: true,
-          decoration: InputDecoration(
-            labelText: ctx.l10n.jrnlQtyLabel,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(ctx.l10n.commonCancel)),
-          FilledButton(
-            style: FilledButton.styleFrom(
-                backgroundColor: kTotumOrange, foregroundColor: Colors.white),
-            onPressed: () async {
-              final grams =
-                  double.tryParse(qtyCtrl.text.replaceAll(',', '.')) ?? 100.0;
-              Navigator.pop(ctx);
-              await widget.onAddEntry(meal, food, grams, _currentDate);
-              await _fetchDate(_currentDate, showSpinner: false);
-            },
-            child: Text(ctx.l10n.commonAdd),
-          ),
-        ],
-      ),
-    );
+    final open = widget.onOpenAddPage;
+    if (open == null) return;
+    await open(meal, _currentDate);
+    if (mounted) await _fetchDate(_currentDate, showSpinner: false);
   }
 
   Future<void> _showEditDialog(
@@ -6468,8 +6309,9 @@ class _DayJournalViewState extends State<_DayJournalView> {
                       onExpandedChanged: (v) => _setMealExpanded(meal, v),
                       onAddFood: () => _openAddFoodDialog(meal),
                       onScan: widget.onScanForMeal != null
-                          ? () => widget.onScanForMeal!(meal)
+                          ? () => widget.onScanForMeal!(meal, date: _currentDate)
                           : null,
+                      onShare: () => _openMealShare(meal),
                       onClearAll: () => _handleClearMeal(meal),
                       nutritionTargets: _effectiveTargets,
                       allFoods: widget.allFoods,
@@ -6711,6 +6553,8 @@ class _MealSection extends StatefulWidget {
   // SharedPreferences pour survivre aussi à une fermeture de l'app.
   final bool initiallyExpanded;
   final ValueChanged<bool>? onExpandedChanged;
+  /// Carte Instagram du repas (25/10/2026).
+  final VoidCallback? onShare;
 
   const _MealSection({
     required this.title,
@@ -6727,6 +6571,7 @@ class _MealSection extends StatefulWidget {
     this.onClearAll,
     this.nutritionTargets,
     this.allFoods = const [],
+    this.onShare,
   });
 
   @override
@@ -6805,6 +6650,16 @@ class _MealSectionState extends State<_MealSection> {
                     ctx.l10n.jrnlMealItemCount(widget.items.length),
                     style: TextStyle(fontSize: 13, color: TotumColors.textSecondary),
                   ),
+                  const Spacer(),
+                  if (widget.onShare != null && widget.items.isNotEmpty)
+                    IconButton(
+                      tooltip: ctx.l10n.shareMealButton,
+                      icon: const Icon(Icons.photo_camera_outlined, color: TotumColors.accent),
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                        widget.onShare!();
+                      },
+                    ),
                 ],
               ),
             ),
@@ -6962,6 +6817,8 @@ class _MealSectionState extends State<_MealSection> {
                   onSelected: (value) async {
                     if (value == 'select') {
                       _toggleSelectMode();
+                    } else if (value == 'share') {
+                      widget.onShare?.call();
                     } else if (value == 'copy') {
                       widget.onCopy();
                     } else if (value == 'clear') {
@@ -6991,6 +6848,18 @@ class _MealSectionState extends State<_MealSection> {
                     }
                   },
                   itemBuilder: (ctx) => [
+                    if (widget.items.isNotEmpty && widget.onShare != null)
+                      PopupMenuItem(
+                        value: 'share',
+                        child: Row(
+                          children: [
+                            const Icon(Icons.photo_camera_outlined, size: 20, color: TotumColors.accent),
+                            const SizedBox(width: 10),
+                            Text(l10n.shareMealButton,
+                                style: const TextStyle(fontWeight: FontWeight.w700)),
+                          ],
+                        ),
+                      ),
                     PopupMenuItem(
                       value: 'select',
                       child: Row(
@@ -7671,7 +7540,6 @@ class _FoodListView extends StatelessWidget {
   final VoidCallback? onCreateRecipe;
   final void Function(dynamic it)? onEditCustom;
   final Future<void> Function(String id)? onDeleteCustom;
-  final void Function(dynamic it)? onDuplicate;
   final int? persoFilter;
   final void Function(int)? onPersoFilterChanged;
   final int persoCount;
@@ -7689,18 +7557,27 @@ class _FoodListView extends StatelessWidget {
   final void Function(_CustomMeal meal)? onEditMeal;
   final Future<void> Function(String id)? onDeleteMeal;
   final VoidCallback? onCreateMeal;
+  /// En-tête qui défile avec la liste (entrée Marques & restaurants, repas
+  /// perso correspondant à la recherche) — aucune place fixe consommée.
+  final Widget? header;
+  /// Ajout en un tap avec la dernière quantité utilisée (voir _FoodStats).
+  final void Function(dynamic it)? onQuickAdd;
+  final double? Function(String id)? lastGrams;
+  /// Message d'état vide spécifique (ex. onglet Favoris).
+  final String? emptyHint;
 
   const _FoodListView({
     required this.items, required this.isFav, required this.onFavToggle,
     required this.onTap, required this.showCreateButton,
     this.onCreateCustom, this.onCreateRecipe,
-    this.onEditCustom, this.onDeleteCustom, this.onDuplicate,
+    this.onEditCustom, this.onDeleteCustom,
     this.persoFilter, this.onPersoFilterChanged,
     this.persoCount = 0, this.recipeCount = 0,
     this.onlyLibraryRecipes = false, this.onOnlyLibraryChanged,
     this.libraryRecipeCount = 0,
     this.mealItems = const [], this.onTapMeal, this.onOpenMealDetail,
     this.onEditMeal, this.onDeleteMeal, this.onCreateMeal,
+    this.header, this.onQuickAdd, this.lastGrams, this.emptyHint,
   });
 
   bool _isPersonal(dynamic it) {
@@ -7866,8 +7743,11 @@ class _FoodListView extends StatelessWidget {
                     // (assez pour "Aliments"/"Recettes"/"Repas" en entier +
                     // le compteur), les 2 autres se partagent le reste à
                     // parts égales.
+                    // 25/10/2026 : 40 % (au lieu de 44 %) + compteur affiché
+                      // sur la seule vignette active — plus aucune troncature
+                      // ("Re…", "Aliments p…") sur un écran de 360-400 px.
                     double widthFor(int index) {
-                      final selectedWidth = available * 0.44;
+                      final selectedWidth = available * 0.40;
                       if (persoFilter == index) return selectedWidth;
                       return (available - selectedWidth) / 2;
                     }
@@ -7930,7 +7810,20 @@ class _FoodListView extends StatelessWidget {
           child: items.isEmpty
               ? Center(
                   child: persoFilter == null
-                      ? Text(context.l10n.jrnlNoResults)
+                      // En-tête (raccourci Marques & restaurants...) gardé EN
+                      // HAUT même sans résultat, jamais centré dans le vide.
+                      ? ListView(
+                          children: [
+                            if (header != null) header!,
+                            const SizedBox(height: 48),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 32),
+                              child: Text(emptyHint ?? context.l10n.jrnlNoResults,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: TotumColors.textSecondary, height: 1.4)),
+                            ),
+                          ],
+                        )
                       : Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -7962,9 +7855,13 @@ class _FoodListView extends StatelessWidget {
                   padding: showCreateButton
                       ? const EdgeInsets.only(bottom: 88)
                       : null,
-                  itemCount: items.length,
-                  separatorBuilder: (_, __) => Divider(height: 1, color: TotumColors.outline),
-                  itemBuilder: (_, i) {
+                  itemCount: items.length + (header != null ? 1 : 0),
+                  separatorBuilder: (_, i) => header != null && i == 0
+                      ? const SizedBox.shrink()
+                      : Divider(height: 1, color: TotumColors.outline),
+                  itemBuilder: (_, rawIndex) {
+                    if (header != null && rawIndex == 0) return header!;
+                    final i = rawIndex - (header != null ? 1 : 0);
                     final it = items[i];
                     final name = (((it as dynamic).name) as String?) ?? 'Aliment';
                     final id = (((it as dynamic).id) as String?) ?? '';
@@ -8141,37 +8038,49 @@ class _FoodListView extends StatelessWidget {
                           style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
                       minVerticalPadding: 8,
+                      // Refonte 25/10/2026 : 2 actions max par ligne (cœur +
+                      // ajout rapide), le reste (modifier/supprimer une
+                      // création perso) dans un menu — lisible même sur un
+                      // petit écran, et le geste le plus fréquent (ajouter)
+                      // est enfin à un seul tap.
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if ((isCustom || isRec) && onEditCustom != null)
-                            IconButton(
-                              tooltip: context.l10n.sunModifyButton,
-                              icon: Icon(Icons.edit_outlined, color: TotumColors.textSecondary),
-                              onPressed: () => onEditCustom!(it),
-                            ),
-                          if ((isCustom || isRec) && onDeleteCustom != null)
-                            IconButton(
-                              tooltip: context.l10n.commonDelete,
-                              icon: Icon(Icons.delete_outline, color: TotumColors.textSecondary),
-                              onPressed: () => onDeleteCustom!(id),
-                            ),
-                          if (!isCustom && !isRec && onDuplicate != null)
-                            IconButton(
-                              tooltip: context.l10n.jrnlCopyAsPersonalFoodTooltip,
-                              icon: const Icon(Icons.copy_outlined, size: 20),
-                              color: TotumColors.textSecondary,
-                              onPressed: () => onDuplicate!(it),
+                          if ((isCustom || isRec) && (onEditCustom != null || onDeleteCustom != null))
+                            PopupMenuButton<String>(
+                              tooltip: context.l10n.commonMore,
+                              icon: Icon(Icons.more_vert, color: TotumColors.textSecondary, size: 20),
+                              onSelected: (v) {
+                                if (v == 'edit') onEditCustom?.call(it);
+                                if (v == 'delete') onDeleteCustom?.call(id);
+                              },
+                              itemBuilder: (ctx) => [
+                                if (onEditCustom != null)
+                                  PopupMenuItem(value: 'edit', child: Text(ctx.l10n.sunModifyButton)),
+                                if (onDeleteCustom != null)
+                                  PopupMenuItem(value: 'delete', child: Text(ctx.l10n.commonDelete)),
+                              ],
                             ),
                           IconButton(
                             tooltip: fav ? context.l10n.jrnlRemoveFavorite : context.l10n.jrnlAddFavorite,
+                            visualDensity: VisualDensity.compact,
                             icon: Icon(
                               fav ? Icons.favorite : Icons.favorite_border,
                               color: fav ? TotumColors.accent : TotumColors.textMuted,
+                              size: 21,
                             ),
                             onPressed: id.isNotEmpty ? () => onFavToggle(id) : null,
                           ),
-                          Icon(Icons.chevron_right, color: TotumColors.textMuted),
+                          if (onQuickAdd != null)
+                            IconButton(
+                              tooltip: context.l10n.jrnlQuickAddTooltip(
+                                  (lastGrams?.call(id) ?? 100).toStringAsFixed(0)),
+                              visualDensity: VisualDensity.compact,
+                              icon: const Icon(Icons.add_circle, color: TotumColors.accent, size: 28),
+                              onPressed: () => onQuickAdd!(it),
+                            )
+                          else
+                            Icon(Icons.chevron_right, color: TotumColors.textMuted),
                         ],
                       ),
                       onTap: () => onTap(it),
@@ -8494,6 +8403,7 @@ class _PersoFilterCard extends StatelessWidget {
                 ),
               ),
             ),
+            if (selected) ...[
             const SizedBox(width: 6),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
@@ -8510,6 +8420,7 @@ class _PersoFilterCard extends StatelessWidget {
                 ),
               ),
             ),
+            ],
           ],
         ),
       ),
