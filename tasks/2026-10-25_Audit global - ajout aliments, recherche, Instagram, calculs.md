@@ -2,7 +2,7 @@
 
 Sauvegarde avant travaux : tag git `backup/pre-audit-2026-10-25` (retour arrière possible à tout moment : `git checkout backup/pre-audit-2026-10-25`).
 
-Vérifications finales : `flutter analyze` 0 problème · **92/92 tests** (74 avant + 18 nouveaux) · `flutter build web --wasm` OK · build Android : voir fin du document.
+Vérifications finales : `flutter analyze` 0 problème · **92/92 tests** (74 avant + 18 nouveaux) · `flutter build web --wasm` OK · `flutter build apk --debug` OK (avec le nouveau plugin `image_picker`).
 
 ---
 
