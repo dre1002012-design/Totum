@@ -5272,4 +5272,25 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get shareEmptyMeal =>
       'Ajoute au moins un aliment à ce repas pour le partager.';
+
+  @override
+  String get jrnlEnergyUnknownShort => 'Énergie non communiquée par l\'ANSES';
+
+  @override
+  String get jrnlEnergyUnknownWarning =>
+      'La table officielle ANSES-CIQUAL ne fournit pas l\'énergie de cet aliment (une de ses macros n\'a pas été mesurée) : il compterait 0 kcal. Préfère une variante proche, ou crée un aliment perso avec les valeurs de l\'emballage.';
+
+  @override
+  String get onboardingAgeRange => 'Entre 16 et 100 ans';
+
+  @override
+  String get onboardingHeightRange => 'Taille plausible : 120 à 230 cm';
+
+  @override
+  String get onboardingWeightRange => 'Poids plausible : 30 à 300 kg';
+
+  @override
+  String onboardingSummaryHow(String bmr) {
+    return 'Métabolisme de base estimé : $bmr kcal/j (formule de Mifflin-St Jeor). Ce point de départ s\'affine ensuite tout seul à partir de ton poids réel et de ton journal.';
+  }
 }

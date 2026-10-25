@@ -8795,6 +8795,42 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Ajoute au moins un aliment à ce repas pour le partager.'**
   String get shareEmptyMeal;
+
+  /// No description provided for @jrnlEnergyUnknownShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Énergie non communiquée par l\'ANSES'**
+  String get jrnlEnergyUnknownShort;
+
+  /// No description provided for @jrnlEnergyUnknownWarning.
+  ///
+  /// In fr, this message translates to:
+  /// **'La table officielle ANSES-CIQUAL ne fournit pas l\'énergie de cet aliment (une de ses macros n\'a pas été mesurée) : il compterait 0 kcal. Préfère une variante proche, ou crée un aliment perso avec les valeurs de l\'emballage.'**
+  String get jrnlEnergyUnknownWarning;
+
+  /// No description provided for @onboardingAgeRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre 16 et 100 ans'**
+  String get onboardingAgeRange;
+
+  /// No description provided for @onboardingHeightRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taille plausible : 120 à 230 cm'**
+  String get onboardingHeightRange;
+
+  /// No description provided for @onboardingWeightRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids plausible : 30 à 300 kg'**
+  String get onboardingWeightRange;
+
+  /// No description provided for @onboardingSummaryHow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Métabolisme de base estimé : {bmr} kcal/j (formule de Mifflin-St Jeor). Ce point de départ s\'affine ensuite tout seul à partir de ton poids réel et de ton journal.'**
+  String onboardingSummaryHow(String bmr);
 }
 
 class _AppLocalizationsDelegate

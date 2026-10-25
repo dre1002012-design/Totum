@@ -61,6 +61,10 @@ class FoodItem {
     this.nameEn,
   });
 
+  /// Énergie absente de la table source et non calculable (une macro
+  /// manque) — à signaler, jamais à afficher comme "0 kcal".
+  bool get energyUnknown => kcal100 == null;
+
   /// Renvoie les valeurs **pour une quantité (g)**.
   Map<String, double> macrosFor(double grams) {
     double f(double? v) => (v ?? 0) * grams / 100.0;
@@ -80,6 +84,27 @@ class FoodItem {
     }
     return m;
   }
+}
+
+/// AUDIT DU 25/10/2026 — 145 aliments CIQUAL n'ont AUCUNE valeur d'énergie
+/// dans la table ANSES (champ vide), alors que leurs macros le sont souvent :
+/// lus comme 0 kcal, ils faisaient compter 0 kcal à tout repas qui les
+/// contenait (ex. "Brochette de boeuf, crue", "Canneberge, crue", "Baba au
+/// rhum"). Deux cas, sans jamais inventer de donnée :
+/// - protéines, glucides ET lipides connus (57 aliments) : énergie calculée
+///   avec les coefficients officiels du règlement (UE) n° 1169/2011, annexe
+///   XIV — la méthode même de la table CIQUAL (4 kcal/g protéines et
+///   glucides, 9 lipides, 2 fibres, 7 alcool, 2,4 polyols) ;
+/// - au moins un des trois inconnu (88 aliments) : `null` — affiché
+///   "énergie non communiquée", jamais 0 (voir [FoodItem.energyUnknown]).
+double? energyFromMacros({
+  double? prot, double? carb, double? fat,
+  double? fiber, double? alcohol, double? polyols,
+}) {
+  if (prot == null || carb == null || fat == null) return null;
+  final e = 4 * prot + 4 * carb + 9 * fat + 2 * (fiber ?? 0) + 7 * (alcohol ?? 0) + 2.4 * (polyols ?? 0);
+  // Macros toutes mesurées à 0 (eau, sel...) : 0 kcal est alors une vraie valeur.
+  return double.parse(e.toStringAsFixed(1));
 }
 
 /// Nom d'affichage le plus pertinent (Priorité 39, langue Priorité 48) :
@@ -373,15 +398,21 @@ class FoodsRepository {
             orElse: () => const MapEntry('', ''),
           ).value;
         }
-        name = (name ?? '').trim();
+        // 8 libellés CIQUAL contiennent des espaces doublés ("Carpe,  élevage").
+        name = (name ?? '').trim().replaceAll(RegExp(r'\s{2,}'), ' ');
         if (name.isEmpty) continue;
 
         // Macros (alias fréquents dans ton CSV)
-        final kcal = _readNum(row, ['Énergie_kcal_100g','Énergie (kcal/100g)','Calories_kcal_100g','kcal_100g','Energy_kcal_100g']);
+        final kcalRaw = _readNum(row, ['Énergie_kcal_100g','Énergie (kcal/100g)','Calories_kcal_100g','kcal_100g','Energy_kcal_100g']);
         final prot = _readNum(row, ['Protéines_g_100g','Proteines_g_100g','Protéines (g/100g)','Protein_g_100g']);
         final carb = _readNum(row, ['Glucides_g_100g','Glucides (g/100g)','Carbs_g_100g']); // on affichera Glucides_g_100g si dispo
         final fat  = _readNum(row, ['Lipides_g_100g','Lipides (g/100g)','Fat_g_100g']);
         final fib  = _readNum(row, ['Fibres_g_100g','Fibres (g/100g)','Fiber_g_100g']);
+        final kcal = kcalRaw ?? energyFromMacros(
+          prot: prot, carb: carb, fat: fat, fiber: fib,
+          alcohol: _readNum(row, ['Alcool_g_100g']),
+          polyols: _readNum(row, ['Polyols_g_100g']),
+        );
 
         // Micros = toutes les colonnes numériques, hors nom & macros détectées
         final macroKeys = <String>{
@@ -442,7 +473,7 @@ class FoodsRepository {
           groupe: colStr('groupe'),
           sousGroupe: colStr('sous_groupe'),
           pictogramme: colStr('pictogramme'),
-          nomGenerique: colStr('nom_generique'),
+          nomGenerique: colStr('nom_generique')?.replaceAll(RegExp(r'\s{2,}'), ' '),
           novaScore: int.tryParse(colStr('score_nova_estime') ?? ''),
           novaEstime: true,
           nameEn: colStr('nom_en'),

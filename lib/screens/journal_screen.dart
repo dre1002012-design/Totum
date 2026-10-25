@@ -904,6 +904,9 @@ class JournalScreenState extends State<JournalScreen> {
     if (_commonFoodIds.contains(id)) b += 6;
     if (id.startsWith('custom:') || id.startsWith('recipe:')) b += 3;
     if (id.startsWith('usda:')) b -= 2;
+    // Énergie inconnue (table ANSES incomplète) : derrière les variantes
+    // complètes, sans jamais être masqué.
+    if (it is foods_loader.FoodItem && it.energyUnknown) b -= 12;
     return b;
   }
 
@@ -1416,6 +1419,10 @@ class JournalScreenState extends State<JournalScreen> {
       'kcal': kcal, 'prot': prot, 'carb': carb, 'fat': fat, 'fiber': fiber,
     };
     _journal[meal]!.add(entry);
+    // Donuts/totaux du jour redessinés tout de suite depuis la mémoire
+    // (25/10/2026) — avant, ils attendaient l'insertion Supabase PUIS une
+    // relecture complète du jour (2 allers-retours réseau) pour bouger.
+    _dayViewKey.currentState?.showLocalToday(_journal);
     await _stats.bump(id, grams: grams);
 
     final micros = _microsSnapshot(it, grams);
@@ -1903,6 +1910,28 @@ class JournalScreenState extends State<JournalScreen> {
                       ],
                     ),
                   ),
+                  if (it is foods_loader.FoodItem && it.energyUnknown)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 6),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: TotumColors.negative.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(Icons.info_outline, size: 18, color: TotumColors.negative),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(ctx.l10n.jrnlEnergyUnknownWarning,
+                                  style: TextStyle(fontSize: 12.5, height: 1.35, color: TotumColors.textPrimary)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   if (_photoOf(it) != null || _novaOf(it) != null)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 4, 16, 6),
@@ -5645,7 +5674,16 @@ class _DayJournalViewState extends State<_DayJournalView> {
     _loadCollapsedMeals();
     _fetchDate(_currentDate);
   }
-/// Rafraîchit la vue depuis l'extérieur (ex : après un scan).
+  /// Affichage immédiat de l'état EN MÉMOIRE du jour (mêmes listes que
+  /// JournalScreenState._journal, comme après un chargement normal), avant
+  /// la relecture Supabase qui confirme — voir _addToJournal.
+  void showLocalToday(Map<String, List<Map<String, dynamic>>> today) {
+    if (!mounted || !_isToday) return;
+    setState(() => _journal = today);
+    _recomputeTotals();
+  }
+
+  /// Rafraîchit la vue depuis l'extérieur (ex : après un scan).
   Future<void> refreshCurrentDate() =>
       _fetchDate(_currentDate, showSpinner: false);
   String _ymd(DateTime d) =>
@@ -8030,7 +8068,12 @@ class _FoodListView extends StatelessWidget {
                       // désormais (sauf graines) ; juste le nom et les kcal/100g.
                       subtitle: Text(
                           [
-                            context.l10n.jrnlKcalPer100g(kcal100.toStringAsFixed(0)),
+                            // Jamais "0 kcal" pour une énergie absente de la
+                            // table ANSES (voir energyFromMacros, foods_loader).
+                            if (it is foods_loader.FoodItem && it.energyUnknown)
+                              context.l10n.jrnlEnergyUnknownShort
+                            else
+                              context.l10n.jrnlKcalPer100g(kcal100.toStringAsFixed(0)),
                             if (isFromLibrary) context.l10n.jrnlLibraryBadge,
                           ].join(' · '),
                           maxLines: 1,

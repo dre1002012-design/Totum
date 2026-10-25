@@ -86,7 +86,7 @@ SUBGROUP_ICON_NOVA = {
     # comme défaut ; 🧄 lui-même n'a plus aucune raison d'apparaître ici
     # (aucun aliment "ail" dans ce sous-groupe).
     ('aides culinaires et ingrédients divers', 'condiments'): ('🫙', 3),
-    ('aides culinaires et ingrédients divers', 'denrées destinées à une alimentation particulière'): ('🏥', 4),
+    ('aides culinaires et ingrédients divers', 'denrées destinées à une alimentation particulière'): ('🥤', 4),  # 25/10/2026 : 🏥 (hôpital) jugé anxiogène pour un substitut de repas
     ('aides culinaires et ingrédients divers', 'herbes'): ('🌿', 1),
     ('aides culinaires et ingrédients divers', 'ingrédients pour végétariens'): ('🌱', 3),
     ('aides culinaires et ingrédients divers', 'sauces'): ('🥫', 4),

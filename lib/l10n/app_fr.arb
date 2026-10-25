@@ -1826,5 +1826,12 @@
   "shareTipsTitle": "Pour maximiser la portée",
   "shareTipsBody": "Publie le carrousel avec la légende copiée (5 mots-dièse max., la limite Instagram). Les enregistrements et les envois en message privé font partie des signaux qu'Instagram dit valoriser le plus : les deux appels à l'action du dernier visuel sont là pour ça.",
   "shareMealButton": "Partager sur Instagram",
-  "shareEmptyMeal": "Ajoute au moins un aliment à ce repas pour le partager."
+  "shareEmptyMeal": "Ajoute au moins un aliment à ce repas pour le partager.",
+  "jrnlEnergyUnknownShort": "Énergie non communiquée par l'ANSES",
+  "jrnlEnergyUnknownWarning": "La table officielle ANSES-CIQUAL ne fournit pas l'énergie de cet aliment (une de ses macros n'a pas été mesurée) : il compterait 0 kcal. Préfère une variante proche, ou crée un aliment perso avec les valeurs de l'emballage.",
+  "onboardingAgeRange": "Entre 16 et 100 ans",
+  "onboardingHeightRange": "Taille plausible : 120 à 230 cm",
+  "onboardingWeightRange": "Poids plausible : 30 à 300 kg",
+  "onboardingSummaryHow": "Métabolisme de base estimé : {bmr} kcal/j (formule de Mifflin-St Jeor). Ce point de départ s'affine ensuite tout seul à partir de ton poids réel et de ton journal.",
+  "@onboardingSummaryHow": {"placeholders": {"bmr": {"type": "String"}}}
 }

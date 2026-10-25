@@ -41,25 +41,59 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   static const _pageCount = 4;
 
   nutri.Sex _sex = nutri.Sex.male;
-  final _ageCtrl = TextEditingController(text: '30');
-  final _heightCtrl = TextEditingController(text: '175'); // toujours en cm en interne
-  final _weightCtrl = TextEditingController(text: '70');  // toujours en kg en interne
+  // BUG CORRIGÉ (25/10/2026, audit du parcours d'inscription) : ces champs
+  // étaient pré-remplis (30 ans, 175 cm, 70 kg) — "Continuer" passait donc
+  // sans aucune saisie, exactement le profil faux que ce parcours devait
+  // empêcher. Vides désormais (indication en grisé), bouton actif seulement
+  // pour des valeurs plausibles (voir _ageOk/_heightOk/_weightOk).
+  final _ageCtrl = TextEditingController();
+  final _heightCtrl = TextEditingController(); // toujours en cm en interne
+  final _weightCtrl = TextEditingController(); // toujours en kg en interne
+  // Contrôleurs d'AFFICHAGE (cm/kg ou in/lb), créés une seule fois — avant,
+  // recréés à chaque frappe, ce qui rendait la saisie instable (curseur).
+  final _heightDisplayCtrl = TextEditingController();
+  final _weightDisplayCtrl = TextEditingController();
   nutri.ActivityLevel? _activity;
   nutri.GoalType? _goal;
   bool _saving = false;
 
   @override
+  void initState() {
+    super.initState();
+    AppSettings.unitSystem.addListener(_syncDisplayUnits);
+  }
+
+  @override
   void dispose() {
+    AppSettings.unitSystem.removeListener(_syncDisplayUnits);
     _pageCtrl.dispose();
     _ageCtrl.dispose();
     _heightCtrl.dispose();
     _weightCtrl.dispose();
+    _heightDisplayCtrl.dispose();
+    _weightDisplayCtrl.dispose();
     super.dispose();
+  }
+
+  /// Changement d'unités pendant la saisie : réaffiche les valeurs déjà
+  /// saisies dans la nouvelle unité (la valeur métrique interne ne change pas).
+  void _syncDisplayUnits() {
+    final system = AppSettings.unitSystem.value;
+    String fmt(double v) => v == v.roundToDouble() ? v.toStringAsFixed(0) : v.toStringAsFixed(1);
+    if (_num(_heightCtrl) > 0) _heightDisplayCtrl.text = fmt(Units.displayHeight(_num(_heightCtrl), system));
+    if (_num(_weightCtrl) > 0) _weightDisplayCtrl.text = fmt(Units.displayWeight(_num(_weightCtrl), system));
+    if (mounted) setState(() {});
   }
 
   double _num(TextEditingController c) => double.tryParse(c.text.replaceAll(',', '.')) ?? 0.0;
 
-  bool get _canContinueFromMeasures => _num(_ageCtrl) > 0 && _num(_heightCtrl) > 0 && _num(_weightCtrl) > 0;
+  // Bornes de plausibilité (adulte) : les formules de l'app (Mifflin-St
+  // Jeor, références EFSA/ANSES) sont validées pour l'adulte ; une faute de
+  // frappe (17 cm, 700 kg) ne doit jamais produire des objectifs absurdes.
+  bool get _ageOk => _num(_ageCtrl) >= 16 && _num(_ageCtrl) <= 100;
+  bool get _heightOk => _num(_heightCtrl) >= 120 && _num(_heightCtrl) <= 230;
+  bool get _weightOk => _num(_weightCtrl) >= 30 && _num(_weightCtrl) <= 300;
+  bool get _canContinueFromMeasures => _ageOk && _heightOk && _weightOk;
 
   void _goTo(int page) {
     _pageCtrl.animateToPage(page, duration: const Duration(milliseconds: 280), curve: Curves.easeOutCubic);
@@ -251,7 +285,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ],
           ),
           const SizedBox(height: 18),
-          _numField(label: l10n.profileAgeYears, controller: _ageCtrl, icon: Icons.cake_outlined),
+          _numField(label: l10n.profileAgeYears, controller: _ageCtrl, icon: Icons.cake_outlined,
+              hint: '41', error: _ageCtrl.text.isNotEmpty && !_ageOk ? l10n.onboardingAgeRange : null),
           const SizedBox(height: 14),
           _unitAwareField(
             labelMetric: l10n.profileHeightCm,
@@ -259,6 +294,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             icon: Icons.height,
             isWeight: false,
             controller: _heightCtrl,
+            displayController: _heightDisplayCtrl,
+            hint: '175',
+            error: _heightCtrl.text.isNotEmpty && !_heightOk ? l10n.onboardingHeightRange : null,
           ),
           const SizedBox(height: 14),
           _unitAwareField(
@@ -267,6 +305,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             icon: Icons.monitor_weight_outlined,
             isWeight: true,
             controller: _weightCtrl,
+            displayController: _weightDisplayCtrl,
+            hint: '70',
+            error: _weightCtrl.text.isNotEmpty && !_weightOk ? l10n.onboardingWeightRange : null,
           ),
         ],
       ),
@@ -298,13 +339,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _numField({required String label, required TextEditingController controller, IconData? icon}) {
+  Widget _numField({required String label, required TextEditingController controller, IconData? icon,
+      String? hint, String? error}) {
     return TextField(
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       onChanged: (_) => setState(() {}),
       decoration: InputDecoration(
         labelText: label,
+        hintText: hint,
+        errorText: error,
         prefixIcon: icon != null ? Icon(icon, size: 20) : null,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -323,27 +367,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     required IconData icon,
     required bool isWeight,
     required TextEditingController controller,
+    required TextEditingController displayController,
+    String? hint,
+    String? error,
   }) {
     return ValueListenableBuilder<UnitSystem>(
       valueListenable: AppSettings.unitSystem,
       builder: (context, system, _) {
         final isImperial = system == UnitSystem.imperial;
-        final metricValue = double.tryParse(controller.text.replaceAll(',', '.')) ?? 0.0;
-        final displayed = isWeight ? Units.displayWeight(metricValue, system) : Units.displayHeight(metricValue, system);
-        final displayCtrl = TextEditingController(
-          text: displayed == displayed.roundToDouble() ? displayed.toStringAsFixed(0) : displayed.toStringAsFixed(1),
-        );
         return TextField(
-          controller: displayCtrl,
+          controller: displayController,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onChanged: (v) {
-            final entered = double.tryParse(v.replaceAll(',', '.')) ?? 0.0;
-            final metric = isWeight ? Units.weightToKg(entered, system) : Units.heightToCm(entered, system);
-            controller.text = metric.toString();
+            final entered = double.tryParse(v.replaceAll(',', '.'));
+            controller.text = entered == null
+                ? ''
+                : (isWeight ? Units.weightToKg(entered, system) : Units.heightToCm(entered, system)).toString();
             setState(() {});
           },
           decoration: InputDecoration(
             labelText: isImperial ? labelImperial : labelMetric,
+            hintText: isImperial ? null : hint,
+            errorText: error,
             prefixIcon: Icon(icon, size: 20),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
@@ -465,6 +510,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 _macroChip(l10n.profileFatG, g.fat),
               ],
             ),
+            const SizedBox(height: 14),
+            // D'où vient ce chiffre : la confiance dans l'objectif passe par
+            // la transparence du calcul (et par l'ajustement adaptatif, réel).
+            Text(l10n.onboardingSummaryHow(nutri.computeBmr(_buildProfile()).round().toString()),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, height: 1.4, color: TotumColors.textSecondary)),
           ],
         ),
       ),

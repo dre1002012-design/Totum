@@ -245,8 +245,14 @@ class ProfileScreenState extends State<ProfileScreen> {
   /// inutile de les relancer. Ce sous-ensemble est donc le seul à
   /// redéclencher une fois le profil chargé.
   void _refreshProfileDependentCharts() {
-    computeTodayTotals().then((v) { if (mounted) setState(() => _dayTotalsCache = v); });
-    _dayEntriesFuture = dayFoodEntries(DateTime.now());
+    // Une seule lecture des aliments du jour (avant : computeTodayTotals ET
+    // dayFoodEntries relisaient chacun la même table, 2 requêtes identiques
+    // à chaque retour sur l'onglet).
+    final now = DateTime.now();
+    _dayEntriesFuture = dayFoodEntries(now);
+    _dayEntriesFuture
+        .then((entries) => totalsFromEntries(now, entries))
+        .then((v) { if (mounted) setState(() => _dayTotalsCache = v); });
     _computeAutoTargets().then((v) { if (mounted) setState(() => _targetsCache = v); });
   }
 

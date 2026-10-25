@@ -189,9 +189,13 @@ Future<List<FoodEntryContribution>> dayFoodEntries(DateTime day) async {
 }
 
 /// Totaux réellement logués un jour donné.
-Future<DayTotals> computeDayTotals(DateTime day) async {
-  final entries = await dayFoodEntries(day);
+Future<DayTotals> computeDayTotals(DateTime day) async =>
+    totalsFromEntries(day, await dayFoodEntries(day));
 
+/// Agrège une liste déjà chargée par [dayFoodEntries] — évite de relire
+/// Supabase une 2e fois quand un écran a besoin des deux (Tableau de bord :
+/// donuts + détail par aliment, 25/10/2026).
+Future<DayTotals> totalsFromEntries(DateTime day, List<FoodEntryContribution> entries) async {
   double kcal = 0, prot = 0, carb = 0, fat = 0, fiber = 0;
   final micros = <String, double>{};
   for (final e in entries) {

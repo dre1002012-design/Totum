@@ -5228,4 +5228,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get shareEmptyMeal =>
       'Add at least one food to this meal to share it.';
+
+  @override
+  String get jrnlEnergyUnknownShort => 'Energy not reported by ANSES';
+
+  @override
+  String get jrnlEnergyUnknownWarning =>
+      'The official ANSES-CIQUAL table does not report this food\'s energy (one of its macros was not measured): it would count as 0 kcal. Prefer a close variant, or create a personal food with the label values.';
+
+  @override
+  String get onboardingAgeRange => 'Between 16 and 100 years';
+
+  @override
+  String get onboardingHeightRange => 'Plausible height: 120 to 230 cm';
+
+  @override
+  String get onboardingWeightRange => 'Plausible weight: 30 to 300 kg';
+
+  @override
+  String onboardingSummaryHow(String bmr) {
+    return 'Estimated basal metabolism: $bmr kcal/day (Mifflin-St Jeor equation). This starting point then refines itself from your real weight and your journal.';
+  }
 }
