@@ -1643,8 +1643,12 @@ class JournalScreenState extends State<JournalScreen> {
     final messenger = ScaffoldMessenger.of(context);
     messenger.hideCurrentSnackBar();
     messenger.showSnackBar(SnackBar(
+      // Flutter ≥ 3.32 : un SnackBar AVEC action reste affiché indéfiniment
+      // par défaut (`persist` = action != null) — bug du 26/10/2026, message
+      // figé à l'écran. La durée doit s'appliquer : persist explicitement faux.
+      persist: false,
       behavior: SnackBarBehavior.floating,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 4),
       content: Text(
         l10n.jrnlQuickAddedSnack(name, grams.toStringAsFixed(0), _mealTypeLabel(meal, l10n)),
         maxLines: 2, overflow: TextOverflow.ellipsis,
@@ -1663,13 +1667,188 @@ class JournalScreenState extends State<JournalScreen> {
     ));
   }
 
-  /// Ajout en un tap, avec la dernière quantité utilisée (100 g sinon).
-  Future<void> _quickAdd(dynamic it, String meal, DateTime? date) async {
+  /// Fiche quantité express (⊕ d'une ligne d'aliment) — 26/10/2026, retour
+  /// d'Alex : le ⊕ ajoutait 100 g d'office, sans pouvoir régler le poids.
+  /// Un seul écran, un seul geste de plus que l'ajout direct : la quantité
+  /// habituelle est déjà sélectionnée (taper un chiffre la remplace, Entrée
+  /// valide), portions en un tap, kcal et macros recalculées en direct, repas
+  /// modifiable. Le tap sur la ligne ouvre toujours la fiche complète.
+  Future<void> _openQuickQtySheet(dynamic it, String presetMeal, DateTime? date) async {
+    final l10n = context.l10n;
     final id = ((it as dynamic).id as String?) ?? '';
-    final grams = _stats.lastGrams(id) ?? 100.0;
-    final pending = _addFood(meal, it, grams, date);
+    final last = _stats.lastGrams(id);
+    double grams = last ?? 100;
+    String meal = presetMeal;
+    String fmt(double g) => g == g.roundToDouble() ? g.toStringAsFixed(0) : g.toStringAsFixed(1);
+    final ctrl = TextEditingController(text: fmt(grams));
+    ctrl.selection = TextSelection(baseOffset: 0, extentOffset: ctrl.text.length);
+    double per100(String field) {
+      try {
+        final v = switch (field) {
+          'kcal' => (it as dynamic).kcal100,
+          'prot' => (it as dynamic).prot100,
+          'carb' => (it as dynamic).carb100,
+          _ => (it as dynamic).fat100,
+        };
+        return (v is num) ? v.toDouble() : 0.0;
+      } catch (_) { return 0.0; }
+    }
+    final portions = foods_loader.FoodsRepository.instance.portionsFor(id);
+    final chips = <(String, double)>[
+      if (last != null) (l10n.jrnlQtyLastChip(fmt(last)), last),
+      for (final pt in portions.take(3)) ('${frenchPortionLabel(pt.label)} · ${pt.grams.toStringAsFixed(0)} g', pt.grams),
+      for (final g in const [50.0, 100.0, 150.0, 200.0])
+        if (g != last) ('${g.toStringAsFixed(0)} g', g),
+    ];
+    final name = displayNameOf(it, ((it as dynamic).name as String?) ?? l10n.jrnlGenericFoodFallback);
+    final pictogram = _pictogramOf(it);
+
+    final result = await showModalBottomSheet<(double, String)>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      builder: (ctx) => StatefulBuilder(builder: (ctx, setSheet) {
+        final f = grams / 100.0;
+        final kcal = per100('kcal') * f;
+        void submit() {
+          if (grams > 0) Navigator.of(ctx).pop((grams, meal));
+        }
+        return Padding(
+          padding: EdgeInsets.fromLTRB(16, 0, 16, 16 + MediaQuery.of(ctx).viewInsets.bottom),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 40, height: 40, alignment: Alignment.center,
+                    decoration: BoxDecoration(color: TotumColors.accentSoft, borderRadius: BorderRadius.circular(12)),
+                    child: Text(pictogram ?? '🍽️', style: const TextStyle(fontSize: 21)),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(name, maxLines: 2, overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 130,
+                    child: TextField(
+                      controller: ctrl,
+                      autofocus: true,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      textInputAction: TextInputAction.done,
+                      style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900),
+                      decoration: InputDecoration(
+                        suffixText: 'g',
+                        isDense: true,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      onChanged: (v) {
+                        final g = double.tryParse(v.replaceAll(',', '.'));
+                        setSheet(() => grams = (g != null && g > 0) ? g : 0);
+                      },
+                      onSubmitted: (_) => submit(),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(foods_loader.FoodsRepository.instance.findById(id)?.energyUnknown == true
+                                ? l10n.jrnlEnergyUnknownShort
+                                : '${kcal.round()} kcal',
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: TotumColors.accent)),
+                        Text(
+                          l10n.jrnlQtyMacrosLine(
+                            (per100('prot') * f).toStringAsFixed(0),
+                            (per100('carb') * f).toStringAsFixed(0),
+                            (per100('fat') * f).toStringAsFixed(0),
+                          ),
+                          style: TextStyle(fontSize: 12.5, color: TotumColors.textSecondary, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8, runSpacing: 8,
+                children: [
+                  for (final (label, g) in chips)
+                    ChoiceChip(
+                      label: Text(label, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700)),
+                      selected: grams == g,
+                      selectedColor: TotumColors.accentSoft,
+                      onSelected: (_) => setSheet(() {
+                        grams = g;
+                        ctrl.text = fmt(g);
+                        ctrl.selection = TextSelection.collapsed(offset: ctrl.text.length);
+                      }),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 6,
+                children: [
+                  for (final m in const ['Petit-déjeuner', 'Déjeuner', 'Dîner', 'Collation'])
+                    ChoiceChip(
+                      label: Text(_mealTypeLabel(m, l10n), style: const TextStyle(fontSize: 12)),
+                      selected: meal == m,
+                      selectedColor: TotumColors.accentSoft,
+                      visualDensity: VisualDensity.compact,
+                      onSelected: (_) => setSheet(() => meal = m),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: grams > 0 ? submit : null,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: TotumColors.accent,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size.fromHeight(50),
+                    textStyle: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w800),
+                  ),
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.jrnlQtySheetAddButton(kcal.round().toString())),
+                ),
+              ),
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    _openFoodSheet(it, presetMeal: meal, targetDate: date);
+                  },
+                  child: Text(l10n.jrnlQtySeeDetails),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+    // Pas de ctrl.dispose() ici : la fiche est encore en animation de
+    // fermeture (champ toujours monté) — libéré avec le reste par le GC,
+    // comme les autres fiches de cet écran.
+    if (result == null || !mounted) return;
+    final (g, m) = result;
+    final pending = _addFood(m, it, g, date);
     final isToday = date == null || _ymd(date) == _ymd(DateTime.now());
-    _showAddedFeedback(it, grams, meal, isToday ? pending : Future.value(null));
+    _showAddedFeedback(it, g, m, isToday ? pending : Future.value(null));
     await pending;
   }
 
@@ -4798,6 +4977,10 @@ class _AddFoodPageState extends State<_AddFoodPage>
   bool _includeCiqual = true;
   bool _showCategoryTabs = true;
   bool _multiSelectEnabled = false;
+  // 26/10/2026 (retour d'Alex) : Marques & restaurants restent un usage
+  // annexe — MASQUÉS par défaut, activables dans le tiroir de filtre, pour
+  // ne jamais occuper de place pour rien en tête de liste.
+  bool _showBrands = false;
 
   static const _mealOptions = ['Petit-déjeuner', 'Déjeuner', 'Dîner', 'Collation'];
   static const _mealIcons = <String, IconData>{
@@ -4868,8 +5051,10 @@ class _AddFoodPageState extends State<_AddFoodPage>
     final includeCiqual = sp.getBool('addfood_include_ciqual') ?? true;
     final showTabs = sp.getBool('addfood_show_tabs') ?? true;
     final multiSelect = sp.getBool('addfood_multi_select') ?? false;
+    final showBrands = sp.getBool('addfood_show_brands') ?? false;
     if (!mounted) return;
     setState(() {
+      _showBrands = showBrands;
       _includeUsda = includeUsda;
       // Jamais les deux bases désactivées en même temps.
       _includeCiqual = includeCiqual || !includeUsda;
@@ -4906,6 +5091,12 @@ class _AddFoodPageState extends State<_AddFoodPage>
     final sp = await SharedPreferences.getInstance();
     await sp.setBool('addfood_include_ciqual', _includeCiqual);
     await sp.setBool('addfood_include_usda', _includeUsda);
+  }
+
+  Future<void> _setShowBrands(bool v) async {
+    setState(() => _showBrands = v);
+    final sp = await SharedPreferences.getInstance();
+    await sp.setBool('addfood_show_brands', v);
   }
 
   Future<void> _setMultiSelectEnabled(bool v) async {
@@ -5031,6 +5222,21 @@ class _AddFoodPageState extends State<_AddFoodPage>
                       activeThumbColor: TotumColors.accent,
                       onChanged: (v) {
                         _setShowCategoryTabs(v);
+                        setSheetState(() {});
+                      },
+                    ),
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(l10n.jrnlShowBrandsToggleTitle,
+                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5)),
+                      subtitle: Text(
+                        l10n.jrnlShowBrandsToggleDesc,
+                        style: TextStyle(fontSize: 12, color: TotumColors.textSecondary),
+                      ),
+                      value: _showBrands,
+                      activeThumbColor: TotumColors.accent,
+                      onChanged: (v) {
+                        _setShowBrands(v);
                         setSheetState(() {});
                       },
                     ),
@@ -5202,7 +5408,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
   void _openFood(dynamic it) =>
       p._openFoodSheet(it, presetMeal: _selectedMeal, targetDate: widget.targetDate);
 
-  void _quickAdd(dynamic it) => p._quickAdd(it, _selectedMeal, widget.targetDate);
+  void _quickAdd(dynamic it) => p._openQuickQtySheet(it, _selectedMeal, widget.targetDate);
 
   Future<void> _openBrandsPage() async {
     await Navigator.of(context).push(MaterialPageRoute(
@@ -5222,6 +5428,7 @@ class _AddFoodPageState extends State<_AddFoodPage>
   /// Ligne d'entrée vers Marques & restaurants, en tête de la liste
   /// "Aliments" : défile avec la liste, ne coûte aucune place fixe.
   Widget _brandsEntry() {
+    if (!_showBrands) return const SizedBox.shrink();
     final l10n = context.l10n;
     final q = p._query.trim();
     final matches = q.isEmpty ? 0 : _brandMatches().length;
@@ -5761,16 +5968,20 @@ class _DayJournalViewState extends State<_DayJournalView> {
   /// Carte Instagram du repas affiché (25/10/2026, demande d'Alex) : macros
   /// et micronutriments RÉELS du repas, calculés à partir des aliments du
   /// journal (micros pour 100 g de la base × quantités loguées).
-  Future<void> _openMealShare(String meal) async {
-    final entries = _journal[meal] ?? const <Map<String, dynamic>>[];
+  /// [meal] nul = journée entière (tous les repas du jour affiché).
+  Future<void> _openMealShare(String? meal) async {
+    final entries = meal == null
+        ? [for (final list in _journal.values) ...list]
+        : (_journal[meal] ?? const <Map<String, dynamic>>[]);
     if (entries.isEmpty) return;
     final byId = <String, dynamic>{
       for (final f in widget.allFoods) (((f as dynamic).id as String?) ?? ''): f,
     };
     final data = buildMealShareData(
-      title: _mealTypeLabel(meal, context.l10n),
+      title: meal == null ? context.l10n.shareDayTitle : _mealTypeLabel(meal, context.l10n),
       date: _currentDate,
       entries: entries,
+      isFullDay: meal == null,
       lookup: (id, name) {
         final f = byId[id] ?? foods_loader.FoodsRepository.instance.findById(id);
         if (f == null) return null;
@@ -6350,6 +6561,7 @@ class _DayJournalViewState extends State<_DayJournalView> {
                           ? () => widget.onScanForMeal!(meal, date: _currentDate)
                           : null,
                       onShare: () => _openMealShare(meal),
+                      onShareDay: () => _openMealShare(null),
                       onClearAll: () => _handleClearMeal(meal),
                       nutritionTargets: _effectiveTargets,
                       allFoods: widget.allFoods,
@@ -6593,6 +6805,8 @@ class _MealSection extends StatefulWidget {
   final ValueChanged<bool>? onExpandedChanged;
   /// Carte Instagram du repas (25/10/2026).
   final VoidCallback? onShare;
+  /// Carte Instagram de la journée entière (26/10/2026).
+  final VoidCallback? onShareDay;
 
   const _MealSection({
     required this.title,
@@ -6610,6 +6824,7 @@ class _MealSection extends StatefulWidget {
     this.nutritionTargets,
     this.allFoods = const [],
     this.onShare,
+    this.onShareDay,
   });
 
   @override
@@ -6857,6 +7072,8 @@ class _MealSectionState extends State<_MealSection> {
                       _toggleSelectMode();
                     } else if (value == 'share') {
                       widget.onShare?.call();
+                    } else if (value == 'shareDay') {
+                      widget.onShareDay?.call();
                     } else if (value == 'copy') {
                       widget.onCopy();
                     } else if (value == 'clear') {
@@ -6894,6 +7111,18 @@ class _MealSectionState extends State<_MealSection> {
                             const Icon(Icons.photo_camera_outlined, size: 20, color: TotumColors.accent),
                             const SizedBox(width: 10),
                             Text(l10n.shareMealButton,
+                                style: const TextStyle(fontWeight: FontWeight.w700)),
+                          ],
+                        ),
+                      ),
+                    if (widget.onShareDay != null)
+                      PopupMenuItem(
+                        value: 'shareDay',
+                        child: Row(
+                          children: [
+                            const Icon(Icons.calendar_today_outlined, size: 20, color: TotumColors.accent),
+                            const SizedBox(width: 10),
+                            Text(l10n.shareShareDay,
                                 style: const TextStyle(fontWeight: FontWeight.w700)),
                           ],
                         ),
@@ -8116,8 +8345,7 @@ class _FoodListView extends StatelessWidget {
                           ),
                           if (onQuickAdd != null)
                             IconButton(
-                              tooltip: context.l10n.jrnlQuickAddTooltip(
-                                  (lastGrams?.call(id) ?? 100).toStringAsFixed(0)),
+                              tooltip: context.l10n.jrnlAddWithQtyTooltip,
                               visualDensity: VisualDensity.compact,
                               icon: const Icon(Icons.add_circle, color: TotumColors.accent, size: 28),
                               onPressed: () => onQuickAdd!(it),

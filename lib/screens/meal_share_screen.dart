@@ -1,15 +1,15 @@
 // lib/screens/meal_share_screen.dart
 //
-// "Partager sur Instagram" — demande d'Alex (25/10/2026, compte de
-// naturopathe) : à partir d'un repas du journal (et de la photo du plat),
-// produire un contenu Instagram clé en main, sans retouche : carrousel,
-// post, story ou images pour un Reel, avec les macros et les
-// micronutriments réels du repas, plus la légende prête à coller.
+// "Partager sur Instagram" (et réseaux, site, Play Store) — demande d'Alex
+// (25-26/10/2026, naturopathe & coach) : à partir d'un repas ou d'une
+// journée du journal (et de la photo du plat), un contenu clé en main, sans
+// retouche, pour son compte perso OU pour le compte de l'app Totum.
 //
 // Données et sources : services/meal_share.dart. Visuels :
-// widgets/meal_share_slides.dart. Export : rendu hors écran en 1080 px
-// (services/widget_image_renderer.dart), puis feuille de partage native
-// (Instagram y apparaît directement) ou téléchargement sur le web.
+// widgets/meal_share_slides.dart. Export : rendu hors écran à la taille
+// exacte de chaque format (services/widget_image_renderer.dart), puis
+// feuille de partage native (Instagram y apparaît directement) ou
+// téléchargement sur le web.
 
 import 'dart:ui' as ui;
 
@@ -27,7 +27,7 @@ import '../services/export/share_images_stub.dart'
     if (dart.library.html) '../services/export/share_images_web.dart'
     if (dart.library.io) '../services/export/share_images_io.dart';
 
-enum _ShareFormat { carousel, post, story, reel }
+enum _ShareFormat { carousel, post, story, reel, landscape, banner }
 
 class MealShareScreen extends StatefulWidget {
   final MealShareData data;
@@ -39,15 +39,17 @@ class MealShareScreen extends StatefulWidget {
 
 class _MealShareScreenState extends State<MealShareScreen> {
   static const _handleKey = 'share_instagram_handle_v1';
-  static const _paletteKey = 'share_palette_v1';
+  static const _paletteKey = 'share_palette_v2';
   static const _markKey = 'share_totum_mark_v1';
+  static const _brandKey = 'share_brand_v1';
 
   late MealShareData _data = widget.data;
   late final TextEditingController _titleCtrl = TextEditingController(text: widget.data.title);
   final TextEditingController _handleCtrl = TextEditingController();
   final PageController _pageCtrl = PageController();
   _ShareFormat _format = _ShareFormat.carousel;
-  SharePalette _palette = SharePalette.cream;
+  ShareBrand _brand = ShareBrand.coach;
+  SharePalette _palette = SharePalette.naturoSage;
   bool _showMark = true;
   ui.Image? _photo;
   int _page = 0;
@@ -72,17 +74,22 @@ class _MealShareScreenState extends State<MealShareScreen> {
     if (!mounted) return;
     setState(() {
       _handleCtrl.text = sp.getString(_handleKey) ?? '';
+      _brand = sp.getString(_brandKey) == 'totum' ? ShareBrand.totum : ShareBrand.coach;
       final pid = sp.getString(_paletteKey);
-      _palette = SharePalette.all.firstWhere((p) => p.id == pid, orElse: () => SharePalette.cream);
+      _palette = SharePalette.all.firstWhere((p) => p.id == pid, orElse: () => _defaultPalette(_brand));
       _showMark = sp.getBool(_markKey) ?? true;
     });
   }
+
+  SharePalette _defaultPalette(ShareBrand b) =>
+      b == ShareBrand.totum ? SharePalette.totumCream : SharePalette.naturoSage;
 
   Future<void> _savePrefs() async {
     final sp = await SharedPreferences.getInstance();
     await sp.setString(_handleKey, _handleCtrl.text.trim());
     await sp.setString(_paletteKey, _palette.id);
     await sp.setBool(_markKey, _showMark);
+    await sp.setString(_brandKey, _brand == ShareBrand.totum ? 'totum' : 'coach');
   }
 
   bool get _english => Localizations.localeOf(context).languageCode == 'en';
@@ -98,7 +105,7 @@ class _MealShareScreenState extends State<MealShareScreen> {
     final l10n = context.l10n;
     MealShareSlide make(ShareSlideKind k, {int? index, int? count, bool reel = false}) => MealShareSlide(
           kind: k, data: _data, palette: _palette, l10n: l10n, english: _english,
-          photo: _photo, handle: _handle, showTotumMark: _showMark,
+          photo: _photo, handle: _handle, brand: _brand, showTotumMark: _showMark,
           index: index, count: count, reelFrame: reel,
         );
     return switch (_format) {
@@ -106,11 +113,11 @@ class _MealShareScreenState extends State<MealShareScreen> {
           for (var i = 0; i < carouselKinds.length; i++)
             make(carouselKinds[i], index: i + 1, count: carouselKinds.length),
         ],
-      _ShareFormat.reel => [
-          for (var i = 0; i < carouselKinds.length; i++) make(carouselKinds[i], reel: true),
-        ],
+      _ShareFormat.reel => [for (final k in carouselKinds) make(k, reel: true)],
       _ShareFormat.post => [make(ShareSlideKind.post)],
       _ShareFormat.story => [make(ShareSlideKind.story)],
+      _ShareFormat.landscape => [make(ShareSlideKind.landscape)],
+      _ShareFormat.banner => [make(ShareSlideKind.banner)],
     };
   }
 
@@ -135,8 +142,11 @@ class _MealShareScreenState extends State<MealShareScreen> {
     }
   }
 
+  String _caption({bool? english}) =>
+      captionFor(_data, english: english ?? _english, handle: _handle, brand: _brand);
+
   Future<void> _copyCaption() async {
-    await Clipboard.setData(ClipboardData(text: captionFor(_data, english: _english, handle: _handle)));
+    await Clipboard.setData(ClipboardData(text: _caption()));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(context.l10n.shareCaptionCopied), behavior: SnackBarBehavior.floating),
@@ -150,19 +160,19 @@ class _MealShareScreenState extends State<MealShareScreen> {
     // Tout ce qui dépend du contexte est capturé AVANT la 1re attente.
     final view = View.of(context);
     final slides = _slides();
-    final english = _english;
+    final caption = _caption();
     try {
       await _savePrefs();
       final files = <(Uint8List, String)>[];
       final stamp = DateTime.now().millisecondsSinceEpoch;
       for (var i = 0; i < slides.length; i++) {
         final img = await renderWidgetToImage(slides[i],
-            logicalSize: slides[i].logicalSize, pixelRatio: kShareExportScale, view: view);
+            logicalSize: slides[i].logicalSize, pixelRatio: slides[i].exportScale, view: view);
         files.add((await imageToPng(img), 'totum_${_format.name}_${stamp}_${i + 1}.png'));
       }
       // La légende part dans le presse-papiers : Instagram ignore le texte
       // transmis par la feuille de partage, il suffit de la coller.
-      await Clipboard.setData(ClipboardData(text: captionFor(_data, english: english, handle: _handle)));
+      await Clipboard.setData(ClipboardData(text: caption));
       final shared = await shareOrDownloadPngs(files, subject: _data.title);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -177,6 +187,32 @@ class _MealShareScreenState extends State<MealShareScreen> {
     }
   }
 
+  Widget _sectionLabel(String text) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Text(text, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: TotumColors.textSecondary)),
+      );
+
+  Widget _brandSelector() {
+    final l10n = context.l10n;
+    return SegmentedButton<ShareBrand>(
+      showSelectedIcon: false,
+      style: SegmentedButton.styleFrom(
+        selectedBackgroundColor: TotumColors.accentSoft,
+        selectedForegroundColor: TotumColors.accent,
+        textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5),
+      ),
+      segments: [
+        ButtonSegment(value: ShareBrand.coach, label: Text(l10n.shareBrandCoach), icon: const Icon(Icons.spa_outlined, size: 18)),
+        ButtonSegment(value: ShareBrand.totum, label: Text(l10n.shareBrandTotum), icon: const Icon(Icons.storefront_outlined, size: 18)),
+      ],
+      selected: {_brand},
+      onSelectionChanged: (s) => setState(() {
+        _brand = s.first;
+        _palette = _defaultPalette(_brand);
+      }),
+    );
+  }
+
   Widget _formatSelector() {
     final l10n = context.l10n;
     final labels = {
@@ -184,24 +220,26 @@ class _MealShareScreenState extends State<MealShareScreen> {
       _ShareFormat.post: (l10n.shareFormatPost, Icons.crop_portrait),
       _ShareFormat.story: (l10n.shareFormatStory, Icons.amp_stories_outlined),
       _ShareFormat.reel: (l10n.shareFormatReel, Icons.movie_outlined),
+      _ShareFormat.landscape: (l10n.shareFormatLandscape, Icons.crop_landscape),
+      _ShareFormat.banner: (l10n.shareFormatBanner, Icons.shop_outlined),
     };
-    return SegmentedButton<_ShareFormat>(
-      showSelectedIcon: false,
-      style: SegmentedButton.styleFrom(
-        selectedBackgroundColor: TotumColors.accentSoft,
-        selectedForegroundColor: TotumColors.accent,
-        textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5),
-        visualDensity: VisualDensity.compact,
-      ),
-      segments: [
+    return Wrap(
+      spacing: 8, runSpacing: 8,
+      alignment: WrapAlignment.center,
+      children: [
         for (final e in labels.entries)
-          ButtonSegment(value: e.key, label: Text(e.value.$1), icon: Icon(e.value.$2, size: 18)),
+          ChoiceChip(
+            avatar: Icon(e.value.$2, size: 17, color: _format == e.key ? TotumColors.accent : TotumColors.textSecondary),
+            label: Text(e.value.$1, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
+            selected: _format == e.key,
+            showCheckmark: false,
+            selectedColor: TotumColors.accentSoft,
+            onSelected: (_) {
+              setState(() { _format = e.key; _page = 0; });
+              if (_pageCtrl.hasClients) _pageCtrl.jumpToPage(0);
+            },
+          ),
       ],
-      selected: {_format},
-      onSelectionChanged: (s) {
-        setState(() { _format = s.first; _page = 0; });
-        if (_pageCtrl.hasClients) _pageCtrl.jumpToPage(0);
-      },
     );
   }
 
@@ -212,6 +250,8 @@ class _MealShareScreenState extends State<MealShareScreen> {
       _ShareFormat.post => l10n.shareFormatPostDesc,
       _ShareFormat.story => l10n.shareFormatStoryDesc,
       _ShareFormat.reel => l10n.shareFormatReelDesc,
+      _ShareFormat.landscape => l10n.shareFormatLandscapeDesc,
+      _ShareFormat.banner => l10n.shareFormatBannerDesc,
     };
   }
 
@@ -221,7 +261,7 @@ class _MealShareScreenState extends State<MealShareScreen> {
       // Aperçu : largeur de l'écran, plafonné en hauteur pour laisser voir
       // les réglages sous l'aperçu.
       final maxH = MediaQuery.of(context).size.height * 0.52;
-      var w = c.maxWidth * 0.86;
+      var w = c.maxWidth * 0.9;
       var h = w * size.height / size.width;
       if (h > maxH) {
         h = maxH;
@@ -276,7 +316,7 @@ class _MealShareScreenState extends State<MealShareScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final slides = _slides();
-    final caption = captionFor(_data, english: _english, handle: _handle);
+    final caption = _caption();
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.shareScreenTitle, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
@@ -284,9 +324,12 @@ class _MealShareScreenState extends State<MealShareScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
         children: [
+          _sectionLabel(l10n.shareBrandLabel),
+          _brandSelector(),
+          const SizedBox(height: 14),
           _formatSelector(),
           Padding(
-            padding: const EdgeInsets.only(top: 6, bottom: 12),
+            padding: const EdgeInsets.only(top: 8, bottom: 12),
             child: Text(_formatDescription(),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
@@ -354,7 +397,7 @@ class _MealShareScreenState extends State<MealShareScreen> {
                     customBorder: const CircleBorder(),
                     onTap: () => setState(() => _palette = p),
                     child: Container(
-                      width: 34, height: 34,
+                      width: 36, height: 36,
                       decoration: BoxDecoration(
                         color: p.bg,
                         shape: BoxShape.circle,
@@ -364,21 +407,25 @@ class _MealShareScreenState extends State<MealShareScreen> {
                         ),
                       ),
                       child: Center(
-                        child: Container(width: 10, height: 10,
-                            decoration: BoxDecoration(color: p.accent, shape: BoxShape.circle)),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          Container(width: 9, height: 9, decoration: BoxDecoration(color: p.accent, shape: BoxShape.circle)),
+                          const SizedBox(width: 2),
+                          Container(width: 6, height: 6, decoration: BoxDecoration(color: p.accent2, shape: BoxShape.circle)),
+                        ]),
                       ),
                     ),
                   ),
                 ),
             ],
           ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.shareTotumMarkToggle, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-            value: _showMark,
-            activeThumbColor: TotumColors.accent,
-            onChanged: (v) => setState(() => _showMark = v),
-          ),
+          if (_brand == ShareBrand.coach)
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.shareTotumMarkToggle, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              value: _showMark,
+              activeThumbColor: TotumColors.accent,
+              onChanged: (v) => setState(() => _showMark = v),
+            ),
           const SizedBox(height: 6),
           TotumCard(
             child: Column(

@@ -1532,7 +1532,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profilePauseActiveBody =>
-      'No weigh-in or logging during this time? No worries — we won\'t use it to calculate your needs.';
+      'No weigh-ins or food log during this time? No problem — we won\'t use it to calculate your needs. When you\'re back, your first 3 weigh-ins are set aside while water and salt from holiday meals clear: the post-break pounds never skew your numbers.';
 
   @override
   String get profilePauseEndButton => 'I\'m back';
@@ -4525,14 +4525,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jrnlMultiSelectToggleDesc =>
-      'Check several foods in \"Common\" and add them all at once to a meal.';
+      'Check several foods in \"Foods\" and add them all at once to a meal.';
 
   @override
-  String get jrnlCategoryTabsToggleTitle => 'Category tabs';
+  String get jrnlCategoryTabsToggleTitle => 'Foods / Favorites / Personal tabs';
 
   @override
   String get jrnlCategoryTabsToggleDesc =>
-      'Common/Favorites/Personal/Brands/Restaurant — turn off to save screen space.';
+      'Turn off to save space: only the search across all foods stays visible.';
 
   @override
   String get jrnlSortByLabel => 'Sort by';
@@ -5110,7 +5110,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareVnrFootnote =>
-      '% of EU nutrient reference values (adult, Regulation 1169/2011) per serving. Omega-3: EFSA reference 250 mg/day.';
+      '% of EU nutrient reference values (adult, Regulation 1169/2011) per serving. Omega-3 EPA+DHA: ANSES reference 500 mg/day.';
 
   @override
   String get shareIngredientsTitle => 'On the plate';
@@ -5151,7 +5151,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareFormatCarouselDesc =>
-      '5 visuals 1080×1350 — the most saved format';
+      '8 visuals 1080×1350 — hook, numbers, micronutrients, fats, roles, recipe, gaps, call to action';
 
   @override
   String get shareFormatPostDesc => '1 all-in-one visual 1080×1350';
@@ -5162,7 +5162,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareFormatReelDesc =>
-      '5 images 1080×1920 to import into the Reels editor, with your music';
+      '8 images 1080×1920 to import into the Reels editor, with your music';
 
   @override
   String get shareDishNameLabel => 'Dish name';
@@ -5249,4 +5249,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String onboardingSummaryHow(String bmr) {
     return 'Estimated basal metabolism: $bmr kcal/day (Mifflin-St Jeor equation). This starting point then refines itself from your real weight and your journal.';
   }
+
+  @override
+  String jrnlQtySheetAddButton(String kcal) {
+    return 'Add · $kcal kcal';
+  }
+
+  @override
+  String jrnlQtyLastChip(String grams) {
+    return 'Usual · $grams g';
+  }
+
+  @override
+  String jrnlQtyMacrosLine(String p, String c, String f) {
+    return 'P $p g · C $c g · F $f g';
+  }
+
+  @override
+  String get jrnlQtySeeDetails => 'See nutrition details';
+
+  @override
+  String get jrnlAddWithQtyTooltip => 'Add (choose quantity)';
+
+  @override
+  String get jrnlShowBrandsToggleTitle => 'Brands & restaurants';
+
+  @override
+  String get jrnlShowBrandsToggleDesc =>
+      'Shows access to branded products and restaurant chains (hidden by default to keep the screen light).';
+
+  @override
+  String get shareFormatLandscape => 'Landscape';
+
+  @override
+  String get shareFormatBanner => 'Play Store';
+
+  @override
+  String get shareFormatLandscapeDesc =>
+      '1 visual 1200×630 — website, Facebook, LinkedIn, link preview';
+
+  @override
+  String get shareFormatBannerDesc =>
+      '1024×500 banner — Play Store feature graphic';
+
+  @override
+  String get shareBrandLabel => 'For which account?';
+
+  @override
+  String get shareBrandCoach => 'My naturopath & coach account';
+
+  @override
+  String get shareBrandTotum => 'Totum account';
+
+  @override
+  String get shareShareDay => 'Share my day';
+
+  @override
+  String get shareDayTitle => 'My day';
 }

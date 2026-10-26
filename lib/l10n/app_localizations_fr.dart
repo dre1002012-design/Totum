@@ -1547,7 +1547,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get profilePauseActiveBody =>
-      'Pas de pesée ni de journal pendant cette période ? Aucun souci — on ne s\'en servira pas pour calculer tes besoins.';
+      'Pas de pesée ni de journal pendant cette période ? Aucun souci — on ne s\'en servira pas pour calculer tes besoins. Au retour, tes 3 premières pesées sont mises de côté le temps que l\'eau et le sel des repas de vacances s\'éliminent : les kilos du retour ne faussent jamais ton calcul.';
 
   @override
   String get profilePauseEndButton => 'Je suis de retour';
@@ -4565,14 +4565,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get jrnlMultiSelectToggleDesc =>
-      'Coche plusieurs aliments dans \"Commun\" et ajoute-les d\'un coup à un repas.';
+      'Coche plusieurs aliments dans \"Aliments\" et ajoute-les d\'un coup à un repas.';
 
   @override
-  String get jrnlCategoryTabsToggleTitle => 'Onglets de catégorie';
+  String get jrnlCategoryTabsToggleTitle =>
+      'Onglets Aliments / Favoris / Perso';
 
   @override
   String get jrnlCategoryTabsToggleDesc =>
-      'Commun/Favoris/Perso/Marques/Restaurant — désactive pour gagner de la place.';
+      'Désactive pour gagner de la place : seule la recherche dans tous les aliments reste affichée.';
 
   @override
   String get jrnlSortByLabel => 'Trier par';
@@ -5153,7 +5154,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shareVnrFootnote =>
-      '% des valeurs nutritionnelles de référence (VNR adulte, règlement UE 1169/2011) pour la portion. Oméga-3 : référence EFSA 250 mg/j.';
+      '% des valeurs nutritionnelles de référence (VNR adulte, règlement UE 1169/2011) pour la portion. Oméga-3 EPA+DHA : référence ANSES 500 mg/j.';
 
   @override
   String get shareIngredientsTitle => 'Dans l\'assiette';
@@ -5195,7 +5196,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shareFormatCarouselDesc =>
-      '5 visuels 1080×1350 — le format le plus enregistré';
+      '8 visuels 1080×1350 — accroche, chiffres, micronutriments, acides gras, rôles, recette, à compléter, appel à l\'action';
 
   @override
   String get shareFormatPostDesc => '1 visuel 1080×1350 tout-en-un';
@@ -5206,7 +5207,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shareFormatReelDesc =>
-      '5 images 1080×1920 à importer dans l\'éditeur de Reels, avec ta musique';
+      '8 images 1080×1920 à importer dans l\'éditeur de Reels, avec ta musique';
 
   @override
   String get shareDishNameLabel => 'Nom du plat';
@@ -5293,4 +5294,61 @@ class AppLocalizationsFr extends AppLocalizations {
   String onboardingSummaryHow(String bmr) {
     return 'Métabolisme de base estimé : $bmr kcal/j (formule de Mifflin-St Jeor). Ce point de départ s\'affine ensuite tout seul à partir de ton poids réel et de ton journal.';
   }
+
+  @override
+  String jrnlQtySheetAddButton(String kcal) {
+    return 'Ajouter · $kcal kcal';
+  }
+
+  @override
+  String jrnlQtyLastChip(String grams) {
+    return 'Habituel · $grams g';
+  }
+
+  @override
+  String jrnlQtyMacrosLine(String p, String c, String f) {
+    return 'P $p g · G $c g · L $f g';
+  }
+
+  @override
+  String get jrnlQtySeeDetails => 'Voir le détail nutritionnel';
+
+  @override
+  String get jrnlAddWithQtyTooltip => 'Ajouter (choisir la quantité)';
+
+  @override
+  String get jrnlShowBrandsToggleTitle => 'Marques & restaurants';
+
+  @override
+  String get jrnlShowBrandsToggleDesc =>
+      'Affiche l\'accès aux produits de marque et aux enseignes de restauration (masqué par défaut pour alléger l\'écran).';
+
+  @override
+  String get shareFormatLandscape => 'Paysage';
+
+  @override
+  String get shareFormatBanner => 'Play Store';
+
+  @override
+  String get shareFormatLandscapeDesc =>
+      '1 visuel 1200×630 — site internet, Facebook, LinkedIn, aperçu de lien';
+
+  @override
+  String get shareFormatBannerDesc =>
+      'Bannière 1024×500 — image de présentation Play Store (« feature graphic »)';
+
+  @override
+  String get shareBrandLabel => 'Pour quel compte ?';
+
+  @override
+  String get shareBrandCoach => 'Mon compte naturo & coach';
+
+  @override
+  String get shareBrandTotum => 'Compte Totum';
+
+  @override
+  String get shareShareDay => 'Partager ma journée';
+
+  @override
+  String get shareDayTitle => 'Ma journée';
 }

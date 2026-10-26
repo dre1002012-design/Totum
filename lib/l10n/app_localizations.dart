@@ -2689,7 +2689,7 @@ abstract class AppLocalizations {
   /// No description provided for @profilePauseActiveBody.
   ///
   /// In fr, this message translates to:
-  /// **'Pas de pesée ni de journal pendant cette période ? Aucun souci — on ne s\'en servira pas pour calculer tes besoins.'**
+  /// **'Pas de pesée ni de journal pendant cette période ? Aucun souci — on ne s\'en servira pas pour calculer tes besoins. Au retour, tes 3 premières pesées sont mises de côté le temps que l\'eau et le sel des repas de vacances s\'éliminent : les kilos du retour ne faussent jamais ton calcul.'**
   String get profilePauseActiveBody;
 
   /// No description provided for @profilePauseEndButton.
@@ -7629,19 +7629,19 @@ abstract class AppLocalizations {
   /// No description provided for @jrnlMultiSelectToggleDesc.
   ///
   /// In fr, this message translates to:
-  /// **'Coche plusieurs aliments dans \"Commun\" et ajoute-les d\'un coup à un repas.'**
+  /// **'Coche plusieurs aliments dans \"Aliments\" et ajoute-les d\'un coup à un repas.'**
   String get jrnlMultiSelectToggleDesc;
 
   /// No description provided for @jrnlCategoryTabsToggleTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Onglets de catégorie'**
+  /// **'Onglets Aliments / Favoris / Perso'**
   String get jrnlCategoryTabsToggleTitle;
 
   /// No description provided for @jrnlCategoryTabsToggleDesc.
   ///
   /// In fr, this message translates to:
-  /// **'Commun/Favoris/Perso/Marques/Restaurant — désactive pour gagner de la place.'**
+  /// **'Désactive pour gagner de la place : seule la recherche dans tous les aliments reste affichée.'**
   String get jrnlCategoryTabsToggleDesc;
 
   /// No description provided for @jrnlSortByLabel.
@@ -8589,7 +8589,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareVnrFootnote.
   ///
   /// In fr, this message translates to:
-  /// **'% des valeurs nutritionnelles de référence (VNR adulte, règlement UE 1169/2011) pour la portion. Oméga-3 : référence EFSA 250 mg/j.'**
+  /// **'% des valeurs nutritionnelles de référence (VNR adulte, règlement UE 1169/2011) pour la portion. Oméga-3 EPA+DHA : référence ANSES 500 mg/j.'**
   String get shareVnrFootnote;
 
   /// No description provided for @shareIngredientsTitle.
@@ -8661,7 +8661,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareFormatCarouselDesc.
   ///
   /// In fr, this message translates to:
-  /// **'5 visuels 1080×1350 — le format le plus enregistré'**
+  /// **'8 visuels 1080×1350 — accroche, chiffres, micronutriments, acides gras, rôles, recette, à compléter, appel à l\'action'**
   String get shareFormatCarouselDesc;
 
   /// No description provided for @shareFormatPostDesc.
@@ -8679,7 +8679,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareFormatReelDesc.
   ///
   /// In fr, this message translates to:
-  /// **'5 images 1080×1920 à importer dans l\'éditeur de Reels, avec ta musique'**
+  /// **'8 images 1080×1920 à importer dans l\'éditeur de Reels, avec ta musique'**
   String get shareFormatReelDesc;
 
   /// No description provided for @shareDishNameLabel.
@@ -8831,6 +8831,102 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Métabolisme de base estimé : {bmr} kcal/j (formule de Mifflin-St Jeor). Ce point de départ s\'affine ensuite tout seul à partir de ton poids réel et de ton journal.'**
   String onboardingSummaryHow(String bmr);
+
+  /// No description provided for @jrnlQtySheetAddButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter · {kcal} kcal'**
+  String jrnlQtySheetAddButton(String kcal);
+
+  /// No description provided for @jrnlQtyLastChip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Habituel · {grams} g'**
+  String jrnlQtyLastChip(String grams);
+
+  /// No description provided for @jrnlQtyMacrosLine.
+  ///
+  /// In fr, this message translates to:
+  /// **'P {p} g · G {c} g · L {f} g'**
+  String jrnlQtyMacrosLine(String p, String c, String f);
+
+  /// No description provided for @jrnlQtySeeDetails.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le détail nutritionnel'**
+  String get jrnlQtySeeDetails;
+
+  /// No description provided for @jrnlAddWithQtyTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter (choisir la quantité)'**
+  String get jrnlAddWithQtyTooltip;
+
+  /// No description provided for @jrnlShowBrandsToggleTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marques & restaurants'**
+  String get jrnlShowBrandsToggleTitle;
+
+  /// No description provided for @jrnlShowBrandsToggleDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Affiche l\'accès aux produits de marque et aux enseignes de restauration (masqué par défaut pour alléger l\'écran).'**
+  String get jrnlShowBrandsToggleDesc;
+
+  /// No description provided for @shareFormatLandscape.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paysage'**
+  String get shareFormatLandscape;
+
+  /// No description provided for @shareFormatBanner.
+  ///
+  /// In fr, this message translates to:
+  /// **'Play Store'**
+  String get shareFormatBanner;
+
+  /// No description provided for @shareFormatLandscapeDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'1 visuel 1200×630 — site internet, Facebook, LinkedIn, aperçu de lien'**
+  String get shareFormatLandscapeDesc;
+
+  /// No description provided for @shareFormatBannerDesc.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bannière 1024×500 — image de présentation Play Store (« feature graphic »)'**
+  String get shareFormatBannerDesc;
+
+  /// No description provided for @shareBrandLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour quel compte ?'**
+  String get shareBrandLabel;
+
+  /// No description provided for @shareBrandCoach.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon compte naturo & coach'**
+  String get shareBrandCoach;
+
+  /// No description provided for @shareBrandTotum.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte Totum'**
+  String get shareBrandTotum;
+
+  /// No description provided for @shareShareDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager ma journée'**
+  String get shareShareDay;
+
+  /// No description provided for @shareDayTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma journée'**
+  String get shareDayTitle;
 }
 
 class _AppLocalizationsDelegate

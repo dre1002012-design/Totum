@@ -102,23 +102,47 @@ void main() {
     // Comme le « + » central.
     key.currentState!.openAddPage(meal: 'Petit-déjeuner');
     await shot('1_ajout_defaut');
+    // Marques & restaurants masqués par défaut (26/10/2026).
+    expect(find.text('Marques & restaurants'), findsNothing);
+
+    // ⊕ -> fiche quantité express (plus d'ajout de 100 g d'office).
+    await tester.tap(find.byIcon(Icons.add_circle).first);
+    await shot('2_quantite_express');
+    await tester.enterText(find.byType(TextField).last, '35');
+    await tester.pump();
+    await shot('3_quantite_saisie');
+    await tester.tap(find.byType(FilledButton).last);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.byType(SnackBar), findsOneWidget);
+    await shot('4_confirmation');
+    // Le message doit disparaître tout seul (bug du 26/10/2026 : figé).
+    await tester.pump(const Duration(seconds: 6));
+    await tester.pump(const Duration(seconds: 1));
+    await settle();
+    expect(find.byType(SnackBar), findsNothing);
 
     await tester.enterText(find.byType(TextField).first, 'magret de canard');
-    await shot('2_recherche_phrase');
-
-    await tester.enterText(find.byType(TextField).first, 'big mac');
-    await shot('3_recherche_marque');
+    await shot('5_recherche_phrase');
 
     await tester.enterText(find.byType(TextField).first, '');
     await tester.tap(find.text('Favoris'));
-    await shot('4_favoris');
+    await shot('6_favoris');
 
     await tester.tap(find.text('Perso'));
-    await shot('5_perso');
+    await shot('7_perso');
 
+    // Activation de Marques & restaurants dans le tiroir de filtre.
     await tester.tap(find.widgetWithText(Tab, 'Aliments'));
     await settle();
-    await tester.tap(find.text('Marques & restaurants').first);
-    await shot('6_marques_restaurants');
+    await tester.tap(find.byIcon(Icons.tune));
+    await settle();
+    await shot('8_options');
+    await tester.tap(find.widgetWithText(SwitchListTile, 'Marques & restaurants'));
+    await settle();
+    await tester.tapAt(const Offset(200, 60)); // ferme le tiroir
+    await settle();
+    expect(find.text('Marques & restaurants'), findsOneWidget);
+    await tester.enterText(find.byType(TextField).first, 'big mac');
+    await shot('9_recherche_marque');
   });
 }

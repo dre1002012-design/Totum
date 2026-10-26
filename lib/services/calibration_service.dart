@@ -129,6 +129,175 @@ int pausedDaysInRangeSync(List<PausePeriod> pauses, DateTime start, DateTime end
   return count;
 }
 
+/// Jours de "stabilisation" après la fin d'une pause : les pesées de ces
+/// jours-là sont écartées du calcul (25/10/2026, retour d'Alex — "quand on
+/// revient de pause avec quasiment 3 kg de plus, rétention d'eau ou repas
+/// plaisir, ça doit être considéré"). Au retour d'une coupure (voyage, sel,
+/// glucides, horaires), le poids est gonflé par de l'eau et du glycogène
+/// qui s'éliminent en quelques jours — les compter ferait lire une PERTE
+/// rapide (donc une dépense surestimée) juste après le retour. 3 jours :
+/// recommandation publiée par MacroFactor ("attendre 3-4 jours que le poids
+/// se stabilise" au retour de vacances, macrofactor.com/tracking-vacation).
+const int kPostPauseWashoutDays = 3;
+
+/// Résultat de l'équation d'équilibre énergétique sur une fenêtre.
+class EnergyBalanceEstimate {
+  final double tdee;
+  final double avgKcal;
+  /// Variation de poids TENDANCE attribuée aux jours suivis (somme des
+  /// segments continus, jamais à travers une pause).
+  final double weightChangeKg;
+  final int effectiveDays;
+  final int daysWithFood;
+  final int loggableDays;
+  final int weighInsUsed;
+  final int segments;
+  const EnergyBalanceEstimate({
+    required this.tdee,
+    required this.avgKcal,
+    required this.weightChangeKg,
+    required this.effectiveDays,
+    required this.daysWithFood,
+    required this.loggableDays,
+    required this.weighInsUsed,
+    required this.segments,
+  });
+}
+
+/// Pesées réellement exploitables : hors jours de pause ET hors jours de
+/// stabilisation qui suivent la fin d'une pause (voir
+/// [kPostPauseWashoutDays]). Pure (testable sans réseau).
+List<WeighIn> usableWeighIns(List<WeighIn> history, List<PausePeriod> pauses,
+    {int washoutDays = kPostPauseWashoutDays}) {
+  if (pauses.isEmpty) return List.of(history);
+  bool inWashout(DateTime d) {
+    final day = DateTime(d.year, d.month, d.day);
+    for (final p in pauses) {
+      final e = p.end;
+      if (e == null || e.isBefore(p.start)) continue; // en cours / annulée
+      final end = DateTime(e.year, e.month, e.day);
+      if (day.isAfter(end) && !day.isAfter(end.add(Duration(days: washoutDays)))) return true;
+    }
+    return false;
+  }
+  return history.where((w) => !pauses.any((p) => p.contains(w.date)) && !inWashout(w.date)).toList();
+}
+
+/// CŒUR UNIQUE du calcul de dépense empirique — partagé par
+/// [CalibrationService.computeCalibration] (cible calorique réelle) ET
+/// [CalibrationService.expenditureHistory] (graphique), pour qu'ils ne
+/// puissent plus jamais diverger (cause n°1 des incidents passés de ce
+/// fichier, Priorités 52/53/59, 19/08 et 24/08/2026).
+///
+/// BUG CORRIGÉ (25/10/2026, retour d'Alex — "je m'étais bien mis en pause,
+/// si tu ne l'as pas vu c'est que le calcul n'est pas cohérent") : les
+/// pesées de pause étaient bien exclues, mais le lissage reliait encore le
+/// DERNIER poids avant la pause au PREMIER poids après — tout l'écart de
+/// part et d'autre (repas non notés, rétention d'eau du retour) était donc
+/// attribué aux jours suivis, comme si ces kilos venaient des calories
+/// loguées. Vérifié sur les données réelles d'Alex : +1,4 kg en 4 jours de
+/// pause (72,7 -> 74,1 kg, puis redescente : de l'eau) faisaient attribuer
+/// jusqu'à +1,07 kg aux jours suivis au lieu de ~+0,3 kg, sous-estimant sa
+/// dépense de 100 à 150 kcal/j. Même logique que MacroFactor ("l'estimation
+/// est gelée pendant la période non suivie, puis reprend là où elle
+/// s'était arrêtée") : la fenêtre est découpée en SEGMENTS CONTINUS entre
+/// les pauses, chaque segment a son propre lissage et sa propre variation
+/// (début/fin 30 %, comme avant), et seules ces variations intra-segment
+/// entrent dans l'équation. La pesée de retour n'est jamais comparée à
+/// celle d'avant la pause.
+///
+/// [weighIns] : pesées de la fenêtre, triées, déjà passées par
+/// [usableWeighIns]. Renvoie `null` si aucune variation exploitable.
+EnergyBalanceEstimate? estimateEnergyBalance({
+  required List<WeighIn> weighIns,
+  required Map<String, double> kcalByDay,
+  required List<PausePeriod> pauses,
+  required DateTime today,
+}) {
+  if (weighIns.length < 2) return null;
+  bool paused(DateTime d) => pauses.any((p) => p.contains(d));
+  final todayKey = _dateKey(today);
+
+  // Découpage en segments : une coupure dès qu'un jour de pause (ou de
+  // stabilisation, déjà retiré des pesées) sépare 2 pesées consécutives.
+  final segments = <List<WeighIn>>[];
+  var current = <WeighIn>[weighIns.first];
+  for (var i = 1; i < weighIns.length; i++) {
+    final a = weighIns[i - 1].date, b = weighIns[i].date;
+    var crossesPause = false;
+    for (var d = DateTime(a.year, a.month, a.day).add(const Duration(days: 1));
+        d.isBefore(DateTime(b.year, b.month, b.day));
+        d = d.add(const Duration(days: 1))) {
+      if (paused(d)) { crossesPause = true; break; }
+    }
+    if (crossesPause) {
+      segments.add(current);
+      current = <WeighIn>[];
+    }
+    current.add(weighIns[i]);
+  }
+  segments.add(current);
+
+  double avgWeight(List<WeighIn> pts) => pts.fold<double>(0, (a, w) => a + w.weightKg) / pts.length;
+  double avgEpochDay(List<WeighIn> pts) =>
+      pts.fold<double>(0, (a, w) => a + w.date.millisecondsSinceEpoch / 86400000.0) / pts.length;
+
+  var totalChange = 0.0, totalEffDays = 0.0;
+  double? baseWeight;
+  var used = 0, usedSegments = 0;
+  double totalKcal = 0;
+  var daysWithFood = 0, loggableDays = 0;
+  for (final seg in segments) {
+    if (seg.length < 2) continue;
+    // Lissage propre au segment (jamais à travers une pause).
+    final trend = emaTrend(seg);
+    final trended = List<WeighIn>.generate(seg.length, (i) => WeighIn(seg[i].date, trend[i]));
+    final spanDays = seg.last.date.difference(seg.first.date).inDays;
+    final segmentSpan = (spanDays * 0.3).round().clamp(0, spanDays);
+    final earlyEnd = seg.first.date.add(Duration(days: segmentSpan));
+    final lateStart = seg.last.date.subtract(Duration(days: segmentSpan));
+    final early = trended.where((w) => !w.date.isAfter(earlyEnd)).toList();
+    final late = trended.where((w) => !w.date.isBefore(lateStart)).toList();
+    final eff = avgEpochDay(late) - avgEpochDay(early);
+    if (eff < 1) continue;
+    totalChange += avgWeight(late) - avgWeight(early);
+    totalEffDays += eff;
+    baseWeight ??= avgWeight(early);
+    used += seg.length;
+    usedSegments++;
+    // Calories des jours couverts par CE segment (jour en cours et jours
+    // de pause exclus, comme avant).
+    for (var j = 0; j <= spanDays; j++) {
+      final d = seg.first.date.add(Duration(days: j));
+      final key = _dateKey(d);
+      if (key == todayKey || paused(d)) continue;
+      loggableDays++;
+      final k = kcalByDay[key] ?? 0.0;
+      if (k > 0) {
+        totalKcal += k;
+        daysWithFood++;
+      }
+    }
+  }
+  if (usedSegments == 0 || daysWithFood == 0 || baseWeight == null) return null;
+
+  final effectiveDays = totalEffDays.round();
+  if (effectiveDays <= 0) return null;
+  final avgKcal = totalKcal / daysWithFood;
+  final rateBwPerWeek = (totalChange / baseWeight) / (effectiveDays / 7.0);
+  final density = effectiveEnergyDensityKcalPerKg(rateBwPerWeek.abs());
+  return EnergyBalanceEstimate(
+    tdee: avgKcal - (totalChange * density) / effectiveDays,
+    avgKcal: avgKcal,
+    weightChangeKg: totalChange,
+    effectiveDays: effectiveDays,
+    daysWithFood: daysWithFood,
+    loggableDays: loggableDays,
+    weighInsUsed: used,
+    segments: usedSegments,
+  );
+}
+
 String _dateKey(DateTime d) =>
     '${d.year.toString().padLeft(4, '0')}-'
     '${d.month.toString().padLeft(2, '0')}-'
@@ -334,14 +503,6 @@ class CalibrationService {
     }
   }
 
-  /// Retire de l'historique toute pesée prise pendant une période de pause
-  /// déclarée — voir [computeCalibration] pour le raisonnement.
-  Future<List<WeighIn>> _excludePaused(List<WeighIn> history) async {
-    final pauses = await PauseService.instance.load();
-    if (pauses.isEmpty) return history;
-    return history.where((w) => !pauses.any((p) => p.contains(w.date))).toList();
-  }
-
   // BUG CORRIGÉ (21/08/2026, retour d'Alex — TDEE encore aberrant, 1244
   // kcal/j / "8/20 j", APRÈS le correctif du 20/08/2026, alors que
   // l'algorithme rejoué à la main sur son export Supabase réel donnait
@@ -534,150 +695,37 @@ class CalibrationService {
     final windowStart = baseWindowStart
         .subtract(Duration(days: pausedInBaseWindow.clamp(0, 60)));
 
-    final inWindow = (await _excludePaused(history))
+    final pauses = await PauseService.instance.load();
+    final inWindow = usableWeighIns(history, pauses)
         .where((w) => !w.date.isBefore(windowStart))
         .toList()
       ..sort((a, b) => a.date.compareTo(b.date));
 
     // Seuil COMPTE de jours distincts pesés (jamais l'écart de dates seul —
-    // voir le commentaire sur `_minWeighDays`) : à la fois le critère de
-    // suffisance ET le chiffre affiché à l'écran (`daysOfWeightData`), pour
-    // qu'il n'y ait plus jamais d'écart entre "ce que dit la barre de
-    // progression" et "ce qu'exige réellement le calcul" — exactement la
-    // classe de bug déjà rencontrée (Priorités 52/53/59).
+    // voir `_minWeighDays`) : critère de suffisance ET chiffre affiché.
     if (inWindow.length < _minWeighDays) {
       return CalibrationResult(hasEnoughData: false, daysOfWeightData: inWindow.length);
     }
 
-    final rawFirst = inWindow.first;
-    final rawLast = inWindow.last;
-    final rawSpanDays = rawLast.date.difference(rawFirst.date).inDays;
-
-    // ── Robustesse : on moyenne les pesées du DÉBUT et de la FIN de la
-    // période (premiers/derniers 30 %), au lieu de ne comparer que 2 points
-    // isolés qui peuvent être faussés par la rétention d'eau, un repas
-    // salé ou une pesée à une heure inhabituelle. Si une seule pesée existe
-    // dans un segment, la "moyenne" est simplement cette pesée — la méthode
-    // devient automatiquement plus fiable si l'utilisateur pèse plus souvent.
-    //
-    // BUG CORRIGÉ (19/08/2026, retour d'Alex — TDEE calibré aberrant après
-    // une simple fluctuation de poids en fin de fenêtre) : cette moyenne
-    // portait jusqu'ici sur le poids BRUT (`w.weightKg`), alors que
-    // [emaTrend] (juste au-dessus dans ce même fichier, déjà utilisé pour la
-    // courbe "Poids tendance") existe précisément pour filtrer le bruit
-    // jour-à-jour (eau/sel/glycogène/horaire de pesée) avant toute analyse.
-    // Sur une fenêtre minimale de 10 jours, un simple pic d'eau de 1-2kg en
-    // fin de période (rétention passagère, PAS un vrai changement de masse
-    // grasse) était lu comme un "gain" ou une "perte" réels et se propageait
-    // tel quel dans l'équation d'équilibre énergétique (×7700 kcal/kg) —
-    // produisant un TDEE empirique déconnecté de la réalité (observé : chute
-    // de plusieurs centaines de kcal). On calcule maintenant la moyenne des
-    // segments sur le poids TENDANCE (lissé), jamais sur le brut — même
-    // principe que la courbe affichée à l'utilisateur, qu'il reconnaît et
-    // comprend déjà.
-    final trend = emaTrend(inWindow);
-    final trended = List<WeighIn>.generate(
-        inWindow.length, (i) => WeighIn(inWindow[i].date, trend[i]));
-
-    final segmentSpan = (rawSpanDays * 0.3).round().clamp(0, rawSpanDays);
-    final earlyEnd = rawFirst.date.add(Duration(days: segmentSpan));
-    final lateStart = rawLast.date.subtract(Duration(days: segmentSpan));
-
-    final earlyPoints = trended.where((w) => !w.date.isAfter(earlyEnd)).toList();
-    final latePoints = trended.where((w) => !w.date.isBefore(lateStart)).toList();
-
-    double avgWeight(List<WeighIn> pts) =>
-        pts.fold<double>(0, (a, w) => a + w.weightKg) / pts.length;
-    double avgEpochDay(List<WeighIn> pts) =>
-        pts.fold<double>(0, (a, w) => a + w.date.millisecondsSinceEpoch / 86400000.0) /
-        pts.length;
-
-    final avgEarlyWeight = avgWeight(earlyPoints);
-    final avgLateWeight = avgWeight(latePoints);
-    final avgEarlyDay = avgEpochDay(earlyPoints);
-    final avgLateDay = avgEpochDay(latePoints);
-    final effectiveSpanDays = (avgLateDay - avgEarlyDay).round();
-
-    if (effectiveSpanDays < (_minWeighDays * 0.6).round()) {
-      // Les segments moyennés sont trop rapprochés pour être fiables (cas
-      // marginal : jours pesés groupés sur une courte portion de la
-      // fenêtre malgré un compte suffisant, ex. 10 jours pesés d'affilée
-      // suivis d'un long trou).
+    // Kcal loguées jour par jour : Supabase fait foi (voir _kcalByDay).
+    final kcalByDay = await _kcalByDay(sp, inWindow.first.date, inWindow.last.date);
+    final est = estimateEnergyBalance(
+      weighIns: inWindow, kcalByDay: kcalByDay, pauses: pauses, today: now,
+    );
+    // Segments moyennés trop rapprochés pour être fiables (pesées groupées
+    // sur une portion étroite de la fenêtre malgré un compte suffisant).
+    if (est == null || est.effectiveDays < (_minWeighDays * 0.6).round()) {
       return CalibrationResult(hasEnoughData: false, daysOfWeightData: inWindow.length);
     }
-
-    // Moyenne des calories loguées sur la période couverte par les pesées —
-    // les jours de pause sont exclus même si, exceptionnellement, quelque
-    // chose a été loggé ce jour-là (voyage/repas de fête atypiques, pas
-    // représentatifs de l'alimentation "normale" qu'on cherche à mesurer).
-    //
-    // BUG CORRIGÉ (20/08/2026, retour d'Alex — TDEE empirique de 1273 kcal/j
-    // alors que son journal réel, sur Supabase, tourne à 2500-3100 kcal/j) :
-    // ce calcul lisait via `_kcalForDate`, qui n'interroge QUE le cache local
-    // `history_snapshots` (SharedPreferences, jamais synchronisé — voir son
-    // commentaire). `expenditureHistory`/`expenditureReadiness` avaient déjà
-    // été corrigées (Priorité 53, 14/08/2026) pour utiliser `_kcalByDay`, qui
-    // complète les jours manquants du cache local par une requête groupée
-    // Supabase (`food_entries`) — mais `computeCalibration`, la fonction qui
-    // alimente directement le TDEE empirique utilisé pour la cible calorique
-    // réelle, avait été oubliée lors de cette correction. Un cache local
-    // troué (réinstall, changement d'appareil, purge) faisait donc paraître
-    // le journal quasi vide à CE seul calcul, malgré un historique Supabase
-    // complet — produisant un TDEE empirique aberrant et dangereusement bas.
-    final kcalByDay = await _kcalByDay(sp, rawFirst.date, rawLast.date);
-    final todayKey = _dateKey(now);
-    double totalKcal = 0;
-    int daysWithFood = 0;
-    for (int i = 0; i <= rawSpanDays; i++) {
-      final d = rawFirst.date.add(Duration(days: i));
-      // BUG CORRIGÉ (01/09/2026, retour d'Alex — "j'ai renseigné mon petit-
-      // déjeuner et la dépense a chuté") : la journée EN COURS (aujourd'hui)
-      // entrait dans cette moyenne dès le premier aliment loggé, avec un
-      // total forcément PARTIEL (petit-déjeuner seul, ex. 597 kcal, contre
-      // 3000+ kcal une fois la journée complète) — noyée au même titre
-      // qu'un vrai jour terminé, elle tirait mécaniquement la moyenne vers
-      // le bas à chaque repas ajouté, jusqu'à ce que la journée se termine.
-      // Une journée ne peut être jugée "loguée" qu'une fois TERMINÉE — la
-      // journée du jour ne doit donc jamais entrer dans cette moyenne, quel
-      // que soit ce qui y a déjà été saisi (même principe que
-      // [expenditureHistory] ci-dessous, qui alimente le graphique).
-      if (_dateKey(d) == todayKey) continue;
-      if (await PauseService.instance.isPausedOn(d)) continue;
-      final k = kcalByDay[_dateKey(d)] ?? 0.0;
-      if (k > 0) {
-        totalKcal += k;
-        daysWithFood++;
-      }
-    }
-
-    if (daysWithFood < _minFoodDays) {
+    if (est.daysWithFood < _minFoodDays) {
       return CalibrationResult(
         hasEnoughData: false,
         daysOfWeightData: inWindow.length,
-        daysOfFoodData: daysWithFood,
+        daysOfFoodData: est.daysWithFood,
       );
     }
-
-    final avgKcal = totalKcal / daysWithFood;
-    final weightChangeKg = avgLateWeight - avgEarlyWeight;
-    // BUG CORRIGÉ (19/08/2026, audit "aucune faille") : utilisait une
-    // constante fixe de 7700 kcal/kg — alors que le reste du moteur
-    // (`_goalEnergyAdjustmentKcal`/`effectiveEnergyDensityKcalPerKg` dans
-    // profile.dart) applique déjà un modèle de densité énergétique VARIABLE
-    // selon la vitesse du changement de poids (rapide = plus d'eau/glycogène,
-    // lent = plus proche de graisse pure — voir la doc de la fonction). Une
-    // même incohérence de fond que celle déjà corrigée pour le poids
-    // brut/tendance : appliquer une seule densité fixe partout revient à
-    // ignorer que 2-3kg gagnés en un week-end (cheat meal, sel) ne "pèsent"
-    // pas la même chose en kcal que 2-3kg perdus sur plusieurs semaines.
-    final rateBwPerWeek = (effectiveSpanDays > 0 && avgEarlyWeight > 0)
-        ? (weightChangeKg / avgEarlyWeight) / (effectiveSpanDays / 7.0)
-        : 0.0;
-    final density = effectiveEnergyDensityKcalPerKg(rateBwPerWeek.abs());
-    // Équation d'équilibre énergétique : le TDEE réel est ce qu'il aurait
-    // fallu manger pour rester stable, compte tenu du poids gagné/perdu,
-    // calculé sur l'écart EFFECTIF entre les 2 segments moyennés.
-    final empiricalTdee = avgKcal - (weightChangeKg * density) / effectiveSpanDays;
+    final empiricalTdee = est.tdee;
+    final daysWithFood = est.daysWithFood;
 
     // Confiance croissante avec le VOLUME de données réellement disponible
     // (jours pesés, même métrique que le seuil de suffisance ci-dessus —
@@ -728,9 +776,8 @@ class CalibrationService {
     // (pesées ET calories), une fois pour toute la fenêtre plutôt qu'à
     // chaque itération de la boucle glissante ci-dessous.
     final pauses = await PauseService.instance.load();
-    final history = pauses.isEmpty
-        ? rawHistory
-        : rawHistory.where((w) => !pauses.any((p) => p.contains(w.date))).toList();
+    // Même filtrage que computeCalibration (pause + stabilisation au retour).
+    final history = usableWeighIns(rawHistory, pauses);
     if (history.length < 2) return const [];
 
     final now = DateTime.now();
@@ -781,98 +828,25 @@ class CalibrationService {
         ..sort((a, b) => a.date.compareTo(b.date));
       if (inWindow.length < 2) continue;
 
-      // Seuil COMPTE (jours distincts pesés dans la fenêtre), pas l'écart de
-      // dates — même critère que [computeCalibration]/[expenditureReadiness]
-      // (voir `_minWeighDays`), pour que ce graphique ne puisse jamais
-      // afficher un point que la calibration elle-même refuserait.
-      final spanDays = inWindow.last.date.difference(inWindow.first.date).inDays;
+      // Seuil COMPTE (jours distincts pesés dans la fenêtre) — même
+      // critère que [computeCalibration]/[expenditureReadiness].
       final minWeighCount = (windowDays * 0.5).round();
       if (inWindow.length < minWeighCount) continue;
 
-      double totalKcal = 0;
-      int daysWithFood = 0;
-      // Vrai plafond atteignable pour CE point (voir le commentaire de
-      // `loggableDays` sur ExpenditurePoint) : chaque jour de la fenêtre qui
-      // ATTEINT le test `k > 0` ci-dessous compte ici, qu'il ait ou non été
-      // effectivement logué — c'est exactement le dénominateur honnête de
-      // `daysWithFood`, contrairement au `windowDays` configuré (20), qui ne
-      // tient pas compte de l'exclusion du jour en cours/des jours de pause.
-      int loggableDays = 0;
-      final todayKey = _dateKey(now);
-      for (int j = 0; j <= spanDays; j++) {
-        final d = inWindow.first.date.add(Duration(days: j));
-        // BUG CORRIGÉ (01/09/2026, retour d'Alex — "j'ai renseigné mon
-        // petit-déjeuner et la dépense a chuté") : même correctif que
-        // [computeCalibration] ci-dessus — la journée EN COURS ne peut pas
-        // entrer dans cette moyenne, son total est par nature partiel tant
-        // qu'elle n'est pas terminée (un petit-déjeuner seul, ex. 597 kcal,
-        // noyé au même titre qu'un jour complet à 3000+ kcal, tirait
-        // l'estimation vers le bas à chaque repas ajouté).
-        if (_dateKey(d) == todayKey) continue;
-        if (pauses.any((p) => p.contains(d))) continue;
-        loggableDays++;
-        final k = kcalByDay[_dateKey(d)] ?? 0.0;
-        if (k > 0) {
-          totalKcal += k;
-          daysWithFood++;
-        }
-      }
-      if (daysWithFood < (windowDays * 0.4).round()) continue;
-
-      final avgKcal = totalKcal / daysWithFood;
-
-      // BUG CORRIGÉ (24/08/2026, audit "revérifie tout" — retour d'Alex)
-      // : ce point utilisait encore une comparaison à 2 POINTS (1er/dernier
-      // du poids TENDANCE de la fenêtre), alors que [computeCalibration] —
-      // la fonction qui calcule et sauvegarde la VRAIE cible calorique —
-      // était déjà passée à une moyenne des segments début/fin (30 %
-      // chacun, voir son commentaire du 19/08/2026) pour rester robuste à
-      // un seul point de fin de fenêtre bruité. Les deux méthodes
-      // coexistaient sans que rien à l'écran ne le précise : sur les
-      // données réelles d'Alex, ça produisait 2841 kcal/j ici contre 2783
-      // kcal/j réellement utilisés pour la cible — 2 chiffres corrects
-      // chacun pour sa propre méthode, mais lisibles comme un désaccord
-      // interne. Reprend maintenant EXACTEMENT le même calcul que
-      // [computeCalibration] (segments début/fin sur le poids tendance,
-      // écart effectif entre les 2 centroïdes de segment) : le point le
-      // plus récent de ce graphique correspond désormais, au jour près, au
-      // TDEE empirique qui alimente réellement la cible.
-      final trend = emaTrend(inWindow);
-      final trended = List<WeighIn>.generate(
-          inWindow.length, (k) => WeighIn(inWindow[k].date, trend[k]));
-
-      final segmentSpan = (spanDays * 0.3).round().clamp(0, spanDays);
-      final earlyEnd = inWindow.first.date.add(Duration(days: segmentSpan));
-      final lateStart = inWindow.last.date.subtract(Duration(days: segmentSpan));
-      final earlyPoints = trended.where((w) => !w.date.isAfter(earlyEnd)).toList();
-      final latePoints = trended.where((w) => !w.date.isBefore(lateStart)).toList();
-
-      double avgWeight(List<WeighIn> pts) =>
-          pts.fold<double>(0, (a, w) => a + w.weightKg) / pts.length;
-      double avgEpochDay(List<WeighIn> pts) =>
-          pts.fold<double>(0, (a, w) => a + w.date.millisecondsSinceEpoch / 86400000.0) /
-          pts.length;
-
-      final avgEarlyWeight = avgWeight(earlyPoints);
-      final avgLateWeight = avgWeight(latePoints);
-      final avgEarlyDay = avgEpochDay(earlyPoints);
-      final avgLateDay = avgEpochDay(latePoints);
-      final effectiveSpanDays = (avgLateDay - avgEarlyDay).round();
-
-      // Même garde-fou que [computeCalibration] : segments moyennés trop
-      // rapprochés pour être fiables (pesées groupées sur une portion
-      // étroite de la fenêtre malgré un compte suffisant).
-      if (effectiveSpanDays < (minWeighCount * 0.6).round()) continue;
-
-      final weightChangeKg = avgLateWeight - avgEarlyWeight;
-      // Même densité énergétique VARIABLE que [computeCalibration] (voir son
-      // commentaire) — jamais 7700 kcal/kg fixe — pour rester cohérent avec
-      // le reste du moteur.
-      final rateBwPerWeek = (avgEarlyWeight > 0)
-          ? (weightChangeKg / avgEarlyWeight) / (effectiveSpanDays / 7.0)
-          : 0.0;
-      final density = effectiveEnergyDensityKcalPerKg(rateBwPerWeek.abs());
-      final estimate = avgKcal - (weightChangeKg * density) / effectiveSpanDays;
+      // Cœur unique partagé avec computeCalibration (voir
+      // estimateEnergyBalance) : le point le plus récent de ce graphique
+      // correspond, au jour près, au TDEE qui alimente réellement la cible.
+      final est = estimateEnergyBalance(
+        weighIns: inWindow, kcalByDay: kcalByDay, pauses: pauses, today: now,
+      );
+      if (est == null) continue;
+      if (est.daysWithFood < (windowDays * 0.4).round()) continue;
+      if (est.effectiveDays < (minWeighCount * 0.6).round()) continue;
+      final estimate = est.tdee;
+      final avgKcal = est.avgKcal;
+      final weightChangeKg = est.weightChangeKg;
+      final daysWithFood = est.daysWithFood;
+      final loggableDays = est.loggableDays;
 
       // Bande d'incertitude : resserrée avec le volume de données (jamais
       // sous ±3%, aucune estimation empirique n'étant jamais parfaitement
@@ -927,7 +901,10 @@ class CalibrationService {
     final now = DateTime.now();
     final windowStart = now.subtract(Duration(days: windowDays));
 
-    final inWindow = (await _excludePaused(rawHistory))
+    // Même filtrage que computeCalibration/expenditureHistory (pause +
+    // stabilisation au retour, voir usableWeighIns) — compteur affiché et
+    // calcul réel ne peuvent pas diverger.
+    final inWindow = usableWeighIns(rawHistory, await PauseService.instance.load())
         .where((w) => !w.date.isBefore(windowStart) && !w.date.isAfter(now))
         .toList()
       ..sort((a, b) => a.date.compareTo(b.date));

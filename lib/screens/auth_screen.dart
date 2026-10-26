@@ -44,6 +44,10 @@ class _AuthScreenState extends State<AuthScreen> {
         backgroundColor: color ?? TotumColors.positive,
         behavior: SnackBarBehavior.floating,
         duration: Duration(seconds: seconds),
+        // Flutter ≥ 3.32 : un SnackBar AVEC action reste affiché indéfiniment
+        // par défaut (`persist` = action != null) — bug du 26/10/2026, message
+        // figé à l'écran. La durée doit s'appliquer : persist explicitement faux.
+        persist: false,
         action: action,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
