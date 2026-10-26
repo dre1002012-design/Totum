@@ -5123,7 +5123,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shareKickerRecipe => 'La recette';
 
   @override
-  String get shareKickerNaturo => 'Le point naturo';
+  String get shareKickerNaturo => 'À retenir';
 
   @override
   String get shareMacrosTitle => 'D\'où vient l\'énergie ?';
@@ -5138,12 +5138,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String shareOfEfsaFiber(int pct) {
-    return '$pct % des 25 g/j';
+    return '$pct % des 30 g/j';
   }
 
   @override
   String get shareMacrosFootnote =>
-      'Répartition calculée sur l\'énergie du plat (4 kcal/g protéines et glucides, 9 kcal/g lipides). Fibres : référence EFSA 25 g/j.';
+      'Fibres : repère ANSES de 30 g par jour pour un adulte.';
 
   @override
   String get shareMicrosTitle => 'Ce que ce plat t\'apporte';
@@ -5154,7 +5154,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shareVnrFootnote =>
-      '% des valeurs nutritionnelles de référence (VNR adulte, règlement UE 1169/2011) pour la portion. Oméga-3 EPA+DHA : référence ANSES 500 mg/j.';
+      '% des valeurs nutritionnelles de référence de l\'UE pour un adulte, pour la portion. Oméga-3 EPA+DHA : repère ANSES de 500 mg par jour.';
 
   @override
   String get shareIngredientsTitle => 'Dans l\'assiette';
@@ -5170,7 +5170,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get shareNaturoTitle => 'Ce que j\'en retiens';
+  String get shareNaturoTitle => 'L\'essentiel';
 
   @override
   String get shareCtaSave => '💾 Enregistre ce post pour ta prochaine assiette';
@@ -5180,7 +5180,7 @@ class AppLocalizationsFr extends AppLocalizations {
       '✈️ Envoie-le à quelqu\'un qui cherche des idées de repas';
 
   @override
-  String get shareScreenTitle => 'Partager sur Instagram';
+  String get shareScreenTitle => 'Partager';
 
   @override
   String get shareFormatCarousel => 'Carrousel';
@@ -5196,18 +5196,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shareFormatCarouselDesc =>
-      '8 visuels 1080×1350 — accroche, chiffres, micronutriments, acides gras, rôles, recette, à compléter, appel à l\'action';
+      '8 visuels 1080×1350 — Instagram, Facebook, LinkedIn';
 
   @override
   String get shareFormatPostDesc => '1 visuel 1080×1350 tout-en-un';
 
   @override
   String get shareFormatStoryDesc =>
-      '1 visuel 1080×1920, zones Instagram respectées';
+      '1 visuel 1080×1920 — stories Instagram, Facebook, WhatsApp';
 
   @override
   String get shareFormatReelDesc =>
-      '8 images 1080×1920 à importer dans l\'éditeur de Reels, avec ta musique';
+      '8 images 1080×1920 à importer dans un éditeur vidéo (Reels, TikTok, Shorts)';
 
   @override
   String get shareDishNameLabel => 'Nom du plat';
@@ -5222,7 +5222,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shareRemovePhoto => 'Retirer la photo';
 
   @override
-  String get shareHandleLabel => 'Ton compte Instagram';
+  String get shareHandleLabel => 'Ton @compte (optionnel)';
 
   @override
   String get shareHandleHint => '@ton.compte';
@@ -5231,7 +5231,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sharePaletteLabel => 'Ambiance';
 
   @override
-  String get shareTotumMarkToggle => 'Mention « Calculé avec Totum »';
+  String get shareTotumMarkToggle => 'Mention « Analysé avec Totum »';
 
   @override
   String get shareCaptionLabel => 'Légende prête à coller';
@@ -5261,14 +5261,14 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get shareTipsTitle => 'Pour maximiser la portée';
+  String get shareTipsTitle => 'Conseils de publication';
 
   @override
   String get shareTipsBody =>
-      'Publie le carrousel avec la légende copiée (5 mots-dièse max., la limite Instagram). Les enregistrements et les envois en message privé font partie des signaux qu\'Instagram dit valoriser le plus : les deux appels à l\'action du dernier visuel sont là pour ça.';
+      'Carrousel : publie les visuels dans l\'ordre avec la légende copiée (5 mots-dièse maximum sur Instagram). Story : ajoute un sondage ou une question pour faire réagir. Les enregistrements et les envois en message privé font partie des signaux qu\'Instagram valorise le plus.';
 
   @override
-  String get shareMealButton => 'Partager sur Instagram';
+  String get shareMealButton => 'Partager ce repas';
 
   @override
   String get shareEmptyMeal =>
@@ -5327,15 +5327,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shareFormatLandscape => 'Paysage';
 
   @override
-  String get shareFormatBanner => 'Play Store';
+  String get shareFormatBanner => 'Bannière';
 
   @override
   String get shareFormatLandscapeDesc =>
-      '1 visuel 1200×630 — site internet, Facebook, LinkedIn, aperçu de lien';
+      '1 visuel 1200×630 — site internet, blog, Facebook, LinkedIn';
 
   @override
   String get shareFormatBannerDesc =>
-      'Bannière 1024×500 — image de présentation Play Store (« feature graphic »)';
+      '1 visuel 1024×500 — en-tête de site ou de profil';
 
   @override
   String get shareBrandLabel => 'Pour quel compte ?';
@@ -5351,4 +5351,41 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shareDayTitle => 'Ma journée';
+
+  @override
+  String shareCreateButton(int count) {
+    return 'Créer $count visuel(s)';
+  }
+
+  @override
+  String get shareReadyTitle => 'Tes visuels sont prêts';
+
+  @override
+  String get shareReadyHint =>
+      '« Partager… » ouvre le menu de partage de ton appareil : Instagram (publication, story, message), Facebook, WhatsApp, e-mail… La légende est copiée automatiquement : il suffit de la coller (sinon, touche « Copier la légende »).';
+
+  @override
+  String get shareShareButton => 'Partager…';
+
+  @override
+  String get shareSaveButton => 'Enregistrer sur l\'appareil';
+
+  @override
+  String shareSavedToGallery(int count) {
+    return '$count visuel(s) enregistré(s) dans tes photos';
+  }
+
+  @override
+  String get shareSaveDenied =>
+      'Accès aux photos refusé : autorise-le dans les réglages du téléphone, ou utilise « Partager… ».';
+
+  @override
+  String get shareShareUnavailable =>
+      'Ce navigateur ne permet pas de partager des images : utilise « Enregistrer sur l\'appareil », puis publie depuis ta galerie.';
+
+  @override
+  String get shareShareOne => 'Partager ce visuel';
+
+  @override
+  String get sharePaletteTotum => 'Totum';
 }

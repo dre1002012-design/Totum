@@ -165,23 +165,46 @@ void main() {
     expect(data.covered().every((c) => c.percent >= data.gapThreshold), isTrue);
   });
 
-  test('légende : 5 mots-dièse maximum, aucune allégation "riche en", CTA selon la marque', () {
-    final cap = captionFor(data, handle: '@agenaturo');
+  test('légende : généraliste, 5 mots-dièse max, aucun emoji de nutriment, aucune allégation', () {
+    final cap = captionFor(data, handle: '@moncompte');
     expect(RegExp(r'#\w+').allMatches(cap).length, lessThanOrEqualTo(5));
     expect(cap.toLowerCase(), isNot(contains('riche en')));
-    expect(cap, contains('@agenaturo'));
-    final capTotum = captionFor(data, brand: ShareBrand.totum);
-    expect(capTotum, contains('Google Play'));
-    expect(RegExp(r'#\w+').allMatches(capTotum).length, lessThanOrEqualTo(5));
+    expect(cap.toLowerCase(), isNot(contains('naturo')));
+    expect(cap, contains('@moncompte'));
+    expect(cap, contains('Ciqual'));
+    // Seuls 💾 (enregistrer) et ✈️ (envoyer, icône d'Instagram) sont admis.
+    final emoji = RegExp(r'[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]', unicode: true);
+    final found = emoji.allMatches(cap).map((m) => m.group(0)).toSet()..removeAll({'💾', '✈'});
+    expect(found, isEmpty, reason: 'emojis inattendus : $found');
+    expect(captionFor(data, mentionTotum: false), isNot(contains('Totum')));
+  });
+
+  test('nutriments : symbole explicite, jamais d\'emoji, références cohérentes', () {
+    final emoji = RegExp(r'[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]', unicode: true);
+    for (final n in essentialNutrients) {
+      expect(n.symbol, isNotEmpty);
+      for (final t in [n.symbol, n.labelFr, n.titleFr, n.roleFr, n.foodsFr, n.foodsEn]) {
+        expect(emoji.hasMatch(t), isFalse, reason: '${n.key} : "$t"');
+      }
+    }
+    // Symboles distincts au sein d'une même famille (K vitamine ≠ K minéral).
+    final byKind = <NutrientKind, Set<String>>{};
+    for (final n in essentialNutrients) {
+      expect(byKind.putIfAbsent(n.kind, () => {}).add(n.symbol), isTrue, reason: n.key);
+    }
+    expect(kRefFiberG, 30); // repère ANSES, cité tel quel sur les visuels
   });
 
   testWidgets('rendu PNG de tous les visuels (4 ambiances, 6 formats)', (tester) async {
     final fr = AppLocalizationsFr();
     await tester.runAsync(() async {
-      final sdk = '${Platform.environment['USERPROFILE']}/flutter/bin/cache/artifacts/material_fonts';
-      await _loadFont('Roboto', ['$sdk/roboto-regular.ttf']);
-      await _loadFont('Roboto', ['$sdk/roboto-bold.ttf']);
-      await _loadFont('Roboto', ['$sdk/roboto-black.ttf']);
+      // Police EMBARQUÉE des visuels (pubspec : TotumShare), comme en production.
+      final loader = FontLoader('TotumShare');
+      for (final f in ['Regular', 'Bold', 'Black']) {
+        final bytes = File('assets/fonts/Roboto-$f.ttf').readAsBytesSync();
+        loader.addFont(Future.value(ByteData.view(bytes.buffer)));
+      }
+      await loader.load();
       await _loadFont('Emoji', [r'C:\Windows\Fonts\seguiemj.ttf']);
       final dir = Directory('build/share')..createSync(recursive: true);
       for (final f in dir.listSync()) {
@@ -192,28 +215,28 @@ void main() {
             logicalSize: slide.logicalSize, pixelRatio: slide.exportScale, view: tester.view);
         File('${dir.path}/$name.png').writeAsBytesSync(await imageToPng(img));
       }
-      MealShareSlide make(ShareSlideKind k, SharePalette p, {ShareBrand brand = ShareBrand.coach, int? i, bool reel = false}) =>
-          MealShareSlide(kind: k, data: data, palette: p, l10n: fr, handle: '@agenaturo', brand: brand,
+      MealShareSlide make(ShareSlideKind k, SharePalette p, {int? i, bool reel = false, String handle = ''}) =>
+          MealShareSlide(kind: k, data: data, palette: p, l10n: fr, handle: handle,
               index: i, count: i == null ? null : carouselKinds.length, reelFrame: reel,
-              fontFamily: 'Roboto', fontFamilyFallback: const ['Emoji']);
+              fontFamilyFallback: const ['Emoji']);
 
       for (final pal in SharePalette.all) {
-        final brand = pal.id.startsWith('totum') ? ShareBrand.totum : ShareBrand.coach;
         for (var i = 0; i < carouselKinds.length; i++) {
-          await render(make(carouselKinds[i], pal, brand: brand, i: i + 1), '${pal.id}_${i + 1}_${carouselKinds[i].name}');
+          await render(make(carouselKinds[i], pal, i: i + 1, handle: pal.id == 'nature' ? '@moncompte' : ''),
+              '${pal.id}_${i + 1}_${carouselKinds[i].name}');
         }
       }
-      await render(make(ShareSlideKind.story, SharePalette.naturoSage), 'format_story');
-      await render(make(ShareSlideKind.post, SharePalette.naturoLinen), 'format_post');
-      await render(make(ShareSlideKind.landscape, SharePalette.totumCream, brand: ShareBrand.totum), 'format_paysage');
-      await render(make(ShareSlideKind.banner, SharePalette.totumCream, brand: ShareBrand.totum), 'format_banniere_playstore');
+      await render(make(ShareSlideKind.story, SharePalette.nature), 'format_story');
+      await render(make(ShareSlideKind.post, SharePalette.linen), 'format_post');
+      await render(make(ShareSlideKind.landscape, SharePalette.totumCream), 'format_paysage');
+      await render(make(ShareSlideKind.banner, SharePalette.totumCream), 'format_banniere_playstore');
       await render(make(ShareSlideKind.micros, SharePalette.totumNight, reel: true), 'format_reel_3');
       final day = _alexDay();
       for (final k in [ShareSlideKind.cover, ShareSlideKind.micros, ShareSlideKind.gaps, ShareSlideKind.cta]) {
         await render(
-          MealShareSlide(kind: k, data: day, palette: SharePalette.naturoSage, l10n: fr, handle: '@agenaturo',
+          MealShareSlide(kind: k, data: day, palette: SharePalette.nature, l10n: fr, 
               index: carouselKinds.indexOf(k) + 1, count: carouselKinds.length,
-              fontFamily: 'Roboto', fontFamilyFallback: const ['Emoji']),
+              fontFamilyFallback: const ['Emoji']),
           'journee_${k.name}');
       }
       expect(day.isFullDay, isTrue);

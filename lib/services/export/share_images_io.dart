@@ -1,23 +1,21 @@
 // lib/services/export/share_images_io.dart
 //
-// Version ANDROID / iOS : écrit les PNG dans le dossier temporaire puis
-// ouvre la feuille de partage native — Instagram y apparaît directement
-// (carrousel si plusieurs images, story/publication sinon).
+// Version ANDROID / iOS : enregistre les visuels dans la galerie photos
+// (paquet gal — MediaStore sur Android, Photos sur iOS), d'où l'utilisateur
+// les publie ensuite où il veut. Le partage direct (Instagram, WhatsApp...)
+// passe, lui, par la feuille de partage native (share_plus), voir
+// meal_share_screen.dart.
 
-import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:gal/gal.dart';
 
-Future<bool> shareOrDownloadPngs(List<(Uint8List, String)> files, {String? subject}) async {
-  final dir = await getTemporaryDirectory();
-  final xfiles = <XFile>[];
-  for (final (bytes, name) in files) {
-    final f = File('${dir.path}/$name');
-    await f.writeAsBytes(bytes, flush: true);
-    xfiles.add(XFile(f.path, mimeType: 'image/png'));
+Future<int> savePngsToDevice(List<(Uint8List, String)> files) async {
+  if (!await Gal.hasAccess()) {
+    if (!await Gal.requestAccess()) return -1;
   }
-  await Share.shareXFiles(xfiles, subject: subject);
-  return true;
+  for (final (bytes, name) in files) {
+    await Gal.putImageBytes(bytes, name: name.replaceAll(RegExp(r'\.png$'), ''));
+  }
+  return files.length;
 }

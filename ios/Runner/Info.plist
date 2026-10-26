@@ -60,6 +60,8 @@
 	     binaire qui utilise ces capteurs sans texte d'explication. -->
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Totum uses your location to estimate the local UV index and help you track your sun-based vitamin D intake.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Totum saves the nutrition visuals you create for a meal to your photo library so you can share them.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Totum lets you pick a photo of your dish to create a shareable nutrition card (macros and micronutrients) for social media.</string>
 	<key>NSCameraUsageDescription</key>

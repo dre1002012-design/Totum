@@ -4,6 +4,9 @@
 
     <!-- Accès réseau (Supabase, etc.) -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Enregistrement des visuels de partage d'un repas dans la galerie (paquet gal) :
+         requis uniquement jusqu'à Android 10 (API 29), aucune demande au-delà. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
 
     <!-- AJOUTER ICI : permission Billing pour Google Play -->
     <uses-permission android:name="com.android.vending.BILLING" />

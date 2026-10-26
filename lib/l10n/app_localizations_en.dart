@@ -5079,7 +5079,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareKickerRecipe => 'The recipe';
 
   @override
-  String get shareKickerNaturo => 'Nutrition take';
+  String get shareKickerNaturo => 'Key takeaways';
 
   @override
   String get shareMacrosTitle => 'Where does the energy come from?';
@@ -5094,12 +5094,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String shareOfEfsaFiber(int pct) {
-    return '$pct% of 25 g/day';
+    return '$pct% of 30 g/day';
   }
 
   @override
   String get shareMacrosFootnote =>
-      'Split computed on the plate\'s energy (4 kcal/g protein and carbs, 9 kcal/g fat). Fiber: EFSA reference 25 g/day.';
+      'Fiber: ANSES guideline of 30 g a day for adults.';
 
   @override
   String get shareMicrosTitle => 'What this plate gives you';
@@ -5110,7 +5110,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareVnrFootnote =>
-      '% of EU nutrient reference values (adult, Regulation 1169/2011) per serving. Omega-3 EPA+DHA: ANSES reference 500 mg/day.';
+      '% of EU nutrient reference values for adults, per serving. Omega-3 EPA+DHA: ANSES guideline of 500 mg a day.';
 
   @override
   String get shareIngredientsTitle => 'On the plate';
@@ -5126,7 +5126,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get shareNaturoTitle => 'My takeaways';
+  String get shareNaturoTitle => 'The essentials';
 
   @override
   String get shareCtaSave => '💾 Save this post for your next plate';
@@ -5135,7 +5135,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareCtaSend => '✈️ Send it to someone looking for meal ideas';
 
   @override
-  String get shareScreenTitle => 'Share on Instagram';
+  String get shareScreenTitle => 'Share';
 
   @override
   String get shareFormatCarousel => 'Carousel';
@@ -5151,18 +5151,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareFormatCarouselDesc =>
-      '8 visuals 1080×1350 — hook, numbers, micronutrients, fats, roles, recipe, gaps, call to action';
+      '8 visuals 1080×1350 — Instagram, Facebook, LinkedIn';
 
   @override
   String get shareFormatPostDesc => '1 all-in-one visual 1080×1350';
 
   @override
   String get shareFormatStoryDesc =>
-      '1 visual 1080×1920, Instagram safe zones respected';
+      '1 visual 1080×1920 — Instagram, Facebook, WhatsApp stories';
 
   @override
   String get shareFormatReelDesc =>
-      '8 images 1080×1920 to import into the Reels editor, with your music';
+      '8 images 1080×1920 to import into a video editor (Reels, TikTok, Shorts)';
 
   @override
   String get shareDishNameLabel => 'Dish name';
@@ -5177,7 +5177,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareRemovePhoto => 'Remove photo';
 
   @override
-  String get shareHandleLabel => 'Your Instagram handle';
+  String get shareHandleLabel => 'Your @handle (optional)';
 
   @override
   String get shareHandleHint => '@your.handle';
@@ -5186,7 +5186,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sharePaletteLabel => 'Style';
 
   @override
-  String get shareTotumMarkToggle => '\"Computed with Totum\" mention';
+  String get shareTotumMarkToggle => '\"Analysed with Totum\" mention';
 
   @override
   String get shareCaptionLabel => 'Ready-to-paste caption';
@@ -5216,14 +5216,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get shareTipsTitle => 'To maximize reach';
+  String get shareTipsTitle => 'Posting tips';
 
   @override
   String get shareTipsBody =>
-      'Post the carousel with the copied caption (5 hashtags max, Instagram\'s limit). Saves and DM sends are among the signals Instagram says it values most: the two calls to action on the last visual are there for that.';
+      'Carousel: post the visuals in order with the copied caption (5 hashtags max on Instagram). Story: add a poll or a question to spark replies. Saves and DM sends are among the signals Instagram values most.';
 
   @override
-  String get shareMealButton => 'Share on Instagram';
+  String get shareMealButton => 'Share this meal';
 
   @override
   String get shareEmptyMeal =>
@@ -5282,15 +5282,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareFormatLandscape => 'Landscape';
 
   @override
-  String get shareFormatBanner => 'Play Store';
+  String get shareFormatBanner => 'Banner';
 
   @override
   String get shareFormatLandscapeDesc =>
-      '1 visual 1200×630 — website, Facebook, LinkedIn, link preview';
+      '1 visual 1200×630 — website, blog, Facebook, LinkedIn';
 
   @override
   String get shareFormatBannerDesc =>
-      '1024×500 banner — Play Store feature graphic';
+      '1 visual 1024×500 — website or profile header';
 
   @override
   String get shareBrandLabel => 'For which account?';
@@ -5306,4 +5306,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareDayTitle => 'My day';
+
+  @override
+  String shareCreateButton(int count) {
+    return 'Create $count visual(s)';
+  }
+
+  @override
+  String get shareReadyTitle => 'Your visuals are ready';
+
+  @override
+  String get shareReadyHint =>
+      '\"Share…\" opens your device\'s share menu: Instagram (post, story, message), Facebook, WhatsApp, email… The caption is copied automatically: just paste it (otherwise, tap \"Copy caption\").';
+
+  @override
+  String get shareShareButton => 'Share…';
+
+  @override
+  String get shareSaveButton => 'Save to device';
+
+  @override
+  String shareSavedToGallery(int count) {
+    return '$count visual(s) saved to your photos';
+  }
+
+  @override
+  String get shareSaveDenied =>
+      'Photo access denied: allow it in your phone settings, or use \"Share…\".';
+
+  @override
+  String get shareShareUnavailable =>
+      'This browser cannot share images: use \"Save to device\", then post from your gallery.';
+
+  @override
+  String get shareShareOne => 'Share this visual';
+
+  @override
+  String get sharePaletteTotum => 'Totum';
 }

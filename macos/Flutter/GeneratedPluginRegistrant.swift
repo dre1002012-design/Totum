@@ -8,6 +8,7 @@ import Foundation
 import app_links
 import audio_session
 import file_selector_macos
+import gal
 import geolocator_apple
 import in_app_purchase_storekit
 import mobile_scanner
@@ -20,6 +21,7 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   AppLinksMacosPlugin.register(with: registry.registrar(forPlugin: "AppLinksMacosPlugin"))
   AudioSessionPlugin.register(with: registry.registrar(forPlugin: "AudioSessionPlugin"))
   FileSelectorPlugin.register(with: registry.registrar(forPlugin: "FileSelectorPlugin"))
+  GalPlugin.register(with: registry.registrar(forPlugin: "GalPlugin"))
   GeolocatorPlugin.register(with: registry.registrar(forPlugin: "GeolocatorPlugin"))
   InAppPurchasePlugin.register(with: registry.registrar(forPlugin: "InAppPurchasePlugin"))
   MobileScannerPlugin.register(with: registry.registrar(forPlugin: "MobileScannerPlugin"))

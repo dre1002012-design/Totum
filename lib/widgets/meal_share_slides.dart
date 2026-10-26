@@ -1,28 +1,30 @@
 // lib/widgets/meal_share_slides.dart
 //
-// Visuels de partage d'un repas / d'une journée (v2, 26/10/2026 — retour
-// d'Alex : "plus de modernité, une vraie valeur ajoutée, rivaliser avec les
-// meilleurs comptes de naturopathes"). Données et sources :
+// Visuels de partage d'un repas / d'une journée. Données et références :
 // services/meal_share.dart. Widgets PURS (aucune dépendance au thème de
 // l'app ni à Localizations) : rendus hors écran à la taille exacte.
 //
-// Structure du carrousel (8 visuels, "une idée par visuel" : accroche ->
-// chiffres -> valeur pédagogique -> appel à l'action) :
-//  1. Couverture : photo pleine largeur, titre chiffré, 3 chiffres clés
-//  2. L'assiette en chiffres : kcal, macros (% de l'énergie), fibres
-//  3. Micronutriments en vedette : 6 jauges + source n°1 dans l'assiette
-//  4. Acides gras essentiels : ALA, LA, EPA+DHA, rapport oméga-6/oméga-3
-//  5. À quoi ils servent : rôles (allégations UE autorisées)
-//  6. La recette : ingrédients, quantités, kcal
-//  7. À compléter dans la journée : essentiels peu couverts + aliments
-//  8. Ce que j'en retiens + appel à l'action (Totum ou compte perso)
+// Révision du 27/10/2026 (retour d'Alex) :
+// - fonction GÉNÉRALISTE : aucun compte ni marque imposé — @compte
+//   optionnel, mention Totum discrète et désactivable ;
+// - plus aucun emoji pour représenter un nutriment (aucun n'était juste :
+//   un poisson pour la B12 ET les oméga-3, une châtaigne pour le
+//   sélénium...) : badges à symbole explicite, façon infographie
+//   nutritionnelle — Mg, Zn, Se, K, Ca, Fe, I pour les minéraux ; "VIT" + D,
+//   C, B12... pour les vitamines ; ω3/ω6 pour les acides gras. Les emojis
+//   restent réservés aux ALIMENTS (pictogrammes Ciqual) ;
+// - mentions de référence courtes et homogènes (VNR UE, repères ANSES).
+//
+// Carrousel (8 visuels, une idée par visuel) :
+//  1. Couverture  2. L'énergie  3. Micronutriments en vedette
+//  4. Acides gras essentiels  5. Leurs rôles  6. La recette
+//  7. L'équilibre (déjà couverts / à compléter)  8. À retenir
 //
 // Tailles logiques -> pixels exportés :
-//  - flux (carrousel, post) : 360 × 450 ×3 = 1080 × 1350 (4:5), marges ≥ 20
-//    pour le recadrage 3:4 de la grille du profil ;
-//  - story / Reel : 360 × 640 ×3 = 1080 × 1920, zones Instagram libres ;
-//  - paysage (site, Facebook, LinkedIn) : 400 × 210 ×3 = 1200 × 630 ;
-//  - bannière Play Store (feature graphic) : 512 × 250 ×2 = 1024 × 500.
+//  - flux (carrousel, post) : 360 × 450 ×3 = 1080 × 1350 (4:5) ;
+//  - story / Reel : 360 × 640 ×3 = 1080 × 1920 (9:16), zones libres ;
+//  - paysage : 400 × 210 ×3 = 1200 × 630 (site, Facebook, LinkedIn) ;
+//  - bannière : 512 × 250 ×2 = 1024 × 500 (en-tête de site, Play Store).
 
 import 'dart:math' as math;
 import 'dart:ui' as ui;
@@ -38,9 +40,9 @@ const Size kShareSizeLandscape = Size(400, 210);
 const Size kShareSizeBanner = Size(512, 250);
 const double kShareExportScale = 3; // 360 -> 1080 px
 
-/// Palette d'un visuel. Ambiances "Totum" = charte de l'app (accent orange
-/// unique) ; ambiances "Naturo" = tons naturels pour un compte de
-/// naturopathe/coach (vert sauge, terracotta), toujours sobres et lisibles.
+/// Palette d'un visuel. Les 2 premières = charte Totum (proposées par
+/// défaut) ; les suivantes = ambiances généralistes, toujours sobres et
+/// très lisibles (contraste texte/fond élevé).
 class SharePalette {
   final String id;
   final Color bg, card, text, textSoft, accent, accentSoft, track, accent2;
@@ -61,17 +63,27 @@ class SharePalette {
     textSoft: Color(0xFFB9AE9F), accent: Color(0xFFFF8A1F), accentSoft: Color(0xFF3A2A18),
     track: Color(0xFF34302A), accent2: Color(0xFFFFC27A), dark: true,
   );
-  static const naturoSage = SharePalette(
-    id: 'naturo_sage', bg: Color(0xFFEEF1E8), card: Colors.white, text: Color(0xFF1F2A1E),
+  static const nature = SharePalette(
+    id: 'nature', bg: Color(0xFFEEF1E8), card: Colors.white, text: Color(0xFF1F2A1E),
     textSoft: Color(0xFF5E6B58), accent: Color(0xFF3F6B4F), accentSoft: Color(0xFFDCE6D5),
     track: Color(0xFFDDE3D6), accent2: Color(0xFFC8693F),
   );
-  static const naturoLinen = SharePalette(
-    id: 'naturo_linen', bg: Color(0xFFF6EFE6), card: Color(0xFFFFFCF8), text: Color(0xFF2B211B),
+  static const linen = SharePalette(
+    id: 'linen', bg: Color(0xFFF6EFE6), card: Color(0xFFFFFCF8), text: Color(0xFF2B211B),
     textSoft: Color(0xFF7A6A5C), accent: Color(0xFFB85C38), accentSoft: Color(0xFFF1DCCB),
     track: Color(0xFFEADFD2), accent2: Color(0xFF6E8B5E),
   );
-  static const all = [totumCream, totumNight, naturoSage, naturoLinen];
+  static const ocean = SharePalette(
+    id: 'ocean', bg: Color(0xFFEDF4F6), card: Colors.white, text: Color(0xFF12262E),
+    textSoft: Color(0xFF557079), accent: Color(0xFF1F6F8B), accentSoft: Color(0xFFD5E8EE),
+    track: Color(0xFFD9E5E9), accent2: Color(0xFFE7A23B),
+  );
+  static const minimal = SharePalette(
+    id: 'minimal', bg: Colors.white, card: Color(0xFFF4F4F2), text: Color(0xFF111111),
+    textSoft: Color(0xFF66666A), accent: Color(0xFF111111), accentSoft: Color(0xFFEDEDEB),
+    track: Color(0xFFE4E4E1), accent2: Color(0xFFFF7A00),
+  );
+  static const all = [totumCream, totumNight, nature, linen, ocean, minimal];
 }
 
 enum ShareSlideKind {
@@ -98,8 +110,9 @@ class MealShareSlide extends StatelessWidget {
   final AppLocalizations l10n;
   final bool english;
   final ui.Image? photo;
+  /// @compte de l'utilisateur, optionnel.
   final String handle;
-  final ShareBrand brand;
+  /// Mention discrète "Analysé avec Totum" (désactivable).
   final bool showTotumMark;
   final int? index;
   final int? count;
@@ -118,7 +131,6 @@ class MealShareSlide extends StatelessWidget {
     this.english = false,
     this.photo,
     this.handle = '',
-    this.brand = ShareBrand.coach,
     this.showTotumMark = true,
     this.index,
     this.count,
@@ -134,8 +146,8 @@ class MealShareSlide extends StatelessWidget {
         _ => reelFrame ? kShareSizeStory : kShareSizeFeed,
       };
 
-  /// Pixels exportés : 1080 de large pour les formats Instagram, 1200 pour
-  /// le paysage, 1024 pour la bannière Play Store.
+  /// Pixels exportés : 1080 de large (Instagram), 1200 (paysage), 1024
+  /// (bannière).
   double get exportScale => kind == ShareSlideKind.banner ? 2 : kShareExportScale;
 
   SharePalette get p => palette;
@@ -170,16 +182,17 @@ class MealShareSlide extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: DefaultTextStyle(
+          // Police embarquée (pubspec : TotumShare) — jamais la police système.
           style: TextStyle(color: p.text, fontSize: 13, height: 1.25, decoration: TextDecoration.none,
-              fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+              fontFamily: fontFamily ?? 'TotumShare', fontFamilyFallback: fontFamilyFallback),
           child: SizedBox.fromSize(
             size: logicalSize,
             child: ClipRect(
               child: Stack(
                 children: [
                   Positioned.fill(child: ColoredBox(color: p.bg)),
-                  Positioned(right: -80, top: -80, child: _blob(210, p.accent.withValues(alpha: p.dark ? 0.14 : 0.09))),
-                  Positioned(left: -60, bottom: -70, child: _blob(170, p.accent2.withValues(alpha: p.dark ? 0.10 : 0.08))),
+                  Positioned(right: -80, top: -80, child: _blob(210, p.accent.withValues(alpha: p.dark ? 0.14 : 0.07))),
+                  Positioned(left: -60, bottom: -70, child: _blob(170, p.accent2.withValues(alpha: p.dark ? 0.10 : 0.07))),
                   Positioned.fill(child: body),
                 ],
               ),
@@ -202,7 +215,8 @@ class MealShareSlide extends StatelessWidget {
           borderRadius: BorderRadius.circular(99),
         ),
         child: Text(text.toUpperCase(), maxLines: 1, overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 1.3, color: p.accent)),
+            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 1.3,
+                color: onPhoto && p.dark ? const Color(0xFF14120F) : p.accent)),
       );
 
   Widget _counter({bool onPhoto = false}) => (index == null || count == null)
@@ -210,7 +224,7 @@ class MealShareSlide extends StatelessWidget {
       : Container(
           padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
           decoration: BoxDecoration(
-            color: onPhoto ? Colors.black.withValues(alpha: 0.35) : p.card.withValues(alpha: 0.8),
+            color: onPhoto ? Colors.black.withValues(alpha: 0.35) : p.card.withValues(alpha: 0.85),
             borderRadius: BorderRadius.circular(99),
           ),
           child: Text('$index/$count',
@@ -226,32 +240,73 @@ class MealShareSlide extends StatelessWidget {
       maxLines: lines, overflow: TextOverflow.ellipsis,
       style: TextStyle(fontSize: size, fontWeight: FontWeight.w900, height: 1.05, letterSpacing: -0.6, color: p.text));
 
-  Widget _brandMark({bool light = false}) {
-    final c = light ? Colors.white : p.text;
-    if (brand == ShareBrand.totum) {
-      return Row(mainAxisSize: MainAxisSize.min, children: [
-        Container(width: 8, height: 8, decoration: BoxDecoration(color: p.accent, shape: BoxShape.circle)),
-        const SizedBox(width: 5),
-        Text('TOTUM', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w900, letterSpacing: 2.2, color: c)),
-      ]);
-    }
-    return Text(handle.trim(), maxLines: 1, overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: c));
+  /// Badge d'un nutriment : symbole explicite, jamais un emoji.
+  Widget _badge(EssentialNutrient d, {double size = 32, bool filled = false}) {
+    final fg = filled ? Colors.white : p.accent;
+    final isVit = d.kind == NutrientKind.vitamin;
+    return Container(
+      width: size, height: size,
+      decoration: BoxDecoration(
+        color: filled ? p.accent : p.accentSoft,
+        borderRadius: BorderRadius.circular(size * 0.3),
+      ),
+      alignment: Alignment.center,
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        if (isVit)
+          Text('VIT', style: TextStyle(fontSize: size * 0.2, height: 1, fontWeight: FontWeight.w900, letterSpacing: 0.5, color: fg)),
+        Text(d.symbol,
+            style: TextStyle(
+                fontSize: size * (d.symbol.length >= 3 ? 0.3 : isVit ? 0.4 : 0.38),
+                height: 1.05, fontWeight: FontWeight.w900, color: fg)),
+      ]),
+    );
   }
 
-  Widget _footer({String? right}) => Padding(
-        padding: const EdgeInsets.fromLTRB(22, 0, 22, 16),
+  Widget _textBadge(String symbol, {double size = 32, String? top}) => Container(
+        width: size, height: size,
+        decoration: BoxDecoration(color: p.accentSoft, borderRadius: BorderRadius.circular(size * 0.3)),
+        alignment: Alignment.center,
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          if (top != null)
+            Text(top, style: TextStyle(fontSize: size * 0.18, height: 1, fontWeight: FontWeight.w900, color: p.accent)),
+          Text(symbol, style: TextStyle(fontSize: size * 0.38, height: 1.05, fontWeight: FontWeight.w900, color: p.accent)),
+        ]),
+      );
+
+  Widget _totumMark({bool light = false}) => Row(mainAxisSize: MainAxisSize.min, children: [
+        Container(width: 7, height: 7, decoration: BoxDecoration(color: p.dark || light ? const Color(0xFFFF8A1F) : const Color(0xFFFF7A00), shape: BoxShape.circle)),
+        const SizedBox(width: 5),
+        Text(english ? 'Analysed with Totum' : 'Analysé avec Totum',
+            style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: light ? Colors.white : p.textSoft)),
+      ]);
+
+  /// Pied de page : @compte (si renseigné) à gauche ; mention Totum (si
+  /// activée) ou "Fais défiler" à droite.
+  Widget _footer({String? right}) {
+    final h = handle.trim();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(22, 0, 22, 16),
+      child: SizedBox(
+        height: 16,
         child: Row(
           children: [
-            Expanded(child: Align(alignment: Alignment.centerLeft, child: _brandMark())),
+            Expanded(
+              child: h.isNotEmpty
+                  ? Text(h, maxLines: 1, overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: p.text))
+                  : (showTotumMark && right != null
+                      ? Align(alignment: Alignment.centerLeft, child: _totumMark())
+                      : const SizedBox.shrink()),
+            ),
             if (right != null)
               Text(right, style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w900, color: p.accent))
-            else if (showTotumMark && brand == ShareBrand.coach)
-              Text(english ? 'Computed with Totum' : 'Calculé avec Totum',
-                  style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w600, color: p.textSoft)),
+            else if (showTotumMark)
+              _totumMark(),
           ],
         ),
-      );
+      ),
+    );
+  }
 
   Widget _foot(String text) => Padding(
         padding: const EdgeInsets.fromLTRB(22, 0, 22, 7),
@@ -266,6 +321,7 @@ class MealShareSlide extends StatelessWidget {
         child: SizedBox(height: height, width: double.infinity, child: RawImage(image: img, fit: BoxFit.cover)),
       );
     }
+    // Sans photo : les pictogrammes des ALIMENTS du repas.
     final emojis = data.items.map((e) => e.emoji).toSet().take(6).toList();
     if (emojis.isEmpty) emojis.add('🍽️');
     return Container(
@@ -306,19 +362,28 @@ class MealShareSlide extends StatelessWidget {
 
   Widget _ring(NutrientHighlight h, {double size = 62, bool showSource = true}) {
     final frac = (h.percent / 100).clamp(0.0, 1.0);
+    final isVit = h.kind == NutrientKind.vitamin;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           width: size, height: size,
           child: CustomPaint(
-            painter: _RingPainter(fraction: frac, color: p.accent, track: p.track, stroke: size * 0.11),
-            child: Center(child: Text(h.emoji, style: TextStyle(fontSize: size * 0.34))),
+            painter: _RingPainter(fraction: frac, color: p.accent, track: p.track, stroke: size * 0.1),
+            child: Center(
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                if (isVit)
+                  Text('VIT', style: TextStyle(fontSize: size * 0.13, height: 1, fontWeight: FontWeight.w900,
+                      letterSpacing: 0.5, color: p.textSoft)),
+                Text(h.symbol, style: TextStyle(fontSize: size * (h.symbol.length >= 3 ? 0.22 : 0.28),
+                    height: 1.05, fontWeight: FontWeight.w900, color: p.accent)),
+              ]),
+            ),
           ),
         ),
         const SizedBox(height: 4),
         Text('${h.percent.round()} %',
-            style: TextStyle(fontSize: size * 0.24, fontWeight: FontWeight.w900, height: 1, color: p.accent)),
+            style: TextStyle(fontSize: size * 0.24, fontWeight: FontWeight.w900, height: 1, color: p.text)),
         const SizedBox(height: 2),
         Text(h.label, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
             style: TextStyle(fontSize: size * 0.165, fontWeight: FontWeight.w800, height: 1.1)),
@@ -356,7 +421,6 @@ class MealShareSlide extends StatelessWidget {
           child: Stack(
             children: [
               Positioned.fill(child: _photoOrMosaic(height: 232, radius: 0)),
-              // Fondu de la photo vers le fond : texte toujours lisible.
               Positioned.fill(
                 child: DecoratedBox(
                   decoration: BoxDecoration(
@@ -371,8 +435,8 @@ class MealShareSlide extends StatelessWidget {
               Positioned(
                 left: 22, right: 22, top: 20,
                 child: Row(children: [
-                  _kicker(data.isFullDay ? (english ? 'My day' : 'Ma journée') : l10n.shareKickerMyPlate, onPhoto: true),
-                  const Spacer(),
+                  Flexible(child: _kicker(data.title, onPhoto: true)),
+                  const SizedBox(width: 8),
                   _counter(onPhoto: photo != null),
                 ]),
               ),
@@ -391,9 +455,9 @@ class MealShareSlide extends StatelessWidget {
           child: Row(children: [
             _stat(fmtNum(data.kcal, english: english), 'kcal', color: p.accent),
             const SizedBox(width: 7),
-            _stat('${data.protein.round()} g', english ? 'protein' : 'protéines'),
+            _stat('${data.protein.round()} g', l10n.shareProteinShort),
             const SizedBox(width: 7),
-            _stat('${data.essentialsAtLeast(30)}', english ? 'essentials ≥ 30 %' : 'essentiels ≥ 30 %'),
+            _stat('${data.fiber.round()} g', l10n.shareFiber),
           ]),
         ),
         _footer(right: count != null ? (english ? 'Swipe  →' : 'Fais défiler  →') : null),
@@ -401,7 +465,7 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 2. L'assiette en chiffres ────────────────────────────────────────
+  // ── 2. L'énergie ─────────────────────────────────────────────────────
 
   Widget _overview() {
     final split = data.energySplit;
@@ -428,7 +492,7 @@ class MealShareSlide extends StatelessWidget {
                   child: Center(
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
                       Text(fmtNum(data.kcal, english: english),
-                          style: TextStyle(fontSize: 27, fontWeight: FontWeight.w900, height: 1, color: p.text)),
+                          style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, height: 1, color: p.text)),
                       Text('kcal', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: p.textSoft)),
                     ]),
                   ),
@@ -444,6 +508,9 @@ class MealShareSlide extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(children: [
+                            Container(width: 9, height: 9,
+                                decoration: BoxDecoration(color: r.$4, borderRadius: BorderRadius.circular(3))),
+                            const SizedBox(width: 6),
                             Expanded(child: Text(r.$1, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800))),
                             Text('${r.$2.round()} g', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900)),
                           ]),
@@ -467,8 +534,6 @@ class MealShareSlide extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
             decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(14)),
             child: Row(children: [
-              const Text('🌿', style: TextStyle(fontSize: 17)),
-              const SizedBox(width: 10),
               Expanded(child: Text(l10n.shareFiber, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800))),
               Text('${data.fiber.round()} g', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900)),
               const SizedBox(width: 8),
@@ -488,6 +553,7 @@ class MealShareSlide extends StatelessWidget {
 
   Widget _micros() {
     final hs = data.highlights(english: english, max: 6);
+    final missing = data.itemsWithoutMicroData;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -510,6 +576,10 @@ class MealShareSlide extends StatelessWidget {
             ),
           ),
         const Spacer(),
+        if (missing > 0)
+          _foot(english
+              ? '$missing ingredient(s) without micronutrient data: values are underestimated.'
+              : '$missing ingrédient(s) sans données de micronutriments : valeurs sous-estimées.'),
         _foot(l10n.shareVnrFootnote),
         _footer(),
       ],
@@ -522,10 +592,11 @@ class MealShareSlide extends StatelessWidget {
     final fa = data.fattyAcids;
     final ratio = fa.laAlaRatio;
     final ratioOk = ratio != null && ratio <= kMaxLaAlaRatio;
-    Widget row(String emoji, String label, String amount, double frac, String hint) => Padding(
+    Widget row(String symbol, String top, String label, String amount, double frac, String hint) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Row(children: [
-            SizedBox(width: 26, child: Text(emoji, style: const TextStyle(fontSize: 16))),
+            _textBadge(symbol, size: 30, top: top),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
@@ -553,13 +624,13 @@ class MealShareSlide extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22),
           child: Column(children: [
-            row('🐟', english ? 'Omega-3 EPA+DHA' : 'Oméga-3 EPA+DHA', '${fmtNum(fa.epaDhaMg, english: english)} mg',
+            row('ω3', 'EPA DHA', english ? 'Omega-3 EPA+DHA (marine)' : 'Oméga-3 EPA+DHA (marins)', '${fmtNum(fa.epaDhaMg, english: english)} mg',
                 fa.epaDhaMg / kRefEpaDhaMg,
-                english ? '${pct(fa.epaDhaMg, kRefEpaDhaMg)} of 500 mg/day · heart, brain' : '${pct(fa.epaDhaMg, kRefEpaDhaMg)} des 500 mg/j · cœur, cerveau'),
-            row('🌱', english ? 'Omega-3 ALA' : 'Oméga-3 ALA', '${fmtNum(fa.alaG, decimals: 1, english: english)} g', fa.alaG / kRefAlaG,
-                english ? '${pct(fa.alaG, kRefAlaG)} of 2.2 g/day · flax, walnut, rapeseed' : '${pct(fa.alaG, kRefAlaG)} des 2,2 g/j · lin, noix, colza'),
-            row('🌻', english ? 'Omega-6 LA' : 'Oméga-6 LA', '${fmtNum(fa.laG, decimals: 1, english: english)} g', fa.laG / kRefLaG,
-                english ? '${pct(fa.laG, kRefLaG)} of 8.9 g/day · often in excess' : '${pct(fa.laG, kRefLaG)} des 8,9 g/j · souvent en excès'),
+                english ? '${pct(fa.epaDhaMg, kRefEpaDhaMg)} of the 500 mg a day' : '${pct(fa.epaDhaMg, kRefEpaDhaMg)} des 500 mg par jour'),
+            row('ω3', 'ALA', english ? 'Omega-3 ALA (plant)' : 'Oméga-3 ALA (végétal)', '${fmtNum(fa.alaG, decimals: 1, english: english)} g', fa.alaG / kRefAlaG,
+                english ? '${pct(fa.alaG, kRefAlaG)} of the 2.2 g a day · flax, walnut, rapeseed' : '${pct(fa.alaG, kRefAlaG)} des 2,2 g par jour · lin, noix, colza'),
+            row('ω6', 'LA', english ? 'Omega-6 LA' : 'Oméga-6 LA', '${fmtNum(fa.laG, decimals: 1, english: english)} g', fa.laG / kRefLaG,
+                english ? '${pct(fa.laG, kRefLaG)} of the 8.9 g a day · to balance with omega-3' : '${pct(fa.laG, kRefLaG)} des 8,9 g par jour · à équilibrer avec les oméga-3'),
           ]),
         ),
         const SizedBox(height: 16),
@@ -586,11 +657,10 @@ class MealShareSlide extends StatelessWidget {
                   ratio == null
                       ? (english ? 'Not enough data on this plate.' : 'Pas assez de données sur cette assiette.')
                       : ratioOk
-                          ? (english ? '✓ Within the ANSES target (< 5). The modern Western diet is often 15 or more.'
-                              : '✓ Dans la cible ANSES (< 5). L\'alimentation moderne dépasse souvent 15.')
-                          : (english ? 'Above the ANSES target (< 5): add flax, walnuts or rapeseed oil.'
-                              : 'Au-dessus de la cible ANSES (< 5) : ajoute lin, noix ou huile de colza.'),
-                  style: TextStyle(fontSize: 9.5, height: 1.25, fontWeight: FontWeight.w700,
+                          ? (english ? '✓ Within the recommended target (below 5).' : '✓ Dans la cible recommandée (moins de 5).')
+                          : (english ? 'Above the recommended target (below 5): add flax, walnuts or rapeseed oil.'
+                              : 'Au-dessus de la cible recommandée (moins de 5) : ajoute lin, noix ou huile de colza.'),
+                  style: TextStyle(fontSize: 10, height: 1.25, fontWeight: FontWeight.w700,
                       color: ratioOk ? Colors.white : p.text),
                 ),
               ),
@@ -598,15 +668,13 @@ class MealShareSlide extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        _foot(english
-            ? 'References: ANSES 2011 (adult, 2,000 kcal) — ALA 1% of energy, LA 4%, EPA+DHA 500 mg/day.'
-            : 'Références : ANSES 2011 (adulte, 2 000 kcal) — ALA 1 % de l\'énergie, LA 4 %, EPA+DHA 500 mg/j.'),
+        _foot(english ? 'ANSES guidelines for adults (2,000 kcal).' : 'Repères ANSES pour un adulte (2 000 kcal).'),
         _footer(),
       ],
     );
   }
 
-  // ── 5. À quoi ils servent ────────────────────────────────────────────
+  // ── 5. Leurs rôles ───────────────────────────────────────────────────
 
   Widget _roles() {
     final hs = data.highlights(english: english, max: 4);
@@ -628,11 +696,7 @@ class MealShareSlide extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(11, 9, 11, 9),
                 decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(14)),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Container(
-                    width: 32, height: 32, alignment: Alignment.center,
-                    decoration: BoxDecoration(color: p.accentSoft, shape: BoxShape.circle),
-                    child: Text(h.emoji, style: const TextStyle(fontSize: 16)),
-                  ),
+                  _badge(h.def, size: 34),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -655,8 +719,8 @@ class MealShareSlide extends StatelessWidget {
         ),
         const Spacer(),
         _foot(english
-            ? 'Authorised EU health claims (Regulation (EU) 432/2012). A varied diet and a healthy lifestyle matter.'
-            : 'Allégations de santé autorisées (règlement UE 432/2012). Une alimentation variée et un mode de vie sain sont importants.'),
+            ? 'Roles recognised in the European Union (authorised health claims).'
+            : 'Rôles reconnus dans l\'Union européenne (allégations de santé autorisées).'),
         _footer(),
       ],
     );
@@ -699,11 +763,11 @@ class MealShareSlide extends StatelessWidget {
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text(shown[i].name, maxLines: 1, overflow: TextOverflow.ellipsis,
                             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
-                        Text('${shown[i].kcal.round()} kcal',
+                        Text('${fmtNum(shown[i].kcal, english: english)} kcal',
                             style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: p.textSoft)),
                       ]),
                     ),
-                    Text('${shown[i].grams.round()} g',
+                    Text('${fmtNum(shown[i].grams, english: english)} g',
                         style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: p.accent)),
                   ]),
                 ),
@@ -723,7 +787,7 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 7. À compléter dans la journée ───────────────────────────────────
+  // ── 7. L'équilibre ───────────────────────────────────────────────────
 
   Widget _gaps() {
     final gaps = data.gaps(english: english, max: 3);
@@ -749,7 +813,6 @@ class MealShareSlide extends StatelessWidget {
             style: TextStyle(fontSize: 11, color: p.textSoft, fontWeight: FontWeight.w700),
           ),
         ),
-        // Déjà couverts : la preuve visuelle que l'alimentation suffit.
         if (covered.isNotEmpty)
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
@@ -763,9 +826,9 @@ class MealShareSlide extends StatelessWidget {
                 Wrap(spacing: 5, runSpacing: 5, children: [
                   for (final c in covered.take(10))
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(99)),
-                      child: Text('${c.emoji} ${c.label}', style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800)),
+                      child: Text(c.label, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800)),
                     ),
                 ]),
               ]),
@@ -776,8 +839,8 @@ class MealShareSlide extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 22),
             child: Text(
               english
-                  ? 'Every essential I track is already well covered here.'
-                  : 'Tous les essentiels que je suis sont déjà bien couverts ici.',
+                  ? 'Every essential micronutrient tracked is already well covered here.'
+                  : 'Tous les micronutriments essentiels suivis sont déjà bien couverts ici.',
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
             ),
           )
@@ -788,19 +851,23 @@ class MealShareSlide extends StatelessWidget {
               for (final g in gaps)
                 Container(
                   margin: const EdgeInsets.only(bottom: 6),
-                  padding: const EdgeInsets.fromLTRB(12, 7, 12, 7),
+                  padding: const EdgeInsets.fromLTRB(10, 7, 12, 7),
                   decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(14)),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Row(children: [
-                      Text(g.emoji, style: const TextStyle(fontSize: 15)),
-                      const SizedBox(width: 8),
-                      Expanded(child: Text(g.label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900))),
-                      Text('${g.percent.round()} %',
-                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: p.textSoft)),
-                    ]),
-                    const SizedBox(height: 3),
-                    Text(g.def.foods(english), maxLines: 2, overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: p.accent)),
+                  child: Row(children: [
+                    _badge(g.def, size: 30),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Row(children: [
+                          Expanded(child: Text(g.label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900))),
+                          Text('${g.percent.round()} %',
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: p.textSoft)),
+                        ]),
+                        const SizedBox(height: 2),
+                        Text(g.def.foods(english), maxLines: 2, overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: p.accent)),
+                      ]),
+                    ),
                   ]),
                 ),
             ]),
@@ -811,12 +878,11 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 8. Ce que j'en retiens + appel à l'action ────────────────────────
+  // ── 8. À retenir + appel à l'action ──────────────────────────────────
 
   Widget _cta() {
     final ins = insightsFor(data, english: english);
-    final cta = ctaFor(brand, handle, english: english);
-    final fa = data.fattyAcids;
+    final h = handle.trim();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -842,7 +908,6 @@ class MealShareSlide extends StatelessWidget {
           ]),
         ),
         const Spacer(),
-        // Récapitulatif chiffré (le visuel "résumé" est celui qu'on enregistre).
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(children: [
@@ -852,7 +917,7 @@ class MealShareSlide extends StatelessWidget {
             const SizedBox(width: 6),
             _stat('${data.fiber.round()} g', l10n.shareFiber),
             const SizedBox(width: 6),
-            _stat('${fmtNum(fa.epaDhaMg, english: english)} mg', 'EPA+DHA'),
+            _stat('${data.essentialsAtLeast(30)}/${essentialNutrients.length}', english ? 'essentials' : 'essentiels'),
           ]),
         ),
         const SizedBox(height: 12),
@@ -862,19 +927,24 @@ class MealShareSlide extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(14, 11, 14, 11),
             decoration: BoxDecoration(color: p.accent, borderRadius: BorderRadius.circular(18)),
             child: DefaultTextStyle.merge(
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: p.id == 'minimal' ? Colors.white : Colors.white),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(cta.main, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w900, height: 1.15)),
+                Text(l10n.shareCtaSave, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w900, height: 1.15)),
                 const SizedBox(height: 3),
-                Text(cta.sub, style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w600, height: 1.25)),
-                const SizedBox(height: 7),
-                Text(english ? '💾 Save it   ✈️ Send it to someone who cares' : '💾 Enregistre   ✈️ Envoie-le à quelqu\'un qui compte',
-                    style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800)),
+                Text(l10n.shareCtaSend, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, height: 1.25)),
+                if (h.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(english ? 'More decoded plates on $h' : 'D\'autres assiettes décryptées sur $h',
+                      style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800)),
+                ],
               ]),
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
+        _foot(english
+            ? 'Values per serving, from the Ciqual food composition table (ANSES).'
+            : 'Valeurs pour la portion, calculées à partir de la table Ciqual (ANSES).'),
         _footer(),
       ],
     );
@@ -900,7 +970,7 @@ class MealShareSlide extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(left: 22, top: 20, child: _kicker(l10n.shareKickerMyPlate, onPhoto: true)),
+            Positioned(left: 22, right: 22, top: 20, child: Align(alignment: Alignment.centerLeft, child: _kicker(data.title, onPhoto: true))),
           ]),
         ),
         Padding(padding: const EdgeInsets.fromLTRB(22, 0, 22, 0), child: _title(hook.headline, size: 19)),
@@ -934,7 +1004,7 @@ class MealShareSlide extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 30), // barre de profil Instagram
-        Padding(padding: const EdgeInsets.fromLTRB(22, 20, 22, 0), child: _kicker(l10n.shareKickerMyPlate)),
+        Padding(padding: const EdgeInsets.fromLTRB(22, 20, 22, 0), child: _kicker(data.title)),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
@@ -974,7 +1044,7 @@ class MealShareSlide extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            _kicker(l10n.shareKickerMyPlate),
+            _kicker(data.title),
             const SizedBox(height: 8),
             Text(hook.headline, maxLines: 3, overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900, height: 1.1, letterSpacing: -0.3, color: p.text)),
@@ -985,11 +1055,11 @@ class MealShareSlide extends StatelessWidget {
             const Spacer(),
             Row(children: [
               Expanded(
-                child: Text('${fmtNum(data.kcal, english: english)} kcal · P ${data.protein.round()} g', maxLines: 1, overflow: TextOverflow.ellipsis,
+                child: Text('${fmtNum(data.kcal, english: english)} kcal · ${l10n.shareProteinShort} ${data.protein.round()} g',
+                    maxLines: 1, overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800, color: p.accent)),
               ),
-              const SizedBox(width: 6),
-              Flexible(child: _brandMark()),
+              if (showTotumMark) ...[const SizedBox(width: 6), _totumMark()],
             ]),
           ]),
         ),
@@ -997,31 +1067,26 @@ class MealShareSlide extends StatelessWidget {
     ]);
   }
 
-  /// Bannière Play Store (feature graphic) 1024 × 500 : promotion de l'app
-  /// à partir d'une vraie assiette analysée. Aucun texte essentiel dans les
-  /// bords (Google peut recadrer les coins arrondis).
+  /// Bannière 1024 × 500 : en-tête de site, couverture, fiche Play Store.
+  /// Aucun texte essentiel dans les bords (recadrage possible).
   Widget _banner() {
     final hs = data.highlights(english: english, max: 3);
+    final hook = hookFor(data, english: english);
     return Row(children: [
       Expanded(
         flex: 11,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(26, 24, 12, 22),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(children: [
-              Container(width: 10, height: 10, decoration: BoxDecoration(color: p.accent, shape: BoxShape.circle)),
-              const SizedBox(width: 6),
-              Text('TOTUM', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, letterSpacing: 3, color: p.text)),
-            ]),
+            _kicker(data.title),
             const SizedBox(height: 12),
-            Text(english ? 'Every plate, decoded.' : 'Chaque assiette, décryptée.',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900, height: 1.05, letterSpacing: -0.6, color: p.text)),
-            const SizedBox(height: 6),
-            Text(
-              english ? 'Macros, micronutrients and essential fats — for health and longevity.'
-                  : 'Macros, micronutriments et acides gras essentiels — pour ta santé et ta longévité.',
-              style: TextStyle(fontSize: 10.5, height: 1.3, fontWeight: FontWeight.w600, color: p.textSoft),
-            ),
+            Text(hook.headline, maxLines: 3, overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, height: 1.05, letterSpacing: -0.5, color: p.text)),
+            const SizedBox(height: 8),
+            Text(hook.subline, maxLines: 2, overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 10.5, height: 1.3, fontWeight: FontWeight.w600, color: p.textSoft)),
+            const Spacer(),
+            if (showTotumMark) _totumMark(),
           ]),
         ),
       ),

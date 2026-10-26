@@ -45,6 +45,7 @@ dependencies:
   # à chaque bump de version, source d'incohérence).
   package_info_plus: ^9.0.1
   image_picker: ^1.2.4   # photo du plat pour la carte Instagram d'un repas (galerie uniquement : sélecteur système, aucune permission caméra supplémentaire)
+  gal: ^2.3.3           # enregistrement des visuels de partage dans la galerie du téléphone (Android/iOS)
 
 dev_dependencies:
   flutter_test:
@@ -100,3 +101,16 @@ flutter:
     # entier évite ce piège à l'avenir : Flutter embarque tout ce qui s'y
     # trouve, sans jamais avoir à resynchroniser cette liste à la main.
     - assets/sounds/
+
+  # Police EMBARQUÉE des visuels de partage d'un repas (27/10/2026) : rendu
+  # identique sur tous les appareils (la police système varie — iOS, Samsung,
+  # web), donc aucun débordement imprévu. Roboto, licence Apache 2.0
+  # (assets/fonts/Roboto-LICENSE.txt).
+  fonts:
+    - family: TotumShare
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Roboto-Black.ttf
+          weight: 900

@@ -8541,7 +8541,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareKickerNaturo.
   ///
   /// In fr, this message translates to:
-  /// **'Le point naturo'**
+  /// **'À retenir'**
   String get shareKickerNaturo;
 
   /// No description provided for @shareMacrosTitle.
@@ -8565,13 +8565,13 @@ abstract class AppLocalizations {
   /// No description provided for @shareOfEfsaFiber.
   ///
   /// In fr, this message translates to:
-  /// **'{pct} % des 25 g/j'**
+  /// **'{pct} % des 30 g/j'**
   String shareOfEfsaFiber(int pct);
 
   /// No description provided for @shareMacrosFootnote.
   ///
   /// In fr, this message translates to:
-  /// **'Répartition calculée sur l\'énergie du plat (4 kcal/g protéines et glucides, 9 kcal/g lipides). Fibres : référence EFSA 25 g/j.'**
+  /// **'Fibres : repère ANSES de 30 g par jour pour un adulte.'**
   String get shareMacrosFootnote;
 
   /// No description provided for @shareMicrosTitle.
@@ -8589,7 +8589,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareVnrFootnote.
   ///
   /// In fr, this message translates to:
-  /// **'% des valeurs nutritionnelles de référence (VNR adulte, règlement UE 1169/2011) pour la portion. Oméga-3 EPA+DHA : référence ANSES 500 mg/j.'**
+  /// **'% des valeurs nutritionnelles de référence de l\'UE pour un adulte, pour la portion. Oméga-3 EPA+DHA : repère ANSES de 500 mg par jour.'**
   String get shareVnrFootnote;
 
   /// No description provided for @shareIngredientsTitle.
@@ -8613,7 +8613,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareNaturoTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Ce que j\'en retiens'**
+  /// **'L\'essentiel'**
   String get shareNaturoTitle;
 
   /// No description provided for @shareCtaSave.
@@ -8631,7 +8631,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareScreenTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Partager sur Instagram'**
+  /// **'Partager'**
   String get shareScreenTitle;
 
   /// No description provided for @shareFormatCarousel.
@@ -8661,7 +8661,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareFormatCarouselDesc.
   ///
   /// In fr, this message translates to:
-  /// **'8 visuels 1080×1350 — accroche, chiffres, micronutriments, acides gras, rôles, recette, à compléter, appel à l\'action'**
+  /// **'8 visuels 1080×1350 — Instagram, Facebook, LinkedIn'**
   String get shareFormatCarouselDesc;
 
   /// No description provided for @shareFormatPostDesc.
@@ -8673,13 +8673,13 @@ abstract class AppLocalizations {
   /// No description provided for @shareFormatStoryDesc.
   ///
   /// In fr, this message translates to:
-  /// **'1 visuel 1080×1920, zones Instagram respectées'**
+  /// **'1 visuel 1080×1920 — stories Instagram, Facebook, WhatsApp'**
   String get shareFormatStoryDesc;
 
   /// No description provided for @shareFormatReelDesc.
   ///
   /// In fr, this message translates to:
-  /// **'8 images 1080×1920 à importer dans l\'éditeur de Reels, avec ta musique'**
+  /// **'8 images 1080×1920 à importer dans un éditeur vidéo (Reels, TikTok, Shorts)'**
   String get shareFormatReelDesc;
 
   /// No description provided for @shareDishNameLabel.
@@ -8709,7 +8709,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareHandleLabel.
   ///
   /// In fr, this message translates to:
-  /// **'Ton compte Instagram'**
+  /// **'Ton @compte (optionnel)'**
   String get shareHandleLabel;
 
   /// No description provided for @shareHandleHint.
@@ -8727,7 +8727,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareTotumMarkToggle.
   ///
   /// In fr, this message translates to:
-  /// **'Mention « Calculé avec Totum »'**
+  /// **'Mention « Analysé avec Totum »'**
   String get shareTotumMarkToggle;
 
   /// No description provided for @shareCaptionLabel.
@@ -8775,19 +8775,19 @@ abstract class AppLocalizations {
   /// No description provided for @shareTipsTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Pour maximiser la portée'**
+  /// **'Conseils de publication'**
   String get shareTipsTitle;
 
   /// No description provided for @shareTipsBody.
   ///
   /// In fr, this message translates to:
-  /// **'Publie le carrousel avec la légende copiée (5 mots-dièse max., la limite Instagram). Les enregistrements et les envois en message privé font partie des signaux qu\'Instagram dit valoriser le plus : les deux appels à l\'action du dernier visuel sont là pour ça.'**
+  /// **'Carrousel : publie les visuels dans l\'ordre avec la légende copiée (5 mots-dièse maximum sur Instagram). Story : ajoute un sondage ou une question pour faire réagir. Les enregistrements et les envois en message privé font partie des signaux qu\'Instagram valorise le plus.'**
   String get shareTipsBody;
 
   /// No description provided for @shareMealButton.
   ///
   /// In fr, this message translates to:
-  /// **'Partager sur Instagram'**
+  /// **'Partager ce repas'**
   String get shareMealButton;
 
   /// No description provided for @shareEmptyMeal.
@@ -8883,19 +8883,19 @@ abstract class AppLocalizations {
   /// No description provided for @shareFormatBanner.
   ///
   /// In fr, this message translates to:
-  /// **'Play Store'**
+  /// **'Bannière'**
   String get shareFormatBanner;
 
   /// No description provided for @shareFormatLandscapeDesc.
   ///
   /// In fr, this message translates to:
-  /// **'1 visuel 1200×630 — site internet, Facebook, LinkedIn, aperçu de lien'**
+  /// **'1 visuel 1200×630 — site internet, blog, Facebook, LinkedIn'**
   String get shareFormatLandscapeDesc;
 
   /// No description provided for @shareFormatBannerDesc.
   ///
   /// In fr, this message translates to:
-  /// **'Bannière 1024×500 — image de présentation Play Store (« feature graphic »)'**
+  /// **'1 visuel 1024×500 — en-tête de site ou de profil'**
   String get shareFormatBannerDesc;
 
   /// No description provided for @shareBrandLabel.
@@ -8927,6 +8927,66 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Ma journée'**
   String get shareDayTitle;
+
+  /// No description provided for @shareCreateButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer {count} visuel(s)'**
+  String shareCreateButton(int count);
+
+  /// No description provided for @shareReadyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes visuels sont prêts'**
+  String get shareReadyTitle;
+
+  /// No description provided for @shareReadyHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'« Partager… » ouvre le menu de partage de ton appareil : Instagram (publication, story, message), Facebook, WhatsApp, e-mail… La légende est copiée automatiquement : il suffit de la coller (sinon, touche « Copier la légende »).'**
+  String get shareReadyHint;
+
+  /// No description provided for @shareShareButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager…'**
+  String get shareShareButton;
+
+  /// No description provided for @shareSaveButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer sur l\'appareil'**
+  String get shareSaveButton;
+
+  /// No description provided for @shareSavedToGallery.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} visuel(s) enregistré(s) dans tes photos'**
+  String shareSavedToGallery(int count);
+
+  /// No description provided for @shareSaveDenied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accès aux photos refusé : autorise-le dans les réglages du téléphone, ou utilise « Partager… ».'**
+  String get shareSaveDenied;
+
+  /// No description provided for @shareShareUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce navigateur ne permet pas de partager des images : utilise « Enregistrer sur l\'appareil », puis publie depuis ta galerie.'**
+  String get shareShareUnavailable;
+
+  /// No description provided for @shareShareOne.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager ce visuel'**
+  String get shareShareOne;
+
+  /// No description provided for @sharePaletteTotum.
+  ///
+  /// In fr, this message translates to:
+  /// **'Totum'**
+  String get sharePaletteTotum;
 }
 
 class _AppLocalizationsDelegate
