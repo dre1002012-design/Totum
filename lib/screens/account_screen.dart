@@ -1138,12 +1138,21 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
       if (user != null) {
         await widget.client.from('account_deletion_requests').insert({'user_id': user.id});
       }
+    } on PostgrestException catch (e) {
+      // 23505 = demande déjà enregistrée (clé primaire user_id) : c'est un
+      // succès, on poursuit.
+      if (e.code != '23505') {
+        _onDeletionRequestFailed(e);
+        return;
+      }
     } catch (e) {
-      // La table peut ne pas encore être migrée côté Supabase (voir
-      // supabase/migrations) — ne bloque jamais la déconnexion/le nettoyage
-      // local ci-dessous, la demande sera à traiter manuellement le temps
-      // que la migration soit appliquée.
-      debugPrint('Erreur enregistrement demande de suppression de compte: $e');
+      // Audit 27/10/2026 (E4) : un échec (hors ligne, session expirée…) était
+      // ignoré, puis l'utilisateur était déconnecté comme si son compte
+      // allait être supprimé — demande perdue, promesse non tenue. Désormais
+      // rien n'est effacé ni déconnecté tant que la demande n'est pas
+      // réellement enregistrée.
+      _onDeletionRequestFailed(e);
+      return;
     }
 
     try {
@@ -1162,6 +1171,16 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
       Navigator.of(context).pop();
       Navigator.of(context).pop();
     }
+  }
+
+  void _onDeletionRequestFailed(Object e) {
+    debugPrint('Erreur enregistrement demande de suppression de compte: $e');
+    if (!mounted) return;
+    setState(() => _deleting = false);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(context.l10n.accountDeleteRequestFailed),
+      duration: const Duration(seconds: 8),
+    ));
   }
 
   Widget _actionRow({

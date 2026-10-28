@@ -1607,8 +1607,14 @@ abstract class AppLocalizations {
   /// No description provided for @accountDeleteDialogContent.
   ///
   /// In fr, this message translates to:
-  /// **'Cette action est irréversible : ta demande de suppression sera enregistrée, ton compte et toutes tes données (journal, objectifs, historique de poids) seront supprimés définitivement. Tu seras déconnecté immédiatement.'**
+  /// **'Cette action est irréversible : ta demande de suppression sera enregistrée, ton compte et toutes tes données (journal, objectifs, historique de poids) seront supprimés définitivement, sous 30 jours au plus tard. Tu seras déconnecté immédiatement.'**
   String get accountDeleteDialogContent;
+
+  /// No description provided for @accountDeleteRequestFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta demande de suppression n\'a pas pu être enregistrée (connexion ?). Rien n\'a été effacé : réessaie dans un instant, ou écris-nous à totum.app.fr@gmail.com.'**
+  String get accountDeleteRequestFailed;
 
   /// No description provided for @accountDeletePermanently.
   ///

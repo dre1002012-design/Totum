@@ -919,7 +919,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountDeleteDialogContent =>
-      'This action is irreversible: your deletion request will be recorded, and your account and all your data (journal, goals, weight history) will be permanently deleted. You\'ll be signed out immediately.';
+      'This action is irreversible: your deletion request will be recorded, and your account and all your data (journal, goals, weight history) will be permanently deleted within 30 days at the latest. You\'ll be signed out immediately.';
+
+  @override
+  String get accountDeleteRequestFailed =>
+      'Your deletion request couldn\'t be recorded (connection?). Nothing has been deleted: try again in a moment, or email us at totum.app.fr@gmail.com.';
 
   @override
   String get accountDeletePermanently => 'Delete permanently';

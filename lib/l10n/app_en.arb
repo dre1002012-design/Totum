@@ -292,7 +292,8 @@
   "accountSubscriptionActivated": "Thank you! Your TOTUM Premium subscription is active!",
 
   "accountDeleteDialogTitle": "Delete my account",
-  "accountDeleteDialogContent": "This action is irreversible: your deletion request will be recorded, and your account and all your data (journal, goals, weight history) will be permanently deleted. You'll be signed out immediately.",
+  "accountDeleteDialogContent": "This action is irreversible: your deletion request will be recorded, and your account and all your data (journal, goals, weight history) will be permanently deleted within 30 days at the latest. You'll be signed out immediately.",
+  "accountDeleteRequestFailed": "Your deletion request couldn't be recorded (connection?). Nothing has been deleted: try again in a moment, or email us at totum.app.fr@gmail.com.",
   "accountDeletePermanently": "Delete permanently",
   "accountDeletingInProgress": "Deleting…",
   "accountDetailsScreenTitle": "Account",

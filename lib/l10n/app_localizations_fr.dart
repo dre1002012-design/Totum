@@ -922,7 +922,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get accountDeleteDialogContent =>
-      'Cette action est irréversible : ta demande de suppression sera enregistrée, ton compte et toutes tes données (journal, objectifs, historique de poids) seront supprimés définitivement. Tu seras déconnecté immédiatement.';
+      'Cette action est irréversible : ta demande de suppression sera enregistrée, ton compte et toutes tes données (journal, objectifs, historique de poids) seront supprimés définitivement, sous 30 jours au plus tard. Tu seras déconnecté immédiatement.';
+
+  @override
+  String get accountDeleteRequestFailed =>
+      'Ta demande de suppression n\'a pas pu être enregistrée (connexion ?). Rien n\'a été effacé : réessaie dans un instant, ou écris-nous à totum.app.fr@gmail.com.';
 
   @override
   String get accountDeletePermanently => 'Supprimer définitivement';
