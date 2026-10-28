@@ -32,9 +32,11 @@ void main() {
         '${Platform.environment['USERPROFILE']}/flutter';
     final sdk = '$root/bin/cache/artifacts/material_fonts';
     await tester.runAsync(() async {
-      await _font('Roboto', '$sdk/roboto-regular.ttf');
-      await _font('Roboto', '$sdk/roboto-bold.ttf');
-      await _font('Roboto', '$sdk/roboto-black.ttf');
+      // Roboto embarquée dans le dépôt (assets/fonts) : présente partout,
+      // CI Linux comprise — mise en page identique au poste de dev.
+      await _font('Roboto', 'assets/fonts/Roboto-Regular.ttf');
+      await _font('Roboto', 'assets/fonts/Roboto-Bold.ttf');
+      await _font('Roboto', 'assets/fonts/Roboto-Black.ttf');
       await _font('MaterialIcons', '$sdk/materialicons-regular.otf');
     });
     SharedPreferences.setMockInitialValues({});

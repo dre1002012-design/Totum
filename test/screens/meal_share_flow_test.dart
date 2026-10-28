@@ -87,8 +87,9 @@ void main() {
         final b = f.readAsBytesSync();
         await (FontLoader(family)..addFont(Future.value(ByteData.view(b.buffer)))).load();
       }
-      for (final f in ['regular', 'bold', 'black']) {
-        await load('Roboto', '$sdk/roboto-$f.ttf');
+      // Roboto embarquée dans le dépôt (assets/fonts) : présente partout.
+      for (final f in ['Regular', 'Bold', 'Black']) {
+        await load('Roboto', 'assets/fonts/Roboto-$f.ttf');
       }
       await load('MaterialIcons', '$sdk/materialicons-regular.otf');
       final em = File(r'C:\Windows\Fonts\seguiemj.ttf');
