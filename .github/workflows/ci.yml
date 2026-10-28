@@ -1,0 +1,28 @@
+# Audit 27/10/2026 (F9) — contrôle automatique à chaque push / pull request :
+# analyse statique + tests, avec la même version de Flutter que le poste de
+# développement (commande.md). Aucun build ni déploiement ici : la
+# publication (web, Play Store) reste manuelle.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.0
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test

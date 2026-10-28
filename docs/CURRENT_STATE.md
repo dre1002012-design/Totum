@@ -1,5 +1,7 @@
 # TOTUM — État actuel du code
 
+> ⚠️ **Document figé au 04/08/2026, non tenu à jour depuis.** Pour l'état actuel, voir les comptes rendus datés de `tasks/` (le plus récent en premier) et `docs/KNOWN_ISSUES.md`.
+
 ✅ Vérifié le 04/08/2026 : les blocs Smart Match Score / badges livrés lors d'une session précédente sont bien appliqués dans le code réel (voir `TODO.md`, Priorité 3 — rien n'a dû être réappliqué).
 
 ## 1. Profil 2.0

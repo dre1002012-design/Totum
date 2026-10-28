@@ -56,4 +56,4 @@ Captures de contrôle : `build/share/` (régénérables via `flutter test test/s
 - Captures de ton profil Instagram pour caler l'ambiance « Naturo » sur ton identité exacte.
 - Captures d'écran de l'app pour la fiche Play Store (différentes de la bannière) : chantier séparé si tu le souhaites.
 - Export `pause_periods` (SQL ci-dessous) pour confirmer tes dates de pause réelles :
-  `select start_date, end_date from pause_periods where user_id = '73037693-0249-44f9-b339-44dcdb005bf5' order by start_date;`
+  `select start_date, end_date from pause_periods where user_id = '<ID_DU_COMPTE>' order by start_date;`
