@@ -104,8 +104,9 @@ async function getSubscriptionExpiry(
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!resp.ok) {
+    // Erreur d'API (≠ abonnement inactif) : surtout ne rien révoquer.
     console.error('Play API error', resp.status, await resp.text());
-    return null;
+    throw new Error(`Play API error ${resp.status}`);
   }
   const data = await resp.json();
   // état : SUBSCRIPTION_STATE_ACTIVE, _CANCELED, _EXPIRED, _IN_GRACE_PERIOD…
@@ -175,8 +176,22 @@ Deno.serve(async (req) => {
     );
 
     if (expiryMs === null) {
-      // Abonnement expiré/révoqué → on laisse premium_until tel quel
-      // (il expirera naturellement). On pourrait aussi le forcer à maintenant.
+      // Audit 27/10/2026 (M3) : abonnement révoqué/remboursé/expiré → l'accès
+      // est coupé maintenant (avant : laissé tel quel, jusqu'à 1 an d'accès
+      // après un remboursement). Jamais pour un client Stripe (premium_until
+      // partagé avec l'abonnement web) ni pour un accès à vie.
+      const { data: status } = await supabase
+        .from('user_status')
+        .select('premium_until, stripe_customer_id, is_premium')
+        .eq('id', link.user_id)
+        .maybeSingle();
+      const until = status?.premium_until ? Date.parse(status.premium_until) : 0;
+      if (status && !status.stripe_customer_id && !status.is_premium && until > Date.now()) {
+        await supabase
+          .from('user_status')
+          .update({ premium_until: new Date().toISOString() })
+          .eq('id', link.user_id);
+      }
       console.log('play-webhook: sub inactive pour', link.user_id);
       return new Response(JSON.stringify({ ok: true, inactive: true }), {
         status: 200,

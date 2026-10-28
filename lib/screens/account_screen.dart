@@ -285,7 +285,8 @@ class _AccountScreenState extends State<AccountScreen> {
 
         if (isNewPurchase || isRestore) {
           if (p.productID == _kSubProductId) {
-            await _activateSubscription(p, showMessage: isNewPurchase);
+            await _activateSubscription(p,
+                showMessage: isNewPurchase, isRestore: isRestore);
           } else if (p.productID == _kPremiumProductId) {
             // Achat unique legacy : n'active à vie QUE ce produit précis.
             await _activatePremium(showMessage: isNewPurchase);
@@ -295,7 +296,14 @@ class _AccountScreenState extends State<AccountScreen> {
           if (msg.contains('possedez deja cet article') ||
               msg.contains('possédez déjà cet article') ||
               msg.toLowerCase().contains('already own this item')) {
-            await _activatePremium();
+            // Audit 27/10/2026 (E1) : ce message arrive quand on retape
+            // « S'abonner » sur un abonnement DÉJÀ actif — il accordait
+            // jusqu'ici l'accès À VIE (`_activatePremium`), quel que soit le
+            // produit. On redemande plutôt à Google les achats réellement
+            // possédés : chacun repasse par le bon chemin ci-dessus
+            // (abonnement → _activateSubscription, ancien achat unique →
+            // _activatePremium).
+            await _iap.restorePurchases();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -344,32 +352,67 @@ class _AccountScreenState extends State<AccountScreen> {
     }
   }
 
-  /// Abonnement annuel Google Play. On enregistre le purchaseToken (lien
-  /// achat ↔ utilisateur, utilisé par la fonction serveur play-webhook pour
-  /// les renouvellements/annulations) ET on pose premium_until à +1 an pour
-  /// un accès immédiat sans attendre la première notification serveur.
+  /// Abonnement annuel Google Play. Vérifié d'abord côté serveur
+  /// (`verify-play-purchase`, qui enregistre lui-même le lien purchaseToken ↔
+  /// utilisateur et `premium_until`). Tant que cette fonction n'est pas
+  /// déployée : repli historique (lien + premium_until à +1 an écrits par le
+  /// client), qu'une restauration ne prolonge jamais s'il est encore actif.
   Future<void> _activateSubscription(PurchaseDetails? purchase,
-      {bool showMessage = true}) async {
+      {bool showMessage = true, bool isRestore = false}) async {
     try {
       final user = _client.auth.currentUser;
       if (user == null) return;
 
-      // Enregistre le lien purchaseToken → user pour la vérif serveur
       final token = purchase
           ?.verificationData.serverVerificationData;
+      bool? verified;
       if (token != null && token.isNotEmpty) {
-        await _client.from('play_purchases').upsert({
-          'purchase_token': token,
-          'user_id': user.id,
-          'subscription_id': _kSubProductId,
-        }, onConflict: 'purchase_token');
+        verified = await _verifyOnServer(token);
+        if (verified == null) {
+          // Fonction serveur indisponible : lien purchaseToken → user écrit
+          // par le client, comme avant (utilisé par play-webhook).
+          await _client.from('play_purchases').upsert({
+            'purchase_token': token,
+            'user_id': user.id,
+            'subscription_id': _kSubProductId,
+          }, onConflict: 'purchase_token');
+        }
       }
 
-      // Accès immédiat (la fonction serveur affinera la date au besoin)
-      final until = DateTime.now().toUtc().add(const Duration(days: 365));
-      await _client.from('user_status').update({
-        'premium_until': until.toIso8601String(),
-      }).eq('id', user.id);
+      if (verified == false) {
+        // Google répond explicitement « abonnement inactif » : on n'accorde
+        // rien, le statut affiché reste celui du serveur.
+        debugPrint('verify-play-purchase : abonnement inactif');
+        await _loadStatus();
+        PremiumStatus.requestRefresh();
+        return;
+      } else if (verified == null) {
+        // Repli historique (fonction serveur pas encore déployée) : accès
+        // immédiat écrit par le client. Audit 27/10/2026 (E2) : une simple
+        // RESTAURATION (à chaque ouverture de cet écran) repoussait la fin
+        // d'accès à aujourd'hui + 1 an, même pour un abonnement résilié —
+        // elle ne prolonge plus jamais un accès encore en cours, elle
+        // rétablit seulement un accès absent ou expiré (Google ne restitue
+        // que les abonnements réellement actifs).
+        var shouldWrite = true;
+        if (isRestore) {
+          final row = await _client
+              .from('user_status')
+              .select('premium_until')
+              .eq('id', user.id)
+              .maybeSingle();
+          final current =
+              DateTime.tryParse((row?['premium_until'] ?? '').toString());
+          shouldWrite = current == null ||
+              !current.toUtc().isAfter(DateTime.now().toUtc());
+        }
+        if (shouldWrite) {
+          final until = DateTime.now().toUtc().add(const Duration(days: 365));
+          await _client.from('user_status').update({
+            'premium_until': until.toIso8601String(),
+          }).eq('id', user.id);
+        }
+      }
 
       await _loadStatus();
       PremiumStatus.requestRefresh(); // voir _activatePremium ci-dessus
@@ -384,6 +427,31 @@ class _AccountScreenState extends State<AccountScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.accountActivationError(e.toString()))),
       );
+    }
+  }
+
+  /// Vérification SERVEUR d'un abonnement Google Play (audit 27/10/2026,
+  /// constat C1) : la fonction `verify-play-purchase` interroge l'API Google
+  /// avec le compte de service, puis écrit elle-même `premium_until` et le
+  /// lien `play_purchases` (clé de service) — le client n'a plus à se
+  /// donner l'accès lui-même.
+  /// `true` = actif et enregistré, `false` = Google le dit inactif,
+  /// `null` = fonction indisponible (pas encore déployée, hors ligne,
+  /// erreur Google) → l'appelant garde le comportement historique.
+  Future<bool?> _verifyOnServer(String token) async {
+    try {
+      final res = await _client.functions.invoke(
+        'verify-play-purchase',
+        body: {'purchaseToken': token, 'subscriptionId': _kSubProductId},
+      );
+      final data = res.data;
+      if (res.status != 200 || data is! Map || data['ok'] != true) {
+        return null;
+      }
+      return data['active'] == true;
+    } catch (e) {
+      debugPrint('verify-play-purchase indisponible : $e');
+      return null;
     }
   }
 
