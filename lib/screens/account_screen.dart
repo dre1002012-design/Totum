@@ -327,9 +327,20 @@ class _AccountScreenState extends State<AccountScreen> {
     try {
       final user = _client.auth.currentUser;
       if (user == null) return;
-      await _client
+      // Ancien achat unique restauré à chaque ouverture de cet écran : on
+      // n'écrit que si l'accès à vie n'est pas déjà enregistré (une fois les
+      // droits d'écriture client retirés côté serveur, cette écriture
+      // échouerait à chaque visite).
+      final row = await _client
           .from('user_status')
-          .update({'is_premium': true}).eq('id', user.id);
+          .select('is_premium')
+          .eq('id', user.id)
+          .maybeSingle();
+      if (row?['is_premium'] != true) {
+        await _client
+            .from('user_status')
+            .update({'is_premium': true}).eq('id', user.id);
+      }
       await _loadStatus();
       // Priorité 65 (audit global) : sans ça, PremiumGate (main.dart) — qui
       // décide d'afficher l'app ou le Paywall — ne réévaluait jamais son
@@ -345,7 +356,10 @@ class _AccountScreenState extends State<AccountScreen> {
         );
       }
     } catch (e) {
-      if (!mounted) return;
+      // Restauration silencieuse (à chaque ouverture de l'écran) : un échec
+      // n'est signalé que pour un achat que l'utilisateur vient de faire.
+      debugPrint('Activation premium : $e');
+      if (!mounted || !showMessage) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.accountActivationError(e.toString()))),
       );
@@ -423,7 +437,10 @@ class _AccountScreenState extends State<AccountScreen> {
         );
       }
     } catch (e) {
-      if (!mounted) return;
+      // Restauration silencieuse (à chaque ouverture de l'écran) : un échec
+      // n'est signalé que pour un achat que l'utilisateur vient de faire.
+      debugPrint('Activation premium : $e');
+      if (!mounted || !showMessage) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.accountActivationError(e.toString()))),
       );
