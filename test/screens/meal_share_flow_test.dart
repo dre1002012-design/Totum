@@ -76,13 +76,21 @@ void main() {
       });
     }
     await tester.runAsync(() async {
-      final sdk = '${Platform.environment['USERPROFILE']}/flutter/bin/cache/artifacts/material_fonts';
-      for (final f in ['regular', 'bold', 'black']) {
-        final b = File('$sdk/roboto-$f.ttf').readAsBytesSync();
-        await (FontLoader('Roboto')..addFont(Future.value(ByteData.view(b.buffer)))).load();
+      // FLUTTER_ROOT d'abord (posé par l'outil flutter partout, CI Linux
+      // comprise) ; police absente = ignorée, jamais un plantage.
+      final root = Platform.environment['FLUTTER_ROOT'] ??
+          '${Platform.environment['USERPROFILE']}/flutter';
+      final sdk = '$root/bin/cache/artifacts/material_fonts';
+      Future<void> load(String family, String path) async {
+        final f = File(path);
+        if (!f.existsSync()) return;
+        final b = f.readAsBytesSync();
+        await (FontLoader(family)..addFont(Future.value(ByteData.view(b.buffer)))).load();
       }
-      final mi = File('$sdk/materialicons-regular.otf').readAsBytesSync();
-      await (FontLoader('MaterialIcons')..addFont(Future.value(ByteData.view(mi.buffer)))).load();
+      for (final f in ['regular', 'bold', 'black']) {
+        await load('Roboto', '$sdk/roboto-$f.ttf');
+      }
+      await load('MaterialIcons', '$sdk/materialicons-regular.otf');
       final em = File(r'C:\Windows\Fonts\seguiemj.ttf');
       if (em.existsSync()) {
         final b = em.readAsBytesSync();

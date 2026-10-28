@@ -25,12 +25,17 @@ Future<void> _font(String family, String path) async {
 
 void main() {
   testWidgets('parcours d\'inscription : validation et récapitulatif', (tester) async {
-    final sdk = '${Platform.environment['USERPROFILE']}\\flutter\\bin\\cache\\artifacts\\material_fonts';
+    // FLUTTER_ROOT d'abord (posé par l'outil flutter partout, CI Linux
+    // comprise) : sans les vraies polices, la mise en page diffère et un
+    // bouton peut sortir de l'écran.
+    final root = Platform.environment['FLUTTER_ROOT'] ??
+        '${Platform.environment['USERPROFILE']}/flutter';
+    final sdk = '$root/bin/cache/artifacts/material_fonts';
     await tester.runAsync(() async {
-      await _font('Roboto', '$sdk\\roboto-regular.ttf');
-      await _font('Roboto', '$sdk\\roboto-bold.ttf');
-      await _font('Roboto', '$sdk\\roboto-black.ttf');
-      await _font('MaterialIcons', '$sdk\\materialicons-regular.otf');
+      await _font('Roboto', '$sdk/roboto-regular.ttf');
+      await _font('Roboto', '$sdk/roboto-bold.ttf');
+      await _font('Roboto', '$sdk/roboto-black.ttf');
+      await _font('MaterialIcons', '$sdk/materialicons-regular.otf');
     });
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(1080, 2340);

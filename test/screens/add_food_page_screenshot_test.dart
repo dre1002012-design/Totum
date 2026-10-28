@@ -29,12 +29,16 @@ Future<void> _font(String family, String path) async {
 
 void main() {
   testWidgets('captures de la page d\'ajout', (tester) async {
-    final sdk = '${Platform.environment['USERPROFILE']}\\flutter\\bin\\cache\\artifacts\\material_fonts';
+    // FLUTTER_ROOT d'abord (posé par l'outil flutter partout, CI Linux
+    // comprise) : sans les vraies polices, la mise en page diffère.
+    final root = Platform.environment['FLUTTER_ROOT'] ??
+        '${Platform.environment['USERPROFILE']}/flutter';
+    final sdk = '$root/bin/cache/artifacts/material_fonts';
     await tester.runAsync(() async {
-      await _font('Roboto', '$sdk\\roboto-regular.ttf');
-      await _font('Roboto', '$sdk\\roboto-bold.ttf');
-      await _font('Roboto', '$sdk\\roboto-black.ttf');
-      await _font('MaterialIcons', '$sdk\\materialicons-regular.otf');
+      await _font('Roboto', '$sdk/roboto-regular.ttf');
+      await _font('Roboto', '$sdk/roboto-bold.ttf');
+      await _font('Roboto', '$sdk/roboto-black.ttf');
+      await _font('MaterialIcons', '$sdk/materialicons-regular.otf');
       await _font('Emoji', r'C:\Windows\Fonts\seguiemj.ttf');
     });
     SharedPreferences.setMockInitialValues({
