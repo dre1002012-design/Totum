@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show SystemChrome, SystemUiOverlayStyle;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -26,6 +27,27 @@ Future<void> main() async {
     FlutterError.presentError(details);
   };
   ErrorWidget.builder = (FlutterErrorDetails details) {
+    // Audit 27/10/2026 (M6) : en production, plus de texte d'exception brut
+    // (rouge sur fond blanc fixe, illisible en mode sombre, détails
+    // internes exposés) — message sobre aux couleurs du thème. Le détail
+    // reste affiché en développement.
+    if (kReleaseMode) {
+      return Material(
+        color: TotumColors.page,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              AppSettings.language.value == 'en'
+                  ? 'This section could not be displayed.'
+                  : 'Cette section n\'a pas pu s\'afficher.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: TotumColors.textSecondary, fontSize: 14),
+            ),
+          ),
+        ),
+      );
+    }
     return Material(
       color: Colors.white,
       child: Padding(
