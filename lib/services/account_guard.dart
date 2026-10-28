@@ -44,6 +44,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'calibration_service.dart';
 import 'pause_service.dart';
+import 'pending_food_ops.dart';
 import 'profile.dart';
 
 const _lastAuthUserIdKey = 'account_guard_last_user_id';
@@ -60,10 +61,8 @@ Future<void> ensureLocalDataMatchesAuthenticatedUser() async {
   final lastId = sp.getString(_lastAuthUserIdKey);
   if (currentId == lastId) return;
 
-  final keysToClear = sp
-      .getKeys()
-      .where((k) => !k.startsWith('settings_') && !k.startsWith('sb-'))
-      .toList();
+  final keysToClear =
+      localKeysToPurge(sp.getKeys(), signingOut: currentId == null);
   for (final k in keysToClear) {
     await sp.remove(k);
   }
@@ -77,4 +76,24 @@ Future<void> ensureLocalDataMatchesAuthenticatedUser() async {
   CalibrationService.instance.resetInMemoryCache();
   PauseService.instance.resetInMemoryCache();
   ProfileStore.instance.resetInMemoryCache();
+}
+
+/// Clés locales à effacer lors d'un changement d'utilisateur.
+///
+/// Audit 27/10/2026 (M1) : une simple DÉCONNEXION effaçait aussi la file des
+/// ajouts faits hors ligne pas encore synchronisés (`PendingFoodOps`) — perdus
+/// pour de bon. À la déconnexion, on conserve donc cette file ET l'identifiant
+/// du dernier compte : si ce MÊME compte se reconnecte, rien n'est purgé et la
+/// file est rejouée ; si un AUTRE compte se connecte, tout est purgé comme
+/// avant (jamais les données d'un compte écrites sous l'identité d'un autre —
+/// voir l'incident du 21/08/2026 ci-dessus).
+List<String> localKeysToPurge(Iterable<String> keys, {required bool signingOut}) {
+  return keys.where((k) {
+    if (k.startsWith('settings_') || k.startsWith('sb-')) return false;
+    if (signingOut &&
+        (k == PendingFoodOps.storageKey || k == _lastAuthUserIdKey)) {
+      return false;
+    }
+    return true;
+  }).toList();
 }

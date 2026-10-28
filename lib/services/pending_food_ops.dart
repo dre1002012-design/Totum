@@ -17,7 +17,19 @@ class PendingFoodOps {
   PendingFoodOps._();
   static final PendingFoodOps instance = PendingFoodOps._();
 
-  static const _key = 'pending_food_ops_v1';
+  static const _key = storageKey;
+
+  /// Clé SharedPreferences de la file — conservée à la déconnexion par
+  /// `account_guard.dart` (voir `localKeysToPurge`).
+  static const storageKey = 'pending_food_ops_v1';
+
+  /// Une opération n'est rejouée que pour le compte qui l'a créée (le
+  /// `user_id` est dans chaque payload) — défense en profondeur en plus de
+  /// la purge d'account_guard et de la RLS.
+  static bool belongsTo(Map<String, dynamic> op, String userId) {
+    final payload = op['payload'];
+    return payload is Map && payload['user_id'] == userId;
+  }
 
   Future<List<Map<String, dynamic>>> _readQueue(SharedPreferences sp) async {
     final raw = sp.getString(_key);
@@ -94,6 +106,10 @@ class PendingFoodOps {
     var successCount = 0;
 
     for (final op in queue) {
+      if (!belongsTo(op, user.id)) {
+        remaining.add(op);
+        continue;
+      }
       final type = op['type'] as String? ?? '';
       final payload =
           Map<String, dynamic>.from((op['payload'] as Map?) ?? {});
