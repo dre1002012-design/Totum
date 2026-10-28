@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../foods_loader.dart' as foods_loader;
+import '../supabase_paging.dart';
 
 // Import conditionnel : web → download_web.dart, mobile → download_io.dart
 import 'download_stub.dart'
@@ -84,14 +85,19 @@ class JournalExporter {
     // bilan_screen.dart ce jour-là) : garde-fou contre le plafond de lignes
     // par défaut de PostgREST/Supabase sur un export portant sur une longue
     // période et une saisie très granulaire (aliment par aliment).
-    final List<dynamic> rawRows = await client
+    // Audit 27/10/2026 (E3) : `.limit()` ne lève PAS le plafond serveur (1000
+    // lignes par défaut) — avec ce tri croissant, l'export perdait alors les
+    // jours les PLUS RÉCENTS. Lecture par pages, ordre total entry_date
+    // puis id.
+    final List<dynamic> rawRows = await fetchAllPages((rangeFrom, rangeTo) => client
         .from('food_entries')
         .select()
         .eq('user_id', user.id)
         .gte('entry_date', _ymd(from))
         .lte('entry_date', _ymd(to))
-        .order('entry_date')
-        .limit(10000);
+        .order('entry_date', ascending: true)
+        .order('id', ascending: true)
+        .range(rangeFrom, rangeTo));
 
     // Groupement : date → repas → entrées
     final byDate = <String, Map<String, List<Map<String, dynamic>>>>{};

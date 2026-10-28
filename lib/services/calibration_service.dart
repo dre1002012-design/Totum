@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'pause_service.dart';
 import 'profile.dart' show effectiveEnergyDensityKcalPerKg;
+import 'supabase_paging.dart';
 
 /// Un point de l'historique de poids.
 class WeighIn {
@@ -456,12 +457,21 @@ class CalibrationService {
       // après un court délai absorbe l'immense majorité des ratés
       // transitoires (blip réseau, coupure Wi-Fi/4G) sans complexifier
       // l'appelant.
+      // Audit 27/10/2026 (F3) : même plafond serveur que food_entries (1000
+      // lignes ≈ 2,7 ans de pesées quotidiennes) — lecture par pages.
+      Future<List<dynamic>> fetch() => fetchAllPages((rangeFrom, rangeTo) =>
+          _client
+              .from('weight_log')
+              .select()
+              .eq('user_id', user.id)
+              .order('date', ascending: false)
+              .range(rangeFrom, rangeTo));
       List<dynamic> rows;
       try {
-        rows = await _client.from('weight_log').select().eq('user_id', user.id);
+        rows = await fetch();
       } catch (_) {
         await Future.delayed(const Duration(milliseconds: 800));
-        rows = await _client.from('weight_log').select().eq('user_id', user.id);
+        rows = await fetch();
       }
       final remote = rows.map((r) {
         final m = Map<String, dynamic>.from(r);
@@ -572,24 +582,27 @@ class CalibrationService {
     final fetchStart =
         _dateKey(DateTime.now().subtract(const Duration(days: _foodEntriesFetchDays)));
     try {
+      // Audit 27/10/2026 (E3) : `.limit()` ne lève PAS le plafond serveur
+      // (1000 lignes par défaut, ~40 jours pour Alex) alors que
+      // expenditureHistory() a besoin de ~80 jours — lecture par pages
+      // (supabase_paging.dart), ordre total entry_date puis id.
+      Future<List<dynamic>> fetch() => fetchAllPages(
+            (rangeFrom, rangeTo) => _client
+                .from('food_entries')
+                .select('entry_date, energy_kcal')
+                .eq('user_id', user.id)
+                .gte('entry_date', fetchStart)
+                .order('entry_date', ascending: false)
+                .order('id', ascending: false)
+                .range(rangeFrom, rangeTo),
+            maxPages: _foodEntriesFetchLimit ~/ kSupabasePageSize,
+          );
       List<dynamic> rows;
       try {
-        rows = await _client
-            .from('food_entries')
-            .select('entry_date, energy_kcal')
-            .eq('user_id', user.id)
-            .gte('entry_date', fetchStart)
-            .order('entry_date', ascending: false)
-            .limit(_foodEntriesFetchLimit);
+        rows = await fetch();
       } catch (_) {
         await Future.delayed(const Duration(milliseconds: 800));
-        rows = await _client
-            .from('food_entries')
-            .select('entry_date, energy_kcal')
-            .eq('user_id', user.id)
-            .gte('entry_date', fetchStart)
-            .order('entry_date', ascending: false)
-            .limit(_foodEntriesFetchLimit);
+        rows = await fetch();
       }
       final list = rows.map((r) => Map<String, dynamic>.from(r as Map)).toList();
       _cachedFoodEntries = list;

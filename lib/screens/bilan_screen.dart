@@ -13,6 +13,7 @@ import '../services/foods_loader.dart' as foods_loader;
 import '../services/calibration_service.dart' show CalibrationService;
 import '../services/export/journal_export.dart';
 import '../services/nutrient_labels.dart';
+import '../services/supabase_paging.dart';
 import 'account_screen.dart'; // ✅
 import '../theme/totum_style.dart';
 import '../l10n/app_localizations.dart';
@@ -1108,16 +1109,18 @@ Future<BilanData> _computeBilanForSpan(ReportSpan span,
         // jours (jusqu'à ~2700 lignes) — les lignes conservées après
         // troncature n'étant alors pas garanties être les plus récentes,
         // faussant silencieusement les moyennes du Bilan pour les gros
-        // utilisateurs. `.order(DESC)` garantit qu'une éventuelle troncature
-        // conserve les jours les plus récents en priorité.
-        final List<Map<String, dynamic>> allRows = await _client
+        // utilisateurs. Audit 27/10/2026 (E3) : `.limit()` ne lève PAS le
+        // plafond serveur — lecture par pages (voir supabase_paging.dart),
+        // ordre total entry_date puis id.
+        final allRows = await fetchAllPages((rangeFrom, rangeTo) => _client
             .from('food_entries')
             .select()
             .eq('user_id', user.id)
             .gte('entry_date', _dateKey(from))
             .lte('entry_date', _dateKey(to))
             .order('entry_date', ascending: false)
-            .limit(10000);
+            .order('id', ascending: false)
+            .range(rangeFrom, rangeTo));
 
         for (final row in allRows) {
           final date = (row['entry_date'] as String?) ?? '';
@@ -2095,15 +2098,17 @@ Future<List<FoodContribution>> _contributorsForRange(
       // Même correctif que le bulk fetch ci-dessus (21/08/2026) : `.order()`
       // + `.limit()` garantissent qu'une éventuelle troncature côté serveur
       // conserve les jours les plus récents plutôt qu'un sous-ensemble
-      // arbitraire.
-      final List<Map<String, dynamic>> rows = await _client
+      // arbitraire. Audit 27/10/2026 (E3) : lecture par pages, `.limit()`
+      // ne levant pas le plafond serveur.
+      final rows = await fetchAllPages((rangeFrom, rangeTo) => _client
           .from('food_entries')
           .select()
           .eq('user_id', user.id)
           .gte('entry_date', ymd(from))
           .lte('entry_date', ymd(to))
           .order('entry_date', ascending: false)
-          .limit(10000);
+          .order('id', ascending: false)
+          .range(rangeFrom, rangeTo));
       for (final r in rows) {
         final id = (r['food_id'] ?? '').toString();
         final name = (r['food_name'] ?? l10n.bilanUnnamedFood).toString();
