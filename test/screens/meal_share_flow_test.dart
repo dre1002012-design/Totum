@@ -1,7 +1,7 @@
 // test/screens/meal_share_flow_test.dart
 //
 // Parcours de partage complet (27/10/2026, retour d'Alex : "le partage ne
-// fonctionne pas") : écran réel -> "Créer 8 visuels" -> fiche "Tes visuels
+// fonctionne pas") : écran réel -> "Créer N visuels" -> fiche "Tes visuels
 // sont prêts" -> "Partager…". Le canal natif de partage (share_plus) et le
 // dossier temporaire (path_provider) sont simulés : on vérifie que le menu
 // de partage reçoit bien les 8 PNG, et que la légende est copiée.
@@ -17,12 +17,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share_plus_platform_interface/share_plus_platform_interface.dart';
 // ignore: depend_on_referenced_packages, implementation_imports
 import 'package:share_plus_platform_interface/method_channel/method_channel_share.dart';
+import 'package:totum_app/widgets/meal_share_slides.dart' show carouselKinds;
 import 'package:totum_app/l10n/app_localizations.dart';
 import 'package:totum_app/screens/meal_share_screen.dart';
 import 'package:totum_app/services/meal_share.dart';
 
 void main() {
-  testWidgets('créer puis partager : le menu de partage reçoit les 8 visuels', (tester) async {
+  testWidgets('créer puis partager : le menu de partage reçoit tous les visuels du carrousel', (tester) async {
     // Police embarquée des visuels (pubspec : TotumShare), chargée comme dans l'app.
     await tester.runAsync(() async {
       final loader = FontLoader('TotumShare');
@@ -109,7 +110,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await shot('share_1_ecran');
-    await tester.tap(find.text('Créer 8 visuel(s)'));
+    await tester.tap(find.text('Créer ${carouselKinds.length} visuel(s)'));
     for (var i = 0; i < 40 && find.text('Tes visuels sont prêts').evaluate().isEmpty; i++) {
       await tester.runAsync(() => Future.delayed(const Duration(milliseconds: 100)));
       await tester.pump(const Duration(milliseconds: 100));
@@ -132,7 +133,7 @@ void main() {
         .map((t) => t.data)
         .toList();
     expect(sharedPaths, isNotNull, reason: 'messages : $snacks');
-    expect(sharedPaths!.length, 8);
+    expect(sharedPaths!.length, carouselKinds.length);
     for (final p in sharedPaths!) {
       final f = File(p as String);
       expect(f.existsSync(), isTrue);
