@@ -15,10 +15,15 @@
 //   restent réservés aux ALIMENTS (pictogrammes Ciqual) ;
 // - mentions de référence courtes et homogènes (VNR UE, repères ANSES).
 //
-// Carrousel (8 visuels, une idée par visuel) :
-//  1. Couverture  2. L'énergie  3. Micronutriments en vedette
-//  4. Acides gras essentiels  5. Leurs rôles  6. La recette
-//  7. L'équilibre (déjà couverts / à compléter)  8. À retenir
+// Version 2.0 (31/10/2026, retour d'Alex : « plus impactant, parlant à
+// tout le monde, aucun symbole chimique, nutriments vraiment pertinents ») :
+// noms complets, apports conseillés ANSES, nutriments choisis par
+// pertinence santé (pas par pourcentage brut), fonctions du corps, part de
+// chaque aliment. Carrousel (9 visuels, une idée par visuel) :
+//  1. Couverture (accroche + 3 stars)  2. L'énergie (macros)
+//  3. Ce que ce repas apporte à ton corps  4. Les stars et d'où elles
+//  viennent  5. Vitamines  6. Minéraux  7. Les bonnes graisses
+//  8. Dans l'assiette (atout de chaque aliment)  9. L'essentiel + à compléter
 //
 // Tailles logiques -> pixels exportés :
 //  - flux (carrousel, post) : 360 × 450 ×3 = 1080 × 1350 (4:5) ;
@@ -87,19 +92,20 @@ class SharePalette {
 }
 
 enum ShareSlideKind {
-  cover, overview, micros, fats, roles, ingredients, gaps, cta,
+  cover, overview, systems, stars, vitamins, minerals, fats, ingredients, cta,
   story, post, landscape, banner,
 }
 
-/// Les 8 visuels d'un carrousel, dans l'ordre de lecture.
+/// Les 9 visuels d'un carrousel, dans l'ordre de lecture.
 const carouselKinds = [
   ShareSlideKind.cover,
   ShareSlideKind.overview,
-  ShareSlideKind.micros,
+  ShareSlideKind.systems,
+  ShareSlideKind.stars,
+  ShareSlideKind.vitamins,
+  ShareSlideKind.minerals,
   ShareSlideKind.fats,
-  ShareSlideKind.roles,
   ShareSlideKind.ingredients,
-  ShareSlideKind.gaps,
   ShareSlideKind.cta,
 ];
 
@@ -160,11 +166,12 @@ class MealShareSlide extends StatelessWidget {
     Widget body = switch (kind) {
       ShareSlideKind.cover => _cover(),
       ShareSlideKind.overview => _overview(),
-      ShareSlideKind.micros => _micros(),
+      ShareSlideKind.systems => _systems(),
+      ShareSlideKind.stars => _stars(),
+      ShareSlideKind.vitamins => _panelSlide(NutrientKind.vitamin),
+      ShareSlideKind.minerals => _panelSlide(NutrientKind.mineral),
       ShareSlideKind.fats => _fats(),
-      ShareSlideKind.roles => _roles(),
       ShareSlideKind.ingredients => _ingredients(),
-      ShareSlideKind.gaps => _gaps(),
       ShareSlideKind.cta => _cta(),
       ShareSlideKind.story => _story(),
       ShareSlideKind.post => _post(),
@@ -243,37 +250,23 @@ class MealShareSlide extends StatelessWidget {
       maxLines: lines, overflow: TextOverflow.ellipsis,
       style: TextStyle(fontSize: size, fontWeight: FontWeight.w900, height: 1.05, letterSpacing: -0.6, color: p.text));
 
-  /// Badge d'un nutriment : symbole explicite, jamais un emoji.
-  Widget _badge(EssentialNutrient d, {double size = 32, bool filled = false}) {
-    final fg = filled ? Colors.white : p.accent;
-    final isVit = d.kind == NutrientKind.vitamin;
-    return Container(
-      width: size, height: size,
-      decoration: BoxDecoration(
-        color: filled ? p.accent : p.accentSoft,
-        borderRadius: BorderRadius.circular(size * 0.3),
-      ),
-      alignment: Alignment.center,
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        if (isVit)
-          Text('VIT', style: TextStyle(fontSize: size * 0.2, height: 1, fontWeight: FontWeight.w900, letterSpacing: 0.5, color: fg)),
-        Text(d.symbol,
-            style: TextStyle(
-                fontSize: size * (d.symbol.length >= 3 ? 0.3 : isVit ? 0.4 : 0.38),
-                height: 1.05, fontWeight: FontWeight.w900, color: fg)),
-      ]),
-    );
-  }
+  /// Pourcentage au format de la langue (« 64 % » / « 64% »).
+  String _pct(double v) => english ? '${v.round()}%' : '${v.round()} %';
 
-  Widget _textBadge(String symbol, {double size = 32, String? top}) => Container(
+  String _refNote() => english
+      ? '% of the daily recommended intake for an adult (ANSES), per serving. Values from the Ciqual table (ANSES).'
+      : '% de l\'apport conseillé de la journée pour un adulte (ANSES), pour la portion. Valeurs de la table Ciqual (ANSES).';
+
+  /// Anneau de pourcentage : % au centre (plafonné à un tour complet).
+  Widget _pctRing(double percent, {double size = 52}) => SizedBox(
         width: size, height: size,
-        decoration: BoxDecoration(color: p.accentSoft, borderRadius: BorderRadius.circular(size * 0.3)),
-        alignment: Alignment.center,
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          if (top != null)
-            Text(top, style: TextStyle(fontSize: size * 0.18, height: 1, fontWeight: FontWeight.w900, color: p.accent)),
-          Text(symbol, style: TextStyle(fontSize: size * 0.38, height: 1.05, fontWeight: FontWeight.w900, color: p.accent)),
-        ]),
+        child: CustomPaint(
+          painter: _RingPainter(fraction: (percent / 100).clamp(0.0, 1.0), color: p.accent, track: p.track, stroke: size * 0.1),
+          child: Center(
+            child: Text(_pct(percent),
+                style: TextStyle(fontSize: size * (percent >= 100 ? 0.22 : 0.26), fontWeight: FontWeight.w900, height: 1, color: p.text)),
+          ),
+        ),
       );
 
   Widget _totumMark({bool light = false}) => Row(mainAxisSize: MainAxisSize.min, children: [
@@ -316,7 +309,7 @@ class MealShareSlide extends StatelessWidget {
         child: Text(text, style: TextStyle(fontSize: 7.5, height: 1.3, color: p.textSoft)),
       );
 
-  Widget _photoOrMosaic({required double height, double radius = 22}) {
+  Widget _photoOrMosaic({required double height, double radius = 22, Alignment plateAlign = Alignment.center}) {
     final img = photo;
     if (img != null) {
       return ClipRRect(
@@ -329,7 +322,7 @@ class MealShareSlide extends StatelessWidget {
     // principal (le plus lourd) au centre.
     final emojis = data.items.map((e) => e.emoji).toSet().take(7).toList();
     if (emojis.isEmpty) emojis.add('🍽️');
-    final plate = height * 0.8;
+    final plate = height * 0.72;
     final around = emojis.skip(1).toList();
     return Container(
       height: height,
@@ -341,7 +334,7 @@ class MealShareSlide extends StatelessWidget {
           colors: [p.accentSoft, Color.lerp(p.accentSoft, p.accent2, 0.35)!],
         ),
       ),
-      alignment: const Alignment(0, 0.45),
+      alignment: plateAlign,
       child: SizedBox(
         width: plate, height: plate,
         child: Stack(
@@ -395,32 +388,13 @@ class MealShareSlide extends StatelessWidget {
       );
 
   Widget _ring(NutrientHighlight h, {double size = 62, bool showSource = true}) {
-    final frac = (h.percent / 100).clamp(0.0, 1.0);
-    final isVit = h.kind == NutrientKind.vitamin;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-          width: size, height: size,
-          child: CustomPaint(
-            painter: _RingPainter(fraction: frac, color: p.accent, track: p.track, stroke: size * 0.1),
-            child: Center(
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                if (isVit)
-                  Text('VIT', style: TextStyle(fontSize: size * 0.13, height: 1, fontWeight: FontWeight.w900,
-                      letterSpacing: 0.5, color: p.textSoft)),
-                Text(h.symbol, style: TextStyle(fontSize: size * (h.symbol.length >= 3 ? 0.22 : 0.28),
-                    height: 1.05, fontWeight: FontWeight.w900, color: p.accent)),
-              ]),
-            ),
-          ),
-        ),
+        _pctRing(h.percent, size: size),
         const SizedBox(height: 4),
-        Text('${h.percent.round()} %',
-            style: TextStyle(fontSize: size * 0.24, fontWeight: FontWeight.w900, height: 1, color: p.text)),
-        const SizedBox(height: 2),
-        Text(h.label, maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
-            style: TextStyle(fontSize: size * 0.165, fontWeight: FontWeight.w800, height: 1.1)),
+        Text(h.label, maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
+            style: TextStyle(fontSize: math.max(7.0, size * 0.165), fontWeight: FontWeight.w800, height: 1.1)),
         if (showSource && h.topSourceName != null)
           Text('${h.topSourceEmoji ?? ''} ${h.topSourceName}', maxLines: 1, overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
@@ -451,10 +425,10 @@ class MealShareSlide extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 232,
+          height: 184,
           child: Stack(
             children: [
-              Positioned.fill(child: _photoOrMosaic(height: 232, radius: 0)),
+              Positioned.fill(child: _photoOrMosaic(height: 184, radius: 0, plateAlign: const Alignment(0, 0.9))),
               if (photo != null)
               Positioned.fill(
                 child: DecoratedBox(
@@ -478,12 +452,13 @@ class MealShareSlide extends StatelessWidget {
             ],
           ),
         ),
-        Padding(padding: const EdgeInsets.fromLTRB(22, 0, 22, 0), child: _title(hook.headline, size: 24, lines: 3)),
+        Padding(padding: const EdgeInsets.fromLTRB(22, 2, 22, 0), child: _title(hook.headline, size: 22.5, lines: 3)),
         Padding(
           padding: const EdgeInsets.fromLTRB(22, 6, 22, 0),
           child: Text(hook.subline, maxLines: 2, overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: p.textSoft)),
         ),
+        _starPills(),
         const Spacer(),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
@@ -496,6 +471,33 @@ class MealShareSlide extends StatelessWidget {
         ),
         _footer(right: count != null ? (english ? 'Swipe  →' : 'Fais défiler  →') : null),
       ],
+    );
+  }
+
+  /// Les 3 stars du repas en pastilles (nom complet + %), sous l'accroche.
+  Widget _starPills() {
+    final hs = data.highlights(english: english, max: 3, focus: focus);
+    if (hs.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 9, 20, 0),
+      child: Wrap(spacing: 6, runSpacing: 6, children: [
+        for (final h in hs)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+            decoration: BoxDecoration(
+              color: p.card,
+              borderRadius: BorderRadius.circular(99),
+              border: Border.all(color: p.track),
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Container(width: 7, height: 7, decoration: BoxDecoration(color: p.accent, shape: BoxShape.circle)),
+              const SizedBox(width: 5),
+              Text(h.label, style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800)),
+              const SizedBox(width: 5),
+              Text(_pct(h.percent), style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w900, color: p.accent)),
+            ]),
+          ),
+      ]),
     );
   }
 
@@ -527,10 +529,16 @@ class MealShareSlide extends StatelessWidget {
 
   Widget _overview() {
     final split = data.energySplit;
+    final eggs = data.equivalent('protein');
+    final sugars = data.micros['Sucres_g_100g'] ?? 0;
+    final sat = data.micros['AG_saturés_g_100g'] ?? 0;
     final rows = [
-      (l10n.shareProtein, data.protein, split.protein, p.accent),
-      (l10n.shareCarbs, data.carbs, split.carbs, p.accent2),
-      (l10n.shareFat, data.fat, split.fat, Color.lerp(p.accent, p.track, 0.55)!),
+      (l10n.shareProtein, data.protein, split.protein, p.accent,
+          eggs == null ? '' : (english ? ' · ≈ ${eggs.count.round()} eggs 🥚' : ' · ≈ ${eggs.count.round()} œufs 🥚')),
+      (l10n.shareCarbs, data.carbs, split.carbs, p.accent2,
+          english ? ' · sugars ${fmtNum(sugars, english: true)} g' : ' · dont sucres ${fmtNum(sugars)} g'),
+      (l10n.shareFat, data.fat, split.fat, Color.lerp(p.accent, p.track, 0.55)!,
+          english ? ' · saturated ${fmtNum(sat, decimals: 1, english: true)} g' : ' · dont saturées ${fmtNum(sat, decimals: 1)} g'),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -575,7 +583,8 @@ class MealShareSlide extends StatelessWidget {
                           const SizedBox(height: 3),
                           _bar(r.$3, height: 6, color: r.$4),
                           const SizedBox(height: 2),
-                          Text(l10n.shareEnergyShare((r.$3 * 100).round()),
+                          Text('${l10n.shareEnergyShare((r.$3 * 100).round())}${r.$5}',
+                              maxLines: 1, overflow: TextOverflow.ellipsis,
                               style: TextStyle(fontSize: 8.5, color: p.textSoft, fontWeight: FontWeight.w600)),
                         ],
                       ),
@@ -607,16 +616,147 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 3. Micronutriments en vedette ────────────────────────────────────
+  // ── 3. Ton corps : les grandes fonctions nourries ───────────────────
 
-  Widget _micros() {
-    final hs = data.highlights(english: english, max: 6, focus: focus);
+  IconData _systemIcon(BodySystem s) => switch (s) {
+        BodySystem.brain => Icons.psychology_outlined,
+        BodySystem.energy => Icons.bolt,
+        BodySystem.immunity => Icons.shield_outlined,
+        BodySystem.bones => Icons.accessibility_new,
+        BodySystem.heart => Icons.favorite_border,
+        BodySystem.hormones => Icons.science_outlined,
+        BodySystem.cells => Icons.eco_outlined,
+        BodySystem.skin => Icons.visibility_outlined,
+      };
+
+  Widget _systemTile(BodySystemScore s) => Container(
+        padding: const EdgeInsets.fromLTRB(9, 6, 10, 6),
+        decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(14)),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            SizedBox(
+              width: 26, height: 26,
+              child: CustomPaint(
+                painter: _RingPainter(fraction: (s.coverage / 100).clamp(0.0, 1.0), color: p.accent, track: p.track, stroke: 3.5),
+                child: Center(child: Icon(_systemIcon(s.system), size: 12.5, color: p.accent)),
+              ),
+            ),
+            const Spacer(),
+            Text(_pct(s.coverage), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, height: 1, color: p.text)),
+          ]),
+          const SizedBox(height: 3),
+          Text(bodySystemLabel(s.system, english), maxLines: 1, overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 9.8, fontWeight: FontWeight.w900, height: 1.1)),
+          const SizedBox(height: 1),
+          Text(s.top.isEmpty ? '—' : s.top.map((h) => h.label).join(' · '), maxLines: 1, overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 7.8, fontWeight: FontWeight.w700, color: p.textSoft)),
+        ]),
+      );
+
+  Widget _systems() {
+    final sys = data.bodySystems(english: english);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _top(english ? 'Your body' : 'Ton corps'),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 12, 22, 0),
+          child: _title(english ? 'What this meal brings to your body' : 'Ce que ce repas apporte à ton corps', size: 21),
+        ),
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18),
+          child: Column(children: [
+            for (var r = 0; r * 2 < sys.length; r++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 7),
+                child: Row(children: [
+                  Expanded(child: _systemTile(sys[r * 2])),
+                  const SizedBox(width: 7),
+                  Expanded(child: r * 2 + 1 < sys.length ? _systemTile(sys[r * 2 + 1]) : const SizedBox.shrink()),
+                ]),
+              ),
+          ]),
+        ),
+        const Spacer(),
+        _foot(english
+            ? 'Average coverage of the nutrients that contribute to each function (EU-authorised health claims, Reg. 432/2012), as % of the adult recommended intake (ANSES).'
+            : 'Couverture moyenne des nutriments qui contribuent à chaque fonction (allégations de santé autorisées dans l\'UE, règlement 432/2012), en % de l\'apport conseillé adulte (ANSES).'),
+        _footer(),
+      ],
+    );
+  }
+
+  // ── 4. Les stars de l'assiette, et d'où elles viennent ───────────────
+
+  static const _segmentAlphas = [1.0, 0.62, 0.38, 0.22];
+
+  Widget _contributionBar(List<({MealShareItem item, double share})> parts) => ClipRRect(
+        borderRadius: BorderRadius.circular(99),
+        child: SizedBox(
+          height: 8,
+          child: Row(children: [
+            for (var i = 0; i < parts.length && i < 4; i++)
+              Expanded(
+                flex: math.max(1, (parts[i].share * 1000).round()),
+                child: Container(
+                  margin: EdgeInsets.only(right: i < parts.length - 1 ? 1.5 : 0),
+                  color: p.accent.withValues(alpha: _segmentAlphas[i]),
+                ),
+              ),
+          ]),
+        ),
+      );
+
+  Widget _starCard(NutrientHighlight h) {
+    final parts = data.contributions(h.def).where((c) => c.share >= 0.01).take(4).toList();
+    final eq = data.equivalent(h.key);
+    return Container(
+      margin: const EdgeInsets.fromLTRB(18, 0, 18, 8),
+      padding: const EdgeInsets.fromLTRB(10, 9, 12, 9),
+      decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(16)),
+      child: Row(children: [
+        _pctRing(h.percent, size: 52),
+        const SizedBox(width: 11),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(h.label, maxLines: 1, overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, height: 1.1)),
+            Text(h.def.title(english), maxLines: 1, overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: p.accent)),
+            const SizedBox(height: 5),
+            _contributionBar(parts),
+            const SizedBox(height: 3),
+            Text(
+              parts.take(3).map((c) => '${c.item.emoji} ${c.item.name} ${_pct(c.share * 100)}').join('   '),
+              maxLines: 1, overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 7.8, fontWeight: FontWeight.w700, color: p.textSoft),
+            ),
+            if (eq != null)
+              Text(
+                english
+                    ? '≈ as much as ${eq.count.round()} ${eq.eq.unitEn} ${eq.eq.emoji}'
+                    : '≈ autant que ${eq.count.round()} ${eq.eq.unitFr} ${eq.eq.emoji}',
+                maxLines: 1, overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 8.2, fontWeight: FontWeight.w800),
+              ),
+          ]),
+        ),
+      ]),
+    );
+  }
+
+  Widget _stars() {
+    final hs = data.highlights(english: english, max: 3, focus: focus);
     final missing = data.itemsWithoutMicroData;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _top(l10n.shareKickerMicros),
-        Padding(padding: const EdgeInsets.fromLTRB(22, 12, 22, 0), child: _title(l10n.shareMicrosTitle)),
+        _top(english ? 'Star nutrients' : 'Les stars de l\'assiette'),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 12, 22, 0),
+          child: _title(english ? 'Its strong points, and where they come from' : 'Ses points forts, et d\'où ils viennent', size: 20),
+        ),
         const Spacer(),
         if (hs.isEmpty)
           Padding(
@@ -625,35 +765,94 @@ class MealShareSlide extends StatelessWidget {
                 style: TextStyle(fontSize: 13, color: p.textSoft, fontWeight: FontWeight.w600)),
           )
         else
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              runSpacing: 14,
-              children: [for (final h in hs) SizedBox(width: 110, child: _ring(h, size: 64))],
-            ),
-          ),
+          for (final h in hs) _starCard(h),
         const Spacer(),
         if (missing > 0)
           _foot(english
               ? '$missing ingredient(s) without micronutrient data: values are underestimated.'
               : '$missing ingrédient(s) sans données de micronutriments : valeurs sous-estimées.'),
-        _foot(l10n.shareVnrFootnote),
+        _foot(_refNote()),
         _footer(),
       ],
     );
   }
 
-  // ── 4. Acides gras essentiels ────────────────────────────────────────
+  // ── 5-6. Tableaux complets : vitamines, minéraux ────────────────────
+
+  Widget _panelSlide(NutrientKind kind) {
+    final rows = data.panel(kind, english: english);
+    final vit = kind == NutrientKind.vitamin;
+    final rowH = vit ? 21.0 : 31.0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _top(vit ? (english ? 'Vitamins' : 'Vitamines') : (english ? 'Minerals' : 'Minéraux')),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 12, 22, 2),
+          child: _title(vit
+              ? (english ? 'Every vitamin, at a glance' : 'Toutes les vitamines, d\'un coup d\'œil')
+              : (english ? 'Every mineral, at a glance' : 'Tous les minéraux, d\'un coup d\'œil'), size: 20),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 0, 22, 0),
+          child: Text(english ? '% of the daily recommended intake' : '% de l\'apport conseillé de la journée',
+              style: TextStyle(fontSize: 10.5, color: p.textSoft, fontWeight: FontWeight.w700)),
+        ),
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22),
+          child: Column(children: [
+            for (final h in rows)
+              SizedBox(
+                height: rowH,
+                child: Row(children: [
+                  SizedBox(
+                    width: 112,
+                    child: Text(h.label, maxLines: 1, overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: vit ? 9.8 : 11, fontWeight: FontWeight.w800)),
+                  ),
+                  Expanded(
+                    child: _bar(h.percent / 100,
+                        height: vit ? 8 : 10,
+                        color: h.percent >= 100
+                            ? p.accent
+                            : h.percent >= 25
+                                ? p.accent.withValues(alpha: 0.7)
+                                : p.accent.withValues(alpha: 0.35)),
+                  ),
+                  SizedBox(
+                    width: 46,
+                    child: Text(_pct(h.percent), textAlign: TextAlign.right,
+                        style: TextStyle(fontSize: vit ? 10 : 11.5, fontWeight: FontWeight.w900,
+                            color: h.percent >= 25 ? p.text : p.textSoft)),
+                  ),
+                ]),
+              ),
+          ]),
+        ),
+        const Spacer(),
+        _foot(_refNote()),
+        _footer(),
+      ],
+    );
+  }
+
+  // ── 7. Les bonnes graisses ───────────────────────────────────────────
 
   Widget _fats() {
     final fa = data.fattyAcids;
     final ratio = fa.laAlaRatio;
     final ratioOk = ratio != null && ratio <= kMaxLaAlaRatio;
-    Widget row(String symbol, String top, String label, String amount, double frac, String hint) => Padding(
+    final sat = data.micros['AG_saturés_g_100g'] ?? 0;
+    final satShare = data.kcal > 0 ? sat * 9 / data.kcal * 100 : 0.0;
+    Widget row(String label, String amount, double frac, String hint) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Row(children: [
-            _textBadge(symbol, size: 30, top: top),
+            Container(
+              width: 30, height: 30,
+              decoration: BoxDecoration(color: p.accentSoft, shape: BoxShape.circle),
+              child: Icon(Icons.water_drop, size: 15, color: p.accent),
+            ),
             const SizedBox(width: 10),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -669,11 +868,11 @@ class MealShareSlide extends StatelessWidget {
             ),
           ]),
         );
-    String pct(double v, double ref) => '${(v / ref * 100).round()} %';
+    String pct(double v, double ref) => _pct(v / ref * 100);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _top(english ? 'Essential fats' : 'Acides gras essentiels'),
+        _top(english ? 'Good fats' : 'Les bonnes graisses'),
         Padding(
           padding: const EdgeInsets.fromLTRB(22, 12, 22, 0),
           child: _title(english ? 'The fats your body can\'t make' : 'Les graisses que ton corps ne fabrique pas', size: 21),
@@ -682,28 +881,25 @@ class MealShareSlide extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22),
           child: Column(children: [
-            row('ω3', 'EPA DHA', english ? 'Omega-3 EPA+DHA (marine)' : 'Oméga-3 EPA+DHA (marins)', '${fmtNum(fa.epaDhaMg, english: english)} mg',
+            row(english ? 'Marine omega-3 (EPA+DHA)' : 'Oméga-3 marins (EPA+DHA)', '${fmtNum(fa.epaDhaMg, english: english)} mg',
                 fa.epaDhaMg / kRefEpaDhaMg,
-                english ? '${pct(fa.epaDhaMg, kRefEpaDhaMg)} of the 500 mg a day' : '${pct(fa.epaDhaMg, kRefEpaDhaMg)} des 500 mg par jour'),
-            row('ω3', 'ALA', english ? 'Omega-3 ALA (plant)' : 'Oméga-3 ALA (végétal)', '${fmtNum(fa.alaG, decimals: 1, english: english)} g', fa.alaG / kRefAlaG,
+                english ? '${pct(fa.epaDhaMg, kRefEpaDhaMg)} of the 500 mg a day · heart & brain' : '${pct(fa.epaDhaMg, kRefEpaDhaMg)} des 500 mg par jour · cœur et cerveau'),
+            row(english ? 'Plant omega-3 (ALA)' : 'Oméga-3 végétal (ALA)', '${fmtNum(fa.alaG, decimals: 1, english: english)} g', fa.alaG / kRefAlaG,
                 english ? '${pct(fa.alaG, kRefAlaG)} of the 2.2 g a day · flax, walnut, rapeseed' : '${pct(fa.alaG, kRefAlaG)} des 2,2 g par jour · lin, noix, colza'),
-            row('ω6', 'LA', english ? 'Omega-6 LA' : 'Oméga-6 LA', '${fmtNum(fa.laG, decimals: 1, english: english)} g', fa.laG / kRefLaG,
+            row(english ? 'Omega-6' : 'Oméga-6', '${fmtNum(fa.laG, decimals: 1, english: english)} g', fa.laG / kRefLaG,
                 english ? '${pct(fa.laG, kRefLaG)} of the 8.9 g a day · to balance with omega-3' : '${pct(fa.laG, kRefLaG)} des 8,9 g par jour · à équilibrer avec les oméga-3'),
           ]),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22),
           child: Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: ratioOk ? p.accent : p.card,
-              borderRadius: BorderRadius.circular(18),
-            ),
+            decoration: BoxDecoration(color: ratioOk ? p.accent : p.card, borderRadius: BorderRadius.circular(18)),
             child: Row(children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(english ? 'ω6 / ω3 RATIO' : 'RAPPORT ω6 / ω3',
-                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 1.1,
+                Text(english ? 'OMEGA-6 / OMEGA-3' : 'OMÉGA-6 / OMÉGA-3',
+                    style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w900, letterSpacing: 1.0,
                         color: ratioOk ? Colors.white.withValues(alpha: 0.85) : p.textSoft)),
                 Text(ratio == null ? '—' : fmtNum(ratio, decimals: 1, english: english),
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, height: 1.05,
@@ -715,14 +911,24 @@ class MealShareSlide extends StatelessWidget {
                   ratio == null
                       ? (english ? 'Not enough data on this plate.' : 'Pas assez de données sur cette assiette.')
                       : ratioOk
-                          ? (english ? '✓ Within the recommended target (below 5).' : '✓ Dans la cible recommandée (moins de 5).')
-                          : (english ? 'Above the recommended target (below 5): add flax, walnuts or rapeseed oil.'
-                              : 'Au-dessus de la cible recommandée (moins de 5) : ajoute lin, noix ou huile de colza.'),
+                          ? (english ? '✓ Within the recommended balance (below 5).' : '✓ Dans l\'équilibre recommandé (moins de 5).')
+                          : (english ? 'Above the recommended balance (below 5): add flax, walnuts or rapeseed oil.'
+                              : 'Au-dessus de l\'équilibre recommandé (moins de 5) : ajoute lin, noix ou huile de colza.'),
                   style: TextStyle(fontSize: 10, height: 1.25, fontWeight: FontWeight.w700,
                       color: ratioOk ? Colors.white : p.text),
                 ),
               ),
             ]),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Text(
+            english
+                ? 'Saturated fats: ${fmtNum(sat, decimals: 1, english: true)} g, i.e. ${satShare.round()}% of the energy (benchmark: under 12%).'
+                : 'Graisses saturées : ${fmtNum(sat, decimals: 1)} g, soit ${satShare.round()} % de l\'énergie (repère : moins de 12 %).',
+            style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: p.textSoft),
           ),
         ),
         const Spacer(),
@@ -732,64 +938,35 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 5. Leurs rôles ───────────────────────────────────────────────────
+  // ── 8. Dans l'assiette : chaque aliment et son atout ─────────────────
 
-  Widget _roles() {
-    final hs = data.highlights(english: english, max: 4, focus: focus);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _top(english ? 'Their roles' : 'Leurs rôles'),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(22, 12, 22, 10),
-          child: _title(english ? 'What they do for you' : 'Ce qu\'ils font pour toi'),
-        ),
-        const Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(children: [
-            for (final h in hs)
-              Container(
-                margin: const EdgeInsets.only(bottom: 7),
-                padding: const EdgeInsets.fromLTRB(11, 9, 11, 9),
-                decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(14)),
-                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  _badge(h.def, size: 34),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Row(children: [
-                        Expanded(
-                          child: Text('${h.label} · ${h.def.title(english)}', maxLines: 1, overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900)),
-                        ),
-                        Text('${h.percent.round()} %',
-                            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900, color: p.accent)),
-                      ]),
-                      const SizedBox(height: 2),
-                      Text(h.def.role(english), maxLines: 2, overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 9.5, height: 1.3, color: p.textSoft, fontWeight: FontWeight.w600)),
-                    ]),
-                  ),
-                ]),
-              ),
-          ]),
-        ),
-        const Spacer(),
-        _foot(english
-            ? 'Roles recognised in the European Union (authorised health claims).'
-            : 'Rôles reconnus dans l\'Union européenne (allégations de santé autorisées).'),
-        _footer(),
-      ],
-    );
+  /// L'atout d'un ingrédient : le nutriment pertinent dont il apporte la
+  /// plus grande part (au moins 35 %) dans ce repas.
+  String? _superpower(MealShareItem it) {
+    NutrientHighlight? best;
+    double bestShare = 0, bestScore = 0;
+    for (final h in data.highlights(english: english, max: 10, focus: focus)) {
+      final total = h.amount;
+      if (total <= 0) continue;
+      final share = h.def.amount(it.micros) / total;
+      final score = share * nutrientRelevance(h, focus: focus);
+      if (share >= 0.35 && score > bestScore) {
+        best = h;
+        bestShare = share;
+        bestScore = score;
+      }
+    }
+    if (best == null) return null;
+    return english
+        ? 'Asset: ${lowerFirst(best.label)} · ${_pct(bestShare * 100)} of the total'
+        : 'Atout : ${lowerFirst(best.label)} · ${_pct(bestShare * 100)} du total';
   }
-
-  // ── 6. La recette ────────────────────────────────────────────────────
 
   Widget _ingredients() {
     final shown = data.items.take(maxIngredientsOnSlide(data.items.length)).toList();
     final more = data.items.length - shown.length;
     final totalG = data.items.fold<double>(0, (a, e) => a + e.grams);
+    final compact = shown.length > 6;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -809,7 +986,7 @@ class MealShareSlide extends StatelessWidget {
               for (var i = 0; i < shown.length; i++) ...[
                 if (i > 0) Divider(height: 1, color: p.track),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  padding: EdgeInsets.symmetric(vertical: compact ? 3 : 5),
                   child: Row(children: [
                     Container(
                       width: 28, height: 28, alignment: Alignment.center,
@@ -821,12 +998,18 @@ class MealShareSlide extends StatelessWidget {
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text(shown[i].name, maxLines: 1, overflow: TextOverflow.ellipsis,
                             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
-                        Text('${fmtNum(shown[i].kcal, english: english)} kcal',
-                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: p.textSoft)),
+                        Text(_superpower(shown[i]) ?? '${fmtNum(shown[i].kcal, english: english)} kcal',
+                            maxLines: 1, overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 8.6, fontWeight: FontWeight.w700,
+                                color: _superpower(shown[i]) != null ? p.accent : p.textSoft)),
                       ]),
                     ),
-                    Text('${fmtNum(shown[i].grams, english: english)} g',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: p.accent)),
+                    Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                      Text('${fmtNum(shown[i].grams, english: english)} g',
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: p.text)),
+                      Text('${fmtNum(shown[i].kcal, english: english)} kcal',
+                          style: TextStyle(fontSize: 8.2, fontWeight: FontWeight.w600, color: p.textSoft)),
+                    ]),
                   ]),
                 ),
               ],
@@ -845,113 +1028,23 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 7. L'équilibre ───────────────────────────────────────────────────
-
-  Widget _gaps() {
-    final gaps = data.gaps(english: english, max: 3);
-    final covered = data.covered(english: english);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _top(english ? 'Balance' : 'L\'équilibre'),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(22, 12, 22, 4),
-          child: _title(gaps.isEmpty
-              ? (english ? 'A remarkably complete plate' : 'Une assiette remarquablement complète')
-              : data.isFullDay
-                  ? (english ? 'To strengthen tomorrow' : 'À renforcer demain')
-                  : (english ? 'To round it off at your other meals' : 'À compléter dans tes autres repas'), size: 21),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(22, 0, 22, 10),
-          child: Text(
-            english
-                ? 'Well chosen, real food covers almost all your needs.'
-                : 'Bien choisie, l\'alimentation couvre presque tous tes besoins.',
-            style: TextStyle(fontSize: 11, color: p.textSoft, fontWeight: FontWeight.w700),
-          ),
-        ),
-        if (covered.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-              decoration: BoxDecoration(color: p.accentSoft, borderRadius: BorderRadius.circular(14)),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(english ? '✓ ALREADY WELL COVERED (${covered.length})' : '✓ DÉJÀ BIEN COUVERTS (${covered.length})',
-                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 1.1, color: p.accent)),
-                const SizedBox(height: 6),
-                Wrap(spacing: 5, runSpacing: 5, children: [
-                  for (final c in covered.take(10))
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(99)),
-                      child: Text(c.label, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800)),
-                    ),
-                ]),
-              ]),
-            ),
-          ),
-        if (gaps.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22),
-            child: Text(
-              english
-                  ? 'Every essential micronutrient tracked is already well covered here.'
-                  : 'Tous les micronutriments essentiels suivis sont déjà bien couverts ici.',
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-            ),
-          )
-        else
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(children: [
-              for (final g in gaps)
-                Container(
-                  margin: const EdgeInsets.only(bottom: 6),
-                  padding: const EdgeInsets.fromLTRB(10, 7, 12, 7),
-                  decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(14)),
-                  child: Row(children: [
-                    _badge(g.def, size: 30),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Row(children: [
-                          Expanded(child: Text(g.label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900))),
-                          Text('${g.percent.round()} %',
-                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: p.textSoft)),
-                        ]),
-                        const SizedBox(height: 2),
-                        Text(g.def.foods(english), maxLines: 2, overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700, color: p.accent)),
-                      ]),
-                    ),
-                  ]),
-                ),
-            ]),
-          ),
-        const Spacer(),
-        _footer(),
-      ],
-    );
-  }
-
-  // ── 8. À retenir + appel à l'action ──────────────────────────────────
+  // ── 9. L'essentiel + à compléter + appel à l'action ─────────────────
 
   Widget _cta() {
     final ins = insightsFor(data, english: english, focus: focus);
+    final gaps = data.gaps(english: english, max: 2);
     final h = handle.trim();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _top(l10n.shareKickerNaturo),
-        Padding(padding: const EdgeInsets.fromLTRB(22, 12, 22, 6), child: _title(l10n.shareNaturoTitle, size: 21)),
+        Padding(padding: const EdgeInsets.fromLTRB(22, 10, 22, 4), child: _title(l10n.shareNaturoTitle, size: 20)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22),
           child: Column(children: [
             for (final t in ins)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
+                padding: const EdgeInsets.symmetric(vertical: 2.5),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Container(
                     margin: const EdgeInsets.only(top: 1),
@@ -960,11 +1053,41 @@ class MealShareSlide extends StatelessWidget {
                     child: const Text('✓', style: TextStyle(fontSize: 11, height: 1, fontWeight: FontWeight.w900, color: Colors.white)),
                   ),
                   const SizedBox(width: 9),
-                  Expanded(child: Text(t, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w600, height: 1.28))),
+                  Expanded(child: Text(t, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, height: 1.25))),
                 ]),
               ),
           ]),
         ),
+        if (gaps.isNotEmpty) ...[
+          const SizedBox(height: 6),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+              decoration: BoxDecoration(color: p.accentSoft, borderRadius: BorderRadius.circular(14)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  data.isFullDay
+                      ? (english ? 'TO STRENGTHEN TOMORROW' : 'À RENFORCER DEMAIN')
+                      : (english ? 'TO ROUND OFF THE DAY' : 'POUR COMPLÉTER LA JOURNÉE'),
+                  style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w900, letterSpacing: 1.1, color: p.accent),
+                ),
+                for (final g in gaps)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3),
+                    child: Text.rich(
+                      TextSpan(children: [
+                        TextSpan(text: '${g.label} : ', style: const TextStyle(fontWeight: FontWeight.w900)),
+                        TextSpan(text: g.def.foods(english)),
+                      ]),
+                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+              ]),
+            ),
+          ),
+        ],
         const Spacer(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -975,17 +1098,17 @@ class MealShareSlide extends StatelessWidget {
             const SizedBox(width: 6),
             _stat('${data.fiber.round()} g', l10n.shareFiber),
             const SizedBox(width: 6),
-            _stat('${data.essentialsAtLeast(30)}/${essentialNutrients.length}', english ? 'essentials' : 'essentiels'),
+            _stat('${data.essentialsAtLeast(25)}/${essentialNutrients.length}', english ? 'essentials' : 'essentiels'),
           ]),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Container(
-            padding: const EdgeInsets.fromLTRB(14, 11, 14, 11),
+            padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
             decoration: BoxDecoration(color: p.accent, borderRadius: BorderRadius.circular(18)),
             child: DefaultTextStyle.merge(
-              style: TextStyle(color: p.id == 'minimal' ? Colors.white : Colors.white),
+              style: const TextStyle(color: Colors.white),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(l10n.shareCtaSave, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w900, height: 1.15)),
                 const SizedBox(height: 3),
@@ -999,10 +1122,8 @@ class MealShareSlide extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 10),
-        _foot(english
-            ? 'Values per serving, from the Ciqual food composition table (ANSES).'
-            : 'Valeurs pour la portion, calculées à partir de la table Ciqual (ANSES).'),
+        const SizedBox(height: 8),
+        _foot(_refNote()),
         _footer(),
       ],
     );
@@ -1031,7 +1152,7 @@ class MealShareSlide extends StatelessWidget {
             Positioned(left: 22, right: 22, top: 20, child: Align(alignment: Alignment.centerLeft, child: _kicker(data.title, onPhoto: true))),
           ]),
         ),
-        Padding(padding: const EdgeInsets.fromLTRB(22, 0, 22, 0), child: _title(hook.headline, size: 19)),
+        Padding(padding: const EdgeInsets.fromLTRB(22, 0, 22, 0), child: _title(hook.headline, size: 17.5, lines: 3)),
         const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1113,7 +1234,7 @@ class MealShareSlide extends StatelessWidget {
             const Spacer(),
             Row(children: [
               Expanded(
-                child: Text('${fmtNum(data.kcal, english: english)} kcal · ${l10n.shareProteinShort} ${data.protein.round()} g',
+                child: Text('${fmtNum(data.kcal, english: english)} kcal · ${data.protein.round()} g ${english ? 'protein' : 'prot.'}',
                     maxLines: 1, overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800, color: p.accent)),
               ),
@@ -1138,8 +1259,8 @@ class MealShareSlide extends StatelessWidget {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             _kicker(data.title),
             const SizedBox(height: 12),
-            Text(hook.headline, maxLines: 3, overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, height: 1.05, letterSpacing: -0.5, color: p.text)),
+            Text(hook.headline, maxLines: 4, overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.w900, height: 1.05, letterSpacing: -0.5, color: p.text)),
             const SizedBox(height: 8),
             Text(hook.subline, maxLines: 2, overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 10.5, height: 1.3, fontWeight: FontWeight.w600, color: p.textSoft)),

@@ -19,6 +19,10 @@ Produit :
   - assets/foods.csv.backup_avant_taxonomie (sauvegarde de l'original)
   - scripts/_taxonomy_report.md (rapport de vérification : diff, échantillons)
 """
+# NOTE (31/10/2026) : la colonne score_nova_estime produite ici est ensuite
+# RECALCULÉE par scripts/nova_classify.py (règles par aliment, définition
+# Monteiro et al. 2019) — toujours relancer nova_classify.py après ce script.
+
 import csv
 import re
 import shutil

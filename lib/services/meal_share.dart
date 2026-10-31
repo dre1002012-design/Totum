@@ -25,6 +25,8 @@
 //   correspondait vraiment) : un symbole explicite (Mg, Zn, VIT D, ω3...) ;
 //   les emojis restent réservés aux ALIMENTS, où ils ont un sens.
 
+import 'dart:math' as math;
+
 /// Une ligne d'ingrédient du repas partagé.
 class MealShareItem {
   final String name;
@@ -82,139 +84,215 @@ enum NutrientKind { vitamin, mineral, fattyAcid }
 
 double _g(Map<String, double> m, String k) => m[k] ?? 0;
 
-/// Un micronutriment essentiel santé/longévité : symbole, référence, rôle
-/// (allégation UE autorisée) et aliments qui en apportent.
+/// Grandes fonctions du corps auxquelles contribuent les micronutriments —
+/// regroupement des allégations de santé AUTORISÉES dans l'UE (règlement
+/// (UE) 432/2012), au sujet des nutriments (jamais une promesse sur un
+/// plat). Version 2.0 du partage (31/10/2026, retour d'Alex : « parler à
+/// tout le monde », cohérence système nerveux/endocrinien/immunitaire…).
+enum BodySystem { brain, energy, immunity, bones, heart, hormones, cells, skin }
+
+String bodySystemLabel(BodySystem s, bool en) => switch (s) {
+      BodySystem.brain => en ? 'Brain & mood' : 'Cerveau & moral',
+      BodySystem.energy => en ? 'Energy & vitality' : 'Énergie & vitalité',
+      BodySystem.immunity => en ? 'Immunity' : 'Immunité',
+      BodySystem.bones => en ? 'Bones & muscles' : 'Os & muscles',
+      BodySystem.heart => en ? 'Heart & circulation' : 'Cœur & circulation',
+      BodySystem.hormones => en ? 'Hormones & thyroid' : 'Hormones & thyroïde',
+      BodySystem.cells => en ? 'Cell protection' : 'Protection des cellules',
+      BodySystem.skin => en ? 'Skin, hair & vision' : 'Peau, cheveux & vue',
+    };
+
+/// Un micronutriment essentiel : nom en clair (jamais un symbole chimique —
+/// retour d'Alex : « les gens ne connaissent pas le tableau de
+/// Mendeleïev »), apport conseillé ANSES pour un adulte, priorité santé,
+/// fonctions (allégations UE) et aliments qui en apportent.
 class EssentialNutrient {
   final String key, labelFr, labelEn, unit;
-  /// Symbole affiché dans le badge : "Mg", "D", "B12", "ω3"...
+  /// Ancien symbole (Mg, D…) — conservé pour compatibilité, jamais affiché.
   final String symbol;
   final NutrientKind kind;
+  /// Apport conseillé ANSES, adulte (le plus exigeant des deux sexes quand
+  /// ils diffèrent ; B1 et B3 sur la base de 2 000 kcal).
   final double reference;
+  /// Priorité santé publique/longévité (1 = standard) : nutriments souvent
+  /// insuffisants en France (INCA 3, Esteban) ou clés pour les systèmes
+  /// nerveux, hormonal et immunitaire — vitamine D, oméga-3, magnésium, iode…
+  /// La B12, abondante dans toute alimentation omnivore, pèse moins.
+  final double weight;
+  final List<BodySystem> systems;
   final String titleFr, titleEn, roleFr, roleEn, foodsFr, foodsEn;
   final double Function(Map<String, double> m) amount;
   const EssentialNutrient(this.key, this.labelFr, this.labelEn, this.unit, this.reference, this.symbol, this.kind,
       {required this.titleFr, required this.titleEn,
       required this.roleFr, required this.roleEn,
       required this.foodsFr, required this.foodsEn,
-      required this.amount});
+      required this.amount, this.weight = 1, this.systems = const []});
   String label(bool en) => en ? labelEn : labelFr;
   String title(bool en) => en ? titleEn : titleFr;
   String role(bool en) => en ? roleEn : roleFr;
   String foods(bool en) => en ? foodsEn : foodsFr;
 }
 
-/// Ordre = priorité santé/longévité (départage à pourcentage égal et ordre
-/// des nutriments à compléter).
+const _bS = BodySystem.brain, _eS = BodySystem.energy, _iS = BodySystem.immunity, _oS = BodySystem.bones,
+    _hS = BodySystem.heart, _tS = BodySystem.hormones, _cS = BodySystem.cells, _sS = BodySystem.skin;
+
+/// Ordre = priorité santé/longévité (départage à score égal, ordre des
+/// nutriments à compléter).
 final List<EssentialNutrient> essentialNutrients = [
-  EssentialNutrient('epaDha', 'Oméga-3 EPA+DHA', 'Omega-3 EPA+DHA', 'mg', 500, 'ω3', NutrientKind.fattyAcid,
+  EssentialNutrient('epaDha', 'Oméga-3 marins (EPA+DHA)', 'Marine omega-3 (EPA+DHA)', 'mg', 500, 'ω3', NutrientKind.fattyAcid,
+      weight: 1.6, systems: [_hS, _bS],
       titleFr: 'Cœur & cerveau', titleEn: 'Heart & brain',
-      roleFr: 'Contribuent à une fonction cardiaque normale (à partir de 250 mg par jour).',
-      roleEn: 'Contribute to the normal function of the heart (from 250 mg a day).',
+      roleFr: 'Contribuent à une fonction cardiaque normale et, pour le DHA, au fonctionnement normal du cerveau.',
+      roleEn: 'Contribute to the normal function of the heart and, for DHA, to normal brain function.',
       foodsFr: 'sardine · maquereau · saumon · hareng', foodsEn: 'sardine · mackerel · salmon · herring',
       amount: (m) => (_g(m, 'EPA_g_100g') + _g(m, 'DHA_g_100g')) * 1000),
-  EssentialNutrient('mg', 'Magnésium', 'Magnesium', 'mg', 375, 'Mg', NutrientKind.mineral,
-      titleFr: 'Énergie & système nerveux', titleEn: 'Energy & nervous system',
-      roleFr: 'Contribue à réduire la fatigue et au fonctionnement normal du système nerveux.',
-      roleEn: 'Contributes to the reduction of tiredness and to normal functioning of the nervous system.',
+  EssentialNutrient('vitD', 'Vitamine D', 'Vitamin D', 'µg', 15, 'D', NutrientKind.vitamin,
+      weight: 1.6, systems: [_iS, _oS],
+      titleFr: 'Immunité & os', titleEn: 'Immunity & bones',
+      roleFr: "Contribue au fonctionnement normal du système immunitaire et au maintien d'une ossature et de muscles normaux.",
+      roleEn: 'Contributes to the normal function of the immune system and the maintenance of normal bones and muscles.',
+      foodsFr: 'poissons gras · jaune d\'œuf · soleil', foodsEn: 'oily fish · egg yolk · sunlight',
+      amount: (m) => _g(m, 'Vitamine_D_µg_100g')),
+  EssentialNutrient('mg', 'Magnésium', 'Magnesium', 'mg', 380, 'Mg', NutrientKind.mineral,
+      weight: 1.45, systems: [_eS, _bS, _oS],
+      titleFr: 'Anti-fatigue & nerfs', titleEn: 'Energy & nerves',
+      roleFr: 'Contribue à réduire la fatigue, au fonctionnement normal du système nerveux et des muscles.',
+      roleEn: 'Contributes to the reduction of tiredness and to normal nervous system and muscle function.',
       foodsFr: 'graines de courge · amandes · chocolat noir · légumineuses',
       foodsEn: 'pumpkin seeds · almonds · dark chocolate · legumes',
       amount: (m) => _g(m, 'Magnésium_mg_100g')),
-  EssentialNutrient('vitD', 'Vitamine D', 'Vitamin D', 'µg', 5, 'D', NutrientKind.vitamin,
-      titleFr: 'Immunité & os', titleEn: 'Immunity & bones',
-      roleFr: "Contribue au fonctionnement normal du système immunitaire et au maintien d'une ossature normale.",
-      roleEn: 'Contributes to the normal function of the immune system and the maintenance of normal bones.',
-      foodsFr: 'poissons gras · jaune d\'œuf · exposition au soleil', foodsEn: 'oily fish · egg yolk · sunlight',
-      amount: (m) => _g(m, 'Vitamine_D_µg_100g')),
-  EssentialNutrient('vitK', 'Vitamine K', 'Vitamin K', 'µg', 75, 'K', NutrientKind.vitamin,
-      titleFr: 'Os & coagulation', titleEn: 'Bones & clotting',
-      roleFr: "Contribue au maintien d'une ossature normale et à une coagulation sanguine normale.",
-      roleEn: 'Contributes to the maintenance of normal bone and to normal blood clotting.',
-      foodsFr: 'légumes verts à feuilles · brocoli · fromages affinés', foodsEn: 'leafy greens · broccoli · aged cheeses',
-      amount: (m) => _g(m, 'Vitamine_K1_µg_100g') + _g(m, 'Vitamine_K2_µg_100g')),
-  EssentialNutrient('b9', 'Vitamine B9', 'Folate', 'µg', 200, 'B9', NutrientKind.vitamin,
-      titleFr: 'Renouvellement cellulaire', titleEn: 'Cell renewal',
-      roleFr: 'Contribue à réduire la fatigue et à la formation normale du sang.',
-      roleEn: 'Contributes to the reduction of tiredness and to normal blood formation.',
+  EssentialNutrient('ala', 'Oméga-3 végétal (ALA)', 'Plant omega-3 (ALA)', 'g', kRefAlaG, 'ω3', NutrientKind.fattyAcid,
+      weight: 1.25, systems: [_hS],
+      titleFr: 'Cholestérol & cœur', titleEn: 'Cholesterol & heart',
+      roleFr: 'Contribue au maintien d\'une cholestérolémie normale.',
+      roleEn: 'Contributes to the maintenance of normal blood cholesterol levels.',
+      foodsFr: 'graines de lin · noix · chia · huile de colza', foodsEn: 'flaxseed · walnuts · chia · rapeseed oil',
+      amount: (m) => _g(m, 'Acide_alpha-linolénique_W3_ALA_g_100g')),
+  EssentialNutrient('i', 'Iode', 'Iodine', 'µg', 150, 'I', NutrientKind.mineral,
+      weight: 1.35, systems: [_tS, _bS],
+      titleFr: 'Thyroïde', titleEn: 'Thyroid',
+      roleFr: 'Contribue à la production normale d\'hormones thyroïdiennes et à des fonctions cognitives normales.',
+      roleEn: 'Contributes to the normal production of thyroid hormones and to normal cognitive function.',
+      foodsFr: 'poissons de mer · crustacés · laitages · sel iodé', foodsEn: 'sea fish · shellfish · dairy · iodised salt',
+      amount: (m) => _g(m, 'Iode_µg_100g')),
+  EssentialNutrient('b9', 'Folates (vitamine B9)', 'Folate (vitamin B9)', 'µg', 330, 'B9', NutrientKind.vitamin,
+      weight: 1.25, systems: [_bS, _eS, _iS],
+      titleFr: 'Renouvellement des cellules', titleEn: 'Cell renewal',
+      roleFr: 'Contribue à réduire la fatigue, à la formation normale du sang et au fonctionnement normal du système immunitaire.',
+      roleEn: 'Contributes to the reduction of tiredness, normal blood formation and normal immune function.',
       foodsFr: 'épinards · lentilles · avocat · brocoli', foodsEn: 'spinach · lentils · avocado · broccoli',
       amount: (m) => _g(m, 'Vitamine_B9_µg_100g')),
-  EssentialNutrient('b12', 'Vitamine B12', 'Vitamin B12', 'µg', 2.5, 'B12', NutrientKind.vitamin,
-      titleFr: 'Système nerveux', titleEn: 'Nervous system',
-      roleFr: 'Contribue au fonctionnement normal du système nerveux et à réduire la fatigue.',
-      roleEn: 'Contributes to normal functioning of the nervous system and to the reduction of tiredness.',
-      foodsFr: 'poissons · fruits de mer · œufs · viande', foodsEn: 'fish · seafood · eggs · meat',
-      amount: (m) => _g(m, 'Vitamine_B12_µg_100g')),
-  EssentialNutrient('k', 'Potassium', 'Potassium', 'mg', 2000, 'K', NutrientKind.mineral,
+  EssentialNutrient('fe', 'Fer', 'Iron', 'mg', 11, 'Fe', NutrientKind.mineral,
+      weight: 1.25, systems: [_eS, _bS, _iS],
+      titleFr: 'Oxygène & énergie', titleEn: 'Oxygen & energy',
+      roleFr: "Contribue au transport normal de l'oxygène dans l'organisme et à réduire la fatigue.",
+      roleEn: 'Contributes to normal oxygen transport in the body and to the reduction of tiredness.',
+      foodsFr: 'lentilles · viande rouge · moules · épinards + vitamine C',
+      foodsEn: 'lentils · red meat · mussels · spinach + vitamin C',
+      amount: (m) => _g(m, 'Fer_mg_100g')),
+  EssentialNutrient('ca', 'Calcium', 'Calcium', 'mg', 950, 'Ca', NutrientKind.mineral,
+      weight: 1.2, systems: [_oS],
+      titleFr: 'Os & dents', titleEn: 'Bones & teeth',
+      roleFr: "Nécessaire au maintien d'une ossature et d'une dentition normales, et à une fonction musculaire normale.",
+      roleEn: 'Needed for the maintenance of normal bones and teeth, and for normal muscle function.',
+      foodsFr: 'fromages · yaourts · sardines avec arêtes · chou kale', foodsEn: 'cheese · yoghurt · sardines with bones · kale',
+      amount: (m) => _g(m, 'Calcium_mg_100g')),
+  EssentialNutrient('k', 'Potassium', 'Potassium', 'mg', 3500, 'K', NutrientKind.mineral,
+      weight: 1.2, systems: [_hS, _oS],
       titleFr: 'Tension & muscles', titleEn: 'Blood pressure & muscles',
       roleFr: "Contribue au maintien d'une pression sanguine normale et à une fonction musculaire normale.",
       roleEn: 'Contributes to the maintenance of normal blood pressure and to normal muscle function.',
       foodsFr: 'pomme de terre · banane · légumineuses · avocat', foodsEn: 'potato · banana · legumes · avocado',
       amount: (m) => _g(m, 'Potassium_mg_100g')),
-  EssentialNutrient('vitC', 'Vitamine C', 'Vitamin C', 'mg', 80, 'C', NutrientKind.vitamin,
-      titleFr: 'Immunité & collagène', titleEn: 'Immunity & collagen',
-      roleFr: 'Contribue au fonctionnement normal du système immunitaire et à la formation normale du collagène.',
-      roleEn: 'Contributes to the normal function of the immune system and to normal collagen formation.',
-      foodsFr: 'poivron · kiwi · agrumes · brocoli', foodsEn: 'bell pepper · kiwi · citrus · broccoli',
-      amount: (m) => _g(m, 'Vitamine_C_mg_100g')),
-  EssentialNutrient('zn', 'Zinc', 'Zinc', 'mg', 10, 'Zn', NutrientKind.mineral,
-      titleFr: 'Défenses & peau', titleEn: 'Defences & skin',
-      roleFr: "Contribue au fonctionnement normal du système immunitaire et au maintien d'une peau normale.",
-      roleEn: 'Contributes to the normal function of the immune system and to the maintenance of normal skin.',
+  EssentialNutrient('zn', 'Zinc', 'Zinc', 'mg', 11, 'Zn', NutrientKind.mineral,
+      weight: 1.15, systems: [_iS, _tS, _sS, _cS, _bS],
+      titleFr: 'Défenses & hormones', titleEn: 'Defences & hormones',
+      roleFr: 'Contribue au fonctionnement normal du système immunitaire, au maintien d\'une testostéronémie normale et d\'une peau normale.',
+      roleEn: 'Contributes to normal immune function, to the maintenance of normal testosterone levels and of normal skin.',
       foodsFr: 'huîtres · bœuf · graines de courge · lentilles', foodsEn: 'oysters · beef · pumpkin seeds · lentils',
       amount: (m) => _g(m, 'Zinc_mg_100g')),
-  EssentialNutrient('se', 'Sélénium', 'Selenium', 'µg', 55, 'Se', NutrientKind.mineral,
-      titleFr: 'Protection cellulaire', titleEn: 'Cell protection',
-      roleFr: 'Contribue à protéger les cellules contre le stress oxydatif et à une fonction thyroïdienne normale.',
-      roleEn: 'Contributes to the protection of cells from oxidative stress and to normal thyroid function.',
+  EssentialNutrient('se', 'Sélénium', 'Selenium', 'µg', 70, 'Se', NutrientKind.mineral,
+      weight: 1.15, systems: [_tS, _cS, _iS, _sS],
+      titleFr: 'Thyroïde & protection', titleEn: 'Thyroid & protection',
+      roleFr: 'Contribue à une fonction thyroïdienne normale et à protéger les cellules contre le stress oxydatif.',
+      roleEn: 'Contributes to normal thyroid function and to the protection of cells from oxidative stress.',
       foodsFr: 'noix du Brésil · poissons · œufs', foodsEn: 'Brazil nuts · fish · eggs',
       amount: (m) => _g(m, 'Sélénium_µg_100g')),
-  EssentialNutrient('i', 'Iode', 'Iodine', 'µg', 150, 'I', NutrientKind.mineral,
-      titleFr: 'Thyroïde', titleEn: 'Thyroid',
-      roleFr: 'Contribue à une fonction thyroïdienne normale et à des fonctions cognitives normales.',
-      roleEn: 'Contributes to normal thyroid function and to normal cognitive function.',
-      foodsFr: 'poissons de mer · crustacés · produits laitiers · sel iodé', foodsEn: 'sea fish · shellfish · dairy · iodised salt',
-      amount: (m) => _g(m, 'Iode_µg_100g')),
-  EssentialNutrient('ca', 'Calcium', 'Calcium', 'mg', 800, 'Ca', NutrientKind.mineral,
-      titleFr: 'Os & dents', titleEn: 'Bones & teeth',
-      roleFr: "Nécessaire au maintien d'une ossature et d'une dentition normales.",
-      roleEn: 'Needed for the maintenance of normal bones and teeth.',
-      foodsFr: 'fromages · yaourts · sardines avec arêtes · chou kale', foodsEn: 'cheese · yoghurt · sardines with bones · kale',
-      amount: (m) => _g(m, 'Calcium_mg_100g')),
-  EssentialNutrient('fe', 'Fer', 'Iron', 'mg', 14, 'Fe', NutrientKind.mineral,
-      titleFr: 'Oxygénation', titleEn: 'Oxygen transport',
-      roleFr: "Contribue au transport normal de l'oxygène dans l'organisme et à réduire la fatigue.",
-      roleEn: 'Contributes to normal oxygen transport in the body and to the reduction of tiredness.',
-      foodsFr: 'lentilles · viande rouge · moules · épinards (avec une source de vitamine C)',
-      foodsEn: 'lentils · red meat · mussels · spinach (with a vitamin C source)',
-      amount: (m) => _g(m, 'Fer_mg_100g')),
-  EssentialNutrient('vitE', 'Vitamine E', 'Vitamin E', 'mg', 12, 'E', NutrientKind.vitamin,
-      titleFr: 'Protection cellulaire', titleEn: 'Cell protection',
+  EssentialNutrient('vitC', 'Vitamine C', 'Vitamin C', 'mg', 110, 'C', NutrientKind.vitamin,
+      weight: 1.05, systems: [_iS, _cS, _eS, _sS, _bS],
+      titleFr: 'Immunité & collagène', titleEn: 'Immunity & collagen',
+      roleFr: 'Contribue au fonctionnement normal du système immunitaire, à la formation du collagène et à réduire la fatigue.',
+      roleEn: 'Contributes to normal immune function, normal collagen formation and the reduction of tiredness.',
+      foodsFr: 'poivron · kiwi · agrumes · brocoli', foodsEn: 'bell pepper · kiwi · citrus · broccoli',
+      amount: (m) => _g(m, 'Vitamine_C_mg_100g')),
+  EssentialNutrient('vitK', 'Vitamine K', 'Vitamin K', 'µg', 79, 'K', NutrientKind.vitamin,
+      weight: 1.0, systems: [_oS],
+      titleFr: 'Os & coagulation', titleEn: 'Bones & clotting',
+      roleFr: "Contribue au maintien d'une ossature normale et à une coagulation sanguine normale.",
+      roleEn: 'Contributes to the maintenance of normal bone and to normal blood clotting.',
+      foodsFr: 'légumes verts à feuilles · brocoli · fromages affinés', foodsEn: 'leafy greens · broccoli · aged cheeses',
+      amount: (m) => _g(m, 'Vitamine_K1_µg_100g') + _g(m, 'Vitamine_K2_µg_100g')),
+  EssentialNutrient('vitE', 'Vitamine E', 'Vitamin E', 'mg', 10, 'E', NutrientKind.vitamin,
+      weight: 1.0, systems: [_cS],
+      titleFr: 'Protection des cellules', titleEn: 'Cell protection',
       roleFr: 'Contribue à protéger les cellules contre le stress oxydatif.',
       roleEn: 'Contributes to the protection of cells from oxidative stress.',
       foodsFr: 'graines de tournesol · amandes · huile de colza', foodsEn: 'sunflower seeds · almonds · rapeseed oil',
       amount: (m) => _g(m, 'Vitamine_E_mg_100g')),
-  EssentialNutrient('vitA', 'Vitamine A', 'Vitamin A', 'µg', 800, 'A', NutrientKind.vitamin,
-      titleFr: 'Vision & peau', titleEn: 'Vision & skin',
-      roleFr: "Contribue au maintien d'une vision normale et d'une peau normale.",
-      roleEn: 'Contributes to the maintenance of normal vision and normal skin.',
+  EssentialNutrient('vitA', 'Vitamine A', 'Vitamin A', 'µg', 750, 'A', NutrientKind.vitamin,
+      weight: 0.95, systems: [_sS, _iS],
+      titleFr: 'Vue & peau', titleEn: 'Vision & skin',
+      roleFr: "Contribue au maintien d'une vision normale, d'une peau normale et au fonctionnement du système immunitaire.",
+      roleEn: 'Contributes to the maintenance of normal vision and skin, and to normal immune function.',
       foodsFr: 'carotte · patate douce · épinards · œufs', foodsEn: 'carrot · sweet potato · spinach · eggs',
       // Équivalents rétinol : rétinol + bêta-carotène / 6 (EFSA).
       amount: (m) => _g(m, 'Rétinol_µg_100g') + _g(m, 'Beta-Carotène_µg_100g') / 6),
-  EssentialNutrient('b1', 'Vitamine B1', 'Vitamin B1', 'mg', 1.1, 'B1', NutrientKind.vitamin,
-      titleFr: 'Métabolisme énergétique', titleEn: 'Energy metabolism',
+  EssentialNutrient('b6', 'Vitamine B6', 'Vitamin B6', 'mg', 1.7, 'B6', NutrientKind.vitamin,
+      weight: 0.95, systems: [_tS, _eS, _iS, _bS],
+      titleFr: 'Hormones & énergie', titleEn: 'Hormones & energy',
+      roleFr: "Contribue à réguler l'activité hormonale, à réduire la fatigue et au fonctionnement du système immunitaire.",
+      roleEn: 'Contributes to the regulation of hormonal activity, the reduction of tiredness and normal immune function.',
+      foodsFr: 'banane · poissons · volaille · pomme de terre', foodsEn: 'banana · fish · poultry · potato',
+      amount: (m) => _g(m, 'Vitamine_B6_mg_100g')),
+  EssentialNutrient('b2', 'Vitamine B2', 'Vitamin B2', 'mg', 1.6, 'B2', NutrientKind.vitamin,
+      weight: 0.8, systems: [_eS, _cS, _sS],
+      titleFr: 'Énergie & protection', titleEn: 'Energy & protection',
+      roleFr: 'Contribue à réduire la fatigue, à protéger les cellules contre le stress oxydatif et au maintien d\'une vision normale.',
+      roleEn: 'Contributes to the reduction of tiredness, protection of cells from oxidative stress and normal vision.',
+      foodsFr: 'laitages · œufs · amandes · champignons', foodsEn: 'dairy · eggs · almonds · mushrooms',
+      amount: (m) => _g(m, 'Vitamine_B2_mg_100g')),
+  EssentialNutrient('b1', 'Vitamine B1', 'Vitamin B1', 'mg', 0.84, 'B1', NutrientKind.vitamin,
+      weight: 0.8, systems: [_eS, _hS, _bS],
+      titleFr: 'Énergie & cœur', titleEn: 'Energy & heart',
       roleFr: 'Contribue à un métabolisme énergétique normal et à une fonction cardiaque normale.',
       roleEn: 'Contributes to normal energy-yielding metabolism and to the normal function of the heart.',
       foodsFr: 'céréales complètes · légumineuses · porc', foodsEn: 'whole grains · legumes · pork',
       amount: (m) => _g(m, 'Vitamine_B1_mg_100g')),
-  EssentialNutrient('b6', 'Vitamine B6', 'Vitamin B6', 'mg', 1.4, 'B6', NutrientKind.vitamin,
-      titleFr: 'Énergie & immunité', titleEn: 'Energy & immunity',
-      roleFr: 'Contribue à réduire la fatigue et au fonctionnement normal du système immunitaire.',
-      roleEn: 'Contributes to the reduction of tiredness and to the normal function of the immune system.',
-      foodsFr: 'banane · poissons · volaille · pomme de terre', foodsEn: 'banana · fish · poultry · potato',
-      amount: (m) => _g(m, 'Vitamine_B6_mg_100g')),
+  EssentialNutrient('b3', 'Vitamine B3', 'Vitamin B3', 'mg', 13.4, 'B3', NutrientKind.vitamin,
+      weight: 0.7, systems: [_eS, _bS, _sS],
+      titleFr: 'Énergie & peau', titleEn: 'Energy & skin',
+      roleFr: 'Contribue à réduire la fatigue, à des fonctions psychologiques normales et au maintien d\'une peau normale.',
+      roleEn: 'Contributes to the reduction of tiredness, normal psychological function and the maintenance of normal skin.',
+      foodsFr: 'volaille · poissons · arachides · champignons', foodsEn: 'poultry · fish · peanuts · mushrooms',
+      amount: (m) => _g(m, 'Vitamine_B3_mg_100g')),
+  EssentialNutrient('b5', 'Vitamine B5', 'Vitamin B5', 'mg', 6, 'B5', NutrientKind.vitamin,
+      weight: 0.65, systems: [_eS, _bS],
+      titleFr: 'Énergie & concentration', titleEn: 'Energy & focus',
+      roleFr: 'Contribue à réduire la fatigue et à des performances intellectuelles normales.',
+      roleEn: 'Contributes to the reduction of tiredness and to normal mental performance.',
+      foodsFr: 'champignons · œufs · avocat · lentilles', foodsEn: 'mushrooms · eggs · avocado · lentils',
+      amount: (m) => _g(m, 'Vitamine_B5_mg_100g')),
+  EssentialNutrient('b12', 'Vitamine B12', 'Vitamin B12', 'µg', 4, 'B12', NutrientKind.vitamin,
+      weight: 0.7, systems: [_bS, _eS, _iS],
+      titleFr: 'Nerfs & énergie', titleEn: 'Nerves & energy',
+      roleFr: 'Contribue au fonctionnement normal du système nerveux et à réduire la fatigue.',
+      roleEn: 'Contributes to normal functioning of the nervous system and to the reduction of tiredness.',
+      foodsFr: 'poissons · fruits de mer · œufs · viande', foodsEn: 'fish · seafood · eggs · meat',
+      amount: (m) => _g(m, 'Vitamine_B12_µg_100g')),
 ];
 
-/// Un micronutriment mis en avant, avec son % de la référence et sa source
-/// principale dans l'assiette.
+/// Un micronutriment mis en avant, avec son % de l'apport conseillé et sa
+/// source principale dans l'assiette.
 class NutrientHighlight {
   final EssentialNutrient def;
   final double amount;
@@ -239,6 +317,48 @@ class NutrientHighlight {
   double get reference => def.reference;
   double get percent => def.reference > 0 ? amount / def.reference * 100 : 0;
 }
+
+/// Note de pertinence d'un nutriment pour CE repas : priorité santé ×
+/// couverture à rendement décroissant (au-delà de ~100 % de l'apport
+/// conseillé, plus rien ne compte — 686 % de B12 ne passe plus devant 45 %
+/// de magnésium). Stress-testé dans meal_share_screenshot_test.dart.
+double nutrientRelevance(NutrientHighlight h, {ShareFocus focus = ShareFocus.balance}) {
+  final cover = 100 * (1 - math.exp(-h.percent / 60));
+  var w = h.def.weight;
+  if ((kFocusNutrients[focus] ?? const <String>[]).contains(h.key)) w *= 1.35;
+  return cover * w;
+}
+
+/// Couverture d'une grande fonction du corps par le repas.
+class BodySystemScore {
+  final BodySystem system;
+  /// Moyenne (0-100) des couvertures plafonnées à 100 % des nutriments qui
+  /// y contribuent.
+  final double coverage;
+  /// Les nutriments qui y contribuent le plus dans ce repas (2 max).
+  final List<NutrientHighlight> top;
+  const BodySystemScore(this.system, this.coverage, this.top);
+}
+
+/// Équivalence ludique : « autant de X que N repères » — valeur CIQUAL de
+/// l'aliment repère pour une portion usuelle (food_portions.dart).
+class FoodEquivalent {
+  final double perUnit;
+  final String unitFr, unitEn, emoji;
+  const FoodEquivalent(this.perUnit, this.unitFr, this.unitEn, this.emoji);
+}
+
+const Map<String, FoodEquivalent> kFoodEquivalents = {
+  'protein': FoodEquivalent(6.4, 'œufs', 'eggs', '🥚'), // 1 œuf 50 g × 12,8 g
+  'fiber': FoodEquivalent(2.1, 'pommes', 'apples', '🍎'), // 1 pomme 150 g × 1,4 g
+  'vitC': FoodEquivalent(66.5, 'oranges', 'oranges', '🍊'), // 1 orange 140 g × 47,5 mg
+  'k': FoodEquivalent(384, 'bananes', 'bananas', '🍌'), // 1 banane 120 g × 320 mg
+  'mg': FoodEquivalent(33.6, 'bananes', 'bananas', '🍌'), // 1 banane 120 g × 28 mg
+  'ca': FoodEquivalent(242, 'verres de lait', 'glasses of milk', '🥛'), // 200 g × 121 mg
+  'fe': FoodEquivalent(3.7, 'assiettes de lentilles', 'plates of lentils', '🫘'), // 150 g × 2,45 mg
+  'vitD': FoodEquivalent(1.0, 'œufs', 'eggs', '🥚'), // 1 œuf 50 g × 2 µg
+  'ala': FoodEquivalent(2.25, 'poignées de noix', 'handfuls of walnuts', '🌰'), // 30 g × 7,5 g
+};
 
 /// Repère fibres de l'ANSES (adulte).
 const double kRefFiberG = 30;
@@ -358,20 +478,78 @@ class MealShareData {
 
   /// Micronutriments essentiels classés par % de la référence. 15 % =
   /// seuil de "quantité significative" de l'étiquetage européen.
+  /// Les « stars » du repas : micronutriments couverts à au moins
+  /// [minPercent] % (15 % = quantité significative de l'étiquetage UE),
+  /// classés par PERTINENCE (priorité santé × couverture à rendement
+  /// décroissant, voir nutrientRelevance) et non plus par pourcentage brut ;
+  /// au plus 2 vitamines B, pour un trio varié et parlant.
   List<NutrientHighlight> highlights({bool english = false, double minPercent = 15, int max = 6,
       ShareFocus focus = ShareFocus.balance}) {
-    final out = [for (final d in essentialNutrients) _highlight(d, english)]
+    final all = [for (final d in essentialNutrients) _highlight(d, english)]
       ..removeWhere((h) => h.percent < minPercent);
     final order = {for (var i = 0; i < essentialNutrients.length; i++) essentialNutrients[i].key: i};
-    // Angle choisi : ses micronutriments passent devant, puis les autres.
-    final preferred = kFocusNutrients[focus] ?? const <String>[];
-    out.sort((a, b) {
-      final pa = preferred.contains(a.key), pb = preferred.contains(b.key);
-      if (pa != pb) return pa ? -1 : 1;
-      final c = b.percent.compareTo(a.percent);
+    all.sort((a, b) {
+      final c = nutrientRelevance(b, focus: focus).compareTo(nutrientRelevance(a, focus: focus));
       return c != 0 ? c : order[a.key]!.compareTo(order[b.key]!);
     });
-    return out.take(max).toList();
+    final out = <NutrientHighlight>[];
+    var bVitamins = 0;
+    for (final h in all) {
+      final isB = h.key.length <= 3 && h.key.startsWith('b');
+      if (isB && bVitamins >= 2) continue;
+      if (isB) bVitamins++;
+      out.add(h);
+      if (out.length == max) break;
+    }
+    return out;
+  }
+
+  /// Tous les nutriments d'une famille (vitamines ou minéraux), du mieux au
+  /// moins couvert — pour les tableaux complets.
+  List<NutrientHighlight> panel(NutrientKind kind, {bool english = false}) =>
+      [for (final d in essentialNutrients) if (d.kind == kind) _highlight(d, english)]
+        ..sort((a, b) => b.percent.compareTo(a.percent));
+
+  /// D'où vient chaque nutriment : part (0-1) de chaque ingrédient, de la
+  /// plus grande à la plus petite.
+  List<({MealShareItem item, double share})> contributions(EssentialNutrient d) {
+    final total = d.amount(micros);
+    if (total <= 0) return const [];
+    final out = <({MealShareItem item, double share})>[
+      for (final it in items)
+        if (d.amount(it.micros) > 0) (item: it, share: d.amount(it.micros) / total),
+    ]..sort((a, b) => b.share.compareTo(a.share));
+    return out;
+  }
+
+  /// Ce que le repas apporte à chaque grande fonction du corps, de la mieux
+  /// à la moins bien nourrie.
+  List<BodySystemScore> bodySystems({bool english = false}) {
+    final hs = [for (final d in essentialNutrients) _highlight(d, english)];
+    final out = <BodySystemScore>[];
+    for (final s in BodySystem.values) {
+      final members = hs.where((h) => h.def.systems.contains(s)).toList();
+      if (members.isEmpty) continue;
+      final cov = members.fold(0.0, (t, h) => t + h.percent.clamp(0, 100)) / members.length;
+      final top = members.where((h) => h.percent >= 10).toList()
+        ..sort((a, b) => nutrientRelevance(b).compareTo(nutrientRelevance(a)));
+      out.add(BodySystemScore(s, cov, top.take(2).toList()));
+    }
+    out.sort((a, b) => b.coverage.compareTo(a.coverage));
+    return out;
+  }
+
+  /// « autant de … que N … » si N ≥ 1,5 (sinon null).
+  ({double count, FoodEquivalent eq})? equivalent(String key) {
+    final eq = kFoodEquivalents[key];
+    if (eq == null) return null;
+    final double amount = switch (key) {
+      'protein' => protein,
+      'fiber' => fiber,
+      _ => essentialNutrients.where((d) => d.key == key).map((d) => d.amount(micros)).firstOrNull ?? 0,
+    };
+    final n = amount / eq.perUnit;
+    return n >= 1.5 ? (count: n, eq: eq) : null;
   }
 
   /// Seuil "peu couvert" : un repas représente environ un tiers de la
@@ -380,9 +558,12 @@ class MealShareData {
   double get gapThreshold => isFullDay ? 75 : 25;
 
   /// Essentiels encore peu couverts, dans l'ordre de priorité santé.
-  List<NutrientHighlight> gaps({bool english = false, int max = 4}) => [
+  List<NutrientHighlight> gaps({bool english = false, int max = 4}) => ([
         for (final d in essentialNutrients) _highlight(d, english),
-      ].where((h) => h.percent < gapThreshold).take(max).toList();
+      ].where((h) => h.percent < gapThreshold).toList()
+        ..sort((a, b) => b.def.weight.compareTo(a.def.weight)))
+          .take(max)
+          .toList();
 
   /// Essentiels déjà bien couverts (au-dessus du seuil "peu couvert").
   List<NutrientHighlight> covered({bool english = false}) {
@@ -430,15 +611,14 @@ String formatAmount(double v, String unit, {bool english = false}) {
 /// UNIQUEMENT à partir des chiffres réels (jamais de promesse santé).
 ({String headline, String subline}) hookFor(MealShareData d,
     {bool english = false, ShareFocus focus = ShareFocus.balance}) {
-  final top = d.highlights(english: english, max: 1);
-  final n30 = d.essentialsAtLeast(30);
-  final total = essentialNutrients.length;
+  final stars = d.highlights(english: english, max: 3, focus: focus);
+  final n25 = d.essentialsAtLeast(25);
   final scope = d.isFullDay
       ? (english ? 'in one day of eating' : 'en une journée')
       : (english ? 'in one plate' : 'dans une seule assiette');
   final sub = english
-      ? '$n30 of $total essential micronutrients above 30% of the reference.'
-      : '$n30 micronutriments essentiels sur $total au-dessus de 30 % de la référence.';
+      ? '$n25 essential vitamins, minerals and omega-3 above 25% of the daily recommended intake.'
+      : '$n25 vitamines, minéraux et oméga-3 essentiels à plus de 25 % de l\'apport conseillé de la journée.';
   final split = d.energySplit;
   switch (focus) {
     case ShareFocus.sport when d.protein >= 15:
@@ -471,19 +651,35 @@ String formatAmount(double v, String unit, {bool english = false}) {
     default:
       break;
   }
-  if (top.isNotEmpty && top.first.percent >= 100) {
-    final h = top.first;
+  String pct(NutrientHighlight h) => english ? '${h.percent.round()}%' : '${h.percent.round()} %';
+  if (stars.isNotEmpty && stars.first.percent >= 100 && stars.first.def.weight >= 1.15) {
+    final h = stars.first;
     return (
       headline: english
-          ? '${h.percent.round()}% of the daily ${h.label} reference $scope'
-          : '${h.percent.round()} % de la référence en ${lowerFirst(h.label)} $scope',
+          ? '${h.label}: ${pct(h)} of the daily recommended intake $scope'
+          : '${h.label} : ${pct(h)} de l\'apport conseillé de la journée $scope',
       subline: sub,
     );
   }
-  if (d.protein >= 30) {
+  if (n25 >= 5 && stars.length >= 2) {
+    final list = stars.map((h) => '${english ? h.label : lowerFirst(h.label)} (${pct(h)})').toList();
+    final joined = list.length == 3
+        ? '${list[0]}, ${list[1]} ${english ? 'and' : 'et'} ${list[2]}'
+        : '${list[0]} ${english ? 'and' : 'et'} ${list[1]}';
+    return (
+      headline: english ? '$n25 essential nutrients $scope' : '$n25 nutriments essentiels réunis $scope',
+      subline: english ? 'Including $joined of the daily recommended intake.' : 'Dont $joined de l\'apport conseillé de la journée.',
+    );
+  }
+  if (d.protein >= 25) {
+    final eq = d.equivalent('protein');
     return (
       headline: english ? '${d.protein.round()} g of protein $scope' : '${d.protein.round()} g de protéines $scope',
-      subline: sub,
+      subline: eq == null
+          ? sub
+          : (english
+              ? 'As much protein as ${eq.count.round()} ${eq.eq.unitEn} ${eq.eq.emoji}'
+              : 'Autant de protéines que ${eq.count.round()} ${eq.eq.unitFr} ${eq.eq.emoji}'),
     );
   }
   return (
@@ -497,8 +693,6 @@ String formatAmount(double v, String unit, {bool english = false}) {
 /// "À retenir" : 2-3 constats factuels tirés des données.
 List<String> insightsFor(MealShareData d, {bool english = false, ShareFocus focus = ShareFocus.balance}) {
   final out = <String>[];
-  final n30 = d.essentialsAtLeast(30);
-  final total = essentialNutrients.length;
   final split = d.energySplit;
   switch (focus) {
     case ShareFocus.sport:
@@ -535,15 +729,36 @@ List<String> insightsFor(MealShareData d, {bool english = false, ShareFocus focu
     case ShareFocus.balance:
       break;
   }
-  if (n30 >= 3) {
-    out.add(english
-        ? '$n30 of the $total essential micronutrients tracked are above 30% of the reference — with real food only.'
-        : '$n30 des $total micronutriments essentiels suivis dépassent 30 % de la référence — uniquement avec de vrais aliments.');
+  final stars = d.highlights(english: english, max: 3, focus: focus);
+  if (stars.length >= 2) {
+    final names = stars.map((h) => english ? h.label : lowerFirst(h.label)).toList();
+    final joined = names.length == 3
+        ? '${names[0]}, ${names[1]} ${english ? 'and' : 'et'} ${names[2]}'
+        : '${names[0]} ${english ? 'and' : 'et'} ${names[1]}';
+    out.add(english ? 'Its strong points: $joined.' : 'Ses points forts : $joined.');
   }
-  if (d.protein >= 25) {
+  final systems = d.bodySystems(english: english).where((b) => b.coverage >= 25).take(2).toList();
+  if (systems.isNotEmpty) {
+    final names = systems.map((b) => english ? bodySystemLabel(b.system, true) : lowerFirst(bodySystemLabel(b.system, false))).join(english ? ' and ' : ' et ');
     out.add(english
-        ? '${d.protein.round()} g of protein: a solid base for satiety and muscle maintenance.'
-        : '${d.protein.round()} g de protéines : une base solide pour la satiété et le maintien musculaire.');
+        ? 'Its nutrients contribute above all to: $names.'
+        : 'Ses nutriments contribuent surtout à : $names.');
+  }
+  // Une équivalence parlante (aliment repère, portion usuelle).
+  for (final k in const ['k', 'vitC', 'mg', 'ca', 'fiber', 'protein', 'ala', 'fe']) {
+    final eq = d.equivalent(k);
+    if (eq == null || eq.count < 2) continue;
+    final what = switch (k) {
+      'protein' => english ? 'protein' : 'protéines',
+      'fiber' => english ? 'fibre' : 'fibres',
+      _ => english
+          ? essentialNutrients.firstWhere((e) => e.key == k).labelEn
+          : lowerFirst(essentialNutrients.firstWhere((e) => e.key == k).labelFr),
+    };
+    out.add(english
+        ? 'As much $what as ${eq.count.round()} ${eq.eq.unitEn} ${eq.eq.emoji}'
+        : 'Autant de $what que ${eq.count.round()} ${eq.eq.unitFr} ${eq.eq.emoji}');
+    break;
   }
   if (d.fiber >= 8) {
     out.add(english
@@ -609,10 +824,17 @@ String captionFor(MealShareData d,
   }
   if (hs.isNotEmpty) {
     b.writeln();
-    b.writeln(english ? 'Essential micronutrients (% of the adult reference):' : 'Micronutriments essentiels (% de la référence adulte) :');
+    b.writeln(english ? 'Strong points (% of the daily recommended intake, adult):' : 'Points forts (% de l\'apport conseillé de la journée, adulte) :');
     for (final h in hs) {
       b.writeln('• ${h.label} ${h.percent.round()} % — ${h.def.role(english)}');
     }
+  }
+  final systems = d.bodySystems(english: english).where((x) => x.coverage >= 25).take(3).toList();
+  if (systems.isNotEmpty) {
+    b.writeln();
+    b.writeln(english
+        ? 'Its nutrients contribute above all to: ${systems.map((x) => bodySystemLabel(x.system, true).toLowerCase()).join(', ')}.'
+        : 'Ses nutriments contribuent surtout à : ${systems.map((x) => lowerFirst(bodySystemLabel(x.system, false))).join(', ')}.');
   }
   final fa = d.fattyAcids;
   if (fa.hasData) {
@@ -620,9 +842,9 @@ String captionFor(MealShareData d,
     b.writeln(english ? 'Essential fats:' : 'Acides gras essentiels :');
     final ratio = fa.laAlaRatio;
     b.writeln(english
-        ? '• EPA+DHA ${fmtNum(fa.epaDhaMg, english: true)} mg · omega-3 ALA ${fmtNum(fa.alaG, decimals: 1, english: true)} g · omega-6 ${fmtNum(fa.laG, decimals: 1, english: true)} g'
+        ? '• Marine omega-3 (EPA+DHA) ${fmtNum(fa.epaDhaMg, english: true)} mg · plant omega-3 (ALA) ${fmtNum(fa.alaG, decimals: 1, english: true)} g · omega-6 ${fmtNum(fa.laG, decimals: 1, english: true)} g'
             '${ratio != null ? ' · omega-6/omega-3 ratio ${fmtNum(ratio, decimals: 1, english: true)}' : ''}'
-        : '• EPA+DHA ${fmtNum(fa.epaDhaMg)} mg · oméga-3 ALA ${fmtNum(fa.alaG, decimals: 1)} g · oméga-6 ${fmtNum(fa.laG, decimals: 1)} g'
+        : '• Oméga-3 marins (EPA+DHA) ${fmtNum(fa.epaDhaMg)} mg · oméga-3 végétal (ALA) ${fmtNum(fa.alaG, decimals: 1)} g · oméga-6 ${fmtNum(fa.laG, decimals: 1)} g'
             '${ratio != null ? ' · rapport oméga-6/oméga-3 ${fmtNum(ratio, decimals: 1)}' : ''}');
   }
   if (d.items.isNotEmpty && !d.isFullDay) {
@@ -640,11 +862,11 @@ String captionFor(MealShareData d,
   if (handle.trim().isNotEmpty) b.writeln(handle.trim());
   b.writeln(mentionTotum
       ? (english
-          ? 'Analysed with Totum — values per serving (Ciqual table by ANSES, EU reference values).'
-          : 'Analyse réalisée avec Totum — valeurs pour la portion (table Ciqual de l\'ANSES, références UE).')
+          ? 'Analysed with Totum — values per serving (ANSES Ciqual table; ANSES recommended intakes for adults).'
+          : 'Analyse réalisée avec Totum — valeurs pour la portion (table Ciqual et apports conseillés de l\'ANSES pour un adulte).')
       : (english
-          ? 'Values per serving (Ciqual table by ANSES, EU reference values).'
-          : 'Valeurs pour la portion (table Ciqual de l\'ANSES, références UE).'));
+          ? 'Values per serving (ANSES Ciqual table; ANSES recommended intakes for adults).'
+          : 'Valeurs pour la portion (table Ciqual et apports conseillés de l\'ANSES pour un adulte).'));
   b.writeln();
   b.write(hashtagsFor(d, english: english, focus: focus).join(' '));
   return b.toString();

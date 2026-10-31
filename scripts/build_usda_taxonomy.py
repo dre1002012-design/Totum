@@ -21,6 +21,10 @@ redécouvertes un aliment à la fois :
 Produit : assets/usda_foods.csv mis à jour en place (mêmes lignes/macros,
 colonnes taxonomie ajoutées à la fin).
 """
+# NOTE (31/10/2026) : la colonne score_nova_estime produite ici est ensuite
+# RECALCULÉE par scripts/nova_classify.py (règles par aliment, définition
+# Monteiro et al. 2019) — toujours relancer nova_classify.py après ce script.
+
 import csv
 import re
 import unicodedata

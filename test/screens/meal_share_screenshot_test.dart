@@ -144,22 +144,72 @@ void main() {
     expect(s.protein + s.carbs + s.fat, closeTo(1, 1e-9));
   });
 
-  test('micronutriments en vedette : essentiels santé uniquement, % exacts, triés, source n°1', () {
+  test('stars : classées par PERTINENCE santé, % exacts (apports ANSES), source n°1', () {
     final hs = data.highlights(max: 20);
     expect(hs, isNotEmpty);
     for (var i = 1; i < hs.length; i++) {
-      expect(hs[i - 1].percent, greaterThanOrEqualTo(hs[i].percent));
+      expect(nutrientRelevance(hs[i - 1]), greaterThanOrEqualTo(nutrientRelevance(hs[i])));
     }
     expect(hs.every((h) => h.percent >= 15), isTrue);
+    // Au plus 2 vitamines B parmi les stars (trio varié).
+    expect(hs.where((h) => RegExp(r'^b\d+$').hasMatch(h.key)).length, lessThanOrEqualTo(2));
     // Jamais de nutriment déjà abondant (retour d'Alex du 26/10/2026).
     for (final banned in ['p', 'na', 'cu', 'mn']) {
       expect(hs.map((h) => h.key), isNot(contains(banned)));
     }
-    final b12 = hs.firstWhere((h) => h.key == 'b12');
-    expect(b12.percent, closeTo(b12.amount / 2.5 * 100, 1e-9));
-    // 190 g de sardines : source n°1 des oméga-3 et de la B12.
+    final b12 = data.panel(NutrientKind.vitamin).firstWhere((h) => h.key == 'b12');
+    expect(b12.percent, closeTo(b12.amount / 4 * 100, 1e-9)); // ANSES : 4 µg
+    // 190 g de sardines : source n°1 des oméga-3 marins.
     expect(hs.firstWhere((h) => h.key == 'epaDha').topSourceName, startsWith('Sardine'));
-    expect(b12.topSourceName, startsWith('Sardine'));
+    // D'où ça vient : parts décroissantes, somme = 100 %.
+    final parts = data.contributions(hs.first.def);
+    expect(parts.fold<double>(0, (t, c) => t + c.share), closeTo(1, 1e-9));
+    for (var i = 1; i < parts.length; i++) {
+      expect(parts[i - 1].share, greaterThanOrEqualTo(parts[i].share));
+    }
+  });
+
+  test("petit-déjeuner réel d'Alex (œufs, lin, huile d'olive, banane) : stars pertinentes", () {
+    final bf = _alexMeal(const {
+      'Lin brun graine': 22.0,
+      'Huile olive vierge extra': 15.0,
+      'Oeuf cru': 160.0,
+      'Banane chair sans peau crue': 99.0,
+    }, 'Petit-déjeuner');
+    final stars = bf.highlights(max: 3);
+    // ignore: avoid_print
+    print('stars: ${stars.map((h) => '${h.label} ${h.percent.round()} %').join(' | ')}');
+    // ignore: avoid_print
+    print('corps: ${bf.bodySystems().map((b) => '${bodySystemLabel(b.system, false)} ${b.coverage.round()} %').join(' | ')}');
+    // Le lin (22 g) apporte plus de 2 fois l'apport conseillé en oméga-3
+    // végétal : il doit être LA star, pas la B12 des œufs.
+    expect(stars.first.key, 'ala');
+    expect(stars.map((h) => h.key), isNot(contains('b12')));
+  });
+
+  test('pertinence : 686 % de B12 ne passe plus devant 45 % de magnésium', () {
+    NutrientHighlight h(String key, double pct) {
+      final d = essentialNutrients.firstWhere((e) => e.key == key);
+      return NutrientHighlight(def: d, amount: d.reference * pct / 100);
+    }
+    expect(nutrientRelevance(h('mg', 45)), greaterThan(nutrientRelevance(h('b12', 686))));
+    expect(nutrientRelevance(h('vitD', 60)), greaterThan(nutrientRelevance(h('b3', 300))));
+    // Au-delà de 100 % plus rien ne compte vraiment (rendement décroissant).
+    expect(nutrientRelevance(h('b12', 686)) - nutrientRelevance(h('b12', 150)), lessThan(10));
+  });
+
+  test('ton corps : 8 fonctions, couvertures entre 0 et 100, nutriments réels', () {
+    final sys = data.bodySystems();
+    expect(sys.length, BodySystem.values.length);
+    for (final b in sys) {
+      expect(b.coverage, inInclusiveRange(0, 100));
+      for (final t in b.top) {
+        expect(t.def.systems, contains(b.system));
+      }
+    }
+    for (var i = 1; i < sys.length; i++) {
+      expect(sys[i - 1].coverage, greaterThanOrEqualTo(sys[i].coverage));
+    }
   });
 
   test('acides gras essentiels et nutriments à compléter', () {
@@ -185,18 +235,17 @@ void main() {
     expect(captionFor(data, mentionTotum: false), isNot(contains('Totum')));
   });
 
-  test('nutriments : symbole explicite, jamais d\'emoji, références cohérentes', () {
+  test('nutriments : noms complets en clair, jamais de symbole chimique ni d\'emoji', () {
     final emoji = RegExp(r'[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]', unicode: true);
+    const symbols = {'Mg', 'Zn', 'Se', 'Fe', 'Ca', 'K', 'I', 'Na', 'P', 'Cu', 'Mn'};
+    final labels = <String>{};
     for (final n in essentialNutrients) {
-      expect(n.symbol, isNotEmpty);
-      for (final t in [n.symbol, n.labelFr, n.titleFr, n.roleFr, n.foodsFr, n.foodsEn]) {
+      for (final t in [n.labelFr, n.labelEn, n.titleFr, n.roleFr, n.foodsFr, n.foodsEn]) {
         expect(emoji.hasMatch(t), isFalse, reason: '${n.key} : "$t"');
       }
-    }
-    // Symboles distincts au sein d'une même famille (K vitamine ≠ K minéral).
-    final byKind = <NutrientKind, Set<String>>{};
-    for (final n in essentialNutrients) {
-      expect(byKind.putIfAbsent(n.kind, () => {}).add(n.symbol), isTrue, reason: n.key);
+      expect(symbols.contains(n.labelFr), isFalse, reason: n.labelFr);
+      expect(labels.add(n.labelFr), isTrue, reason: 'libellé en double : ${n.labelFr}');
+      expect(n.systems, isNotEmpty, reason: n.key);
     }
     expect(kRefFiberG, 30); // repère ANSES, cité tel quel sur les visuels
   });
@@ -214,9 +263,10 @@ void main() {
     final lon = hookFor(data, focus: ShareFocus.longevity);
     expect(lon.headline, startsWith('3 végétaux différents'));
     expect(lon.subline, contains('American Gut Project'));
-    // Sport : magnésium/potassium/fer passent devant les autres essentiels.
+    // Sport : au moins un nutriment « sport » parmi les 3 stars (l'angle
+    // favorise sans écraser un apport majeur, ici 374 % d'oméga-3 marins).
     final hs = data.highlights(focus: ShareFocus.sport, max: 3);
-    expect(kFocusNutrients[ShareFocus.sport]!.contains(hs.first.key), isTrue);
+    expect(hs.any((h) => kFocusNutrients[ShareFocus.sport]!.contains(h.key)), isTrue);
     for (final f in ShareFocus.values) {
       final ins = insightsFor(data, focus: f);
       expect(ins.length, inInclusiveRange(1, 3));
@@ -236,6 +286,8 @@ void main() {
       }
       await loader.load();
       await _loadFont('Emoji', [r'C:\Windows\Fonts\seguiemj.ttf']);
+      final root = Platform.environment['FLUTTER_ROOT'] ?? '${Platform.environment['USERPROFILE']}/flutter';
+      await _loadFont('MaterialIcons', ['$root/bin/cache/artifacts/material_fonts/materialicons-regular.otf']);
       final dir = Directory('build/share')..createSync(recursive: true);
       for (final f in dir.listSync()) {
         f.deleteSync();
@@ -260,7 +312,7 @@ void main() {
       await render(make(ShareSlideKind.post, SharePalette.linen), 'format_post');
       await render(make(ShareSlideKind.landscape, SharePalette.totumCream), 'format_paysage');
       await render(make(ShareSlideKind.banner, SharePalette.totumCream), 'format_banniere_playstore');
-      await render(make(ShareSlideKind.micros, SharePalette.totumNight, reel: true), 'format_reel_3');
+      await render(make(ShareSlideKind.stars, SharePalette.totumNight, reel: true), 'format_reel_4');
       for (final f in ShareFocus.values) {
         for (final k in [ShareSlideKind.cover, ShareSlideKind.cta]) {
           await render(
@@ -271,7 +323,7 @@ void main() {
         }
       }
       final day = _alexDay();
-      for (final k in [ShareSlideKind.cover, ShareSlideKind.micros, ShareSlideKind.gaps, ShareSlideKind.cta]) {
+      for (final k in [ShareSlideKind.cover, ShareSlideKind.systems, ShareSlideKind.stars, ShareSlideKind.cta]) {
         await render(
           MealShareSlide(kind: k, data: day, palette: SharePalette.nature, l10n: fr, 
               index: carouselKinds.indexOf(k) + 1, count: carouselKinds.length,

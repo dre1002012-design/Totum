@@ -55,8 +55,10 @@ void main() {
     expect(repo.portionsFor('ciqual:18071').first.grams, 40);
     // Repère par famille pour un aliment hors essentiels (huile de noix).
     expect(repo.portionsFor('ciqual:17220').first.grams, 10);
-    // Jamais de portion inventée pour un plat composé.
-    final pizza = repo.items.firstWhere((f) => f.sousGroupe == 'pizzas, tartes et crêpes salées');
-    expect(repo.portionsFor(pizza.id), isEmpty);
+    // Plats : repères usuels (part de pizza, assiette de plat composé).
+    final pizza = repo.items.firstWhere((f) => f.name.startsWith('Pizza'));
+    expect(repo.portionsFor(pizza.id).first.grams, 120);
+    final plat = repo.items.firstWhere((f) => f.sousGroupe == 'plats composés');
+    expect(repo.portionsFor(plat.id).first.grams, 300);
   });
 }

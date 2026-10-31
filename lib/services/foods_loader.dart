@@ -671,7 +671,7 @@ class FoodsRepository {
     final f = findById(foodId);
     if (f == null || f.id.startsWith('custom:') || f.id.startsWith('recipe:')) return const [];
     return [
-      for (final h in householdPortionsFor(ciqualCode: f.ciqualCode, sousGroupe: f.sousGroupe))
+      for (final h in householdPortionsFor(ciqualCode: f.ciqualCode, sousGroupe: f.sousGroupe, name: f.name))
         FoodPortion(label: h.fr, labelEn: h.en, grams: h.grams),
     ];
   }
