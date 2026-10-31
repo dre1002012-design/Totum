@@ -41,6 +41,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onboardingStart => 'Commencer';
 
   @override
+  String get onboardingHowItWorks => 'Comment ça marche';
+
+  @override
+  String get onboardingHowLogTitle => '1. Note ce que tu manges';
+
+  @override
+  String get onboardingHowLogBody =>
+      'Le bouton + ajoute un aliment, une recette ou un repas entier. Cherche-le par son nom (même avec une faute), scanne un code-barres ou touche le petit + orange d\'une ligne pour l\'ajouter avec ta dernière quantité.';
+
+  @override
+  String get onboardingHowWeighTitle => '2. Pèse-toi 2 à 3 fois par semaine';
+
+  @override
+  String get onboardingHowWeighBody =>
+      'Le matin, à jeun. Avec ton journal, ça permet à Totum de mesurer ta vraie dépense et d\'ajuster ton objectif tout seul, sans régime extrême.';
+
+  @override
+  String get onboardingHowInsightsTitle => '3. Regarde ce qui te manque';
+
+  @override
+  String get onboardingHowInsightsBody =>
+      'Le Bilan montre tes vitamines, minéraux et oméga-3 ; les Conseils proposent des aliments et des recettes pour les compléter.';
+
+  @override
   String get onboardingSex => 'Sexe';
 
   @override
@@ -2486,7 +2510,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get consSearchByIngredient =>
-      'Chercher par ingrédient (ex. poulet, riz...)';
+      'Recette ou ingrédient (ex. curry, poulet riz…)';
+
+  @override
+  String get consSortTooltip => 'Trier les recettes';
+
+  @override
+  String get consSortRelevance => 'Pertinence';
+
+  @override
+  String get consSortProtein => 'Plus protéinées d\'abord';
+
+  @override
+  String get consSortLightest => 'Moins caloriques d\'abord';
+
+  @override
+  String get consSortHealthy => 'Meilleur score santé d\'abord';
 
   @override
   String get consForYouToday => 'Pour toi aujourd\'hui';
@@ -2785,7 +2824,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get breathPhysiologicalSighBenefit =>
-      'La double inspiration rouvre les petits sacs pulmonaires (alvéoles) affaissés, l\'expiration longue qui suit déclenche un apaisement quasi immédiat. Dans une étude comparative, cette technique a fait mieux que la respiration carrée, l\'hyperventilation cyclique ET la méditation de pleine conscience pour améliorer l\'humeur.';
+      'La double inspiration rouvre les petits sacs pulmonaires (alvéoles) affaissés, l\'expiration longue qui suit déclenche un apaisement quasi immédiat. Dans un essai randomisé de Stanford (2023), c\'est la technique qui a le plus amélioré l\'humeur au quotidien, et les exercices de respiration y ont fait mieux que la méditation de pleine conscience.';
 
   @override
   String get consPhaseDuration => 'Durée de chaque phase';
@@ -4989,6 +5028,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get jrnlFilterMeals => 'Repas';
 
   @override
+  String get jrnlSectionYourFoods => 'Tes aliments habituels';
+
+  @override
+  String get jrnlSectionEssentials => 'Les essentiels du quotidien';
+
+  @override
+  String get jrnlSectionAllFoods => 'Tous les aliments';
+
+  @override
   String get jrnlSyncFailedWarning =>
       'Pas de connexion : cette modification n\'a pas pu être synchronisée et pourrait être perdue. Réessaie dès que possible.';
 
@@ -5098,6 +5146,25 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shareCarbsShort => 'Glucides';
+
+  @override
+  String get shareFocusLabel => 'Angle du visuel';
+
+  @override
+  String get shareFocusBalance => 'Équilibre';
+
+  @override
+  String get shareFocusSport => 'Sport';
+
+  @override
+  String get shareFocusSatiety => 'Satiété';
+
+  @override
+  String get shareFocusLongevity => 'Longévité';
+
+  @override
+  String get shareFocusHint =>
+      'Le même repas, raconté pour ton public : sportifs, rééquilibrage alimentaire, santé et longévité.';
 
   @override
   String get shareFatShort => 'Lipides';

@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../l10n/app_localizations.dart';
 import '../l10n/l10n_ext.dart';
 import '../services/app_settings.dart';
 import '../services/calibration_service.dart';
@@ -496,7 +497,54 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return _pageScaffold(
       title: l10n.onboardingStepSummaryTitle,
       subtitle: l10n.onboardingSummaryIntro,
-      child: TotumCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _targetsCard(g, l10n),
+          const SizedBox(height: 18),
+          // Mode d'emploi en 3 gestes (31/10/2026) : les testeurs d'Alex
+          // posaient leurs questions juste APRÈS l'inscription (« comment
+          // j'ajoute ? », « pourquoi me peser ? ») — on y répond ici, au
+          // moment où ils arrivent sur l'app, sans tutoriel à faire défiler.
+          Text(l10n.onboardingHowItWorks,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+          const SizedBox(height: 10),
+          _howStep(Icons.add_circle, l10n.onboardingHowLogTitle, l10n.onboardingHowLogBody),
+          _howStep(Icons.monitor_weight_outlined, l10n.onboardingHowWeighTitle, l10n.onboardingHowWeighBody),
+          _howStep(Icons.insights_outlined, l10n.onboardingHowInsightsTitle, l10n.onboardingHowInsightsBody),
+        ],
+      ),
+      bottomButton: _primaryButton(l10n.onboardingStart, _finish, loading: _saving),
+    );
+  }
+
+  Widget _howStep(IconData icon, String title, String body) => Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 36, height: 36,
+              decoration: BoxDecoration(color: TotumColors.accentSoft, borderRadius: BorderRadius.circular(10)),
+              child: Icon(icon, size: 20, color: TotumColors.accent),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800, color: TotumColors.textPrimary)),
+                  const SizedBox(height: 2),
+                  Text(body, style: TextStyle(fontSize: 12.5, height: 1.35, color: TotumColors.textSecondary)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _targetsCard(nutri.Goals g, AppLocalizations l10n) {
+    return TotumCard(
         child: Column(
           children: [
             Text('${g.kcal.round()} kcal/j',
@@ -518,9 +566,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 style: TextStyle(fontSize: 12, height: 1.4, color: TotumColors.textSecondary)),
           ],
         ),
-      ),
-      bottomButton: _primaryButton(l10n.onboardingStart, _finish, loading: _saving),
-    );
+      );
   }
 
   Widget _macroChip(String label, double grams) {

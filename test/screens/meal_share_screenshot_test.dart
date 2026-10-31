@@ -50,11 +50,14 @@ List<String> _split(String line) {
   return res;
 }
 
-/// nom CIQUAL -> (micros pour 100 g, pictogramme, macros pour 100 g)
-Map<String, ({Map<String, double> micros, String emoji, List<double> macros})> _loadCiqual() {
+typedef _Food = ({Map<String, double> micros, String emoji, List<double> macros, bool plant, int? nova});
+
+/// nom CIQUAL -> (micros pour 100 g, pictogramme, macros pour 100 g,
+/// végétal ?, NOVA estimé)
+Map<String, _Food> _loadCiqual() {
   final lines = File('assets/foods.csv').readAsLinesSync();
   final h = _split(lines.first);
-  final out = <String, ({Map<String, double> micros, String emoji, List<double> macros})>{};
+  final out = <String, _Food>{};
   for (final l in lines.skip(1)) {
     final c = _split(l);
     if (c.length != h.length) continue;
@@ -68,6 +71,8 @@ Map<String, ({Map<String, double> micros, String emoji, List<double> macros})> _
       micros: micros,
       emoji: c[h.indexOf('pictogramme')],
       macros: [m('Énergie_kcal_100g'), m('Protéines_g_100g'), m('Glucides_g_100g'), m('Lipides_g_100g'), m('Fibres_g_100g')],
+      plant: isPlantFood(groupe: c[h.indexOf('groupe')], sousGroupe: c[h.indexOf('sous_groupe')]),
+      nova: int.tryParse(c[h.indexOf('score_nova_estime')]),
     );
   }
   return out;
@@ -125,6 +130,7 @@ MealShareData _alexMeal(Map<String, double> meal, String title, {bool isFullDay 
       final f = db[id];
       return f == null ? null : (micros100: f.micros, emoji: f.emoji, displayName: id);
     },
+    classify: (id) => (isPlant: db[id]?.plant ?? false, nova: db[id]?.nova),
   );
 }
 
@@ -195,6 +201,30 @@ void main() {
     expect(kRefFiberG, 30); // repère ANSES, cité tel quel sur les visuels
   });
 
+  test('angles du partage : accroches et constats propres à chaque public', () {
+    // Sardines, pommes de terre, poivron, raisin, chocolat : 3 végétaux
+    // (le chocolat est un produit sucré, pas un végétal identifiable).
+    expect(data.plantCount, 3);
+    expect(data.rawShare, isNotNull);
+    expect(data.energyDensity, closeTo(data.kcal / data.totalGrams * 100, 1e-9));
+    final sport = hookFor(data, focus: ShareFocus.sport);
+    expect(sport.headline, contains('g de protéines et'));
+    final sat = hookFor(data, focus: ShareFocus.satiety);
+    expect(sat.headline, contains('kcal pour'));
+    final lon = hookFor(data, focus: ShareFocus.longevity);
+    expect(lon.headline, startsWith('3 végétaux différents'));
+    expect(lon.subline, contains('American Gut Project'));
+    // Sport : magnésium/potassium/fer passent devant les autres essentiels.
+    final hs = data.highlights(focus: ShareFocus.sport, max: 3);
+    expect(kFocusNutrients[ShareFocus.sport]!.contains(hs.first.key), isTrue);
+    for (final f in ShareFocus.values) {
+      final ins = insightsFor(data, focus: f);
+      expect(ins.length, inInclusiveRange(1, 3));
+      expect(hashtagsFor(data, focus: f).length, lessThanOrEqualTo(5));
+      expect(captionFor(data, focus: f), isNot(contains('riche en')));
+    }
+  });
+
   testWidgets('rendu PNG de tous les visuels (4 ambiances, 6 formats)', (tester) async {
     final fr = AppLocalizationsFr();
     await tester.runAsync(() async {
@@ -231,6 +261,15 @@ void main() {
       await render(make(ShareSlideKind.landscape, SharePalette.totumCream), 'format_paysage');
       await render(make(ShareSlideKind.banner, SharePalette.totumCream), 'format_banniere_playstore');
       await render(make(ShareSlideKind.micros, SharePalette.totumNight, reel: true), 'format_reel_3');
+      for (final f in ShareFocus.values) {
+        for (final k in [ShareSlideKind.cover, ShareSlideKind.cta]) {
+          await render(
+            MealShareSlide(kind: k, data: data, palette: SharePalette.totumCream, l10n: fr, focus: f,
+                index: carouselKinds.indexOf(k) + 1, count: carouselKinds.length,
+                fontFamilyFallback: const ['Emoji']),
+            'angle_${f.name}_${k.name}');
+        }
+      }
       final day = _alexDay();
       for (final k in [ShareSlideKind.cover, ShareSlideKind.micros, ShareSlideKind.gaps, ShareSlideKind.cta]) {
         await render(

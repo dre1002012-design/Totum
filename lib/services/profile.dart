@@ -719,7 +719,7 @@ NutritionTargets computeNutritionTargets(UserProfile p) {
 
   // Priorité 71 (audit micronutriments du 17/08/2026) : ne relevait le
   // plancher calcique qu'aux femmes 50+ (post-ménopause), alors que
-  // `isSeniorPlus` (65+, déjà calculé ci-dessous pour vitamine E/sélénium)
+  // `isSeniorPlus` (65+, aussi utilisé ci-dessous pour le sélénium)
   // s'applique tout autant aux hommes — la perte de densité osseuse liée à
   // l'âge touche aussi les hommes, plus tardivement. Un homme senior
   // recevait jusqu'ici 950mg au lieu des 1200mg recommandés.
@@ -747,10 +747,14 @@ NutritionTargets computeNutritionTargets(UserProfile p) {
 
   final vitaUg = isF ? 650.0 : 750.0;
   final vitbetacarUg = isF ? 2600.0 : 3000.0;
-  final vitdUg = p.age >= 50 ? 20.0 : 15.0;
+  // ANSES (références vitamines et minéraux, vérifié le 31/10/2026) :
+  // vitamine D 15 µg/j pour TOUS les adultes de 18 ans et plus — aucune
+  // hausse liée à l'âge (l'ancien palier 20 µg dès 50 ans ne correspondait
+  // ni à l'ANSES, ni à l'EFSA, ni à l'IOM qui ne monte qu'après 70 ans).
+  // Vitamine E 10 mg (hommes) / 9 mg (femmes), sans majoration senior.
+  const vitdUg = 15.0;
 
-  var viteMg = isF ? 9.0 : 10.0;
-  if (isSeniorPlus) viteMg *= 1.10;
+  final viteMg = isF ? 9.0 : 10.0;
 
   // Priorité 71 (audit micronutriments) : ANSES exprime la vitamine K en
   // ~1µg/kg de poids corporel/jour, pas en valeur fixe — l'ancienne

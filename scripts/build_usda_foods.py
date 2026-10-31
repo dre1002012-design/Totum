@@ -223,6 +223,16 @@ def build_row(food, nutrients_by_id, categories):
     for nid, col in NUTRIENT_COLUMN_MAP:
         v = n.get(nid)
         row[col] = '' if v is None else str(v)
+    # Glucides au sens CIQUAL/UE (fibres EXCLUES) : l'id 1005 USDA
+    # (« by difference ») INCLUT les fibres. Même conversion que
+    # usdaAvailableCarbs() (lib/services/usda_service.dart) — 31/10/2026.
+    carb, fib = n.get('1005'), n.get('1079')
+    if carb is not None:
+        avail = carb - (fib or 0)
+        sug = n.get('1063')
+        if sug is not None and avail < sug:
+            avail = sug
+        row['Glucides_g_100g'] = str(round(max(0.0, avail), 2))
     sodium = n.get('1093')
     row['Sel_g_100g'] = f'{sodium * 2.5 / 1000:.4f}' if sodium is not None else ''
     polyol_sum = sum(n[pid] for pid in POLYOL_IDS if pid in n)

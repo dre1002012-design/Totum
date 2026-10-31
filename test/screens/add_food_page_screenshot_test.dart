@@ -110,6 +110,11 @@ void main() {
     await shot('1_ajout_defaut');
     // Marques & restaurants masqués par défaut (26/10/2026).
     expect(find.text('Marques & restaurants'), findsNothing);
+    // Liste par défaut (31/10/2026) : les aliments déjà utilisés, puis les
+    // essentiels du quotidien — plus « Abat, cuit » / « Abondance » en tête.
+    expect(find.text('TES ALIMENTS HABITUELS'), findsOneWidget);
+    expect(find.text('LES ESSENTIELS DU QUOTIDIEN'), findsOneWidget);
+    expect(find.text('Abat, cuit (aliment moyen)'), findsNothing);
 
     // ⊕ -> fiche quantité express (plus d'ajout de 100 g d'office).
     await tester.tap(find.byIcon(Icons.add_circle).first);

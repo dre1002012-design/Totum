@@ -24,6 +24,7 @@ import 'bilan_screen.dart'
     show computeTodayTotumScore, BilanScreen, showNutrientFiche, NutrientFicheRepo;
 
 import '../services/foods_loader.dart' as foods_loader;
+import '../services/food_search.dart';
 import '../services/nutrient_labels.dart';
 import 'account_screen.dart';
 import '../theme/totum_style.dart';
@@ -886,9 +887,11 @@ bool _matchesDiet(TotumRecipe r, int dietIndex) {
 /// répartition, pas des exclusions binaires.
 bool _matchesDietStyle(TotumRecipe r, int dietStyleIndex) {
   if (dietStyleIndex != 3) return true; // seul le cétogène (3) est une contrainte dure
-  final carb100 = r.carb100 ?? 0;
-  final fiber100 = r.fiber100 ?? 0;
-  final netCarbPortion = (carb100 - fiber100).clamp(0, double.infinity) * r.totalWeightG / 100;
+  // Les glucides CIQUAL (base de toutes les recettes) EXCLUENT déjà les
+  // fibres : ce sont directement les « glucides nets » au sens américain.
+  // Soustraire encore les fibres (avant le 31/10/2026) les retirait 2 fois
+  // et laissait passer des plats trop riches en glucides.
+  final netCarbPortion = (r.carb100 ?? 0) * r.totalWeightG / 100;
   // Seuil généreux (encas/pré-training ≤ 15g, repas ≤ 25g) — objectif : ne
   // jamais montrer un plat qui ferait à lui seul dépasser le budget
   // glucidique cétogène (~30g nets/jour), sans être trop restrictif au
@@ -897,17 +900,6 @@ bool _matchesDietStyle(TotumRecipe r, int dietStyleIndex) {
   return netCarbPortion <= ceiling;
 }
 
-/// Normalise une chaîne pour la recherche par ingrédient (minuscules, sans
-/// accents) — permet à "epinard" de matcher "Épinard, cuit".
-String _normalizeSearch(String s) {
-  const from = 'àâäáãåèéêëìíîïòóôõöùúûüçñÀÂÄÁÃÅÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÇÑ';
-  const to = 'aaaaaaeeeeiiiiooooouuuucnAAAAAAEEEEIIIIOOOOOUUUUCN';
-  var out = s.toLowerCase();
-  for (var i = 0; i < from.length; i++) {
-    out = out.replaceAll(from[i], to[i]);
-  }
-  return out;
-}
 
 /// Part réaliste de ce qu'il reste aujourd'hui qu'un repas de cette
 /// catégorie devrait raisonnablement représenter — évite de comparer une
@@ -3763,10 +3755,16 @@ class _RecipesCatalogView extends StatefulWidget {
   State<_RecipesCatalogView> createState() => _RecipesCatalogViewState();
 }
 
+/// Tri de la bibliothèque (31/10/2026) — en plus de « Pour toi ».
+enum _RecipeSort { relevance, protein, lightest, healthy }
+
 class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
   String _filter = 'Toutes';
-  // Filtre objectif EXCLUSIF (comme les catégories) : un seul actif à la fois.
-  String? _activeTag;
+  // Filtres objectif/régime CUMULABLES (31/10/2026, « meilleur entonnoir ») :
+  // une recette doit avoir TOUS les critères cochés (ex. Végétarien +
+  // Hyperprotéiné + Rapide). Avant : un seul critère à la fois.
+  Set<String> _activeTags = {};
+  _RecipeSort _sort = _RecipeSort.relevance;
   bool _smartFitOn = false;
   bool _gridView = true;
   RemainingToday? _remaining;
@@ -3778,6 +3776,8 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
   // revenant sur l'onglet — avant, tout retombait à "Toutes" à chaque fois.
   static const _kPrefFilter = 'conseils_recipes_filter_v1';
   static const _kPrefTag = 'conseils_recipes_activetag_v1';
+  static const _kPrefTags = 'conseils_recipes_activetags_v2';
+  static const _kPrefSort = 'conseils_recipes_sort_v1';
   static const _kPrefSmartFit = 'conseils_recipes_smartfit_v1';
   static const _kPrefGridView = 'conseils_recipes_gridview_v1';
 
@@ -3786,7 +3786,14 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
     if (!mounted) return;
     setState(() {
       _filter = sp.getString(_kPrefFilter) ?? 'Toutes';
-      _activeTag = sp.getString(_kPrefTag);
+      // Migration de l'ancien filtre unique (v1) vers la sélection multiple.
+      final legacy = sp.getString(_kPrefTag);
+      _activeTags = {
+        ...?sp.getStringList(_kPrefTags),
+        if (legacy != null) legacy,
+      };
+      final sortIdx = sp.getInt(_kPrefSort) ?? 0;
+      _sort = _RecipeSort.values[sortIdx.clamp(0, _RecipeSort.values.length - 1)];
       _smartFitOn = sp.getBool(_kPrefSmartFit) ?? false;
       _gridView = sp.getBool(_kPrefGridView) ?? true;
     });
@@ -3795,11 +3802,9 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
   Future<void> _persistFilters() async {
     final sp = await SharedPreferences.getInstance();
     await sp.setString(_kPrefFilter, _filter);
-    if (_activeTag != null) {
-      await sp.setString(_kPrefTag, _activeTag!);
-    } else {
-      await sp.remove(_kPrefTag);
-    }
+    await sp.setStringList(_kPrefTags, _activeTags.toList());
+    await sp.remove(_kPrefTag);
+    await sp.setInt(_kPrefSort, _sort.index);
     await sp.setBool(_kPrefSmartFit, _smartFitOn);
     await sp.setBool(_kPrefGridView, _gridView);
   }
@@ -3811,7 +3816,8 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
   Future<void> _resetFilters() async {
     setState(() {
       _filter = 'Toutes';
-      _activeTag = null;
+      _activeTags = {};
+      _sort = _RecipeSort.relevance;
       _smartFitOn = false;
       _ingredientSearchCtrl.clear();
       _ingredientQuery = '';
@@ -3820,7 +3826,11 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
   }
 
   bool get _hasActiveFilters =>
-      _filter != 'Toutes' || _activeTag != null || _smartFitOn || _ingredientQuery.isNotEmpty;
+      _filter != 'Toutes' ||
+      _activeTags.isNotEmpty ||
+      _smartFitOn ||
+      _ingredientQuery.isNotEmpty ||
+      _sort != _RecipeSort.relevance;
 
   static const _cats = [
     'Toutes',
@@ -3874,16 +3884,52 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
   Color _colorFor(String cat) => TotumColors.accent;
 
   bool _matchesActiveFilters(TotumRecipe r) {
-    if (_activeTag == null) return true;
+    if (_activeTags.isEmpty) return true;
     final allTags = {...r.tags, ...r.goalTags};
-    return allTags.contains(_activeTag);
+    return allTags.containsAll(_activeTags);
   }
 
-  bool _matchesIngredientQuery(TotumRecipe r) {
-    final q = _normalizeSearch(_ingredientQuery.trim());
-    if (q.isEmpty) return true;
-    return r.ingredients.any((i) => _normalizeSearch(i.foodName).contains(q));
+  /// Clé de recherche d'une recette : son nom (affiché), plus ses
+  /// ingrédients (nom CIQUAL d'origine ET nom affiché dans la langue
+  /// courante), sa catégorie et ses étiquettes — même moteur que la
+  /// recherche d'aliments (mots dans le désordre, accents, pluriels,
+  /// faute de frappe d'une lettre). Avant le 31/10/2026 : sous-chaîne
+  /// exacte sur les seuls ingrédients français (« porridge », « curry »,
+  /// « poulet riz » ou « chicken » ne trouvaient rien).
+  final Map<String, FoodSearchKey> _searchKeys = {};
+  FoodSearchKey _searchKeyOf(TotumRecipe r, AppLocalizations l10n) =>
+      _searchKeys.putIfAbsent('${AppSettings.language.value}|${r.id}', () {
+        final repo = foods_loader.FoodsRepository.instance;
+        return FoodSearchKey.from(r.name, [
+          for (final i in r.ingredients) i.foodName,
+          for (final i in r.ingredients)
+            foods_loader.displayNameOf(repo.findById('ciqual:${i.foodId}'), i.foodName),
+          _recipeCategoryLabel(r.category, l10n),
+          for (final t in {...r.tags, ...r.goalTags}) _quickFilterLabel(t, l10n),
+        ]);
+      });
+
+  double _portion(TotumRecipe r, double? per100) => (per100 ?? 0) * r.totalWeightG / 100;
+
+  void _applySort(List<TotumRecipe> list) {
+    switch (_sort) {
+      case _RecipeSort.relevance:
+        return;
+      case _RecipeSort.protein:
+        list.sort((a, b) => _portion(b, b.prot100).compareTo(_portion(a, a.prot100)));
+      case _RecipeSort.lightest:
+        list.sort((a, b) => _portion(a, a.kcal100).compareTo(_portion(b, b.kcal100)));
+      case _RecipeSort.healthy:
+        list.sort((a, b) => b.healthyScore.compareTo(a.healthyScore));
+    }
   }
+
+  String _sortLabel(_RecipeSort s, AppLocalizations l10n) => switch (s) {
+        _RecipeSort.relevance => l10n.consSortRelevance,
+        _RecipeSort.protein => l10n.consSortProtein,
+        _RecipeSort.lightest => l10n.consSortLightest,
+        _RecipeSort.healthy => l10n.consSortHealthy,
+      };
 
   @override
   void dispose() {
@@ -3897,10 +3943,11 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
     final all = TotumRecipesRepo.instance.all;
     final byCategory =
         _filter == 'Toutes' ? all : all.where((r) => r.category == _filter).toList();
-    var filtered = byCategory
-        .where(_matchesActiveFilters)
-        .where(_matchesIngredientQuery)
-        .toList();
+    var filtered = byCategory.where(_matchesActiveFilters).toList();
+    if (_ingredientQuery.trim().isNotEmpty) {
+      filtered = rankFoods<TotumRecipe>(filtered, _ingredientQuery,
+          keyOf: (r) => _searchKeyOf(r, l10n));
+    }
     final remaining = _remaining;
     // Priorité 71 : "Pour toi" doit s'adapter au régime alimentaire
     // (omnivore/végétarien/végétalien — contrainte dure, jamais négociable)
@@ -3927,9 +3974,10 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
           filtered.where((r) => smartMatchScore(r, remaining) >= 55).toList();
       filtered = wellFitted.length >= 6 ? wellFitted : filtered.take(10).toList();
     }
+    _applySort(filtered);
     final showToday = widget.todayRecipes.isNotEmpty &&
         _filter == 'Toutes' &&
-        _activeTag == null &&
+        _activeTags.isEmpty &&
         _ingredientQuery.isEmpty;
 
     return CustomScrollView(
@@ -3974,6 +4022,40 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                         color: _smartFitOn ? Colors.white : TotumColors.textPrimary,
                       ),
                       backgroundColor: TotumColors.surface,
+                    ),
+                    const SizedBox(width: 6),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: _sort == _RecipeSort.relevance
+                            ? TotumColors.surface
+                            : TotumColors.accentSoft,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: _sort == _RecipeSort.relevance
+                                ? TotumColors.outline
+                                : TotumColors.accent),
+                      ),
+                      child: PopupMenuButton<_RecipeSort>(
+                        tooltip: l10n.consSortTooltip,
+                        initialValue: _sort,
+                        icon: Icon(Icons.sort_rounded,
+                            size: 20,
+                            color: _sort == _RecipeSort.relevance
+                                ? TotumColors.textSecondary
+                                : TotumColors.accent),
+                        onSelected: (v) {
+                          setState(() => _sort = v);
+                          _persistFilters();
+                        },
+                        itemBuilder: (_) => [
+                          for (final s in _RecipeSort.values)
+                            CheckedPopupMenuItem(
+                              value: s,
+                              checked: s == _sort,
+                              child: Text(_sortLabel(s, l10n)),
+                            ),
+                        ],
+                      ),
                     ),
                     const SizedBox(width: 6),
                     Container(
@@ -4119,12 +4201,15 @@ class _RecipesCatalogViewState extends State<_RecipesCatalogView> {
                     separatorBuilder: (_, __) => const SizedBox(width: 10),
                     itemBuilder: (context, i) {
                       final (tagKey, label, icon) = _quickFilters[i];
-                      final selected = _activeTag == tagKey;
+                      final selected = _activeTags.contains(tagKey);
                       const tileColor = TotumColors.accent;
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            _activeTag = selected ? null : tagKey;
+                            _activeTags = {..._activeTags};
+                            selected
+                                ? _activeTags.remove(tagKey)
+                                : _activeTags.add(tagKey);
                           });
                           _persistFilters();
                         },
@@ -6140,7 +6225,7 @@ const List<BreathTech> kBreathTechs = [
     desc:
         'Deux inspirations courtes par le nez, l\'une après l\'autre sans expirer entre les deux, puis une longue expiration par la bouche. Le geste que le corps fait déjà naturellement pour "souffler".',
     benefit:
-        'La double inspiration rouvre les petits sacs pulmonaires (alvéoles) affaissés, l\'expiration longue qui suit déclenche un apaisement quasi immédiat. Dans une étude comparative, cette technique a fait mieux que la respiration carrée, l\'hyperventilation cyclique ET la méditation de pleine conscience pour améliorer l\'humeur.',
+        'La double inspiration rouvre les petits sacs pulmonaires (alvéoles) affaissés, l\'expiration longue qui suit déclenche un apaisement quasi immédiat. Dans un essai randomisé de Stanford (2023), c\'est la technique qui a le plus amélioré l\'humeur au quotidien, et les exercices de respiration y ont fait mieux que la méditation de pleine conscience.',
     phaseLabels: ['Inspire', 'Inspire (complément)', 'Expire'],
     defaultSeconds: [2, 1, 5],
     scales: [2.0, 2.15, 1.0],

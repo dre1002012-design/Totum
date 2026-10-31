@@ -41,6 +41,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingStart => 'Get started';
 
   @override
+  String get onboardingHowItWorks => 'How it works';
+
+  @override
+  String get onboardingHowLogTitle => '1. Log what you eat';
+
+  @override
+  String get onboardingHowLogBody =>
+      'The + button adds a food, a recipe or a whole meal. Search by name (typos are fine), scan a barcode, or tap the small orange + on a row to add it with your last amount.';
+
+  @override
+  String get onboardingHowWeighTitle => '2. Weigh yourself 2–3 times a week';
+
+  @override
+  String get onboardingHowWeighBody =>
+      'In the morning, before eating. Together with your log, it lets Totum measure your real expenditure and adjust your target on its own — no extreme dieting.';
+
+  @override
+  String get onboardingHowInsightsTitle => '3. See what you\'re missing';
+
+  @override
+  String get onboardingHowInsightsBody =>
+      'Overview shows your vitamins, minerals and omega-3; Advice suggests foods and recipes to fill the gaps.';
+
+  @override
   String get onboardingSex => 'Sex';
 
   @override
@@ -2468,7 +2492,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get consSearchByIngredient =>
-      'Search by ingredient (e.g. chicken, rice...)';
+      'Recipe or ingredient (e.g. curry, chicken rice…)';
+
+  @override
+  String get consSortTooltip => 'Sort recipes';
+
+  @override
+  String get consSortRelevance => 'Relevance';
+
+  @override
+  String get consSortProtein => 'Highest protein first';
+
+  @override
+  String get consSortLightest => 'Fewest calories first';
+
+  @override
+  String get consSortHealthy => 'Best health score first';
 
   @override
   String get consForYouToday => 'For you today';
@@ -2767,7 +2806,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get breathPhysiologicalSighBenefit =>
-      'The double inhale reopens small collapsed air sacs (alveoli) in the lungs, and the long exhale that follows triggers near-immediate calm. In a comparative study, this technique outperformed box breathing, cyclic hyperventilation AND mindfulness meditation at improving mood.';
+      'The double inhale reopens small collapsed air sacs (alveoli) in the lungs, and the long exhale that follows triggers near-immediate calm. In a randomised Stanford trial (2023), it produced the largest daily improvement in mood, and the breathing exercises outperformed mindfulness meditation.';
 
   @override
   String get consPhaseDuration => 'Duration of each phase';
@@ -4946,6 +4985,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get jrnlFilterMeals => 'Meals';
 
   @override
+  String get jrnlSectionYourFoods => 'Your usual foods';
+
+  @override
+  String get jrnlSectionEssentials => 'Everyday essentials';
+
+  @override
+  String get jrnlSectionAllFoods => 'All foods';
+
+  @override
   String get jrnlSyncFailedWarning =>
       'No connection: this change couldn\'t be synced and may be lost. Please try again when you\'re back online.';
 
@@ -5054,6 +5102,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareCarbsShort => 'Carbs';
+
+  @override
+  String get shareFocusLabel => 'Angle';
+
+  @override
+  String get shareFocusBalance => 'Balance';
+
+  @override
+  String get shareFocusSport => 'Sport';
+
+  @override
+  String get shareFocusSatiety => 'Satiety';
+
+  @override
+  String get shareFocusLongevity => 'Longevity';
+
+  @override
+  String get shareFocusHint =>
+      'The same meal, told for your audience: athletes, weight management, health and longevity.';
 
   @override
   String get shareFatShort => 'Fat';

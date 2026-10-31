@@ -39,6 +39,12 @@ class MealShareItem {
   /// Faux si aucune donnée de micronutriments n'est connue pour cet
   /// ingrédient (aliment perso saisi sans micros, produit scanné incomplet).
   final bool hasMicroData;
+  /// Aliment d'origine végétale (fruit, légume, légumineuse, céréale,
+  /// oléagineux, herbe/épice, algue) — compte pour la diversité végétale.
+  final bool isPlant;
+  /// Degré de transformation NOVA (1 = brut ou peu transformé … 4 =
+  /// ultra-transformé) ; estimé pour la base Ciqual, null si inconnu.
+  final int? nova;
   const MealShareItem({
     required this.name,
     required this.emoji,
@@ -46,8 +52,31 @@ class MealShareItem {
     required this.kcal,
     this.micros = const {},
     this.hasMicroData = true,
+    this.isPlant = false,
+    this.nova,
   });
 }
+
+/// Angle éditorial du partage (31/10/2026, demande d'Alex : le même repas
+/// ne se raconte pas pareil pour un sportif, une personne qui surveille sa
+/// ligne ou quelqu'un d'attentif à sa santé/longévité — coach,
+/// nutritionniste, naturopathe). Change l'accroche, les chiffres de
+/// couverture, l'ordre des micronutriments mis en avant, « À retenir » et
+/// les mots-dièse — jamais les données elles-mêmes.
+enum ShareFocus { balance, sport, satiety, longevity }
+
+/// Micronutriments mis en avant en priorité selon l'angle (allégations UE
+/// autorisées correspondantes : fonction musculaire, métabolisme
+/// énergétique, fatigue pour le sport ; stress oxydatif, cœur, os pour la
+/// longévité).
+const Map<ShareFocus, List<String>> kFocusNutrients = {
+  ShareFocus.sport: ['mg', 'k', 'fe', 'b1', 'b6', 'b12', 'zn'],
+  ShareFocus.longevity: ['epaDha', 'vitC', 'vitE', 'se', 'b9', 'vitK', 'vitD', 'mg'],
+};
+
+/// Repère de diversité végétale : 30 végétaux différents par semaine
+/// (McDonald et al., American Gut Project, mSystems 2018).
+const int kPlantsPerWeekRef = 30;
 
 enum NutrientKind { vitamin, mineral, fattyAcid }
 
@@ -270,6 +299,25 @@ class MealShareData {
   /// alors sous-estimés — signalé sur le visuel, jamais caché.
   int get itemsWithoutMicroData => items.where((i) => !i.hasMicroData).length;
 
+  double get totalGrams => items.fold(0.0, (s, i) => s + i.grams);
+
+  /// Végétaux DIFFÉRENTS dans l'assiette (un aliment = un végétal).
+  int get plantCount => items.where((i) => i.isPlant).length;
+
+  /// kcal pour 100 g d'assiette (densité énergétique).
+  double get energyDensity => totalGrams > 0 ? kcal / totalGrams * 100 : 0;
+
+  /// Part (0-1) du poids de l'assiette en aliments bruts ou peu transformés
+  /// (NOVA 1). Null si le degré de transformation est inconnu pour plus
+  /// d'un quart du poids : jamais un pourcentage bâti sur trop peu.
+  double? get rawShare {
+    final known = items.where((i) => i.nova != null);
+    final knownG = known.fold(0.0, (s, i) => s + i.grams);
+    if (totalGrams <= 0 || knownG < totalGrams * 0.75) return null;
+    final rawG = known.where((i) => i.nova == 1).fold(0.0, (s, i) => s + i.grams);
+    return rawG / knownG;
+  }
+
   /// Part de l'énergie de chaque macro (4/4/9 kcal par g ; fibres non
   /// comptées, comme sur l'étiquetage). Somme = 1 si énergie > 0.
   ({double protein, double carbs, double fat}) get energySplit {
@@ -310,11 +358,16 @@ class MealShareData {
 
   /// Micronutriments essentiels classés par % de la référence. 15 % =
   /// seuil de "quantité significative" de l'étiquetage européen.
-  List<NutrientHighlight> highlights({bool english = false, double minPercent = 15, int max = 6}) {
+  List<NutrientHighlight> highlights({bool english = false, double minPercent = 15, int max = 6,
+      ShareFocus focus = ShareFocus.balance}) {
     final out = [for (final d in essentialNutrients) _highlight(d, english)]
       ..removeWhere((h) => h.percent < minPercent);
     final order = {for (var i = 0; i < essentialNutrients.length; i++) essentialNutrients[i].key: i};
+    // Angle choisi : ses micronutriments passent devant, puis les autres.
+    final preferred = kFocusNutrients[focus] ?? const <String>[];
     out.sort((a, b) {
+      final pa = preferred.contains(a.key), pb = preferred.contains(b.key);
+      if (pa != pb) return pa ? -1 : 1;
       final c = b.percent.compareTo(a.percent);
       return c != 0 ? c : order[a.key]!.compareTo(order[b.key]!);
     });
@@ -375,7 +428,8 @@ String formatAmount(double v, String unit, {bool english = false}) {
 
 /// Accroche du 1er visuel : un titre court + une ligne, construits
 /// UNIQUEMENT à partir des chiffres réels (jamais de promesse santé).
-({String headline, String subline}) hookFor(MealShareData d, {bool english = false}) {
+({String headline, String subline}) hookFor(MealShareData d,
+    {bool english = false, ShareFocus focus = ShareFocus.balance}) {
   final top = d.highlights(english: english, max: 1);
   final n30 = d.essentialsAtLeast(30);
   final total = essentialNutrients.length;
@@ -385,6 +439,38 @@ String formatAmount(double v, String unit, {bool english = false}) {
   final sub = english
       ? '$n30 of $total essential micronutrients above 30% of the reference.'
       : '$n30 micronutriments essentiels sur $total au-dessus de 30 % de la référence.';
+  final split = d.energySplit;
+  switch (focus) {
+    case ShareFocus.sport when d.protein >= 15:
+      return (
+        headline: english
+            ? '${d.protein.round()} g protein & ${d.carbs.round()} g carbs $scope'
+            : '${d.protein.round()} g de protéines et ${d.carbs.round()} g de glucides $scope',
+        subline: english
+            ? 'Protein ${(split.protein * 100).round()}% · carbs ${(split.carbs * 100).round()}% · fat ${(split.fat * 100).round()}% of the energy.'
+            : 'Protéines ${(split.protein * 100).round()} % · glucides ${(split.carbs * 100).round()} % · lipides ${(split.fat * 100).round()} % de l\'énergie.',
+      );
+    case ShareFocus.satiety when d.totalGrams > 0:
+      return (
+        headline: english
+            ? '${fmtNum(d.kcal, english: true)} kcal for ${fmtNum(d.totalGrams, english: true)} g of food'
+            : '${fmtNum(d.kcal)} kcal pour ${fmtNum(d.totalGrams)} g dans l\'assiette',
+        subline: english
+            ? '${d.protein.round()} g protein and ${d.fiber.round()} g fiber · ${d.energyDensity.round()} kcal per 100 g.'
+            : '${d.protein.round()} g de protéines et ${d.fiber.round()} g de fibres · ${d.energyDensity.round()} kcal pour 100 g.',
+      );
+    case ShareFocus.longevity when d.plantCount >= 3:
+      return (
+        headline: english
+            ? '${d.plantCount} different plants $scope'
+            : '${d.plantCount} végétaux différents $scope',
+        subline: english
+            ? 'Benchmark: $kPlantsPerWeekRef different plants a week (American Gut Project, 2018).'
+            : 'Repère : $kPlantsPerWeekRef végétaux différents par semaine (American Gut Project, 2018).',
+      );
+    default:
+      break;
+  }
   if (top.isNotEmpty && top.first.percent >= 100) {
     final h = top.first;
     return (
@@ -409,10 +495,46 @@ String formatAmount(double v, String unit, {bool english = false}) {
 }
 
 /// "À retenir" : 2-3 constats factuels tirés des données.
-List<String> insightsFor(MealShareData d, {bool english = false}) {
+List<String> insightsFor(MealShareData d, {bool english = false, ShareFocus focus = ShareFocus.balance}) {
   final out = <String>[];
   final n30 = d.essentialsAtLeast(30);
   final total = essentialNutrients.length;
+  final split = d.energySplit;
+  switch (focus) {
+    case ShareFocus.sport:
+      if (d.protein >= 20) {
+        out.add(english
+            ? '${d.protein.round()} g of protein (${(split.protein * 100).round()}% of the energy) — protein contributes to the maintenance of muscle mass.'
+            : '${d.protein.round()} g de protéines (${(split.protein * 100).round()} % de l\'énergie) — les protéines contribuent au maintien de la masse musculaire.');
+      }
+      if (d.carbs >= 30) {
+        out.add(english
+            ? '${d.carbs.round()} g of carbohydrates, the main fuel for intense efforts.'
+            : '${d.carbs.round()} g de glucides, le carburant principal des efforts intenses.');
+      }
+    case ShareFocus.satiety:
+      out.add(d.energyDensity <= 120
+          ? (english
+              ? '${d.energyDensity.round()} kcal per 100 g: a generous plate for relatively few calories.'
+              : '${d.energyDensity.round()} kcal pour 100 g : une assiette généreuse pour relativement peu de calories.')
+          : (english
+              ? 'Energy density: ${d.energyDensity.round()} kcal per 100 g of food.'
+              : 'Densité énergétique : ${d.energyDensity.round()} kcal pour 100 g d\'assiette.'));
+    case ShareFocus.longevity:
+      if (d.plantCount >= 2) {
+        out.add(english
+            ? '${d.plantCount} different plants: plant diversity is linked to a more diverse gut microbiota (American Gut Project).'
+            : '${d.plantCount} végétaux différents : la diversité végétale est associée à un microbiote intestinal plus diversifié (American Gut Project).');
+      }
+      final raw = d.rawShare;
+      if (raw != null && raw >= 0.5) {
+        out.add(english
+            ? '${(raw * 100).round()}% of the plate by weight is raw or minimally processed food (NOVA estimate).'
+            : '${(raw * 100).round()} % du poids de l\'assiette en aliments bruts ou peu transformés (estimation NOVA).');
+      }
+    case ShareFocus.balance:
+      break;
+  }
   if (n30 >= 3) {
     out.add(english
         ? '$n30 of the $total essential micronutrients tracked are above 30% of the reference — with real food only.'
@@ -434,17 +556,27 @@ List<String> insightsFor(MealShareData d, {bool english = false}) {
         ? 'Omega-6/omega-3 ratio of ${fmtNum(ratio, decimals: 1, english: true)}: within the recommended target (below 5).'
         : 'Rapport oméga-6/oméga-3 de ${fmtNum(ratio, decimals: 1)} : dans la cible recommandée (moins de 5).');
   }
-  return out.take(3).toList();
+  // Doublons possibles entre la ligne d'angle et les lignes générales
+  // (protéines) : on garde la 1re formulation.
+  final seen = <String>{};
+  return out.where((l) => seen.add(l.split(' ').take(3).join(' '))).take(3).toList();
 }
 
 /// Mots-dièse : 5 maximum (limite d'Instagram depuis décembre 2025),
 /// généralistes, choisis selon le contenu réel.
-List<String> hashtagsFor(MealShareData d, {bool english = false}) {
+List<String> hashtagsFor(MealShareData d, {bool english = false, ShareFocus focus = ShareFocus.balance}) {
   final tags = <String>[
     english ? '#nutrition' : '#nutrition',
-    english ? '#micronutrients' : '#micronutrition',
+    switch (focus) {
+      ShareFocus.sport => english ? '#sportsnutrition' : '#nutritionsportive',
+      ShareFocus.satiety => english ? '#mindfuleating' : '#reequilibragealimentaire',
+      ShareFocus.longevity => english ? '#plantdiversity' : '#diversitevegetale',
+      ShareFocus.balance => english ? '#micronutrients' : '#micronutrition',
+    },
     english ? '#healthyeating' : '#alimentationsaine',
-    english ? '#longevity' : '#longevite',
+    focus == ShareFocus.sport
+        ? (english ? '#fitfood' : '#mealprep')
+        : (english ? '#longevity' : '#longevite'),
   ];
   if (d.epaDhaMg >= 500) {
     tags.add('#omega3');
@@ -459,16 +591,22 @@ List<String> hashtagsFor(MealShareData d, {bool english = false}) {
 /// Légende prête à coller : accroche, macros, essentiels avec leur rôle,
 /// acides gras, ingrédients, appels à l'action, 5 mots-dièse max. Pas
 /// d'emoji pour les nutriments (texte clair, lisible par tous).
-String captionFor(MealShareData d, {bool english = false, String handle = '', bool mentionTotum = true}) {
+String captionFor(MealShareData d,
+    {bool english = false, String handle = '', bool mentionTotum = true, ShareFocus focus = ShareFocus.balance}) {
   final b = StringBuffer();
-  final hook = hookFor(d, english: english);
+  final hook = hookFor(d, english: english, focus: focus);
   b.writeln(d.title);
   b.writeln(hook.headline);
   b.writeln();
   b.writeln(english
       ? '${fmtNum(d.kcal, english: true)} kcal · Protein ${d.protein.round()} g · Carbs ${d.carbs.round()} g · Fat ${d.fat.round()} g · Fiber ${d.fiber.round()} g'
       : '${fmtNum(d.kcal)} kcal · Protéines ${d.protein.round()} g · Glucides ${d.carbs.round()} g · Lipides ${d.fat.round()} g · Fibres ${d.fiber.round()} g');
-  final hs = d.highlights(english: english, max: 4);
+  final hs = d.highlights(english: english, max: 4, focus: focus);
+  if (focus == ShareFocus.longevity && d.plantCount > 0) {
+    b.writeln(english
+        ? '${d.plantCount} different plants in this plate'
+        : '${d.plantCount} végétaux différents dans cette assiette');
+  }
   if (hs.isNotEmpty) {
     b.writeln();
     b.writeln(english ? 'Essential micronutrients (% of the adult reference):' : 'Micronutriments essentiels (% de la référence adulte) :');
@@ -508,7 +646,7 @@ String captionFor(MealShareData d, {bool english = false, String handle = '', bo
           ? 'Values per serving (Ciqual table by ANSES, EU reference values).'
           : 'Valeurs pour la portion (table Ciqual de l\'ANSES, références UE).'));
   b.writeln();
-  b.write(hashtagsFor(d, english: english).join(' '));
+  b.write(hashtagsFor(d, english: english, focus: focus).join(' '));
   return b.toString();
 }
 
@@ -537,6 +675,9 @@ MealShareData buildMealShareData({
   required List<Map<String, dynamic>> entries,
   required ({Map<String, double> micros100, String? emoji, String displayName})? Function(String id, String name) lookup,
   bool isFullDay = false,
+  /// Végétal ? + degré NOVA de l'aliment (facultatif : sans lui, la
+  /// diversité végétale et la part d'aliments bruts restent inconnues).
+  ({bool isPlant, int? nova}) Function(String id)? classify,
 }) {
   double kcal = 0, p = 0, c = 0, f = 0, fi = 0;
   final micros = <String, double>{};
@@ -563,11 +704,13 @@ MealShareData buildMealShareData({
     }
     final hasMicros = itemMicros.values.any((v) => v > 0);
     final name = shortFoodName(food?.displayName ?? rawName);
+    final cls = classify?.call(id);
     final prev = byName[name];
     if (prev == null) {
       byName[name] = MealShareItem(
         name: name, emoji: food?.emoji ?? '🍽️', grams: grams, kcal: num_('kcal'),
         micros: itemMicros, hasMicroData: hasMicros,
+        isPlant: cls?.isPlant ?? false, nova: cls?.nova,
       );
     } else {
       final merged = Map<String, double>.from(prev.micros);
@@ -575,6 +718,10 @@ MealShareData buildMealShareData({
       byName[name] = MealShareItem(
         name: name, emoji: prev.emoji, grams: prev.grams + grams, kcal: prev.kcal + num_('kcal'),
         micros: merged, hasMicroData: prev.hasMicroData || hasMicros,
+        isPlant: prev.isPlant || (cls?.isPlant ?? false),
+        nova: prev.nova == null || cls?.nova == null
+            ? (prev.nova ?? cls?.nova)
+            : (prev.nova! > cls!.nova! ? prev.nova : cls.nova),
       );
     }
   }
@@ -584,6 +731,22 @@ MealShareData buildMealShareData({
     kcal: kcal, protein: p, carbs: c, fat: f, fiber: fi,
     micros: micros, isFullDay: isFullDay,
   );
+}
+
+/// Un aliment est-il d'origine végétale (diversité végétale) ? Groupes
+/// Ciqual et taxonomie USDA de l'app ; huiles, sucres, boissons et plats
+/// composés exclus (un végétal = un aliment végétal identifiable).
+bool isPlantFood({String? groupe, String? sousGroupe}) {
+  const plantGroups = {
+    'fruits, légumes, légumineuses et oléagineux',
+    'fruits', 'légumes', 'légumineuses', 'fruits à coque et graines',
+  };
+  const plantSubgroups = {
+    'pâtes, riz et céréales', 'farines', 'herbes', 'épices', 'algues',
+    'Cereal Grains and Pasta', 'Spices and Herbs',
+  };
+  if (groupe != null && plantGroups.contains(groupe)) return true;
+  return sousGroupe != null && plantSubgroups.contains(sousGroupe);
 }
 
 /// Taille max d'une liste d'ingrédients lisible sur un visuel 1080 px.

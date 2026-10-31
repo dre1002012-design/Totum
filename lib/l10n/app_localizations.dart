@@ -158,6 +158,48 @@ abstract class AppLocalizations {
   /// **'Commencer'**
   String get onboardingStart;
 
+  /// No description provided for @onboardingHowItWorks.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment ça marche'**
+  String get onboardingHowItWorks;
+
+  /// No description provided for @onboardingHowLogTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'1. Note ce que tu manges'**
+  String get onboardingHowLogTitle;
+
+  /// No description provided for @onboardingHowLogBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le bouton + ajoute un aliment, une recette ou un repas entier. Cherche-le par son nom (même avec une faute), scanne un code-barres ou touche le petit + orange d\'une ligne pour l\'ajouter avec ta dernière quantité.'**
+  String get onboardingHowLogBody;
+
+  /// No description provided for @onboardingHowWeighTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'2. Pèse-toi 2 à 3 fois par semaine'**
+  String get onboardingHowWeighTitle;
+
+  /// No description provided for @onboardingHowWeighBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le matin, à jeun. Avec ton journal, ça permet à Totum de mesurer ta vraie dépense et d\'ajuster ton objectif tout seul, sans régime extrême.'**
+  String get onboardingHowWeighBody;
+
+  /// No description provided for @onboardingHowInsightsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'3. Regarde ce qui te manque'**
+  String get onboardingHowInsightsTitle;
+
+  /// No description provided for @onboardingHowInsightsBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le Bilan montre tes vitamines, minéraux et oméga-3 ; les Conseils proposent des aliments et des recettes pour les compléter.'**
+  String get onboardingHowInsightsBody;
+
   /// No description provided for @onboardingSex.
   ///
   /// In fr, this message translates to:
@@ -4323,8 +4365,38 @@ abstract class AppLocalizations {
   /// No description provided for @consSearchByIngredient.
   ///
   /// In fr, this message translates to:
-  /// **'Chercher par ingrédient (ex. poulet, riz...)'**
+  /// **'Recette ou ingrédient (ex. curry, poulet riz…)'**
   String get consSearchByIngredient;
+
+  /// No description provided for @consSortTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trier les recettes'**
+  String get consSortTooltip;
+
+  /// No description provided for @consSortRelevance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pertinence'**
+  String get consSortRelevance;
+
+  /// No description provided for @consSortProtein.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus protéinées d\'abord'**
+  String get consSortProtein;
+
+  /// No description provided for @consSortLightest.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moins caloriques d\'abord'**
+  String get consSortLightest;
+
+  /// No description provided for @consSortHealthy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Meilleur score santé d\'abord'**
+  String get consSortHealthy;
 
   /// No description provided for @consForYouToday.
   ///
@@ -4821,7 +4893,7 @@ abstract class AppLocalizations {
   /// No description provided for @breathPhysiologicalSighBenefit.
   ///
   /// In fr, this message translates to:
-  /// **'La double inspiration rouvre les petits sacs pulmonaires (alvéoles) affaissés, l\'expiration longue qui suit déclenche un apaisement quasi immédiat. Dans une étude comparative, cette technique a fait mieux que la respiration carrée, l\'hyperventilation cyclique ET la méditation de pleine conscience pour améliorer l\'humeur.'**
+  /// **'La double inspiration rouvre les petits sacs pulmonaires (alvéoles) affaissés, l\'expiration longue qui suit déclenche un apaisement quasi immédiat. Dans un essai randomisé de Stanford (2023), c\'est la technique qui a le plus amélioré l\'humeur au quotidien, et les exercices de respiration y ont fait mieux que la méditation de pleine conscience.'**
   String get breathPhysiologicalSighBenefit;
 
   /// No description provided for @consPhaseDuration.
@@ -8298,6 +8370,24 @@ abstract class AppLocalizations {
   /// **'Repas'**
   String get jrnlFilterMeals;
 
+  /// No description provided for @jrnlSectionYourFoods.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes aliments habituels'**
+  String get jrnlSectionYourFoods;
+
+  /// No description provided for @jrnlSectionEssentials.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les essentiels du quotidien'**
+  String get jrnlSectionEssentials;
+
+  /// No description provided for @jrnlSectionAllFoods.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les aliments'**
+  String get jrnlSectionAllFoods;
+
   /// No description provided for @jrnlSyncFailedWarning.
   ///
   /// In fr, this message translates to:
@@ -8489,6 +8579,42 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Glucides'**
   String get shareCarbsShort;
+
+  /// No description provided for @shareFocusLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Angle du visuel'**
+  String get shareFocusLabel;
+
+  /// No description provided for @shareFocusBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équilibre'**
+  String get shareFocusBalance;
+
+  /// No description provided for @shareFocusSport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sport'**
+  String get shareFocusSport;
+
+  /// No description provided for @shareFocusSatiety.
+  ///
+  /// In fr, this message translates to:
+  /// **'Satiété'**
+  String get shareFocusSatiety;
+
+  /// No description provided for @shareFocusLongevity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Longévité'**
+  String get shareFocusLongevity;
+
+  /// No description provided for @shareFocusHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le même repas, raconté pour ton public : sportifs, rééquilibrage alimentaire, santé et longévité.'**
+  String get shareFocusHint;
 
   /// No description provided for @shareFatShort.
   ///

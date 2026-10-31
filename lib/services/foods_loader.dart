@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'food_portions.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -134,7 +135,11 @@ String displayNameOf(dynamic it, String fallback) {
 class FoodPortion {
   final String label;
   final double grams;
-  const FoodPortion({required this.label, required this.grams});
+  /// Libellé anglais quand [label] est déjà en français (portions
+  /// ménagères CIQUAL) ; null pour les portions USDA (libellé anglais
+  /// d'origine, traduit à l'affichage).
+  final String? labelEn;
+  const FoodPortion({required this.label, required this.grams, this.labelEn});
 }
 
 /// Charge et interroge la base CSV.
@@ -656,9 +661,20 @@ class FoodsRepository {
   final Map<String, List<FoodPortion>> _portions = {};
   bool _portionsLoadedOnce = false;
 
-  /// Portions courantes connues pour un aliment (liste vide si aucune —
-  /// ~96% des aliments USDA en ont au moins une, mais jamais pour CIQUAL).
-  List<FoodPortion> portionsFor(String foodId) => _portions[foodId] ?? const [];
+  /// Portions courantes connues pour un aliment (liste vide si aucune) :
+  /// portions mesurées USDA (~96 % des aliments USDA en ont au moins une),
+  /// sinon portions ménagères usuelles des aliments CIQUAL
+  /// (food_portions.dart, 31/10/2026).
+  List<FoodPortion> portionsFor(String foodId) {
+    final usda = _portions[foodId];
+    if (usda != null && usda.isNotEmpty) return usda;
+    final f = findById(foodId);
+    if (f == null || f.id.startsWith('custom:') || f.id.startsWith('recipe:')) return const [];
+    return [
+      for (final h in householdPortionsFor(ciqualCode: f.ciqualCode, sousGroupe: f.sousGroupe))
+        FoodPortion(label: h.fr, labelEn: h.en, grams: h.grams),
+    ];
+  }
 
   Future<void> _loadPortions() async {
     if (_portionsLoadedOnce) return;

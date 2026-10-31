@@ -57,6 +57,7 @@ class _MealShareScreenState extends State<MealShareScreen> {
   static const _handleKey = 'share_instagram_handle_v1';
   static const _paletteKey = 'share_palette_v3';
   static const _markKey = 'share_totum_mark_v1';
+  static const _focusKey = 'share_focus_v1';
 
   late MealShareData _data = widget.data;
   late final TextEditingController _titleCtrl = TextEditingController(text: widget.data.title);
@@ -65,6 +66,7 @@ class _MealShareScreenState extends State<MealShareScreen> {
   _ShareFormat _format = _ShareFormat.carousel;
   SharePalette _palette = SharePalette.totumCream;
   bool _showMark = true;
+  ShareFocus _focus = ShareFocus.balance;
   ui.Image? _photo;
   int _page = 0;
   bool _rendering = false;
@@ -91,6 +93,8 @@ class _MealShareScreenState extends State<MealShareScreen> {
       final pid = sp.getString(_paletteKey);
       _palette = SharePalette.all.firstWhere((p) => p.id == pid, orElse: () => SharePalette.totumCream);
       _showMark = sp.getBool(_markKey) ?? true;
+      final f = sp.getString(_focusKey);
+      _focus = ShareFocus.values.firstWhere((v) => v.name == f, orElse: () => ShareFocus.balance);
     });
   }
 
@@ -99,6 +103,7 @@ class _MealShareScreenState extends State<MealShareScreen> {
     await sp.setString(_handleKey, _handleCtrl.text.trim());
     await sp.setString(_paletteKey, _palette.id);
     await sp.setBool(_markKey, _showMark);
+    await sp.setString(_focusKey, _focus.name);
   }
 
   bool get _english => Localizations.localeOf(context).languageCode == 'en';
@@ -126,7 +131,7 @@ class _MealShareScreenState extends State<MealShareScreen> {
     final l10n = context.l10n;
     MealShareSlide make(ShareSlideKind k, {int? index, int? count, bool reel = false}) => MealShareSlide(
           kind: k, data: _data, palette: _palette, l10n: l10n, english: _english,
-          photo: _photo, handle: _handle, showTotumMark: _showMark,
+          photo: _photo, handle: _handle, showTotumMark: _showMark, focus: _focus,
           index: index, count: count, reelFrame: reel,
         );
     return switch (_format) {
@@ -142,7 +147,8 @@ class _MealShareScreenState extends State<MealShareScreen> {
     };
   }
 
-  String _caption() => captionFor(_data, english: _english, handle: _handle, mentionTotum: _showMark);
+  String _caption() =>
+      captionFor(_data, english: _english, handle: _handle, mentionTotum: _showMark, focus: _focus);
 
   Future<void> _pickPhoto() async {
     try {
@@ -391,6 +397,42 @@ class _MealShareScreenState extends State<MealShareScreen> {
     );
   }
 
+  /// Angle éditorial : le même repas raconté pour un sportif, une personne
+  /// qui surveille sa ligne ou quelqu'un attentif à sa santé/longévité.
+  Widget _focusSelector() {
+    final l10n = context.l10n;
+    final options = {
+      ShareFocus.balance: (l10n.shareFocusBalance, Icons.balance_outlined),
+      ShareFocus.sport: (l10n.shareFocusSport, Icons.fitness_center),
+      ShareFocus.satiety: (l10n.shareFocusSatiety, Icons.spa_outlined),
+      ShareFocus.longevity: (l10n.shareFocusLongevity, Icons.eco_outlined),
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l10n.shareFocusLabel, style: TextStyle(fontWeight: FontWeight.w700, color: TotumColors.textSecondary)),
+        const SizedBox(height: 6),
+        Wrap(
+          spacing: 8, runSpacing: 8,
+          children: [
+            for (final e in options.entries)
+              ChoiceChip(
+                avatar: Icon(e.value.$2, size: 17,
+                    color: _focus == e.key ? TotumColors.accent : TotumColors.textSecondary),
+                label: Text(e.value.$1, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
+                selected: _focus == e.key,
+                showCheckmark: false,
+                selectedColor: TotumColors.accentSoft,
+                onSelected: (_) => setState(() => _focus = e.key),
+              ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Text(l10n.shareFocusHint, style: TextStyle(fontSize: 11.5, color: TotumColors.textSecondary)),
+      ],
+    );
+  }
+
   String _formatDescription() {
     final l10n = context.l10n;
     return switch (_format) {
@@ -519,7 +561,9 @@ class _MealShareScreenState extends State<MealShareScreen> {
                 style: TextStyle(fontSize: 12, color: TotumColors.textSecondary)),
           ),
           _preview(slides),
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
+          _focusSelector(),
+          const SizedBox(height: 16),
           Row(
             children: [
               Expanded(

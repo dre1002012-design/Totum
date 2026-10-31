@@ -76,6 +76,20 @@ int _tierForDataType(String dataType) {
   }
 }
 
+/// Glucides au sens européen (CIQUAL, étiquettes UE) : les glucides USDA
+/// (id 1005, « by difference ») et ceux des étiquettes américaines
+/// INCLUENT les fibres, alors que la colonne Glucides de l'app (CIQUAL)
+/// les EXCLUT. Sans cette conversion, un avocat USDA affichait 8,5 g de
+/// glucides au lieu de 1,8 g (31/10/2026). Plancher : les sucres, qui font
+/// partie des glucides disponibles.
+double? usdaAvailableCarbs(double? carbByDifference, double? fiber, [double? sugars]) {
+  if (carbByDifference == null) return null;
+  var c = carbByDifference - (fiber ?? 0);
+  if (sugars != null && c < sugars) c = sugars;
+  if (c < 0) c = 0;
+  return double.parse(c.toStringAsFixed(2));
+}
+
 /// Extrait les kcal/100g depuis les nutriments abrégés déjà présents dans
 /// une réponse de RECHERCHE (`foods/search`) — forme légèrement différente
 /// de l'endpoint détail (`food/{fdcId}`, voir `getFoodItem`) : pas de champ
@@ -350,7 +364,7 @@ class UsdaService {
       name: (food['description'] ?? 'Aliment USDA').toString(),
       kcal100: gN(1008),
       prot100: gN(1003),
-      carb100: gN(1005),
+      carb100: usdaAvailableCarbs(gN(1005), gN(1079), micros['Sucres_g_100g']),
       fat100: gN(1004),
       fiber100: gN(1079),
       micros100: micros,
@@ -639,7 +653,7 @@ class UsdaService {
       name: name,
       kcal100: kcal,
       prot100: prot,
-      carb100: carb,
+      carb100: usdaAvailableCarbs(carb, fiber, micros['Sucres_g_100g']),
       fat100: fat,
       fiber100: fiber,
       micros100: micros,

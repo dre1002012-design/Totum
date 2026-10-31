@@ -62,6 +62,22 @@ void main() {
     expect(item.brand, 'COCA-COLA');
   });
 
+  test('glucides : les fibres (incluses côté USDA/étiquettes US) sont retirées '
+      'pour suivre la définition CIQUAL/UE', () {
+    final item = UsdaService.foodItemFromBrandedSearchHit(_hit(
+      fdcId: 2,
+      description: 'Test haricots',
+      nutrients: {1005: 23.7, 1079: 8.7, 2000: 0.3, 1008: 132},
+    ));
+    expect(item.carb100, closeTo(15.0, 1e-9));
+    expect(item.fiber100, 8.7);
+    // Plancher : jamais moins que les sucres, jamais négatif.
+    expect(usdaAvailableCarbs(5, 4, 3), 3);
+    expect(usdaAvailableCarbs(2, 5), 0);
+    expect(usdaAvailableCarbs(null, 5), isNull);
+    expect(usdaAvailableCarbs(11, null), 11);
+  });
+
   test('vitamine D : conversion UI -> µg (id 1110) appliquée uniquement en '
       "l'absence de la forme directe en µg (id 1114)", () {
     final withIuOnly = UsdaService.foodItemFromBrandedSearchHit(_hit(

@@ -13,7 +13,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:flutter/widgets.dart' show Locale;
+
+import '../../l10n/app_localizations.dart';
 import '../foods_loader.dart' as foods_loader;
+import '../profile.dart' show ActivityLevel, ActivityLevelX, GoalType;
 import '../supabase_paging.dart';
 
 // Import conditionnel : web → download_web.dart, mobile → download_io.dart
@@ -119,17 +123,13 @@ class JournalExporter {
         } catch (_) {}
       }
       await repo.loadCustomFoods();
+      // Base USDA aussi (31/10/2026) : un aliment USDA logué sans
+      // instantané de micros était ignoré dans les moyennes de l'export.
+      await repo.loadUsdaFromAsset('assets/usda_foods.csv');
     } catch (_) {}
-    final allFoods = <foods_loader.FoodItem>[
-      ...repo.items,
-      ...repo.customs,
-    ];
-    foods_loader.FoodItem? findFood(String id) {
-      for (final f in allFoods) {
-        if (f.id == id) return f;
-      }
-      return null;
-    }
+    // Recherche indexée (CIQUAL + USDA + marques + perso) au lieu d'un
+    // parcours de toute la base pour chaque ligne du journal.
+    foods_loader.FoodItem? findFood(String id) => repo.findById(id);
 
     // ── 3. Profil + cibles (SharedPreferences, fallbacks sûrs) ─────
     final sp = await SharedPreferences.getInstance();
@@ -141,18 +141,21 @@ class JournalExporter {
     final actIdx = sp.getInt('profile_activity') ?? 0;
     final goalIdx = sp.getInt('profile_goal') ?? 1;
 
-    const actLabels = [
-      'Sédentaire', 'Léger (1–3/sem)', 'Modéré (3–5/sem)',
-      'Soutenu (6–7/sem)', 'Très intense (2×/jour)',
-    ];
-    const goalLabels = [
-      'Perte de poids (−20%)', 'Maintien', 'Prise de masse (+10%)',
-      'Perte modérée (−12%)', 'Prise modérée (+6%)',
-    ];
-    final actLabel =
-        actLabels[actIdx.clamp(0, actLabels.length - 1)];
-    final goalLabel =
-        goalLabels[goalIdx.clamp(0, goalLabels.length - 1)];
+    // Libellés EXACTS du profil (31/10/2026) : l'export avait sa propre
+    // liste figée (5 niveaux d'activité au lieu de 6, objectifs en
+    // « −20 % » abandonnés depuis août) — un profil « Très actif »
+    // apparaissait au professionnel de santé comme « Très intense
+    // (2×/jour) ».
+    final fr = lookupAppLocalizations(const Locale('fr'));
+    final activity = ActivityLevel.values[actIdx.clamp(0, ActivityLevel.values.length - 1)];
+    final actLabel = '${activity.titleFor(fr)} — ${activity.descriptionFor(fr)}';
+    final goalLabel = switch (GoalType.values[goalIdx.clamp(0, GoalType.values.length - 1)]) {
+      GoalType.lose => fr.goalLoseTitle,
+      GoalType.loseMild => fr.goalLoseMildTitle,
+      GoalType.maintain => fr.goalMaintainTitle,
+      GoalType.gainMild => fr.goalGainMildTitle,
+      GoalType.gain => fr.goalGainTitle,
+    };
 
     final gKcal = sp.getDouble('goals_kcal') ?? 2000.0;
     final gProt = sp.getDouble('goals_prot') ?? 120.0;
@@ -365,8 +368,8 @@ class JournalExporter {
   <div><b>Âge :</b> $age ans</div>
   <div><b>Taille :</b> ${_n(height)} cm</div>
   <div><b>Poids :</b> ${_n(weight, 1)} kg</div>
-  <div><b>Activité :</b> $actLabel</div>
-  <div><b>Objectif :</b> $goalLabel</div>
+  <div><b>Activité :</b> ${_esc(actLabel)}</div>
+  <div><b>Objectif :</b> ${_esc(goalLabel)}</div>
 </div></div>
 
 <h2>Objectifs journaliers</h2>

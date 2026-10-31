@@ -114,6 +114,8 @@ class MealShareSlide extends StatelessWidget {
   final String handle;
   /// Mention discrète "Analysé avec Totum" (désactivable).
   final bool showTotumMark;
+  /// Angle éditorial (sport, satiété, longévité…) — voir [ShareFocus].
+  final ShareFocus focus;
   final int? index;
   final int? count;
   /// Visuel de carrousel posé dans un cadre 9:16 (images pour un Reel).
@@ -132,6 +134,7 @@ class MealShareSlide extends StatelessWidget {
     this.photo,
     this.handle = '',
     this.showTotumMark = true,
+    this.focus = ShareFocus.balance,
     this.index,
     this.count,
     this.reelFrame = false,
@@ -321,9 +324,13 @@ class MealShareSlide extends StatelessWidget {
         child: SizedBox(height: height, width: double.infinity, child: RawImage(image: img, fit: BoxFit.cover)),
       );
     }
-    // Sans photo : les pictogrammes des ALIMENTS du repas.
-    final emojis = data.items.map((e) => e.emoji).toSet().take(6).toList();
+    // Sans photo (31/10/2026) : une assiette stylisée vue du dessus — les
+    // pictogrammes des ALIMENTS du repas disposés en cercle, l'ingrédient
+    // principal (le plus lourd) au centre.
+    final emojis = data.items.map((e) => e.emoji).toSet().take(7).toList();
     if (emojis.isEmpty) emojis.add('🍽️');
+    final plate = height * 0.8;
+    final around = emojis.skip(1).toList();
     return Container(
       height: height,
       width: double.infinity,
@@ -334,11 +341,38 @@ class MealShareSlide extends StatelessWidget {
           colors: [p.accentSoft, Color.lerp(p.accentSoft, p.accent2, 0.35)!],
         ),
       ),
-      alignment: Alignment.center,
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 12, runSpacing: 6,
-        children: [for (final e in emojis) Text(e, style: TextStyle(fontSize: emojis.length <= 3 ? 54 : 40))],
+      alignment: const Alignment(0, 0.45),
+      child: SizedBox(
+        width: plate, height: plate,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: p.card,
+                  border: Border.all(color: p.track, width: plate * 0.045),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withValues(alpha: p.dark ? 0.35 : 0.10),
+                        blurRadius: 18, offset: const Offset(0, 8)),
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Text(emojis.first, style: TextStyle(fontSize: plate * (around.isEmpty ? 0.42 : 0.3))),
+            ),
+            for (var i = 0; i < around.length; i++)
+              Align(
+                alignment: Alignment(
+                  0.6 * math.cos(-math.pi / 2 + 2 * math.pi * i / around.length),
+                  0.6 * math.sin(-math.pi / 2 + 2 * math.pi * i / around.length),
+                ),
+                child: Text(around[i], style: TextStyle(fontSize: plate * 0.17)),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -412,7 +446,7 @@ class MealShareSlide extends StatelessWidget {
   // ── 1. Couverture ────────────────────────────────────────────────────
 
   Widget _cover() {
-    final hook = hookFor(data, english: english);
+    final hook = hookFor(data, english: english, focus: focus);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -421,6 +455,7 @@ class MealShareSlide extends StatelessWidget {
           child: Stack(
             children: [
               Positioned.fill(child: _photoOrMosaic(height: 232, radius: 0)),
+              if (photo != null)
               Positioned.fill(
                 child: DecoratedBox(
                   decoration: BoxDecoration(
@@ -453,16 +488,39 @@ class MealShareSlide extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
           child: Row(children: [
-            _stat(fmtNum(data.kcal, english: english), 'kcal', color: p.accent),
-            const SizedBox(width: 7),
-            _stat('${data.protein.round()} g', l10n.shareProteinShort),
-            const SizedBox(width: 7),
-            _stat('${data.fiber.round()} g', l10n.shareFiber),
+            for (final (i, st) in _coverStats().indexed) ...[
+              if (i > 0) const SizedBox(width: 7),
+              _stat(st.$1, st.$2, color: i == 0 ? p.accent : null),
+            ],
           ]),
         ),
         _footer(right: count != null ? (english ? 'Swipe  →' : 'Fais défiler  →') : null),
       ],
     );
+  }
+
+  /// Les 3 chiffres de la couverture, selon l'angle choisi.
+  List<(String, String)> _coverStats() {
+    final kcal = (fmtNum(data.kcal, english: english), 'kcal');
+    final prot = ('${data.protein.round()} g', l10n.shareProteinShort);
+    final fib = ('${data.fiber.round()} g', l10n.shareFiber);
+    switch (focus) {
+      case ShareFocus.sport:
+        return [kcal, prot, ('${data.carbs.round()} g', l10n.shareCarbsShort)];
+      case ShareFocus.satiety:
+        return [kcal, prot, fib];
+      case ShareFocus.longevity:
+        final raw = data.rawShare;
+        return [
+          ('${data.plantCount}', english ? 'plants' : 'végétaux'),
+          fib,
+          raw != null
+              ? ('${(raw * 100).round()} %', english ? 'raw foods' : 'aliments bruts')
+              : (fmtNum(data.epaDhaMg, english: english), 'mg ω3'),
+        ];
+      case ShareFocus.balance:
+        return [kcal, prot, fib];
+    }
   }
 
   // ── 2. L'énergie ─────────────────────────────────────────────────────
@@ -552,7 +610,7 @@ class MealShareSlide extends StatelessWidget {
   // ── 3. Micronutriments en vedette ────────────────────────────────────
 
   Widget _micros() {
-    final hs = data.highlights(english: english, max: 6);
+    final hs = data.highlights(english: english, max: 6, focus: focus);
     final missing = data.itemsWithoutMicroData;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -677,7 +735,7 @@ class MealShareSlide extends StatelessWidget {
   // ── 5. Leurs rôles ───────────────────────────────────────────────────
 
   Widget _roles() {
-    final hs = data.highlights(english: english, max: 4);
+    final hs = data.highlights(english: english, max: 4, focus: focus);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -881,7 +939,7 @@ class MealShareSlide extends StatelessWidget {
   // ── 8. À retenir + appel à l'action ──────────────────────────────────
 
   Widget _cta() {
-    final ins = insightsFor(data, english: english);
+    final ins = insightsFor(data, english: english, focus: focus);
     final h = handle.trim();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -953,8 +1011,8 @@ class MealShareSlide extends StatelessWidget {
   // ── Post unique, story, paysage, bannière ────────────────────────────
 
   Widget _post() {
-    final hs = data.highlights(english: english, max: 3);
-    final hook = hookFor(data, english: english);
+    final hs = data.highlights(english: english, max: 3, focus: focus);
+    final hook = hookFor(data, english: english, focus: focus);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -998,8 +1056,8 @@ class MealShareSlide extends StatelessWidget {
   }
 
   Widget _story() {
-    final hs = data.highlights(english: english, max: 3);
-    final hook = hookFor(data, english: english);
+    final hs = data.highlights(english: english, max: 3, focus: focus);
+    final hook = hookFor(data, english: english, focus: focus);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1036,8 +1094,8 @@ class MealShareSlide extends StatelessWidget {
 
   /// Paysage 1200 × 630 : site web, Facebook, LinkedIn, aperçu de lien.
   Widget _landscape() {
-    final hs = data.highlights(english: english, max: 3);
-    final hook = hookFor(data, english: english);
+    final hs = data.highlights(english: english, max: 3, focus: focus);
+    final hook = hookFor(data, english: english, focus: focus);
     return Row(children: [
       SizedBox(width: 170, child: _photoOrMosaic(height: 210, radius: 0)),
       Expanded(
@@ -1070,8 +1128,8 @@ class MealShareSlide extends StatelessWidget {
   /// Bannière 1024 × 500 : en-tête de site, couverture, fiche Play Store.
   /// Aucun texte essentiel dans les bords (recadrage possible).
   Widget _banner() {
-    final hs = data.highlights(english: english, max: 3);
-    final hook = hookFor(data, english: english);
+    final hs = data.highlights(english: english, max: 3, focus: focus);
+    final hook = hookFor(data, english: english, focus: focus);
     return Row(children: [
       Expanded(
         flex: 11,

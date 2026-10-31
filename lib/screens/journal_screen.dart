@@ -23,7 +23,8 @@ import '../l10n/app_localizations.dart';
 import '../l10n/l10n_ext.dart';
 import '../services/nutrient_labels.dart';
 import '../services/food_search.dart';
-import '../services/meal_share.dart' show buildMealShareData;
+import '../services/staple_foods.dart';
+import '../services/meal_share.dart' show buildMealShareData, isPlantFood;
 import '../widgets/word_safe_text.dart';
 import 'meal_share_screen.dart';
 
@@ -556,6 +557,13 @@ String displayNameOf(dynamic it, String fallback) =>
 /// qu'une tentative exhaustive risquée de mal traduire un nom de produit ;
 /// tout le reste du libellé (nombres, fractions, parenthèses, noms propres)
 /// n'est jamais touché.
+/// Libellé d'une portion dans la langue de l'app, avec « ≈ » pour les
+/// portions ménagères (valeurs usuelles, pas une pesée).
+String portionLabel(foods_loader.FoodPortion pt) {
+  if (pt.labelEn == null) return '${frenchPortionLabel(pt.label)} ·';
+  return '${AppSettings.language.value == 'en' ? pt.labelEn! : pt.label} ≈';
+}
+
 String frenchPortionLabel(String label) {
   if (AppSettings.language.value != 'fr') return label;
   const words = <String, String>{
@@ -1134,26 +1142,42 @@ class JournalScreenState extends State<JournalScreen> {
     try { await repo.loadUsdaFromAsset('assets/usda_foods.csv'); } catch (_) {}
 
     // On a besoin de la base des aliments pour recalculer les recettes.
-    final baseFoods = <dynamic>[...repo.items, ..._customs.list]
+    final baseFoods = <dynamic>[
+      ...repo.items, ...repo.usdaItems, ...repo.brandItems, ..._customs.list,
+    ];
+    // Index par id construit une fois : la recherche linéaire de
+    // _findFoodFlexible (~15 000 aliments) pour chaque ingrédient de chaque
+    // recette ralentirait l'ouverture de la page d'ajout.
+    final byId = <String, dynamic>{
+      for (final f in baseFoods) (((f as dynamic).id as String?) ?? ''): f,
+    };
+    dynamic resolve(_RecipeIngredient ing) =>
+        byId[ing.foodId] ??
+        (RegExp(r'^\d+$').hasMatch(ing.foodId) ? byId['ciqual:${ing.foodId}'] : null) ??
+        _findFoodFlexible(baseFoods, ing.foodId, ing.foodName);
 
-      ;
-
-    // Réparation : certaines recettes ont pu être sauvées à 0 kcal si la base
-    // n'était pas chargée au moment de leur création. On les recalcule ici
-    // à partir de leurs ingrédients, puis on persiste la correction.
-    bool repaired = false;
+    // Les valeurs d'une recette sont une COPIE figée au moment de sa
+    // création/import : elles ne suivaient ni les mises à jour de la base
+    // (CIQUAL 2025, glucides USDA corrigés le 31/10/2026) ni les recettes
+    // de la bibliothèque recalculées le même jour (B9, vitamine E,
+    // sélénium… périmés). On les recalcule donc à chaque chargement quand
+    // TOUS les ingrédients sont retrouvés ; sinon seule l'ancienne
+    // réparation (recette sauvée à 0 kcal) s'applique. Seules les recettes
+    // réellement modifiées sont réenregistrées, en arrière-plan.
+    final changed = <_Recipe>[];
     for (final r in _recipes.list) {
-      final hasIngredients = r.ingredients.isNotEmpty;
-      final noEnergy = (r.kcal100 ?? 0) <= 0;
-      if (hasIngredients && noEnergy) {
-        final fixed = _recomputeRecipeFromIngredients(r, baseFoods);
-        if (fixed) repaired = true;
+      if (r.ingredients.isEmpty) continue;
+      final allFound = r.ingredients.every((ing) => resolve(ing) != null);
+      if (allFound || (r.kcal100 ?? 0) <= 0) {
+        if (_recomputeRecipeFromIngredients(r, resolve)) changed.add(r);
       }
     }
-    if (repaired) {
-      for (final r in _recipes.list) {
-        await _recipes.save(r);
-      }
+    if (changed.isNotEmpty) {
+      unawaited(() async {
+        for (final r in changed) {
+          await _recipes.save(r);
+        }
+      }());
     }
 
     // `_all` doit pouvoir résoudre N'IMPORTE QUEL aliment déjà logué/favori/
@@ -1230,13 +1254,14 @@ class JournalScreenState extends State<JournalScreen> {
     return null;
   }
 
-  bool _recomputeRecipeFromIngredients(_Recipe r, List<dynamic> baseFoods) {
+  /// Renvoie true si les valeurs de la recette ont réellement changé.
+  bool _recomputeRecipeFromIngredients(_Recipe r, dynamic Function(_RecipeIngredient) resolve) {
     double totalKcal = 0, totalProt = 0, totalCarb = 0, totalFat = 0, totalFiber = 0;
     final Map<String, double> totalMicros = {};
     double getD(dynamic v) => (v is num) ? v.toDouble() : 0.0;
 
     for (final ing in r.ingredients) {
-      final food = _findFoodFlexible(baseFoods, ing.foodId, ing.foodName);
+      final food = resolve(ing);
       if (food == null) {
         debugPrint('    ingredient introuvable: foodId=${ing.foodId} (${ing.foodName})');
         continue;
@@ -1258,13 +1283,25 @@ class JournalScreenState extends State<JournalScreen> {
     if (totalKcal <= 0) return false; // ingrédients introuvables, on ne touche pas
 
     final ratio = r.totalWeightG > 0 ? 100.0 / r.totalWeightG : 1.0;
+    final micros = Map<String, double>.fromEntries(
+      totalMicros.entries.map((e) => MapEntry(e.key, e.value * ratio)));
+    // Écart significatif seulement (évite de réenregistrer pour un arrondi).
+    bool differs(double? a, double b) =>
+        a == null || (a - b).abs() > 0.005 + 0.005 * b.abs();
+    final changed = differs(r.kcal100, totalKcal * ratio) ||
+        differs(r.prot100, totalProt * ratio) ||
+        differs(r.carb100, totalCarb * ratio) ||
+        differs(r.fat100, totalFat * ratio) ||
+        differs(r.fiber100, totalFiber * ratio) ||
+        micros.length != r.micros100.length ||
+        micros.entries.any((e) => differs(r.micros100[e.key], e.value));
+    if (!changed) return false;
     r.kcal100  = totalKcal  * ratio;
     r.prot100  = totalProt  * ratio;
     r.carb100  = totalCarb  * ratio;
     r.fat100   = totalFat   * ratio;
     r.fiber100 = totalFiber * ratio;
-    r.micros100 = Map<String, double>.fromEntries(
-      totalMicros.entries.map((e) => MapEntry(e.key, e.value * ratio)));
+    r.micros100 = micros;
     return true;
   }
 
@@ -1331,17 +1368,27 @@ class JournalScreenState extends State<JournalScreen> {
   /// tiroir de filtre — partagé par tous les onglets de la page d'ajout.
   List<dynamic> _sortBySortMode(List<dynamic> arr) {
     String idOf(dynamic x) => ((x as dynamic).id as String?) ?? '';
+    // À égalité d'usage (cas de TOUS les aliments pour un nouvel
+    // utilisateur), les essentiels du quotidien passent avant l'ordre
+    // alphabétique — voir staple_foods.dart (31/10/2026).
+    int staple(dynamic a, dynamic b) {
+      final ra = stapleRank(idOf(a)), rb = stapleRank(idOf(b));
+      if (ra != null && rb != null) return ra.compareTo(rb);
+      if (ra != null) return -1;
+      if (rb != null) return 1;
+      return _sortKey(a).compareTo(_sortKey(b));
+    }
     switch (_sortMode) {
       case _SortMode.frequent:
         arr.sort((a, b) {
           final s = _stats.count(idOf(b)).compareTo(_stats.count(idOf(a)));
-          return s != 0 ? s : _sortKey(a).compareTo(_sortKey(b));
+          return s != 0 ? s : staple(a, b);
         });
         break;
       case _SortMode.recent:
         arr.sort((a, b) {
           final s = _stats.last(idOf(b)).compareTo(_stats.last(idOf(a)));
-          return s != 0 ? s : _sortKey(a).compareTo(_sortKey(b));
+          return s != 0 ? s : staple(a, b);
         });
         break;
       case _SortMode.az:
@@ -1677,7 +1724,10 @@ class JournalScreenState extends State<JournalScreen> {
     final l10n = context.l10n;
     final id = ((it as dynamic).id as String?) ?? '';
     final last = _stats.lastGrams(id);
-    double grams = last ?? 100;
+    final portions = foods_loader.FoodsRepository.instance.portionsFor(id);
+    // 1er ajout : la portion naturelle (1 œuf, 1 c. à soupe d'huile…)
+    // plutôt que 100 g pour tout (31/10/2026).
+    double grams = last ?? (portions.isNotEmpty ? portions.first.grams : 100);
     String meal = presetMeal;
     String fmt(double g) => g == g.roundToDouble() ? g.toStringAsFixed(0) : g.toStringAsFixed(1);
     final ctrl = TextEditingController(text: fmt(grams));
@@ -1693,10 +1743,9 @@ class JournalScreenState extends State<JournalScreen> {
         return (v is num) ? v.toDouble() : 0.0;
       } catch (_) { return 0.0; }
     }
-    final portions = foods_loader.FoodsRepository.instance.portionsFor(id);
     final chips = <(String, double)>[
       if (last != null) (l10n.jrnlQtyLastChip(fmt(last)), last),
-      for (final pt in portions.take(3)) ('${frenchPortionLabel(pt.label)} · ${pt.grams.toStringAsFixed(0)} g', pt.grams),
+      for (final pt in portions.take(3)) ('${portionLabel(pt)} ${pt.grams.toStringAsFixed(0)} g', pt.grams),
       for (final g in const [50.0, 100.0, 150.0, 200.0])
         if (g != last) ('${g.toStringAsFixed(0)} g', g),
     ];
@@ -1855,8 +1904,10 @@ class JournalScreenState extends State<JournalScreen> {
   Future<void> _openFoodSheet(dynamic it, {String? presetMeal, DateTime? targetDate}) async {
     if (_targets == null) return;
     final T = _targets!;
-    final lastG = _stats.lastGrams(((it as dynamic).id as String?) ?? '');
-    double grams = lastG ?? 100;
+    final sheetFoodId = ((it as dynamic).id as String?) ?? '';
+    final lastG = _stats.lastGrams(sheetFoodId);
+    final firstPortions = foods_loader.FoodsRepository.instance.portionsFor(sheetFoodId);
+    double grams = lastG ?? (firstPortions.isNotEmpty ? firstPortions.first.grams : 100);
     String meal = presetMeal ?? 'Déjeuner';
     final qtyCtrl = TextEditingController(text: grams.toStringAsFixed(0));
     // Priorité 65 (audit global) : garde-fou anti double-tap — sans ça, un
@@ -2234,11 +2285,10 @@ class JournalScreenState extends State<JournalScreen> {
                   // Portions courantes (Priorité 40, retour d'Alex : éviter
                   // la sous-estimation calorique de qui logue "100 g" par
                   // défaut pour, par exemple, un burger bien plus lourd) —
-                  // uniquement pour les aliments USDA, seule base où ce
-                  // poids de référence est mesuré (pas de données CIQUAL
-                  // équivalentes fiables, donc rien n'est inventé côté
-                  // CIQUAL). Repli silencieux : rien ne s'affiche pour un
-                  // aliment sans portion connue.
+                  // portions mesurées USDA, et depuis le 31/10/2026 portions
+                  // ménagères usuelles des aliments CIQUAL, affichées avec
+                  // « ≈ » (food_portions.dart). Repli silencieux : rien ne
+                  // s'affiche pour un aliment sans portion connue.
                   Builder(builder: (_) {
                     final foodId = ((it as dynamic).id as String?) ?? '';
                     final portions = foods_loader.FoodsRepository.instance
@@ -2253,7 +2303,7 @@ class JournalScreenState extends State<JournalScreen> {
                           for (final p in portions.take(4))
                             ActionChip(
                               label: Text(
-                                  '${frenchPortionLabel(p.label)} · ${p.grams.toStringAsFixed(0)} g',
+                                  '${portionLabel(p)} ${p.grams.toStringAsFixed(0)} g',
                                   style: const TextStyle(fontSize: 12)),
                               backgroundColor: TotumColors.accentSoft,
                               side: BorderSide.none,
@@ -5512,7 +5562,10 @@ class _AddFoodPageState extends State<_AddFoodPage>
               onAddSelected: (selected, meal) async {
                 for (final it in selected) {
                   final id = ((it as dynamic).id as String?) ?? '';
-                  await p._addFood(meal, it, p._stats.lastGrams(id) ?? 100, widget.targetDate);
+                  final portions = foods_loader.FoodsRepository.instance.portionsFor(id);
+                  await p._addFood(meal, it,
+                      p._stats.lastGrams(id) ?? (portions.isNotEmpty ? portions.first.grams : 100),
+                      widget.targetDate);
                 }
               },
             ),
@@ -5529,7 +5582,40 @@ class _AddFoodPageState extends State<_AddFoodPage>
       onQuickAdd: _quickAdd,
       lastGrams: p._stats.lastGrams,
       showCreateButton: false,
+      sectionLabels: _defaultListSections(items),
     );
+  }
+
+  /// Intertitres de la liste par défaut (sans recherche, tri fréquents ou
+  /// récents) : « Tes aliments habituels », puis « Les essentiels du
+  /// quotidien », puis « Tous les aliments » — l'utilisateur comprend
+  /// d'emblée pourquoi ces aliments sont proposés et où commence le reste.
+  Map<int, String> _defaultListSections(List<dynamic> items) {
+    if (p._query.trim().isNotEmpty || items.isEmpty) return const {};
+    if (p._sortMode != _SortMode.frequent && p._sortMode != _SortMode.recent) {
+      return const {};
+    }
+    final l10n = context.l10n;
+    bool used(String id) => p._sortMode == _SortMode.frequent
+        ? p._stats.count(id) > 0
+        : p._stats.last(id) > 0;
+    final out = <int, String>{};
+    var staplesSeen = false;
+    for (var i = 0; i < items.length; i++) {
+      final id = ((items[i] as dynamic).id as String?) ?? '';
+      if (used(id)) {
+        if (i == 0) out[0] = l10n.jrnlSectionYourFoods;
+        continue;
+      }
+      if (isStapleFood(id)) {
+        if (!staplesSeen) out[i] = l10n.jrnlSectionEssentials;
+        staplesSeen = true;
+        continue;
+      }
+      out[i] = l10n.jrnlSectionAllFoods;
+      break;
+    }
+    return out;
   }
 
   Widget _favoritesTab() => _FoodListView(
@@ -5996,6 +6082,14 @@ class _DayJournalViewState extends State<_DayJournalView> {
           micros100: micros,
           emoji: _pictogramOf(f) ?? (_isRecipe(f) ? '🥘' : '🍽️'),
           displayName: displayNameOf(f, name),
+        );
+      },
+      classify: (id) {
+        final f = byId[id] ?? foods_loader.FoodsRepository.instance.findById(id);
+        if (f is! foods_loader.FoodItem) return (isPlant: false, nova: null);
+        return (
+          isPlant: isPlantFood(groupe: f.groupe, sousGroupe: f.sousGroupe),
+          nova: f.novaScore,
         );
       },
     );
@@ -7827,6 +7921,8 @@ class _FoodListView extends StatelessWidget {
   /// En-tête qui défile avec la liste (entrée Marques & restaurants, repas
   /// perso correspondant à la recherche) — aucune place fixe consommée.
   final Widget? header;
+  /// Intertitre éventuel à afficher au-dessus de l'élément d'index donné.
+  final Map<int, String> sectionLabels;
   /// Ajout en un tap avec la dernière quantité utilisée (voir _FoodStats).
   final void Function(dynamic it)? onQuickAdd;
   final double? Function(String id)? lastGrams;
@@ -7845,6 +7941,7 @@ class _FoodListView extends StatelessWidget {
     this.mealItems = const [], this.onTapMeal, this.onOpenMealDetail,
     this.onEditMeal, this.onDeleteMeal, this.onCreateMeal,
     this.header, this.onQuickAdd, this.lastGrams, this.emptyHint,
+    this.sectionLabels = const {},
   });
 
   bool _isPersonal(dynamic it) {
@@ -8006,29 +8103,61 @@ class _FoodListView extends StatelessWidget {
                   builder: (context, constraints) {
                     const gap = 8.0;
                     final available = constraints.maxWidth - gap * 2;
-                    // La sélectionnée prend ~44% de la largeur disponible
-                    // (assez pour "Aliments"/"Recettes"/"Repas" en entier +
-                    // le compteur), les 2 autres se partagent le reste à
-                    // parts égales.
-                    // 25/10/2026 : 40 % (au lieu de 44 %) + compteur affiché
-                      // sur la seule vignette active — plus aucune troncature
-                      // ("Re…", "Aliments p…") sur un écran de 360-400 px.
-                    double widthFor(int index) {
-                      final selectedWidth = available * 0.40;
-                      if (persoFilter == index) return selectedWidth;
-                      return (available - selectedWidth) / 2;
+                    // 31/10/2026 (3ᵉ signalement d'Alex : « Recettes » encore
+                    // coupé) : les pourcentages fixes (44 % puis 40 %) ne
+                    // tenaient ni un écran de 360 px, ni une police système
+                    // agrandie, ni le compteur « 168 » de la bibliothèque.
+                    // Chaque vignette est maintenant MESURÉE (mot + icône +
+                    // compteur, zoom de police du téléphone compris) : la
+                    // place restante est répartie à parts égales ; s'il en
+                    // manque, la sélectionnée garde sa largeur complète et
+                    // le contenu des 2 autres se réduit légèrement
+                    // (FittedBox) — un mot n'est plus jamais tronqué.
+                    final scaler = MediaQuery.textScalerOf(context);
+                    final labels = [
+                      context.l10n.jrnlFilterPersonalFoods,
+                      context.l10n.jrnlFilterRecipes,
+                      context.l10n.jrnlFilterMeals,
+                    ];
+                    final counts = [persoCount, recipeCount, mealItems.length];
+                    List<double> measure(bool icons) => [
+                          for (var i = 0; i < 3; i++)
+                            _PersoFilterCard.naturalWidth(labels[i], counts[i],
+                                selected: persoFilter == i,
+                                showIcon: icons || persoFilter == i,
+                                textScaler: scaler,
+                                base: DefaultTextStyle.of(context).style),
+                        ];
+                    var natural = measure(true);
+                    double sum(List<double> l) => l[0] + l[1] + l[2];
+                    // Place insuffisante : les vignettes non sélectionnées
+                    // masquent d'abord leur icône (le mot prime).
+                    final showIcons = sum(natural) <= available;
+                    if (!showIcons) natural = measure(false);
+                    final total = sum(natural);
+                    final List<double> widths;
+                    if (total <= available) {
+                      final extra = (available - total) / 3;
+                      widths = [for (final w in natural) w + extra];
+                    } else {
+                      final selW = natural[persoFilter!] < available * 0.5
+                          ? natural[persoFilter!]
+                          : available * 0.5;
+                      final rest = (available - selW) / 2;
+                      widths = [for (var i = 0; i < 3; i++) i == persoFilter ? selW : rest];
                     }
 
                     Widget animatedCard(int index, IconData icon, String label, int count) {
                       return AnimatedContainer(
                         duration: const Duration(milliseconds: 220),
                         curve: Curves.easeOutCubic,
-                        width: widthFor(index),
+                        width: widths[index],
                         child: _PersoFilterCard(
                           icon: icon,
                           label: label,
                           count: count,
                           selected: persoFilter == index,
+                          showIcon: showIcons || persoFilter == index,
                           onTap: () => onPersoFilterChanged!(index),
                         ),
                       );
@@ -8036,11 +8165,11 @@ class _FoodListView extends StatelessWidget {
 
                     return Row(
                       children: [
-                        animatedCard(0, Icons.restaurant_menu, context.l10n.jrnlFilterPersonalFoods, persoCount),
+                        animatedCard(0, Icons.restaurant_menu, labels[0], counts[0]),
                         const SizedBox(width: gap),
-                        animatedCard(1, Icons.menu_book_outlined, context.l10n.jrnlFilterRecipes, recipeCount),
+                        animatedCard(1, Icons.menu_book_outlined, labels[1], counts[1]),
                         const SizedBox(width: gap),
-                        animatedCard(2, Icons.bookmark_outline, context.l10n.jrnlFilterMeals, mealItems.length),
+                        animatedCard(2, Icons.bookmark_outline, labels[2], counts[2]),
                       ],
                     );
                   },
@@ -8148,8 +8277,9 @@ class _FoodListView extends StatelessWidget {
                     final pictogram = _pictogramOf(it);
                     final photo = _photoOf(it);
                     final displayName = displayNameOf(it, name);
+                    final section = sectionLabels[i];
 
-                    return ListTile(
+                    final tile = ListTile(
                       // La photo (aliment scanné) prime sur le pictogramme générique
                       // quand elle existe — même emplacement, même taille, comme demandé.
                       leading: photo != null
@@ -8355,6 +8485,27 @@ class _FoodListView extends StatelessWidget {
                         ],
                       ),
                       onTap: () => onTap(it),
+                    );
+                    if (section == null) return tile;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          color: TotumColors.accentSoft.withValues(alpha: 0.3),
+                          padding: const EdgeInsets.fromLTRB(16, 9, 16, 7),
+                          child: Text(
+                            section.toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.8,
+                              color: TotumColors.accent,
+                            ),
+                          ),
+                        ),
+                        tile,
+                      ],
                     );
                   },
                 ),
@@ -8631,13 +8782,39 @@ class _PersoFilterCard extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
+  final bool showIcon;
+
   const _PersoFilterCard({
     required this.icon,
     required this.label,
     required this.count,
     required this.selected,
     required this.onTap,
+    this.showIcon = true,
   });
+
+  static TextStyle _labelStyle(bool selected) => TextStyle(
+        fontSize: 12.5,
+        fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+      );
+  static const TextStyle _countStyle = TextStyle(fontSize: 11, fontWeight: FontWeight.w700);
+
+  /// Largeur exacte nécessaire pour afficher la vignette sans rien couper
+  /// (bordure + marges + icône + mot + compteur si sélectionnée), avec le
+  /// zoom de police du téléphone. Doit rester alignée sur [build].
+  static double naturalWidth(String label, int count,
+      {required bool selected, bool showIcon = true, required TextScaler textScaler, TextStyle? base}) {
+    double textW(String s, TextStyle st) => (TextPainter(
+          text: TextSpan(text: s, style: base?.merge(st) ?? st),
+          textDirection: TextDirection.ltr,
+          textScaler: textScaler,
+          maxLines: 1,
+        )..layout())
+            .width;
+    var w = 2 * (selected ? 1.6 : 1.0) + 2 * 10 + (showIcon ? 17 + 6 : 0) + textW(label, _labelStyle(selected));
+    if (selected) w += 6 + 2 * 7 + textW('$count', _countStyle);
+    return w + 2; // arrondis de rendu
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -8655,44 +8832,43 @@ class _PersoFilterCard extends StatelessWidget {
             width: selected ? 1.6 : 1,
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon,
-                size: 17, color: selected ? TotumColors.accent : TotumColors.textSecondary),
-            const SizedBox(width: 6),
-            Flexible(
-              child: Text(
+        // Jamais d'ellipse : si la place manque (écran très étroit + police
+        // agrandie), le contenu se réduit légèrement mais le mot reste entier.
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (showIcon) ...[
+                Icon(icon,
+                    size: 17, color: selected ? TotumColors.accent : TotumColors.textSecondary),
+                const SizedBox(width: 6),
+              ],
+              Text(
                 label,
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 12.5,
-                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                softWrap: false,
+                style: _labelStyle(selected).copyWith(
                   color: selected ? TotumColors.accent : TotumColors.textSecondary,
                 ),
               ),
-            ),
-            if (selected) ...[
-            const SizedBox(width: 6),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
-              decoration: BoxDecoration(
-                color: selected ? TotumColors.accent : TotumColors.outlineStrong,
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Text(
-                '$count',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: selected ? Colors.white : TotumColors.textSecondary,
+              if (selected) ...[
+                const SizedBox(width: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
+                  decoration: BoxDecoration(
+                    color: TotumColors.accent,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    '$count',
+                    style: _countStyle.copyWith(color: Colors.white),
+                  ),
                 ),
-              ),
-            ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
