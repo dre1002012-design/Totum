@@ -28,6 +28,7 @@ const List<int> kStapleCiqualCodes = [
   36018, // Blanc de poulet, grillé
   36304, // Escalope de dinde, crue
   36306, // Escalope de dinde, grillée
+  36004, // Cuisse de poulet rôtie (avec peau)
   6250, // Steak haché 5 % MG, cru
   6251, // Steak haché 5 % MG, cuit
   6255, // Steak haché 15 % MG, cuit
@@ -43,6 +44,9 @@ const List<int> kStapleCiqualCodes = [
   26129, // Colin (lieu jaune), cru
   26051, // Maquereau, cru
   26040, // Sardines à l'huile d'olive (boîte)
+  26136, // Sardine, grillée
+  26019, // Maquereau, cuit au four
+  27006, // Truite, cuite au four
   10007, // Crevette, cuite
   // ── Produits laitiers et alternatives ─────────────────────────────
   19033, // Lait demi-écrémé
@@ -63,14 +67,17 @@ const List<int> kStapleCiqualCodes = [
   18900, // Boisson soja nature
   18107, // Boisson amande nature
   18899, // Boisson avoine nature
+  19865, // Kéfir de lait
   90002, // Whey (protéine en poudre)
   // ── Protéines végétales, légumineuses ─────────────────────────────
   20904, // Tofu nature
   20917, // Tempeh
   20360, // Lentilles, cuites
+  20589, // Lentilles corail, cuites
   20507, // Pois chiches, cuits
   20532, // Pois chiches en boîte
   20503, // Haricots rouges, cuits
+  20502, // Haricots blancs, cuits
   25621, // Houmous
   // ── Féculents, céréales, pains ───────────────────────────────────
   9104, // Riz blanc, cuit
@@ -118,6 +125,8 @@ const List<int> kStapleCiqualCodes = [
   20053, // Aubergine, crue
   20003, // Betterave rouge, cuite
   20346, // Chou kale, cru
+  20014, // Chou rouge, cru
+  20292, // Courge butternut, cuite
   20327, // Poireau, cuit
   // ── Fruits ───────────────────────────────────────────────────────
   13005, // Banane
@@ -138,21 +147,27 @@ const List<int> kStapleCiqualCodes = [
   13026, // Melon
   13036, // Pastèque
   13011, // Datte sèche
+  13001, // Abricot sec
+  13013, // Figue sèche
   13046, // Raisin sec
   13187, // Compote sans sucres ajoutés
   // ── Oléagineux, graines ──────────────────────────────────────────
   15000, // Amande
   15005, // Noix
+  15008, // Noix du Brésil
   15004, // Noisette
   15054, // Noix de cajou
+  15009, // Pistache, grillée salée
   15001, // Cacahuète
   15202, // Beurre de cacahuète
   15047, // Graines de chia
   15034, // Graines de lin
   15064, // Graines de courge
+  15011, // Graines de tournesol
   // ── Matières grasses ─────────────────────────────────────────────
   17270, // Huile d'olive vierge extra
   17130, // Huile de colza
+  17220, // Huile de noix
   16400, // Beurre doux
   19410, // Crème fraîche épaisse
   // ── Boissons, sucré, condiments ──────────────────────────────────
@@ -162,6 +177,7 @@ const List<int> kStapleCiqualCodes = [
   18155, // Thé vert
   18022, // Tisane
   2070, // Jus d'orange, pur jus
+  2028, // Jus de citron
   31008, // Miel
   31016, // Sucre
   31074, // Chocolat noir 70 %

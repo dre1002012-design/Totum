@@ -193,6 +193,23 @@ const Map<int, List<HouseholdPortion>> _byCode = {
   11104: [_tbspSauce],
   11054: [_tbspSauce],
   11008: [_tbspSauce],
+  // Ajouts du 01/11/2026
+  36004: [HouseholdPortion('1 cuisse', '1 leg', 150)],
+  26136: [HouseholdPortion('3 sardines', '3 sardines', 120)],
+  26019: [HouseholdPortion('1 filet', '1 fillet', 110)],
+  27006: [HouseholdPortion('1 filet', '1 fillet', 110)],
+  19865: [_glass],
+  20589: [_plateLegume],
+  20502: [_plateLegume],
+  20014: [HouseholdPortion('1 portion', '1 serving', 100)],
+  20292: [_plateVeg],
+  13001: [HouseholdPortion('3 abricots secs', '3 dried apricots', 24)],
+  13013: [HouseholdPortion('1 figue sèche', '1 dried fig', 20)],
+  15008: [HouseholdPortion('1 noix', '1 nut', 4), HouseholdPortion('2 noix', '2 nuts', 8)],
+  15009: [_handful],
+  15011: [_tbspSeeds],
+  17220: [_tbspOil, _tspOil],
+  2028: [HouseholdPortion('1 c. à soupe', '1 tbsp', 15)],
 };
 
 /// Repères par sous-groupe ANSES pour les aliments hors essentiels.
