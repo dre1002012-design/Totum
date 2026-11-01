@@ -1612,7 +1612,7 @@
   "shareMacrosSubtitle": "For one serving of this plate",
   "shareEnergyShare": "{pct}% of energy",
   "shareOfEfsaFiber": "{pct}% of 30 g/day",
-  "shareMacrosFootnote": "Fiber: ANSES guideline of 30 g a day for adults.",
+  "shareMacrosFootnote": "ANSES guidelines for adults — protein: 0.83 g per kg a day (58 g for 70 kg); fiber: 30 g a day.",
   "shareMicrosTitle": "What this plate gives you",
   "shareNoMicroHighlight": "No micronutrient reaches 15% of reference values in this serving.",
   "shareVnrFootnote": "% of EU nutrient reference values for adults, per serving. Omega-3 EPA+DHA: ANSES guideline of 500 mg a day.",

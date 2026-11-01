@@ -13,6 +13,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show FontLoader;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:totum_app/l10n/app_localizations_en.dart';
 import 'package:totum_app/l10n/app_localizations_fr.dart';
 import 'package:totum_app/services/food_search.dart';
 import 'package:totum_app/services/meal_share.dart';
@@ -275,6 +276,111 @@ void main() {
     }
   });
 
+  test('aliments stars : sardines en tête, % propres à chaque aliment, apports phares pondérés', () {
+    final spots = data.spotlights(max: 4);
+    // ignore: avoid_print
+    print('aliments stars : ${spots.map((s) => '${s.item.name} [${s.top.map((t) => '${t.$1.key} ${t.$2.round()} %').join(', ')}]').join(' | ')}');
+    expect(spots, isNotEmpty);
+    expect(spots.first.item.name, startsWith('Sardine'));
+    // Même pertinence que les stars : 61 % de vitamine D (souvent
+    // insuffisante) passe devant 425 % de B12 (abondante).
+    expect(spots.first.top.map((t) => t.$1.key), containsAll(['epaDha', 'vitD']));
+    expect(spots.first.top.map((t) => t.$1.key), isNot(contains('b12')));
+    // Une vedette apporte au moins 20 % de quelque chose.
+    for (final s in spots) {
+      expect(s.top.any((t) => t.$2 >= 20) || s.proteinPct >= 20 || s.fiberPct >= 20, isTrue, reason: s.item.name);
+    }
+    for (var i = 1; i < spots.length; i++) {
+      expect(spots[i - 1].score, greaterThanOrEqualTo(spots[i].score));
+    }
+    for (final s in spots) {
+      expect(s.top.length, lessThanOrEqualTo(3));
+      for (final (d, pct) in s.top) {
+        // % de l'apport conseillé apporté par CET aliment seul.
+        expect(pct, closeTo(d.amount(s.item.micros) / d.reference * 100, 1e-9));
+        expect(pct, greaterThanOrEqualTo(10));
+      }
+      expect(s.proteinPct, closeTo(s.item.protein / kRefProteinG * 100, 1e-9));
+      expect(s.systems.length, lessThanOrEqualTo(3));
+    }
+  });
+
+  test('nom court : garde l\'état cru/cuit/sec, qui change le sens d\'un poids', () {
+    expect(shortFoodName('Pâtes sèches, standard, cuites, sans sel ajouté'), 'Pâtes cuites');
+    expect(shortFoodName('Pâtes, crues (sèches)'), 'Pâtes crues');
+    expect(shortFoodName('Pâtes, cuites'), 'Pâtes cuites');
+    expect(shortFoodName('Riz blanc, cru'), 'Riz blanc cru');
+    expect(shortFoodName('Lentille, bouillie/cuite à l\'eau (aliment moyen)'), 'Lentille cuite');
+    expect(shortFoodName('Pomme de terre, cuite (aliment moyen)'), 'Pomme de terre cuite');
+    expect(shortFoodName('Abricot sec'), 'Abricot sec');
+    expect(shortFoodName('Blanc de poulet, grillé'), 'Blanc de poulet');
+    expect(shortFoodName("Sardine, à l'huile d'olive, appertisée, égouttée"), 'Sardine');
+    expect(shortFoodName('White rice, cooked'), 'Cooked white rice');
+    expect(shortFoodName('Pasta, dry (uncooked)'), 'Dry pasta');
+    expect(shortFoodName('Dried apricot'), 'Dried apricot');
+  });
+
+  test('densité : même règle pour le compte et pour les barres, cohérente avec les calories', () {
+    expect(data.energyShare, closeTo(data.kcal / kRefEnergyKcal, 1e-12));
+    final all = data.all();
+    expect(all.length, essentialNutrients.length);
+    for (var i = 1; i < all.length; i++) {
+      expect(all[i - 1].percent, greaterThanOrEqualTo(all[i].percent));
+    }
+    expect(data.denseCount, all.where(data.isDense).length);
+    for (final h in all.where(data.isDense)) {
+      expect(h.percent, greaterThanOrEqualTo(data.energyShare * 100));
+      expect(h.percent, greaterThanOrEqualTo(15));
+    }
+    // ignore: avoid_print
+    print('densité : ${(data.energyShare * 100).round()} % des calories, ${data.denseCount} essentiels au-delà');
+  });
+
+  test('stress-test : repas sans micronutriments (soda) — aucun faux « dense », aucun aliment star', () {
+    final soda = MealShareData(
+      title: 'Soda', date: DateTime(2026, 11, 1), kcal: 139, protein: 0, carbs: 35, fat: 0, fiber: 0,
+      micros: const {'Sucres_g_100g': 35},
+      items: const [MealShareItem(name: 'Boisson au cola', emoji: '🥤', grams: 330, kcal: 139, micros: {'Sucres_g_100g': 35})],
+    );
+    expect(soda.denseCount, 0);
+    expect(soda.spotlights(), isEmpty);
+    expect(soda.fullyCovered, 0);
+    final hook = hookFor(soda);
+    expect(hook.headline, isNot(contains('dense')));
+    expect(hook.subline, isNot(contains('dense')));
+    // Repas vide : aucune division par zéro, rien de « dense ».
+    final empty = MealShareData(title: '', date: DateTime(2026, 11, 1), kcal: 0, protein: 0, carbs: 0, fat: 0,
+        fiber: 0, micros: const {}, items: const []);
+    expect(empty.denseCount, 0);
+    expect(empty.spotlights(), isEmpty);
+  });
+
+  test('le saviez-vous : 21 fiches, sans allégation interdite ; badge « souvent insuffisant » ciblé', () {
+    final emoji = RegExp(r'[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]', unicode: true);
+    // Règlement (UE) 1169/2011, art. 7.3 : jamais prévenir/traiter/guérir.
+    final forbidden = RegExp(r'guéri|prévien|soign|trait|cure|prevent|treat|riche en|source de', caseSensitive: false);
+    for (final n in essentialNutrients) {
+      for (final t in [n.factFr, n.factEn]) {
+        expect(t.trim(), isNotEmpty, reason: n.key);
+        expect(t.length, lessThan(130), reason: '${n.key} : fiche trop longue pour 2 lignes');
+        expect(emoji.hasMatch(t), isFalse, reason: '${n.key} : "$t"');
+        expect(forbidden.hasMatch(t), isFalse, reason: '${n.key} : "$t"');
+      }
+    }
+    expect({for (final n in essentialNutrients) if (n.oftenLow) n.key}, {'vitD', 'epaDha', 'mg', 'ala', 'i'});
+  });
+
+  test('journée : accroche « couverts à 100 % » fondée sur le vrai compte', () {
+    final day = _alexDay();
+    final hook = hookFor(day);
+    // ignore: avoid_print
+    print('journée : ${day.fullyCovered} essentiels à 100 %, ${day.essentialsAtLeast(50)} à 50 % — « ${hook.headline} »');
+    if (day.fullyCovered >= 6) {
+      expect(hook.headline, contains('${day.fullyCovered} nutriments essentiels sur ${essentialNutrients.length} couverts à 100 %'));
+      expect(hook.subline, contains('${day.essentialsAtLeast(50) - day.fullyCovered} autres'));
+    }
+  });
+
   testWidgets('rendu PNG de tous les visuels (4 ambiances, 6 formats)', (tester) async {
     final fr = AppLocalizationsFr();
     await tester.runAsync(() async {
@@ -323,15 +429,44 @@ void main() {
         }
       }
       final day = _alexDay();
-      for (final k in [ShareSlideKind.cover, ShareSlideKind.systems, ShareSlideKind.stars, ShareSlideKind.cta]) {
+      final dayKinds = carouselKindsFor(day);
+      expect(dayKinds, isNot(contains(ShareSlideKind.density)));
+      expect(carouselKindsFor(data), carouselKinds);
+      for (final k in dayKinds) {
         await render(
           MealShareSlide(kind: k, data: day, palette: SharePalette.nature, l10n: fr, 
-              index: carouselKinds.indexOf(k) + 1, count: carouselKinds.length,
+              index: dayKinds.indexOf(k) + 1, count: dayKinds.length,
               fontFamilyFallback: const ['Emoji']),
           'journee_${k.name}');
       }
       expect(day.isFullDay, isTrue);
       expect(day.gaps().every((g) => g.percent < 75), isTrue);
+      // Repas pauvre en nutriments : les visuels restent justes et lisibles.
+      final soda = MealShareData(
+        title: 'Soda', date: DateTime(2026, 11, 1), kcal: 139, protein: 0, carbs: 35, fat: 0, fiber: 0,
+        micros: const {'Sucres_g_100g': 35},
+        items: const [MealShareItem(name: 'Boisson au cola', emoji: '🥤', grams: 330, kcal: 139, micros: {'Sucres_g_100g': 35})],
+      );
+      for (final k in [ShareSlideKind.spotlight, ShareSlideKind.density, ShareSlideKind.stars, ShareSlideKind.panel]) {
+        await render(
+          MealShareSlide(kind: k, data: soda, palette: SharePalette.minimal, l10n: fr,
+              fontFamilyFallback: const ['Emoji']),
+          'soda_${k.name}');
+      }
+      // Petit-déjeuner réel (lin, œufs, huile d'olive, banane) en anglais.
+      final bf = _alexMeal(const {
+        'Lin brun graine': 22.0,
+        'Huile olive vierge extra': 15.0,
+        'Oeuf cru': 160.0,
+        'Banane chair sans peau crue': 99.0,
+      }, 'Breakfast');
+      for (final k in carouselKinds) {
+        await render(
+          MealShareSlide(kind: k, data: bf, palette: SharePalette.linen, l10n: AppLocalizationsEn(), english: true,
+              index: carouselKinds.indexOf(k) + 1, count: carouselKinds.length,
+              fontFamilyFallback: const ['Emoji']),
+          'breakfast_en_${carouselKinds.indexOf(k) + 1}_${k.name}');
+      }
       final banner = make(ShareSlideKind.banner, SharePalette.totumCream);
       final img = await renderWidgetToImage(banner, logicalSize: banner.logicalSize, pixelRatio: banner.exportScale, view: tester.view);
       expect((img.width, img.height), (1024, 500));

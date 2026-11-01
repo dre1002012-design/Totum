@@ -5214,7 +5214,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shareMacrosFootnote =>
-      'Fibres : repère ANSES de 30 g par jour pour un adulte.';
+      'Repères ANSES pour un adulte — protéines : 0,83 g par kg et par jour (58 g pour 70 kg) ; fibres : 30 g par jour.';
 
   @override
   String get shareMicrosTitle => 'Ce que ce plat t\'apporte';
@@ -5231,7 +5231,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shareIngredientsTitle => 'Dans l\'assiette';
 
   @override
-  String shareIngredientsSubtitle(int grams) {
+  String shareIngredientsSubtitle(String grams) {
     return '$grams g au total — à enregistrer pour la refaire';
   }
 

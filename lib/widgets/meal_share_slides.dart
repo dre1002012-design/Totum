@@ -25,6 +25,17 @@
 //  viennent  5. Vitamines  6. Minéraux  7. Les bonnes graisses
 //  8. Dans l'assiette (atout de chaque aliment)  9. L'essentiel + à compléter
 //
+// Version 3.0 (01/11/2026, retour d'Alex : « éduquer, inspirer, montrer
+// qu'une alimentation brute et variée couvre presque 100 % des besoins ») —
+// ce qui marche chez les diététiciens et nutritionnistes en ligne : l'aliment
+// d'abord, puis le nutriment, puis son rôle en une phrase. Carrousel de 10 :
+//  1. Couverture  2. Qui apporte quoi ? (aliments stars)  3. L'énergie
+//  (macros + protéines et fibres face aux repères)  4. Plus de nutriments
+//  que de calories (densité, principe NRF)  5. Les nutriments stars :
+//  pourquoi ils comptent (« le saviez-vous », badge « souvent insuffisant »
+//  — Esteban, INCA 3)  6. Ton corps  7. Le bilan des 21 essentiels
+//  8. Les bonnes graisses  9. Dans l'assiette  10. L'essentiel
+//
 // Tailles logiques -> pixels exportés :
 //  - flux (carrousel, post) : 360 × 450 ×3 = 1080 × 1350 (4:5) ;
 //  - story / Reel : 360 × 640 ×3 = 1080 × 1920 (9:16), zones libres ;
@@ -92,22 +103,31 @@ class SharePalette {
 }
 
 enum ShareSlideKind {
-  cover, overview, systems, stars, vitamins, minerals, fats, ingredients, cta,
+  cover, spotlight, overview, density, stars, systems, panel, fats, ingredients, cta,
   story, post, landscape, banner,
 }
 
-/// Les 9 visuels d'un carrousel, dans l'ordre de lecture.
+/// Les 10 visuels d'un carrousel, dans l'ordre de lecture.
 const carouselKinds = [
   ShareSlideKind.cover,
+  ShareSlideKind.spotlight,
   ShareSlideKind.overview,
-  ShareSlideKind.systems,
+  ShareSlideKind.density,
   ShareSlideKind.stars,
-  ShareSlideKind.vitamins,
-  ShareSlideKind.minerals,
+  ShareSlideKind.systems,
+  ShareSlideKind.panel,
   ShareSlideKind.fats,
   ShareSlideKind.ingredients,
   ShareSlideKind.cta,
 ];
+
+/// Carrousel d'un partage donné. Journée entière : sans le visuel
+/// « densité » — notion de REPAS (une assiette légère mais riche) ; pour une
+/// journée de 2 900 kcal, comparer à 2 000 kcal griserait un magnésium à
+/// 128 % alors que la journée couvre 15 essentiels à 100 % (message porté
+/// par le bilan complet).
+List<ShareSlideKind> carouselKindsFor(MealShareData d) =>
+    d.isFullDay ? [for (final k in carouselKinds) if (k != ShareSlideKind.density) k] : carouselKinds;
 
 class MealShareSlide extends StatelessWidget {
   final ShareSlideKind kind;
@@ -165,11 +185,12 @@ class MealShareSlide extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget body = switch (kind) {
       ShareSlideKind.cover => _cover(),
+      ShareSlideKind.spotlight => _spotlight(),
       ShareSlideKind.overview => _overview(),
-      ShareSlideKind.systems => _systems(),
+      ShareSlideKind.density => _density(),
       ShareSlideKind.stars => _stars(),
-      ShareSlideKind.vitamins => _panelSlide(NutrientKind.vitamin),
-      ShareSlideKind.minerals => _panelSlide(NutrientKind.mineral),
+      ShareSlideKind.systems => _systems(),
+      ShareSlideKind.panel => _panelAll(),
       ShareSlideKind.fats => _fats(),
       ShareSlideKind.ingredients => _ingredients(),
       ShareSlideKind.cta => _cta(),
@@ -425,10 +446,10 @@ class MealShareSlide extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 184,
+          height: 170,
           child: Stack(
             children: [
-              Positioned.fill(child: _photoOrMosaic(height: 184, radius: 0, plateAlign: const Alignment(0, 0.9))),
+              Positioned.fill(child: _photoOrMosaic(height: 170, radius: 0, plateAlign: const Alignment(0, 0.9))),
               if (photo != null)
               Positioned.fill(
                 child: DecoratedBox(
@@ -461,7 +482,7 @@ class MealShareSlide extends StatelessWidget {
         _starPills(),
         const Spacer(),
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
           child: Row(children: [
             for (final (i, st) in _coverStats().indexed) ...[
               if (i > 0) const SizedBox(width: 7),
@@ -525,7 +546,114 @@ class MealShareSlide extends StatelessWidget {
     }
   }
 
-  // ── 2. L'énergie ─────────────────────────────────────────────────────
+  // ── 2. Qui apporte quoi ? Les aliments stars ─────────────────────────
+
+  /// Les 3 apports phares d'un aliment vedette — micronutriments pondérés
+  /// par la priorité santé, protéines et fibres s'ils pèsent (≥ 20 %) —,
+  /// en % de l'apport conseillé de la journée pour la quantité mangée.
+  List<(String, double)> _spotChips(FoodSpotlight f) {
+    final ranked = <(String, double, double)>[
+      for (final t in f.top) (t.$1.short(english), t.$2, relevanceOf(t.$1.weight, t.$2)),
+      if (f.proteinPct >= 20) (english ? 'Protein' : 'Protéines', f.proteinPct, relevanceOf(kProteinWeight, f.proteinPct)),
+      if (f.fiberPct >= 20) (english ? 'Fiber' : 'Fibres', f.fiberPct, relevanceOf(kFiberWeight, f.fiberPct)),
+    ]..sort((a, b) => b.$3.compareTo(a.$3));
+    return [for (final r in ranked.take(3)) (r.$1, r.$2)];
+  }
+
+  Widget _spotCard(FoodSpotlight f) {
+    final chips = _spotChips(f);
+    return Container(
+      margin: const EdgeInsets.fromLTRB(18, 0, 18, 7),
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+      decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(16)),
+      child: Row(children: [
+        Container(
+          width: 44, height: 44, alignment: Alignment.center,
+          decoration: BoxDecoration(color: p.accentSoft, shape: BoxShape.circle),
+          child: Text(f.item.emoji, style: const TextStyle(fontSize: 22)),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Expanded(
+                child: Text(f.item.name, maxLines: 1, overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, height: 1.1)),
+              ),
+              const SizedBox(width: 6),
+              Text('${fmtNum(f.item.grams, english: english)} g',
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: p.textSoft)),
+            ]),
+            const SizedBox(height: 4),
+            Wrap(spacing: 4, runSpacing: 3, children: [
+              for (final c in chips)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(color: p.accentSoft, borderRadius: BorderRadius.circular(99)),
+                  child: Text.rich(
+                    TextSpan(children: [
+                      TextSpan(text: '${c.$1} '),
+                      TextSpan(text: _pct(c.$2), style: TextStyle(color: p.accent)),
+                    ]),
+                    style: TextStyle(fontSize: 8.4, fontWeight: FontWeight.w900, color: p.text),
+                  ),
+                ),
+            ]),
+            if (f.systems.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Row(children: [
+                for (final (i, s) in f.systems.take(2).indexed) ...[
+                  if (i > 0) const SizedBox(width: 8),
+                  Icon(_systemIcon(s), size: 9.5, color: p.accent),
+                  const SizedBox(width: 3),
+                  Flexible(
+                    child: Text(bodySystemLabel(s, english), maxLines: 1, overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 7.8, fontWeight: FontWeight.w700, color: p.textSoft)),
+                  ),
+                ],
+              ]),
+            ],
+          ]),
+        ),
+      ]),
+    );
+  }
+
+  Widget _spotlight() {
+    final spots = data.spotlights(english: english, max: 4);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _top(english ? 'Star foods' : 'Les aliments stars'),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 12, 22, 2),
+          child: _title(english ? 'Who brings what?' : 'Qui apporte quoi ?', size: 22),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 0, 22, 0),
+          child: Text(
+              english
+                  ? 'The foods that bring the most essential nutrients'
+                  : 'Ceux qui apportent le plus de nutriments essentiels',
+              style: TextStyle(fontSize: 10, color: p.textSoft, fontWeight: FontWeight.w700)),
+        ),
+        const Spacer(),
+        if (spots.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 22),
+            child: Text(l10n.shareNoMicroHighlight,
+                style: TextStyle(fontSize: 13, color: p.textSoft, fontWeight: FontWeight.w600)),
+          )
+        else
+          for (final f in spots) _spotCard(f),
+        const Spacer(),
+        _foot(_refNote()),
+        _footer(),
+      ],
+    );
+  }
+
+  // ── 3. L'énergie ─────────────────────────────────────────────────────
 
   Widget _overview() {
     final split = data.energySplit;
@@ -597,17 +725,11 @@ class MealShareSlide extends StatelessWidget {
         const SizedBox(height: 14),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-            decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(14)),
-            child: Row(children: [
-              Expanded(child: Text(l10n.shareFiber, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800))),
-              Text('${data.fiber.round()} g', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900)),
-              const SizedBox(width: 8),
-              Text(l10n.shareOfEfsaFiber((data.fiber / kRefFiberG * 100).round()),
-                  style: TextStyle(fontSize: 9.5, color: p.textSoft, fontWeight: FontWeight.w700)),
-            ]),
-          ),
+          child: Row(children: [
+            _refCard(l10n.shareProtein, data.protein, kRefProteinG),
+            const SizedBox(width: 8),
+            _refCard(l10n.shareFiber, data.fiber, kRefFiberG),
+          ]),
         ),
         const Spacer(flex: 2),
         _foot(l10n.shareMacrosFootnote),
@@ -616,7 +738,142 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 3. Ton corps : les grandes fonctions nourries ───────────────────
+  /// Protéines ou fibres face au repère de la journée (ANSES, adulte).
+  Widget _refCard(String label, double grams, double ref) => Expanded(
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
+          decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(14)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Expanded(child: Text(label, style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800))),
+              Text(_pct(grams / ref * 100), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: p.accent)),
+            ]),
+            const SizedBox(height: 5),
+            _bar(grams / ref, height: 5),
+            const SizedBox(height: 3),
+            Text(english ? '${grams.round()} g of the ${ref.round()} g a day' : '${grams.round()} g sur ${ref.round()} g conseillés par jour',
+                maxLines: 1, overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 8.5, color: p.textSoft, fontWeight: FontWeight.w700)),
+          ]),
+        ),
+      );
+
+  // ── 4. Plus de nutriments que de calories ────────────────────────────
+
+  Widget _density() {
+    final share = data.energyShare * 100;
+    final rows = data.all(english: english).take(8).toList();
+    final n = data.denseCount;
+    final total = essentialNutrients.length;
+    // Échelle 0-150 % : la ligne des calories reste lisible même pour un
+    // repas copieux ; au-delà, la barre est pleine et le % affiché exact.
+    const scaleMax = 150.0;
+    final linePos = (share / scaleMax).clamp(0.01, 0.99);
+    final day = data.isFullDay;
+    final what = english ? (day ? 'day' : 'meal') : (day ? 'cette journée' : 'ce repas');
+    final message = english
+        ? (n >= 4
+            ? '$n of $total essential nutrients go beyond the share of calories: that is what a nutrient-dense ${day ? 'day' : 'plate'} looks like.'
+            : n == 0
+                ? 'No essential nutrient goes beyond the share of calories of this $what yet.'
+                : '$n of $total essential nutrient${n > 1 ? 's go' : ' goes'} beyond the share of calories of this $what.')
+        : (n >= 4
+            ? '$n nutriments essentiels sur $total dépassent la part de calories : c\'est ça, ${day ? 'une journée dense' : 'une assiette dense'} en nutriments.'
+            : n == 0
+                ? 'Aucun nutriment essentiel ne dépasse encore la part de calories de $what.'
+                : '$n nutriment${n > 1 ? 's' : ''} essentiel${n > 1 ? 's' : ''} sur $total dépasse${n > 1 ? 'nt' : ''} la part de calories de $what.');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _top(english ? 'Nutrient density' : 'Densité nutritionnelle'),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 12, 22, 3),
+          child: _title(
+              n >= 4
+                  ? (english ? 'More nutrients than calories' : 'Plus de nutriments que de calories')
+                  : (english ? 'Nutrients vs calories' : 'Nutriments et calories'),
+              size: 21),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 0, 22, 0),
+          child: Text.rich(
+            TextSpan(children: [
+              TextSpan(text: english ? 'This $what = ' : '${day ? 'Cette journée' : 'Ce repas'} = '),
+              TextSpan(text: _pct(share), style: TextStyle(fontWeight: FontWeight.w900, color: p.accent)),
+              TextSpan(text: english ? ' of the calories of a 2,000 kcal day' : ' des calories d\'une journée de 2 000 kcal'),
+            ]),
+            style: TextStyle(fontSize: 10.5, color: p.textSoft, fontWeight: FontWeight.w700),
+          ),
+        ),
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22),
+          child: LayoutBuilder(builder: (_, c) {
+            const nameW = 100.0, pctW = 42.0;
+            final barW = c.maxWidth - nameW - pctW;
+            return Stack(children: [
+              Column(children: [
+                for (final h in rows)
+                  SizedBox(
+                    height: 23,
+                    child: Row(children: [
+                      SizedBox(
+                        width: nameW,
+                        child: Text(h.def.short(english), maxLines: 1, overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 9.8, fontWeight: FontWeight.w800)),
+                      ),
+                      SizedBox(
+                        width: barW,
+                        child: _bar(h.percent / scaleMax,
+                            height: 10, color: data.isDense(h) ? p.accent : p.accent.withValues(alpha: 0.3)),
+                      ),
+                      SizedBox(
+                        width: pctW,
+                        child: Text(_pct(h.percent), textAlign: TextAlign.right,
+                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900,
+                                color: data.isDense(h) ? p.text : p.textSoft)),
+                      ),
+                    ]),
+                  ),
+              ]),
+              // Repère vertical : la part de calories du repas.
+              Positioned(
+                left: nameW + barW * linePos - 1,
+                top: 0, bottom: 0,
+                child: Container(width: 2, color: p.text.withValues(alpha: 0.6)),
+              ),
+            ]);
+          }),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 5, 22, 0),
+          child: Row(children: [
+            Container(width: 2, height: 10, color: p.text.withValues(alpha: 0.6)),
+            const SizedBox(width: 6),
+            Text(english ? 'share of calories (${_pct(share)})' : 'part des calories (${_pct(share)})',
+                style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w800, color: p.textSoft)),
+          ]),
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(12, 9, 12, 9),
+            decoration: BoxDecoration(color: p.accentSoft, borderRadius: BorderRadius.circular(14)),
+            child: Text(message, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, height: 1.25)),
+          ),
+        ),
+        const Spacer(),
+        _foot(english
+            ? 'Calories: 2,000 kcal EU reference intake. Nutrients: ANSES adult recommended intakes; counted from 15% (significant amount). Nutrient-density principle (NRF index, Drewnowski 2010).'
+            : 'Calories : apport de référence UE de 2 000 kcal. Nutriments : apports conseillés ANSES adulte, comptés à partir de 15 % (quantité significative). Principe des indices de densité nutritionnelle (NRF, Drewnowski 2010).'),
+        _footer(),
+      ],
+    );
+  }
+
+  // ── 6. Ton corps : les grandes fonctions nourries ───────────────────
 
   IconData _systemIcon(BodySystem s) => switch (s) {
         BodySystem.brain => Icons.psychology_outlined,
@@ -687,7 +944,7 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 4. Les stars de l'assiette, et d'où elles viennent ───────────────
+  // ── 5. Les nutriments stars : pourquoi ils comptent, d'où ils viennent
 
   static const _segmentAlphas = [1.0, 0.62, 0.38, 0.22];
 
@@ -708,12 +965,20 @@ class MealShareSlide extends StatelessWidget {
         ),
       );
 
+  /// Badge « souvent insuffisant » : apports ou statut souvent sous les
+  /// repères en France (Esteban 2014-2016, INCA 3).
+  Widget _lowBadge() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+        decoration: BoxDecoration(color: p.accent2.withValues(alpha: p.dark ? 0.28 : 0.22), borderRadius: BorderRadius.circular(99)),
+        child: Text(english ? 'Often too low' : 'Souvent insuffisant',
+            style: TextStyle(fontSize: 7.2, fontWeight: FontWeight.w900, color: p.text)),
+      );
+
   Widget _starCard(NutrientHighlight h) {
     final parts = data.contributions(h.def).where((c) => c.share >= 0.01).take(4).toList();
-    final eq = data.equivalent(h.key);
     return Container(
-      margin: const EdgeInsets.fromLTRB(18, 0, 18, 8),
-      padding: const EdgeInsets.fromLTRB(10, 9, 12, 9),
+      margin: const EdgeInsets.fromLTRB(18, 0, 18, 6),
+      padding: const EdgeInsets.fromLTRB(10, 7, 12, 7),
       decoration: BoxDecoration(color: p.card, borderRadius: BorderRadius.circular(16)),
       child: Row(children: [
         _pctRing(h.percent, size: 52),
@@ -722,8 +987,17 @@ class MealShareSlide extends StatelessWidget {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(h.label, maxLines: 1, overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, height: 1.1)),
-            Text(h.def.title(english), maxLines: 1, overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: p.accent)),
+            Row(children: [
+              Flexible(
+                child: Text(h.def.title(english), maxLines: 1, overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: p.accent)),
+              ),
+              if (h.def.oftenLow) ...[const SizedBox(width: 6), _lowBadge()],
+            ]),
+            const SizedBox(height: 3),
+            // Le saviez-vous : son rôle dans le corps, en une phrase.
+            Text(h.def.fact(english), maxLines: 2, overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 8.4, fontWeight: FontWeight.w600, height: 1.22)),
             const SizedBox(height: 5),
             _contributionBar(parts),
             const SizedBox(height: 3),
@@ -732,14 +1006,6 @@ class MealShareSlide extends StatelessWidget {
               maxLines: 1, overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 7.8, fontWeight: FontWeight.w700, color: p.textSoft),
             ),
-            if (eq != null)
-              Text(
-                english
-                    ? '≈ as much as ${eq.count.round()} ${eq.eq.unitEn} ${eq.eq.emoji}'
-                    : '≈ autant que ${eq.count.round()} ${eq.eq.unitFr} ${eq.eq.emoji}',
-                maxLines: 1, overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 8.2, fontWeight: FontWeight.w800),
-              ),
           ]),
         ),
       ]),
@@ -749,13 +1015,19 @@ class MealShareSlide extends StatelessWidget {
   Widget _stars() {
     final hs = data.highlights(english: english, max: 3, focus: focus);
     final missing = data.itemsWithoutMicroData;
+    final anyLow = hs.any((h) => h.def.oftenLow);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _top(english ? 'Star nutrients' : 'Les stars de l\'assiette'),
+        _top(english ? 'Star nutrients' : 'Les nutriments stars'),
         Padding(
-          padding: const EdgeInsets.fromLTRB(22, 12, 22, 0),
-          child: _title(english ? 'Its strong points, and where they come from' : 'Ses points forts, et d\'où ils viennent', size: 20),
+          padding: const EdgeInsets.fromLTRB(22, 12, 22, 2),
+          child: _title(english ? 'Why they matter' : 'Pourquoi ils comptent', size: 22),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 0, 22, 0),
+          child: Text(english ? 'Their role in the body, and which food they come from' : 'Leur rôle dans le corps, et de quel aliment ils viennent',
+              style: TextStyle(fontSize: 10, color: p.textSoft, fontWeight: FontWeight.w700)),
         ),
         const Spacer(),
         if (hs.isEmpty)
@@ -771,63 +1043,100 @@ class MealShareSlide extends StatelessWidget {
           _foot(english
               ? '$missing ingredient(s) without micronutrient data: values are underestimated.'
               : '$missing ingrédient(s) sans données de micronutriments : valeurs sous-estimées.'),
-        _foot(_refNote()),
+        _foot(anyLow
+            ? '${_refNote()} ${english ? 'Often too low: intakes or status often below guidelines in France (Esteban 2014-2016, INCA 3).' : 'Souvent insuffisant : apports ou statut souvent sous les repères en France (études Esteban 2014-2016 et INCA 3).'}'
+            : _refNote()),
         _footer(),
       ],
     );
   }
 
-  // ── 5-6. Tableaux complets : vitamines, minéraux ────────────────────
+  // ── 7. Le bilan des 21 essentiels ────────────────────────────────────
 
-  Widget _panelSlide(NutrientKind kind) {
-    final rows = data.panel(kind, english: english);
-    final vit = kind == NutrientKind.vitamin;
-    final rowH = vit ? 21.0 : 31.0;
+  Widget _panelAll() {
+    final vit = data.panel(NutrientKind.vitamin, english: english);
+    final rest = [
+      ...data.panel(NutrientKind.mineral, english: english),
+      ...data.panel(NutrientKind.fattyAcid, english: english),
+    ]..sort((a, b) => b.percent.compareTo(a.percent));
+    Color tone(double pct) => pct >= 100
+        ? p.accent
+        : pct >= 50
+            ? p.accent.withValues(alpha: 0.72)
+            : pct >= 25
+                ? p.accent.withValues(alpha: 0.48)
+                : p.accent.withValues(alpha: 0.25);
+    Widget cell(NutrientHighlight h) => Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              if (h.def.oftenLow) ...[_lowDot(), const SizedBox(width: 3)],
+              Expanded(
+                child: Text(h.def.short(english), maxLines: 1, overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800)),
+              ),
+              Text(_pct(h.percent),
+                  style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900,
+                      color: h.percent >= 25 ? p.text : p.textSoft)),
+            ]),
+            const SizedBox(height: 2),
+            _bar(h.percent / 100, height: 4.5, color: tone(h.percent)),
+          ]),
+        );
+    Widget col(String title, List<NutrientHighlight> list) => Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(title.toUpperCase(),
+                style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w900, letterSpacing: 1.1, color: p.accent)),
+            const SizedBox(height: 5),
+            for (final h in list) cell(h),
+          ]),
+        );
+    final full = data.fullyCovered;
+    final half = data.essentialsAtLeast(50);
+    final total = essentialNutrients.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _top(vit ? (english ? 'Vitamins' : 'Vitamines') : (english ? 'Minerals' : 'Minéraux')),
+        _top(english ? 'Full report' : 'Le bilan complet'),
         Padding(
-          padding: const EdgeInsets.fromLTRB(22, 12, 22, 2),
-          child: _title(vit
-              ? (english ? 'Every vitamin, at a glance' : 'Toutes les vitamines, d\'un coup d\'œil')
-              : (english ? 'Every mineral, at a glance' : 'Tous les minéraux, d\'un coup d\'œil'), size: 20),
+          padding: const EdgeInsets.fromLTRB(22, 12, 22, 3),
+          child: _title(english ? 'The $total essentials, at a glance' : 'Les $total essentiels, d\'un coup d\'œil', size: 20),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(22, 0, 22, 0),
-          child: Text(english ? '% of the daily recommended intake' : '% de l\'apport conseillé de la journée',
-              style: TextStyle(fontSize: 10.5, color: p.textSoft, fontWeight: FontWeight.w700)),
+          child: Text.rich(
+            TextSpan(children: [
+              TextSpan(text: '$full', style: TextStyle(fontWeight: FontWeight.w900, color: p.accent)),
+              TextSpan(text: english ? ' covered at 100% · ' : ' couverts à 100 % · '),
+              TextSpan(text: '$half', style: TextStyle(fontWeight: FontWeight.w900, color: p.accent)),
+              TextSpan(text: english ? ' above 50%' : ' à plus de 50 %'),
+            ]),
+            style: TextStyle(fontSize: 10, color: p.textSoft, fontWeight: FontWeight.w700),
+          ),
         ),
         const Spacer(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22),
-          child: Column(children: [
-            for (final h in rows)
-              SizedBox(
-                height: rowH,
-                child: Row(children: [
-                  SizedBox(
-                    width: 112,
-                    child: Text(h.label, maxLines: 1, overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: vit ? 9.8 : 11, fontWeight: FontWeight.w800)),
-                  ),
-                  Expanded(
-                    child: _bar(h.percent / 100,
-                        height: vit ? 8 : 10,
-                        color: h.percent >= 100
-                            ? p.accent
-                            : h.percent >= 25
-                                ? p.accent.withValues(alpha: 0.7)
-                                : p.accent.withValues(alpha: 0.35)),
-                  ),
-                  SizedBox(
-                    width: 46,
-                    child: Text(_pct(h.percent), textAlign: TextAlign.right,
-                        style: TextStyle(fontSize: vit ? 10 : 11.5, fontWeight: FontWeight.w900,
-                            color: h.percent >= 25 ? p.text : p.textSoft)),
-                  ),
-                ]),
-              ),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            col(english ? 'Vitamins' : 'Vitamines', vit),
+            const SizedBox(width: 18),
+            col(english ? 'Minerals & omega-3' : 'Minéraux & oméga-3', rest),
+          ]),
+        ),
+        const SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22),
+          child: Row(children: [
+            _lowDot(),
+            const SizedBox(width: 4),
+            Expanded(
+              child: Text(
+                  english
+                      ? 'often too low in France (Esteban 2014-2016, INCA 3)'
+                      : 'souvent insuffisant en France (études Esteban 2014-2016 et INCA 3)',
+                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 7.8, fontWeight: FontWeight.w700, color: p.textSoft)),
+            ),
           ]),
         ),
         const Spacer(),
@@ -837,7 +1146,10 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 7. Les bonnes graisses ───────────────────────────────────────────
+  Widget _lowDot() =>
+      Container(width: 5, height: 5, decoration: BoxDecoration(color: p.accent2, shape: BoxShape.circle));
+
+  // ── 8. Les bonnes graisses ───────────────────────────────────────────
 
   Widget _fats() {
     final fa = data.fattyAcids;
@@ -938,7 +1250,7 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 8. Dans l'assiette : chaque aliment et son atout ─────────────────
+  // ── 9. Dans l'assiette : chaque aliment et son atout ─────────────────
 
   /// L'atout d'un ingrédient : le nutriment pertinent dont il apporte la
   /// plus grande part (au moins 35 %) dans ce repas.
@@ -974,7 +1286,7 @@ class MealShareSlide extends StatelessWidget {
         Padding(padding: const EdgeInsets.fromLTRB(22, 12, 22, 0), child: _title(l10n.shareIngredientsTitle)),
         Padding(
           padding: const EdgeInsets.fromLTRB(22, 4, 22, 8),
-          child: Text(l10n.shareIngredientsSubtitle(totalG.round()),
+          child: Text(l10n.shareIngredientsSubtitle(fmtNum(totalG, english: english)),
               style: TextStyle(fontSize: 11, color: p.textSoft, fontWeight: FontWeight.w600)),
         ),
         Padding(
@@ -986,12 +1298,12 @@ class MealShareSlide extends StatelessWidget {
               for (var i = 0; i < shown.length; i++) ...[
                 if (i > 0) Divider(height: 1, color: p.track),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: compact ? 3 : 5),
+                  padding: EdgeInsets.symmetric(vertical: compact ? 2 : 5),
                   child: Row(children: [
                     Container(
-                      width: 28, height: 28, alignment: Alignment.center,
+                      width: compact ? 24 : 28, height: compact ? 24 : 28, alignment: Alignment.center,
                       decoration: BoxDecoration(color: p.accentSoft, shape: BoxShape.circle),
-                      child: Text(shown[i].emoji, style: const TextStyle(fontSize: 14)),
+                      child: Text(shown[i].emoji, style: TextStyle(fontSize: compact ? 12 : 14)),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -1028,7 +1340,7 @@ class MealShareSlide extends StatelessWidget {
     );
   }
 
-  // ── 9. L'essentiel + à compléter + appel à l'action ─────────────────
+  // ── 10. L'essentiel + à compléter + appel à l'action ────────────────
 
   Widget _cta() {
     final ins = insightsFor(data, english: english, focus: focus);

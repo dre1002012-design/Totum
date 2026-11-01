@@ -8703,7 +8703,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareMacrosFootnote.
   ///
   /// In fr, this message translates to:
-  /// **'Fibres : repère ANSES de 30 g par jour pour un adulte.'**
+  /// **'Repères ANSES pour un adulte — protéines : 0,83 g par kg et par jour (58 g pour 70 kg) ; fibres : 30 g par jour.'**
   String get shareMacrosFootnote;
 
   /// No description provided for @shareMicrosTitle.
@@ -8734,7 +8734,7 @@ abstract class AppLocalizations {
   ///
   /// In fr, this message translates to:
   /// **'{grams} g au total — à enregistrer pour la refaire'**
-  String shareIngredientsSubtitle(int grams);
+  String shareIngredientsSubtitle(String grams);
 
   /// No description provided for @shareMoreIngredients.
   ///

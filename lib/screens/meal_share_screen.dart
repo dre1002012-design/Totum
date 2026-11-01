@@ -134,12 +134,12 @@ class _MealShareScreenState extends State<MealShareScreen> {
           photo: _photo, handle: _handle, showTotumMark: _showMark, focus: _focus,
           index: index, count: count, reelFrame: reel,
         );
+    final kinds = carouselKindsFor(_data);
     return switch (_format) {
       _ShareFormat.carousel => [
-          for (var i = 0; i < carouselKinds.length; i++)
-            make(carouselKinds[i], index: i + 1, count: carouselKinds.length),
+          for (var i = 0; i < kinds.length; i++) make(kinds[i], index: i + 1, count: kinds.length),
         ],
-      _ShareFormat.reel => [for (final k in carouselKinds) make(k, reel: true)],
+      _ShareFormat.reel => [for (final k in kinds) make(k, reel: true)],
       _ShareFormat.post => [make(ShareSlideKind.post)],
       _ShareFormat.story => [make(ShareSlideKind.story)],
       _ShareFormat.landscape => [make(ShareSlideKind.landscape)],

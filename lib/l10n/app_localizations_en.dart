@@ -5170,7 +5170,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareMacrosFootnote =>
-      'Fiber: ANSES guideline of 30 g a day for adults.';
+      'ANSES guidelines for adults — protein: 0.83 g per kg a day (58 g for 70 kg); fiber: 30 g a day.';
 
   @override
   String get shareMicrosTitle => 'What this plate gives you';
@@ -5187,7 +5187,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareIngredientsTitle => 'On the plate';
 
   @override
-  String shareIngredientsSubtitle(int grams) {
+  String shareIngredientsSubtitle(String grams) {
     return '$grams g in total — save it to make it again';
   }
 
